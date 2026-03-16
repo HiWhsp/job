@@ -544,7 +544,7 @@ page {
     padding: 0 0 80px;
 
     font-size: 16px;
-    font-family: Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     line-height: 20px;
     color: #333333;
@@ -609,7 +609,7 @@ page {
           padding: 12px 40px;
           border-bottom: 1px solid #eee;
 
-          font-family: Arial, Arial;
+          font-family: Poppins, Poppins;
           font-weight: 400;
           font-size: 14px;
           color: #1f1f1f;
@@ -617,7 +617,7 @@ page {
 
         .item-detail {
           padding: 40px 0;
-          font-family: OPPOSans, OPPOSans;
+          font-family: Poppins, Poppins;
           // font-weight: bold;
           font-size: 14px;
           color: #1f1f1f;
@@ -755,7 +755,7 @@ page {
     display: flex;
     justify-content: center;
     align-items: center;
-    font-family: OPPOSans, OPPOSans;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     font-size: 14px;
     color: #1f1f1f;
@@ -781,7 +781,7 @@ page {
     cursor: pointer;
     min-width: 120px;
     width: fit-content;
-    font-family: OPPOSans, OPPOSans;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     font-size: 22px;
     color: #1e262e;
@@ -797,7 +797,7 @@ page {
     width: fit-content;
 
     span {
-      font-family: OPPOSans, OPPOSans;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       font-size: 22px;
       color: #ec6a2b;
@@ -815,7 +815,7 @@ page {
     text-align: left;
 
     span {
-      font-family: OPPOSans, OPPOSans;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       font-size: 22px;
       color: #1e262e;
@@ -828,14 +828,14 @@ page {
 
   .total-number {
     width: fit-content;
-    font-family: OPPOSans, OPPOSans;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     font-size: 16px;
     color: #1f1f1f;
 
     b {
       font-size: 24px;
-      font-family: Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: bold;
       line-height: 20px;
       color: #EC6A2B;
@@ -847,14 +847,14 @@ page {
     margin-right: 60px;
     width: fit-content;
 
-    font-family: OPPOSans, OPPOSans;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     font-size: 16px;
     color: #1f1f1f;
 
     b {
       font-size: 24px;
-      font-family: Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: bold;
       line-height: 20px;
       color: #EC6A2B;
@@ -868,7 +868,7 @@ page {
     background: #00306B;
 
     font-size: 16px;
-    font-family: Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: bold;
     color: #ffffff;
     transition: 0.3s;
@@ -901,7 +901,7 @@ page {
   }
   .empty-text {
     margin: 39px 0 33px 0;
-    font-family: Microsoft YaHei, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     font-size: 16px;
     color: #1f1f1f;
@@ -912,7 +912,7 @@ page {
       height: 56px;
       border-radius: 8px 8px 8px 8px;
       background: #EC6A2B;
-      font-family: Microsoft YaHei, Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       font-size: 18px;
       color: #ffffff;

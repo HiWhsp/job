@@ -136,7 +136,7 @@ export default {
     line-height: 70px;
     background: #ffffff;
     font-size: 20px;
-    font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: bold;
     color: #333333;
     img {
@@ -182,7 +182,7 @@ export default {
       padding: 12px 24px;
       margin-right: 0;
       font-size: 16px;
-      font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       color: #1f1f1f;
       border-bottom: 2px solid transparent;
@@ -219,7 +219,7 @@ export default {
     span {
       margin-left: 10px;
       font-size: 16px;
-      font-family: PingFang SC;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       line-height: 36px;
       color: #ec6a2b;
@@ -353,14 +353,14 @@ export default {
 
         .currency {
           font-size: 42px;
-          font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+          font-family: Poppins, Poppins;
           font-weight: bold;
           color: #00306B;
         }
 
         .num {
           font-size: 42px;
-          font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+          font-family: Poppins, Poppins;
           font-weight: bold;
           color: #00306B;
         }
@@ -369,7 +369,7 @@ export default {
       .tiaojian {
         margin-top: 10px;
         font-size: 12px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         color: #505050;
         line-height: 28px;
@@ -377,7 +377,7 @@ export default {
 
       .shijian {
         font-size: 12px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         color: #505050;
         line-height: 28px;
@@ -392,7 +392,7 @@ export default {
           background: #00306B;
           border-radius: 4px 4px 4px 4px;
           font-size: 14px;
-          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+          font-family: Poppins, Poppins;
           font-weight: 400;
           color: #ffffff;
 

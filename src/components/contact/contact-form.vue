@@ -263,7 +263,7 @@ export default {
   text-align: center;
   position: relative;
   font-size: 36px;
-  font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+  font-family: Poppins, Poppins;
   font-weight: bold;
   color: #333333;
 }
@@ -297,7 +297,7 @@ export default {
 
       .label {
         margin-bottom: 26px;
-        font-family: Arial, Arial;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         font-size: 20px;
         color: #000000;
@@ -332,7 +332,7 @@ export default {
       background: #00306B;
       border-radius: 0px 0px 0px 0px;
 
-      font-family: OPPOSans, OPPOSans;
+      font-family: Poppins, Poppins;
       font-weight: bold;
       font-size: 16px;
       color: #FFFFFF;
@@ -350,7 +350,7 @@ export default {
   border-radius: 4px 4px 4px 4px;
   border: 1px solid #00306B;
   font-size: 14px;
-  font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+  font-family: Poppins, Poppins;
   font-weight: 400;
   color: #00306B;
 

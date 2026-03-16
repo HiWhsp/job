@@ -103,7 +103,7 @@ export default {
       min-width: 56px;
       height: 14px;
       font-size: 14px;
-      font-family: Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: 300;
       color: #1F1F1F;
       line-height: 14px;
@@ -114,7 +114,7 @@ export default {
       min-width: 42px;
       height: 14px;
       font-size: 14px;
-      font-family: Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: 300;
       color: #d36f16;
       line-height: 14px;

@@ -518,7 +518,7 @@ export default {
           &::before {
             margin-right: 3px;
             content: "*";
-            font-family: OPPOSans, OPPOSans;
+            font-family: Poppins, Poppins;
             font-weight: 400;
             font-size: 14px;
             color: #ff0000;
@@ -528,7 +528,7 @@ export default {
         &::after {
           margin-left: 3px;
           content: ":";
-          font-family: OPPOSans, OPPOSans;
+          font-family: Poppins, Poppins;
           font-weight: 400;
           font-size: 20px;
           color: #505050;
@@ -540,12 +540,12 @@ export default {
         font-size: 20px;
         color: #1e262e;
         font-weight: 400;
-        font-family: OPPOSans, OPPOSans;
+        font-family: Poppins, Poppins;
       }
 
       .el-select {
         width: 100%;
-        font-family: OPPOSans, OPPOSans;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         font-size: 14px;
         color: #1f1f1f;
@@ -610,7 +610,7 @@ export default {
     background: #ffffff;
     border-radius: 50px 50px 50px 50px;
     border: 1px solid #00306B;
-    font-family: Arial, Arial;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     font-size: 14px;
     color: #00306B;

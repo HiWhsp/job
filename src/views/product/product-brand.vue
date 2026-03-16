@@ -132,7 +132,7 @@ export default {
       // padding-left: 60px;
 
       .main-title {
-        font-family: Microsoft YaHei, Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: bold;
         font-size: 60px;
         color: #FFFFFF;
@@ -146,7 +146,7 @@ export default {
         background: #00306B;
         border-radius: 0px 0px 0px 0px;
 
-        font-family: Microsoft YaHei, Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         font-size: 30px;
         color: #FFFFFF;

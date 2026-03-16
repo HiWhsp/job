@@ -127,7 +127,7 @@ export default {
     border: none;
 
     font-size: 15px; /*no*/
-    font-family: Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #8c8c8c;
   }

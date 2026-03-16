@@ -218,7 +218,7 @@ export default {
       border-radius: 0px 0px 0px 0px;
       border: 1px solid #00306B;
 
-      font-family: Microsoft YaHei, Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: bold;
       font-size: 16px;
       color: #00306B;
@@ -228,7 +228,7 @@ export default {
       }
     }
     .tip {
-      font-family: Microsoft YaHei, Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       font-size: 12px;
       color: #333333;
@@ -248,7 +248,7 @@ export default {
       height: 48px;
       background: #00306B;
       border-radius: 0px 0px 0px 0px;
-      font-family: Microsoft YaHei, Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: bold;
       font-size: 16px;
       color: #ffffff;
@@ -258,7 +258,7 @@ export default {
       }
     }
     .tip {
-      font-family: Microsoft YaHei, Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       font-size: 12px;
       color: #333333;
@@ -280,7 +280,7 @@ export default {
       padding: 0 12px;
       height: 48px;
       line-height: 48px;
-      font-family: Microsoft YaHei, Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: bold;
       font-size: 16px;
       color: #00306B;
@@ -296,13 +296,13 @@ export default {
     margin-bottom: 20px;
     text-align: right;
     .label {
-      font-family: Microsoft YaHei, Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       font-size: 12px;
       color: #1F1F1F;
     }
     .value {
-      font-family: Microsoft YaHei, Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: bold;
       font-size: 20px;
       color: #00306B;
@@ -319,7 +319,7 @@ export default {
       background: #00306B;
 
       border-radius: 0px 0px 0px 0px;
-      font-family: Microsoft YaHei, Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       font-size: 16px;
       color: #ffffff;

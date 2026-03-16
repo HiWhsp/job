@@ -127,7 +127,7 @@ export default {
 
     .detail-title {
       font-size: 36px;
-      font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: bold;
       color: #333333;
     }
@@ -147,7 +147,7 @@ export default {
   margin-bottom: 20px;
   text-align: left;
   font-size: 36px;
-  font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+  font-family: Poppins, Poppins;
   font-weight: 400;
   color: #333333;
 
@@ -162,7 +162,7 @@ export default {
     background: #00306B;
     border-radius: 4px 4px 4px 4px;
     font-size: 20px;
-    font-family: SourceHanSansSC-Regular-, SourceHanSansSC-Regular;
+    font-family: Poppins, Poppins;
     font-weight: normal;
     color: #ffffff;
   }
@@ -199,7 +199,7 @@ export default {
   .zhize-title {
     margin: 40px 0;
     font-size: 28px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #333333;
   }
@@ -209,7 +209,7 @@ export default {
   .yaoqiu-title {
     margin: 40px 0;
     font-size: 28px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #333333;
   }
@@ -217,7 +217,7 @@ export default {
 
 .ctx {
   font-size: 16px;
-  font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+  font-family: Poppins, Poppins;
   font-weight: 400;
   color: #333333;
   line-height: 40px;

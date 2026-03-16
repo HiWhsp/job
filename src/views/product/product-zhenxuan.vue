@@ -285,7 +285,7 @@ export default {
 
   .info-left {
     width: 100%;
-    font-family: Microsoft YaHei, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: bold;
     font-size: 40px;
     color: #ffffff;
@@ -302,7 +302,7 @@ export default {
     height: 80px;
 
     span {
-      font-family: Microsoft YaHei, Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: bold;
       font-size: 24px;
       color: #fff;
@@ -363,7 +363,7 @@ export default {
         padding-top: 24px;
 
         .title {
-          font-family: MicrosoftYaHei, MicrosoftYaHei;
+          font-family: Poppins, Poppins;
           font-weight: normal;
           font-size: 14px;
           color: #3d4248;
@@ -372,13 +372,13 @@ export default {
 
         .price {
           margin-top: 16px;
-          font-family: Microsoft YaHei, Microsoft YaHei;
+          font-family: Poppins, Poppins;
           font-weight: bold;
           font-size: 14px;
           color: #00306B;
 
           .unit {
-            font-family: Microsoft YaHei, Microsoft YaHei;
+            font-family: Poppins, Poppins;
             font-weight: bold;
             font-size: 14px;
             color: #00306B;
@@ -395,7 +395,7 @@ export default {
     margin-bottom: 30px;
 
     span {
-      font-family: Microsoft YaHei, Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: bold;
       font-size: 24px;
       color: #333333;
@@ -424,14 +424,14 @@ export default {
         background: #ffffff;
         border-radius: 8px 8px 8px 8px;
 
-        font-family: Microsoft YaHei, Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: bold;
         font-size: 18px;
         color: #333333;
 
         &.active {
           background: rgba(247, 71, 71, 0.2);
-          font-family: Microsoft YaHei, Microsoft YaHei;
+          font-family: Poppins, Poppins;
           font-weight: bold;
           font-size: 18px;
           color: #00306B;
@@ -492,7 +492,7 @@ export default {
 
           .brand {
             text-align: center;
-            font-family: MicrosoftYaHei, MicrosoftYaHei;
+            font-family: Poppins, Poppins;
             font-weight: normal;
             font-size: 13px;
             color: #656565;
@@ -503,7 +503,7 @@ export default {
             height: 50px;
 
             .title {
-              font-family: MicrosoftYaHei, MicrosoftYaHei;
+              font-family: Poppins, Poppins;
               font-weight: normal;
               font-size: 14px;
               color: #3d4248;
@@ -514,7 +514,7 @@ export default {
           .price {
             margin-top: 13px;
             font-size: 14px;
-            font-family: PingFang SC, PingFang SC;
+            font-family: Poppins, Poppins;
             font-weight: 500;
             color: #eb0f19;
 

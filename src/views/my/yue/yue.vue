@@ -150,7 +150,7 @@ export default {
     margin-bottom: 20px;
     text-align: left;
     font-size: 16px;
-    font-family: Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: bold;
     line-height: 20px;
     color: #333333;
@@ -166,7 +166,7 @@ export default {
       }
       span {
         font-size: 16px;
-        font-family: Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         line-height: 24px;
         color: #222222;
@@ -196,7 +196,7 @@ export default {
       text-align: left;
       .text-1 {
         font-size: 26px;
-        font-family: PingFang SC;
+        font-family: Poppins, Poppins;
         font-weight: bold;
         line-height: 40px;
         color: #ffffff;
@@ -205,7 +205,7 @@ export default {
         margin-top: 10px;
         margin-bottom: 30px;
         font-size: 48px;
-        font-family: PingFang SC;
+        font-family: Poppins, Poppins;
         font-weight: bold;
         line-height: 40px;
         color: #ffffff;
@@ -217,7 +217,7 @@ export default {
           height: 34px;
           background: rgba(0, 0, 0, 0.45);
           font-size: 14px;
-          font-family: PingFang SC;
+          font-family: Poppins, Poppins;
           font-weight: 400;
           line-height: 34px;
           color: #ffffff;
@@ -242,7 +242,7 @@ export default {
     border-radius: 45px;
 
     font-size: 16px;
-    font-family: PingFang SC;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     line-height: 36px;
     color: #ffffff;
@@ -275,14 +275,14 @@ export default {
 
     .currency {
       font-size: 15px;
-      font-family: Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: bold;
       line-height: 15px;
       color: #333;
     }
     .money {
       font-size: 30px;
-      font-family: Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: bold;
       line-height: 40px;
       color: #333;

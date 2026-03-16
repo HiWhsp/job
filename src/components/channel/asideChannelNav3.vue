@@ -240,7 +240,7 @@ export default {
             margin: 0 0.18rem;
             font-size: 14px;
             line-height: 18px;
-            font-family: MicrosoftYaHei;
+            font-family: Poppins, Poppins;
             color: #333333;
             display: flex;
             align-items: center;
@@ -264,7 +264,7 @@ export default {
             }
             a {
               font-size: 16px;
-              font-family: MicrosoftYaHei;
+              font-family: Poppins, Poppins;
               line-height: 0.18rem;
               color: #9b9b9b;
               display: block;
@@ -273,7 +273,7 @@ export default {
             .level-3-title {
               cursor: pointer;
               font-size: 14px;
-              font-family: MicrosoftYaHei;
+              font-family: Poppins, Poppins;
               color: #9b9b9b;
               display: block;
               margin: 0 0.05rem;
@@ -292,7 +292,7 @@ export default {
         margin-left: 30px;
         margin-bottom: 10px;
         font-size: 14px;
-        font-family: MicrosoftYaHei;
+        font-family: Poppins, Poppins;
         line-height: 40px;
         height: 40px;
         color: #5e5e5e;

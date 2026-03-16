@@ -186,14 +186,14 @@ export default {
         .title {
           margin-bottom: 10px;
           font-size: 18px;
-          font-family: PingFang SC, PingFang SC;
+          font-family: Poppins, Poppins;
           color: #000;
           font-weight: bold;
         }
 
         .desc {
           font-size: 14px;
-          font-family: PingFang SC, PingFang SC;
+          font-family: Poppins, Poppins;
           font-weight: 500;
           color: #5e5e5e;
         }
@@ -227,7 +227,7 @@ export default {
         text-align: left;
         margin-bottom: 15px;
         font-size: 20px;
-        font-family: PingFang SC, PingFang SC;
+        font-family: Poppins, Poppins;
         font-weight: bold;
         color: #fff;
         line-height: 50px;
@@ -236,7 +236,7 @@ export default {
       .link-item {
         text-align: left;
         font-size: 18px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         color: #fff;
         line-height: 40px;
@@ -245,7 +245,7 @@ export default {
 
         a {
           font-weight: normal;
-          font-family: MicrosoftYaHei, MicrosoftYaHei;
+          font-family: Poppins, Poppins;
           font-weight: normal;
           font-size: 18px;
           color: #fff;
@@ -349,14 +349,14 @@ export default {
 
   a {
     font-size: 14px;
-    font-family: Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #fff;
   }
 
   /deep/ a {
     font-size: 14px;
-    font-family: Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #fff;
   }

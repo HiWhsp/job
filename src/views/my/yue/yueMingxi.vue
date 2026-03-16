@@ -153,7 +153,7 @@ export default {
     line-height: 56px;
     background: #ffffff;
     font-size: 16px;
-    font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: bold;
     color: #333333;
 
@@ -193,7 +193,7 @@ export default {
     text-align: left;
     .text-1 {
       font-size: 16px;
-      font-family: PingFang SC;
+      font-family: Poppins, Poppins;
       font-weight: bold;
       line-height: 40px;
       color: #ffffff;
@@ -202,7 +202,7 @@ export default {
       margin-top: 10px;
 
       font-size: 40px;
-      font-family: PingFang SC;
+      font-family: Poppins, Poppins;
       font-weight: bold;
       line-height: 40px;
       color: #ffffff;
@@ -222,7 +222,7 @@ export default {
         line-height: 34px;
         background: rgba(255, 255, 255, 0.78);
         font-size: 14px;
-        font-family: PingFang SC;
+        font-family: Poppins, Poppins;
         font-weight: 400;
       }
     }
@@ -243,7 +243,7 @@ export default {
     margin-right: 60px;
 
     font-size: 14px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #333333;
 

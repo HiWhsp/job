@@ -235,7 +235,7 @@ export default {
         .banner-desc {
           margin-top: 30px;
           max-width: 800px;
-          font-family: OPPOSans, OPPOSans;
+          font-family: Poppins, Poppins;
           font-weight: 500;
           font-size: 23px;
           color: #FFFFFF;
@@ -338,14 +338,14 @@ export default {
           font-weight: 500;
           color: #ec6a2b;
           margin-bottom: 12px;
-          font-family: Microsoft YaHei, Microsoft YaHei;
+          font-family: Poppins, Poppins;
           line-height: 1.4;
         }
 
         .card-email {
           font-size: 14px;
           color: #1f1f1f;
-          font-family: Microsoft YaHei, Microsoft YaHei;
+          font-family: Poppins, Poppins;
           line-height: 1.4;
         }
       }
@@ -392,7 +392,7 @@ export default {
     }
 
     .desc {
-      font-family: OPPOSans, OPPOSans;
+      font-family: Poppins, Poppins;
       // font-weight: bold;
       font-size: 16px;
       color: #555555;
@@ -417,7 +417,7 @@ export default {
 
   .msg-desc {
     margin-top: 46px;
-    font-family: OPPOSans, OPPOSans;
+    font-family: Poppins, Poppins;
     font-weight: 500;
     font-size: 21px;
     color: #444444;
@@ -435,7 +435,7 @@ export default {
     border-radius: 0px 0px 0px 0px;
     border: 1px solid #00306B;
 
-    font-family: OPPOSans, OPPOSans;
+    font-family: Poppins, Poppins;
     font-weight: bold;
     font-size: 16px;
     color: #00306B;

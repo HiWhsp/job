@@ -507,7 +507,7 @@ export default {
 
     .price-box {
       margin-left: 100px;
-      font-family: Arial, Arial;
+      font-family: Poppins, Poppins;
       font-weight: bold;
       font-size: 30px;
       color: #ff0000;
@@ -517,7 +517,7 @@ export default {
   .detail-desc {
     margin-top: 17px;
     margin-bottom: 20px;
-    font-family: OPPOSans, OPPOSans;
+    font-family: Poppins, Poppins;
     // font-weight: bold;
     font-size: 16px;
     color: #747474;
@@ -544,7 +544,7 @@ export default {
         }
 
         .label {
-          font-family: Microsoft YaHei, Microsoft YaHei;
+          font-family: Poppins, Poppins;
           font-weight: 400;
           font-size: 18px;
           color: #6a6a6a;
@@ -557,20 +557,20 @@ export default {
           margin-left: 28px;
 
           font-size: 16px;
-          font-family: PingFang SC, PingFang SC;
+          font-family: Poppins, Poppins;
           font-weight: 500;
           color: #353535;
 
           &.vals-price {
             font-size: 32px;
-            font-family: PingFang SC, PingFang SC;
+            font-family: Poppins, Poppins;
             font-weight: bold;
             color: #6941aa;
           }
 
           .val {
             flex: 1;
-            font-family: Microsoft YaHei, Microsoft YaHei;
+            font-family: Poppins, Poppins;
             font-weight: bold;
             font-size: 32px;
             color: #6941aa;
@@ -585,7 +585,7 @@ export default {
 
       .number {
         font-size: 28px;
-        font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: bold;
         color: #ea3200;
       }
@@ -609,7 +609,7 @@ export default {
       align-items: center;
 
       .label {
-        font-family: Microsoft YaHei, Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         font-size: 18px;
         color: #6a6a6a;
@@ -634,7 +634,7 @@ export default {
       margin-top: 8px;
       min-width: 90px;
 
-      font-family: Microsoft YaHei, Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       font-size: 18px;
       color: #505050;
@@ -644,7 +644,7 @@ export default {
       margin-left: 20px;
       font-size: 18px;
       color: #00306B;
-      font-family: Microsoft YaHei, Microsoft YaHei;
+      font-family: Poppins, Poppins;
     }
   }
 
@@ -815,8 +815,8 @@ export default {
 
     .sel-num-title {
       min-width: 90px;
-      font-family: Arial, Arial;
-      font-family: Microsoft YaHei, Microsoft YaHei;
+      font-family: Poppins, Poppins;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       font-size: 14px;
       color: #505050;
@@ -824,7 +824,7 @@ export default {
 
     .kucun {
       margin-left: 16px;
-      font-family: Microsoft YaHei, Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       font-size: 14px;
       color: #505050;
@@ -874,7 +874,7 @@ export default {
         text-align: center;
 
         font-size: 16px;
-        font-family: Arial;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         color: #4a4a4a;
       }
@@ -900,14 +900,14 @@ export default {
 
     .label {
       min-width: 90px;
-      font-family: Microsoft YaHei, Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       font-size: 14px;
       color: #505050;
     }
 
     .value {
-      font-family: Microsoft YaHei, Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       font-size: 14px;
       color: #505050;
@@ -923,7 +923,7 @@ export default {
 
     .box {
       align-items: flex-end;
-      font-family: Microsoft YaHei, Microsoft YaHei;
+      font-family: Poppins, Poppins;
     }
 
     .summary-item {
@@ -1001,7 +1001,7 @@ export default {
       .btn-buy {
         background: #00306B;
 
-        font-family: Microsoft YaHei, Microsoft YaHei;
+        font-family: Poppins, Poppins;
       }
 
       .btn-add-cart {
@@ -1018,7 +1018,7 @@ export default {
         background: #ffffff;
         border-radius: 0px 0px 0px 0px;
         border: 1px solid #00306B;
-        font-family: OPPOSans, OPPOSans;
+        font-family: Poppins, Poppins;
         // font-weight: bold;
         font-size: 18px;
         color: #00306B;

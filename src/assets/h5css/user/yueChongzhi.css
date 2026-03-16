@@ -31,7 +31,7 @@
     line-height: 56px;
     background: #ffffff;
     font-size: 16px;
-    font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: bold;
     color: #333333;
   }
@@ -69,7 +69,7 @@
   }
   .top-info .yue-box .text-box .text-1 {
     font-size: 26px;
-    font-family: PingFang SC;
+    font-family: Poppins, Poppins;
     font-weight: bold;
     line-height: 40px;
     color: #ffffff;
@@ -78,7 +78,7 @@
     margin-top: 10px;
     margin-bottom: 30px;
     font-size: 48px;
-    font-family: PingFang SC;
+    font-family: Poppins, Poppins;
     font-weight: bold;
     line-height: 40px;
     color: #ffffff;
@@ -89,7 +89,7 @@
     height: 34px;
     background: rgba(0, 0, 0, 0.45);
     font-size: 14px;
-    font-family: PingFang SC;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     line-height: 34px;
     color: #ffffff;
@@ -124,14 +124,14 @@
   }
   .list .item .currency {
     font-size: 15px;
-    font-family: Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: bold;
     line-height: 15px;
     color: #333;
   }
   .list .item .money {
     font-size: 30px;
-    font-family: Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: bold;
     line-height: 40px;
     color: #333;
@@ -151,7 +151,7 @@
     padding: 24px;
     padding: 10px;
     font-size: 12px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #1F1F1F;
     line-height: 28px;
@@ -161,7 +161,7 @@
     margin-bottom: 20px;
     font-size: 18px;
     font-size: 14px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #333333;
   }
@@ -211,7 +211,7 @@
     background: linear-gradient(61deg, #00306B 0%, #fe6927 100%);
     border-radius: 20px 0px 20px 0px;
     font-size: 12px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #ffffff;
   }
@@ -219,21 +219,21 @@
     padding-top: 30px;
     padding-bottom: 15px;
     font-size: 16px;
-    font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: bold;
     color: #00306B;
   }
   .chongzhi-list .chongzhi-item .tip {
     margin-top: 10px;
     font-size: 12px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #1F1F1F;
   }
   .chongzhi-type {
     margin-bottom: 20px;
     font-size: 14px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #333333;
   }
@@ -272,7 +272,7 @@
     background: #00306B;
     border-radius: 4px;
     font-size: 14px;
-    font-family: PingFang SC;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #ffffff;
   }

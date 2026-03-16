@@ -292,7 +292,7 @@ export default {
     height: 83px;
     background: #fbfbfb;
 
-    font-family: OPPOSans, OPPOSans;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     font-size: 20px;
     color: #1e262e;
@@ -301,7 +301,7 @@ export default {
     .fav-check {
       user-select: none;
       cursor: pointer;
-      font-family: OPPOSans, OPPOSans;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       font-size: 20px;
       color: #1e262e;
@@ -319,7 +319,7 @@ export default {
     .fav-delete {
       cursor: pointer;
 
-      font-family: OPPOSans, OPPOSans;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       font-size: 20px;
       color: #1e262e;
@@ -382,7 +382,7 @@ export default {
       .text-1 {
         cursor: pointer;
         margin-bottom: 6px;
-        font-family: OPPOSans, OPPOSans;
+        font-family: Poppins, Poppins;
         // font-weight: bold;
         font-size: 20px;
         color: #1f1f1f;
@@ -390,7 +390,7 @@ export default {
       }
 
       .text-2 {
-        font-family: OPPOSans, OPPOSans;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         font-size: 20px;
         color: #777;
@@ -399,7 +399,7 @@ export default {
 
     .goods-price {
       min-width: 220px;
-      font-family: OPPOSans, OPPOSans;
+      font-family: Poppins, Poppins;
       font-weight: 700;
       font-size: 20px;
       color: #1f1f1f;

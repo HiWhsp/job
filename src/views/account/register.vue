@@ -391,7 +391,7 @@ export default {
         align-items: center;
 
         .tab-item {
-          font-family: Microsoft YaHei, Microsoft YaHei;
+          font-family: Poppins, Poppins;
           font-weight: bold;
           font-size: 26px;
           padding-bottom: 14px;
@@ -440,7 +440,7 @@ export default {
           display: inline-block;
           width: 90px;
           border-right: 1px solid #ccc;
-          font-family: OPPOSans, OPPOSans;
+          font-family: Poppins, Poppins;
           font-weight: 400;
           font-size: 16px;
           color: #7d7d7d;
@@ -460,7 +460,7 @@ export default {
 
           &::-webkit-input-placeholder {
             font-size: 14px;
-            font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+            font-family: Poppins, Poppins;
             font-weight: 400;
             color: #d7d7d7;
           }
@@ -476,7 +476,7 @@ export default {
         justify-content: space-between;
 
         span {
-          font-family: OPPOSans, OPPOSans;
+          font-family: Poppins, Poppins;
           font-weight: 400;
           font-size: 16px;
           color: #7d7d7d;
@@ -498,7 +498,7 @@ export default {
             line-height: 20px;
 
             .el-radio__label {
-              font-family: OPPOSans, OPPOSans;
+              font-family: Poppins, Poppins;
               font-weight: 400;
               font-size: 16px;
               color: #7d7d7d;
@@ -530,7 +530,7 @@ export default {
         justify-content: space-between;
 
         font-size: 14px;
-        font-family: Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         line-height: 24px;
         color: #505050;
@@ -549,7 +549,7 @@ export default {
           height: 57px;
           background: #00306B;
           font-size: 20px;
-          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+          font-family: Poppins, Poppins;
           font-weight: 400;
 
           color: #ffffff;
@@ -563,7 +563,7 @@ export default {
 
         a {
           font-size: 16px;
-          font-family: Microsoft YaHei;
+          font-family: Poppins, Poppins;
           font-weight: 400;
           line-height: 24px;
           color: #00306B;
@@ -590,7 +590,7 @@ export default {
 
   .terms-check {
     cursor: pointer;
-    font-family: OPPOSans, OPPOSans;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     font-size: 12px;
     color: #505050;
@@ -604,7 +604,7 @@ export default {
 
   .terms-text {
     cursor: pointer;
-    font-family: OPPOSans, OPPOSans;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     font-size: 12px;
     color: #505050;

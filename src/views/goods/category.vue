@@ -183,7 +183,7 @@ export default {
     height: 55px;
     line-height: 55px;
     font-size: 16px;
-    font-family: Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: bold;
     color: #333333;
   }
@@ -195,7 +195,7 @@ export default {
   .category-item {
     padding-left: 20px;
     font-size: 14px;
-    font-family: Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     height: 50px;
     line-height: 50px;
@@ -268,7 +268,7 @@ export default {
   -webkit-line-clamp: 2;
           height: 48px;
           font-size: 18px;
-          font-family: Microsoft YaHei;
+          font-family: Poppins, Poppins;
           font-weight: 400;
 
           color: #333333;
@@ -277,7 +277,7 @@ export default {
           text-align: left;
           margin-top: 15px;
           font-size: 16px;
-          font-family: Microsoft YaHei;
+          font-family: Poppins, Poppins;
           font-weight: bold;
           line-height: 16px;
           color: #00306B;

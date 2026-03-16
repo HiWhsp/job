@@ -317,7 +317,7 @@ export default {
 
         transition: all 0.3s ease;
         transform: scale(0);
-        font-family: Microsoft YaHei, Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         font-size: 18px;
         color: #414141;

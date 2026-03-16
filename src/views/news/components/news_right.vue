@@ -139,7 +139,7 @@ export default {
 
 
     .right-title {
-        font-family: Microsoft YaHei, Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: bold;
         font-size: 20px;
         color: #000000;
@@ -170,7 +170,7 @@ export default {
                     line-height: 45px;
                     background: #F2F5F9;
                     border-radius: 4px 4px 4px 4px;
-                    font-family: Microsoft YaHei, Microsoft YaHei;
+                    font-family: Poppins, Poppins;
                     font-weight: 400;
                     font-size: 16px;
                     color: #000000;
@@ -217,7 +217,7 @@ export default {
 
                 a {
                     display: block;
-                    font-family: Microsoft YaHei, Microsoft YaHei;
+                    font-family: Poppins, Poppins;
                     font-weight: 400;
                     font-size: 14px;
                     color: #282828;

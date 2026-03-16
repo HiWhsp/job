@@ -280,7 +280,7 @@ export default {
     line-height: 70px;
     background: #ffffff;
     font-size: 20px;
-    font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: bold;
     color: #1e262e;
 
@@ -342,7 +342,7 @@ export default {
   gap: 20px;
 
   font-size: 20px;
-  font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+  font-family: Poppins, Poppins;
   font-weight: bold;
   color: #333333;
 
@@ -422,7 +422,7 @@ export default {
 
   .text {
     font-size: 14px;
-    font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: bold;
   }
 }
@@ -465,7 +465,7 @@ export default {
     height: 48px;
     background: #f07a2c;
     border-radius: 4px;
-    font-family: OPPOSans, OPPOSans;
+    font-family: Poppins, Poppins;
     font-weight: 600;
     font-size: 16px;
     color: #ffffff;

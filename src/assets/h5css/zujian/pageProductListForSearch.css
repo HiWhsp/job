@@ -20,7 +20,7 @@
   }
   .info-list .title-item .item {
     font-size: 14px;
-    font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: bold !important;
     color: #ffffff !important;
   }
@@ -44,7 +44,7 @@
     flex: 1;
     text-align: center;
     font-size: 12px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #1F1F1F;
   }
@@ -65,7 +65,7 @@
   }
   .info-list .info-item .item a {
     font-size: 12px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #1F1F1F;
   }
@@ -100,7 +100,7 @@
     display: block;
     margin-bottom: 10px;
     font-size: 14px;
-    font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: bold;
     color: #333333;
   }
@@ -118,7 +118,7 @@
   .product-list .product-item .product-left .shuoming .shuoming-item {
     display: flex;
     align-items: center;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #333333;
     cursor: pointer;
@@ -144,7 +144,7 @@
     background: #00306B;
     border-radius: 3px 3px 3px 3px;
     font-size: 12px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #ffffff;
   }
@@ -153,7 +153,7 @@
     align-items: center;
     align-items: flex-start;
     flex-wrap: nowrap;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #808080;
     line-height: 24px;
@@ -171,7 +171,7 @@
   }
   .product-list .product-item .product-left .text-box .val a {
     font-size: 12px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #808080;
     font-size: 1.4rem;
@@ -231,7 +231,7 @@
   }
   .product-list .product-item .product-right .duibi-box span {
     font-size: 12px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #1F1F1F;
   }

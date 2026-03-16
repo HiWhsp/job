@@ -208,7 +208,7 @@ export default {
   border-radius: 4px 4px 4px 4px;
   border: 1px solid #00306B;
   font-size: 14px;
-  font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+  font-family: Poppins, Poppins;
   font-weight: 400;
   color: #00306B;
 
@@ -232,7 +232,7 @@ export default {
         min-width: 100px;
         text-align: left;
         font-size: 14px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         color: #333;
       }
@@ -240,7 +240,7 @@ export default {
       .val {
         .money {
           font-size: 20px;
-          font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+          font-family: Poppins, Poppins;
           font-weight: bold;
           color: #00306B;
         }

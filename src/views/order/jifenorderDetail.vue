@@ -144,7 +144,7 @@ export default {
     text-align: left;
 
     font-size: 16px;
-    font-family: Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: bold;
     line-height: 20px;
     color: #333333;
@@ -168,7 +168,7 @@ export default {
     border-bottom: 1px solid #ccc;
 
     font-size: 14px;
-    font-family: Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: bold;
 
     color: #333333;
@@ -185,7 +185,7 @@ export default {
       flex: 1;
       .item-title {
         font-size: 14px;
-        font-family: Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: bold;
         line-height: 20px;
         color: #333333;
@@ -194,7 +194,7 @@ export default {
       .item-content {
         min-height: 80px;
         font-size: 14px;
-        font-family: Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         line-height: 20px;
         color: #333333;

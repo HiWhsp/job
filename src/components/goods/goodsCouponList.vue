@@ -76,7 +76,7 @@ export default {
     .text {
       flex: 2;
       font-size: 14px;
-      font-family: Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       line-height: 45px;
       color: #6c6c6c;
@@ -96,7 +96,7 @@ export default {
     .text {
       flex: 2;
       font-size: 14px;
-      font-family: Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       line-height: 45px;
       color: #ff3d00;

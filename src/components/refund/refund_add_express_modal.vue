@@ -117,7 +117,7 @@ export default {
           border: 1px solid #eee;
           height: 50px;
           padding-left: 20px;
-          font-family: Microsoft YaHei, Microsoft YaHei;
+          font-family: Poppins, Poppins;
           font-weight: 400;
           font-size: 14px;
           color: #676767;
@@ -152,7 +152,7 @@ export default {
     height: 50px;
     border-radius: 4px 4px 4px 4px;
     border: 1px solid #EC6A2B;
-    font-family: Microsoft YaHei, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     font-size: 20px;
     color: #EC6A2B;
@@ -164,7 +164,7 @@ export default {
     background: #EC6A2B;
     border: none;
     border-radius: 4px 4px 4px 4px;
-    font-family: Microsoft YaHei, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     font-size: 20px;
     color: #FFFFFF;

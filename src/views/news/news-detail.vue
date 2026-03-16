@@ -166,7 +166,7 @@ export default {
 
   .news-title {
     text-align: center;
-    font-family: Microsoft YaHei, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: bold;
     font-size: 30px;
     color: #1E262E;
@@ -177,7 +177,7 @@ export default {
   .news-desc {
     margin-top: 30px;
     text-align: center;
-    font-family: Microsoft YaHei, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     font-size: 10px;
     color: #333333;
@@ -208,13 +208,13 @@ export default {
     .nav-item {
       margin-bottom: 26px;
       cursor: pointer;
-      font-family: Microsoft YaHei, Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       font-size: 14px;
       color: #000000;
 
       a {
-        font-family: Microsoft YaHei, Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         font-size: 14px;
         color: #000000;

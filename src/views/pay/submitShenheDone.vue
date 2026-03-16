@@ -99,14 +99,14 @@ export default {
     .text-1 {
       margin: 20px 0;
       font-size: 16px;
-      font-family: Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       line-height: 53px;
       color: #000000;
     }
     .text-2 {
       font-size: 14px;
-      font-family: Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       line-height: 53px;
       color: #505050;

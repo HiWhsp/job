@@ -251,7 +251,7 @@ export default {
     background: #F5F5F5;
 
 
-    font-family: OPPOSans, OPPOSans;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     font-size: 14px;
     color: #1F1F1F;
@@ -260,7 +260,7 @@ export default {
     .product-check {
       user-select: none;
       cursor: pointer;
-      font-family: OPPOSans, OPPOSans;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       font-size: 14px;
       color: #1F1F1F;
@@ -280,7 +280,7 @@ export default {
       margin-left: 40px;
       cursor: pointer;
 
-      font-family: OPPOSans, OPPOSans;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       font-size: 14px;
       color: #1F1F1F;
@@ -352,7 +352,7 @@ export default {
           cursor: pointer;
           margin-bottom: 15px;
           font-size: 14px;
-          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+          font-family: Poppins, Poppins;
           font-weight: 400;
           color: #333333;
           line-height: 24px;
@@ -360,7 +360,7 @@ export default {
 
         .text-2 {
           font-size: 14px;
-          font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+          font-family: Poppins, Poppins;
           font-weight: bold;
           color: #00306B;
 

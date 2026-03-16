@@ -362,7 +362,7 @@ export default {
     line-height: 70px;
     background: #ffffff;
     font-size: 20px;
-    font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: bold;
     color: #1e262e;
     img {
@@ -672,7 +672,7 @@ export default {
 /deep/ .el-dialog__header {
   padding: 16px 24px;
   background: #fff;
-  font-family: Microsoft YaHei, Microsoft YaHei;
+  font-family: Poppins, Poppins;
   font-weight: 600;
   font-size: 24px;
   color: #1e262e;
@@ -695,7 +695,7 @@ export default {
     height: 52px;
     background: #ec6a2b;
     border-radius: 6px 6px 6px 6px;
-    font-family: Microsoft YaHei, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     font-size: 20px;
     color: #ffffff;
@@ -707,7 +707,7 @@ export default {
     background: #ffffff;
     border-radius: 50px;
     border: 1px solid #d4d4d4;
-    font-family: Microsoft YaHei, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     font-size: 14px;
     color: #1f1f1f;

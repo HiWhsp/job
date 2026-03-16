@@ -13,7 +13,7 @@
     line-height: 56px;
     background: #ffffff;
     font-size: 16px;
-    font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: bold;
     color: #333333;
   }
@@ -63,7 +63,7 @@
   .wrap-address .address-item .top > div span {
     font-size: 14px;
     font-size: 12px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #1F1F1F;
   }
@@ -87,7 +87,7 @@
   }
   .wrap-address .address-item .bottom .right {
     font-size: 14px;
-    font-family: Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     line-height: 20px;
     color: #00306B;

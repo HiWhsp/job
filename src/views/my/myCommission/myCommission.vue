@@ -68,7 +68,7 @@ export default {
     margin-bottom: 20px;
     text-align: left;
     font-size: 16px;
-    font-family: Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: bold;
     line-height: 20px;
     color: #333333;
@@ -84,7 +84,7 @@ export default {
       }
       span {
         font-size: 16px;
-        font-family: Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         line-height: 24px;
         color: #222222;
@@ -106,7 +106,7 @@ export default {
     .text {
       margin-top: 30px;
       font-size: 48px;
-      font-family: Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       color: #212121;
     }
@@ -132,7 +132,7 @@ export default {
         border: 1px solid #cccccc;
 
         font-size: 20px;
-        font-family: Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: bold;
         color: #333333;
 
@@ -151,7 +151,7 @@ export default {
         background: #00306B;
         border-radius: 0;
         font-size: 20px;
-        font-family: Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: bold;
         color: #fff;
         border: 1px solid #eeeeee;

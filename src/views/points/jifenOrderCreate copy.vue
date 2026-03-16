@@ -563,7 +563,7 @@ export default {
 
     .left {
       font-size: 16px;
-      font-family: Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: bold;
       color: #ff1312;
 
@@ -573,7 +573,7 @@ export default {
     }
     .right {
       font-size: 12px;
-      font-family: Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       line-height: 24px;
       color: #333333;
@@ -670,7 +670,7 @@ export default {
       padding-top: 0;
       background: #f9f9f9;
       font-size: 14px;
-      font-family: Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       // line-height: 30px;
       color: #333333;
@@ -898,7 +898,7 @@ export default {
   .section-title {
     margin-bottom: 10px;
     font-size: 14px;
-    font-family: Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: bold;
     line-height: 30px;
     color: #333333;
@@ -906,7 +906,7 @@ export default {
   .section-tip {
     margin-bottom: 10px;
     font-size: 14px;
-    font-family: Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     line-height: 30px;
     color: #1F1F1F;

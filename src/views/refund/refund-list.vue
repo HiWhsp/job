@@ -349,7 +349,7 @@ export default {
     line-height: 70px;
     background: #ffffff;
     font-size: 20px;
-    font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: bold;
     color: #333333;
   }
@@ -373,7 +373,7 @@ export default {
     display: flex;
     align-items: center;
     font-size: 14px;
-    font-family: Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     line-height: 20px;
     color: #7d7d7d;
@@ -598,7 +598,7 @@ export default {
       border-top: 1px solid #ccc;
       justify-content: flex-end;
       font-size: 14px;
-      font-family: Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       line-height: 20px;
       color: #7d7d7d;
@@ -664,7 +664,7 @@ export default {
         padding: 3px 6px;
         border: 1px solid #ccc;
         font-size: 14px;
-        font-family: Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         line-height: 20px;
         color: #505050;
@@ -797,7 +797,7 @@ export default {
       border-top: 1px solid #ccc;
       justify-content: flex-end;
       font-size: 14px;
-      font-family: Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       line-height: 20px;
       color: #7d7d7d;

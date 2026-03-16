@@ -80,7 +80,7 @@ export default {
       text-align: center;
       margin: 20px 0;
       font-size: 24px;
-      font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       color: #000000;
     }
@@ -94,13 +94,13 @@ export default {
   align-items: center;
         .label {
           font-size: 14px;
-          font-family: SourceHanSansCN-Regular-, SourceHanSansCN-Regular;
+          font-family: Poppins, Poppins;
           font-weight: normal;
           color: #000;
         }
         .val {
           font-size: 14px;
-          font-family: SourceHanSansCN-Regular-, SourceHanSansCN-Regular;
+          font-family: Poppins, Poppins;
           font-weight: normal;
           color: #00306B;
         }
@@ -139,7 +139,7 @@ export default {
   .quxiao {
     // margin-right: 20px;
     font-size: 14px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #00306B;
     border: 1px solid #00306B;

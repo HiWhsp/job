@@ -363,7 +363,7 @@ export default {
     background: #F9F9F9;
     border-radius: 0px 0px 0px 0px;
     border: 1px solid #CCCCCC;
-    font-family: Microsoft YaHei, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     font-size: 12px;
     color: #333333;
@@ -399,7 +399,7 @@ export default {
     border-radius: 30px 30px 30px 30px;
     border: 1px solid #F6FAFD;
 
-    font-family: PingFang SC, PingFang SC;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     font-size: 28px;
     color: #000000;

@@ -135,7 +135,7 @@ export default {
     line-height: 70px;
     background: #ffffff;
     font-size: 20px;
-    font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: bold;
     color: #333333;
 
@@ -188,7 +188,7 @@ export default {
           text-align: left;
 
           font-size: 14px;
-          font-family: Microsoft YaHei;
+          font-family: Poppins, Poppins;
           font-weight: 400;
           color: #333333;
         }
@@ -207,7 +207,7 @@ export default {
 
         text-align: left;
         font-size: 14px;
-        font-family: Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         line-height: 30px;
         color: #222222;
@@ -234,7 +234,7 @@ export default {
       .date {
         text-align: left;
         font-size: 14px;
-        font-family: PingFang SC;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         line-height: 19px;
         color: #505050;

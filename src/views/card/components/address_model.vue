@@ -204,7 +204,7 @@ export default {
         margin-bottom: 20px;
         padding-bottom: 16px;
         border-bottom: 1px solid #d5d8de;
-        font-family: Microsoft YaHei, Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         font-size: 24px;
         color: #333333;
@@ -256,7 +256,7 @@ export default {
             padding-bottom: 15px;
             border-bottom: 1px solid #d5d8de;
             font-size: 14px;
-            font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+            font-family: Poppins, Poppins;
             font-weight: 400;
             color: #000000;
           }
@@ -264,7 +264,7 @@ export default {
           .address-bottom {
             padding-top: 15px;
             font-size: 14px;
-            font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+            font-family: Poppins, Poppins;
             font-weight: 400;
             color: #505050;
           }
@@ -277,7 +277,7 @@ export default {
 
         .empty-title {
           margin-bottom: 40px;
-          font-family: Microsoft YaHei, Microsoft YaHei;
+          font-family: Poppins, Poppins;
           font-weight: 400;
           font-size: 16px;
           color: #333333;
@@ -289,7 +289,7 @@ export default {
           background: #ffffff;
           border-radius: 2px 2px 2px 2px;
           border: 1px solid #009f39;
-          font-family: Microsoft YaHei, Microsoft YaHei;
+          font-family: Poppins, Poppins;
           font-weight: 400;
           font-size: 14px;
           color: #009f39;
@@ -329,7 +329,7 @@ export default {
     background: #ffffff;
     border-radius: 50px 50px 50px 50px;
     border: 1px solid #009f39;
-    font-family: Arial, Arial;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     font-size: 14px;
     color: #009f39;

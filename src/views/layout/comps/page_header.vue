@@ -417,7 +417,7 @@ export default {
     border-bottom: 1px solid #eeeeee;
     .base-box {
       height: 54px;
-      font-family: Microsoft YaHei, Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       font-size: 14px;
       line-height: 0px;
@@ -525,7 +525,7 @@ export default {
       span {
         margin-left: 10px;
         font-size: 30px;
-        font-family: Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         line-height: 30px;
         color: #333333;
@@ -557,7 +557,7 @@ export default {
           padding-left: 20px;
           padding-right: 30px;
           font-size: 16px;
-          font-family: Microsoft YaHei;
+          font-family: Poppins, Poppins;
           color: #5e5e5e;
           border-radius: 40px 0 0 40px;
           &::placeholder {
@@ -604,7 +604,7 @@ export default {
         }
 
         .text {
-          font-family: Microsoft YaHei, Microsoft YaHei;
+          font-family: Poppins, Poppins;
           font-weight: 400;
           font-size: 20px;
           color: #00306b;
@@ -719,7 +719,7 @@ export default {
         color: #222;
         width: 100%;
         font-size: 16px;
-        font-family: sans-serif;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         color: #333;
       }
@@ -941,7 +941,7 @@ export default {
 
   .phone {
     margin: 0 16px;
-    font-family: Arial, Arial;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     font-size: 16px;
     color: #505050;
@@ -952,7 +952,7 @@ export default {
   }
 
   .logout {
-    font-family: Arial, Arial;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     font-size: 16px;
     color: #505050;

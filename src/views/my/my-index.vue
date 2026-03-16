@@ -311,7 +311,7 @@ export default {
     .name {
       margin-top: 10px;
       font-size: 14px;
-      font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       color: #ffffff;
     }
@@ -334,7 +334,7 @@ export default {
 
     .text-1 {
       font-size: 14px;
-      font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       color: #333333;
     }
@@ -350,7 +350,7 @@ export default {
 
       span {
         font-size: 14px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         color: #00306B;
       }
@@ -386,7 +386,7 @@ export default {
       .label {
         margin-top: 20px;
         font-size: 16px;
-        font-family: SourceHanSansCN-Regular-, SourceHanSansCN-Regular;
+        font-family: Poppins, Poppins;
         font-weight: normal;
         color: #333333;
       }
@@ -395,7 +395,7 @@ export default {
         span {
           // margin-left: 5px;
           font-size: 32px;
-          font-family: SourceHanSansCN-Regular-, SourceHanSansCN-Regular;
+          font-family: Poppins, Poppins;
           font-weight: normal;
           color: #00306B;
         }
@@ -418,7 +418,7 @@ export default {
 
   .label {
     font-size: 18px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #333333;
   }
@@ -427,7 +427,7 @@ export default {
       display: flex;
   align-items: center;
     font-size: 14px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #00306B;
     cursor: pointer;
@@ -461,7 +461,7 @@ export default {
         margin-top: 10px;
         margin-bottom: 20px;
         font-size: 14px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         color: #505050;
       }

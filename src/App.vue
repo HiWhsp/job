@@ -25,6 +25,7 @@ export default {
   list-style: none;
   padding: 0;
   margin: 0;
+  font-family: Poppins, Poppins;
 }
 body {
   background-color: #fff;

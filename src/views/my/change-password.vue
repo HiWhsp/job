@@ -130,7 +130,7 @@ export default {
     line-height: 56px;
     background: #ffffff;
     font-size: 16px;
-    font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: bold;
     color: #333333;
   }
@@ -165,7 +165,7 @@ export default {
       .info {
         padding-left: 10px;
         font-size: 14px;
-        font-family: Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         color: #333333;
         display: inline-block;
@@ -189,7 +189,7 @@ export default {
       .action {
         margin-left: 20px;
         font-size: 14px;
-        font-family: Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         color: #00306B;
 
@@ -214,7 +214,7 @@ export default {
     background: #FFFFFF;
     border-radius: 50px 50px 50px 50px;
     border: 1px solid #00306B;
-    font-family: Arial, Arial;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     font-size: 14px;
     color: #00306B;
@@ -227,7 +227,7 @@ export default {
     height: 32px;
     background: #00306B;
     border-radius: 50px 50px 50px 50px;
-    font-family: Arial, Arial;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     font-size: 14px;
     color: #FFFFFF;

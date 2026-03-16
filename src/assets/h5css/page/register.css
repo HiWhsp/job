@@ -53,7 +53,7 @@
   }
   .page .center .tab-box .tab-item {
     font-size: 14px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #333333;
   }
@@ -82,7 +82,7 @@
     /*no */
     border-right: 1px solid #ccc;
     font-size: 14px;
-    font-family: Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     line-height: 24px;
     color: #505050;
@@ -100,7 +100,7 @@
   }
   .page .center .input-box input::-webkit-input-placeholder {
     font-size: 14px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #d7d7d7;
   }
@@ -111,7 +111,7 @@
     align-items: center;
     justify-content: space-between;
     font-size: 14px;
-    font-family: Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     line-height: 24px;
     color: #505050;
@@ -127,7 +127,7 @@
     height: 40px;
     background: linear-gradient(90deg, #ff7327 0%, #ea5959 100%);
     font-size: 14px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #ffffff;
   }
@@ -138,7 +138,7 @@
   }
   .page .center .register-box a {
     font-size: 14px;
-    font-family: Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     line-height: 24px;
     color: #00306B;
@@ -179,7 +179,7 @@
   }
   .qrcode-cit .text-box .text {
     font-size: 16px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #333333;
   }

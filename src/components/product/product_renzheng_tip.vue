@@ -99,7 +99,7 @@ export default {
 
     .text-box-1 {
       margin-top: 18px;
-      font-family: Microsoft YaHei, Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: bold;
       font-size: 20px;
       color: #1f1f1f;
@@ -107,7 +107,7 @@ export default {
 
     .text-box-2 {
       margin-top: 18px;
-      font-family: Microsoft YaHei, Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       font-size: 16px;
       color: #333;
@@ -129,7 +129,7 @@ export default {
     background: #fffefe;
     border-radius: 4px 4px 4px 4px;
     border: 1px solid #00306B;
-    font-family: Microsoft YaHei, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     font-size: 18px;
     color: #00306B;
@@ -140,7 +140,7 @@ export default {
     height: 46px;
     background: #00306B;
     border-radius: 4px 4px 4px 4px;
-    font-family: Microsoft YaHei, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     font-size: 18px;
     color: #ffffff;

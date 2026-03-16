@@ -133,14 +133,14 @@ export default {
         min-width: 100px;
         text-align: right;
         font-size: 14px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         color: #1F1F1F;
       }
       .val {
         .money {
           font-size: 20px;
-          font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+          font-family: Poppins, Poppins;
           font-weight: bold;
           color: #00306B;
         }

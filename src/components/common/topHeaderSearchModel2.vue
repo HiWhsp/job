@@ -148,12 +148,12 @@ export default {
       text-align: left;
       .text-1 {
         font-size: 14px;
-        font-family: MicrosoftYaHei;
+        font-family: Poppins, Poppins;
         color: #747474;
       }
       .text-2 {
         font-size: 24px;
-        font-family: MicrosoftYaHei;
+        font-family: Poppins, Poppins;
         color: #f00;
       }
     }
@@ -194,7 +194,7 @@ export default {
       border: 2px solid #f00;
 
       font-size: 14px;
-      font-family: Microsoft YaHei;
+      font-family: Poppins, Poppins;
       color: #000;
     }
     .btn-search {

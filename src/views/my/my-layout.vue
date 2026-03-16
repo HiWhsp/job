@@ -254,7 +254,7 @@ export default {
       .left-title {
         padding: 18px 0;
         text-align: center;
-        font-family: Microsoft YaHei, Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         font-size: 18px;
         color: #333333;
@@ -303,7 +303,7 @@ export default {
 
             .group-title {
               flex: 1;
-              font-family: Microsoft YaHei, Microsoft YaHei;
+              font-family: Poppins, Poppins;
               font-weight: bold;
               font-size: 16px;
               color: #333333;
@@ -329,7 +329,7 @@ export default {
               cursor: pointer;
 
               .sub-title {
-                font-family: Microsoft YaHei, Microsoft YaHei;
+                font-family: Poppins, Poppins;
                 font-weight: 400;
                 font-size: 14px;
                 color: #1F1F1F;
@@ -352,7 +352,7 @@ export default {
             padding-left: 70px;
             text-align: left;
 
-            font-family: OPPOSans, OPPOSans;
+            font-family: Poppins, Poppins;
             font-weight: 400;
             font-size: 12px;
             color: #808080;
@@ -370,7 +370,7 @@ export default {
               cursor: pointer;
               padding-left: 50px;
               user-select: none;
-              font-family: OPPOSans, OPPOSans;
+              font-family: Poppins, Poppins;
               font-weight: 400;
               font-size: 14px;
               color: #333333;

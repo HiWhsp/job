@@ -126,7 +126,7 @@ export default {
     border-radius: 10px;
     border: 1px solid #EC6A2B;
 
-    font-family: Arial, Arial;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     font-size: 20px;
     color: #EC6A2B;
@@ -166,7 +166,7 @@ export default {
     }
 
     .text-box {
-      font-family: Microsoft YaHei, Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: bold;
       font-size: 24px;
       color: #1E262E;

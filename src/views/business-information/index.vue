@@ -349,7 +349,7 @@ export default {
     line-height: 70px;
     background: #ffffff;
     font-size: 20px;
-    font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: bold;
     color: #1e262e;
   }
@@ -365,7 +365,7 @@ export default {
       font-weight: bold;
       color: #1e262e;
       margin-bottom: 40px;
-      font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+      font-family: Poppins, Poppins;
       text-align: left;
     }
 

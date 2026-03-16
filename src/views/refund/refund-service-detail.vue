@@ -658,7 +658,7 @@ export default {
     line-height: 70px;
     background: #ffffff;
     font-size: 20px;
-    font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: bold;
     color: #1E262E;
 
@@ -704,7 +704,7 @@ export default {
     padding: 20px;
 
     .name-info {
-      font-family: Microsoft YaHei, Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       font-size: 14px;
       color: #7D7D7D;
@@ -712,7 +712,7 @@ export default {
     }
 
     .addr-info {
-      font-family: Microsoft YaHei, Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       font-size: 14px;
       color: #7D7D7D;
@@ -746,7 +746,7 @@ export default {
     padding-left: 24px;
 
     .title {
-      font-family: Microsoft YaHei, Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       font-size: 20px;
       color: #5E5E5E;
@@ -756,14 +756,14 @@ export default {
     .sku {
       margin: 12px 0;
       height: 16px;
-      font-family: Microsoft YaHei, Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       font-size: 20px;
       color: #5E5E5E;
     }
 
     .num {
-      font-family: Microsoft YaHei, Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       font-size: 20px;
       color: #5E5E5E;
@@ -855,7 +855,7 @@ export default {
   border-radius: 10px;
 
   .jindu-title {
-    font-family: Microsoft YaHei, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     font-size: 19px;
     color: #FFFFFF;
@@ -863,7 +863,7 @@ export default {
 
   .jindu-desc {
     margin-top: 10px;
-    font-family: Microsoft YaHei, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     font-size: 13px;
     color: #FFFFFF;

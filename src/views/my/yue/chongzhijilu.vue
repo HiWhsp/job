@@ -85,7 +85,7 @@ export default {
     margin-bottom: 20px;
     text-align: left;
     font-size: 16px;
-    font-family: Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: bold;
     line-height: 20px;
     color: #333333;
@@ -102,7 +102,7 @@ export default {
       }
       span {
         font-size: 16px;
-        font-family: Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         line-height: 24px;
         color: #222222;
@@ -144,7 +144,7 @@ export default {
         flex: 2;
         .remark {
           font-size: 16px;
-          font-family: Microsoft YaHei;
+          font-family: Poppins, Poppins;
           font-weight: bold;
           line-height: 21px;
           color: #333333;
@@ -153,7 +153,7 @@ export default {
         .date {
           margin-top: 10px;
           font-size: 14px;
-          font-family: Microsoft YaHei;
+          font-family: Poppins, Poppins;
           font-weight: 400;
           line-height: 19px;
           color: #7d7d7d;
@@ -162,7 +162,7 @@ export default {
       .text-2 {
         min-width: 70px;
         font-size: 24px;
-        font-family: Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         line-height: 31px;
         color: #f13f17;

@@ -69,7 +69,7 @@
   }
   .page .main-title .left {
     font-size: 16px;
-    font-family: Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: bold;
     color: #333;
   }
@@ -78,7 +78,7 @@
   }
   .page .main-title .right {
     font-size: 12px;
-    font-family: Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     line-height: 24px;
     color: #333333;
@@ -199,14 +199,14 @@
   .page .goods-list .list .item .item-detail .item-2 .goods-title {
     height: 40px;
     font-size: 12px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #1F1F1F;
     line-height: 18px;
   }
   .page .goods-list .list .item .item-detail .item-2 .goods-guige {
     font-size: 12px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #505050;
   }
@@ -225,7 +225,7 @@
     padding: 10px;
     background: #f9f9f9;
     font-size: 14px;
-    font-family: Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #333333;
   }
@@ -268,7 +268,7 @@
     margin-right: 24px;
     border: 1px solid #00306B;
     font-size: 14px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #00306B;
   }
@@ -470,7 +470,7 @@
   .order-action .section-title {
     margin-bottom: 5px;
     font-size: 14px;
-    font-family: Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: bold;
     line-height: 25px;
     color: #333333;
@@ -478,7 +478,7 @@
   .order-action .section-tip {
     margin-bottom: 5px;
     font-size: 14px;
-    font-family: Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     line-height: 25px;
     color: #1F1F1F;
@@ -552,7 +552,7 @@
     padding-bottom: 16px;
     border-bottom: 1px solid #d5d8de;
     font-size: 16px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: bold;
     color: #333333;
   }
@@ -600,14 +600,14 @@
     border-bottom: 1px solid #d5d8de;
     font-size: 14px;
     font-size: 12px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #000000;
   }
   .section .section-ctx .address-list .address-item .address-bottom {
     padding-top: 10px;
     font-size: 12px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #505050;
   }
@@ -622,7 +622,7 @@
     border-radius: 2px 2px 2px 2px;
     border: 1px solid #b9b9b9;
     font-size: 14px;
-    font-family: SourceHanSansCN-Regular-, SourceHanSansCN-Regular;
+    font-family: Poppins, Poppins;
     font-weight: normal;
     color: #1F1F1F;
   }
@@ -666,7 +666,7 @@
   .section-pay .pay-group .title {
     min-width: 80px;
     font-size: 14px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #1F1F1F;
   }
@@ -697,7 +697,7 @@
   }
   .section-pay .pay-group .pay-items .item span {
     font-size: 14px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #333;
   }
@@ -711,7 +711,7 @@
     border-radius: 3px 3px 3px 3px;
     border: 1px solid #00306B;
     font-size: 14px;
-    font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: normal;
     color: #00306B;
   }
@@ -728,7 +728,7 @@
   }
   .section-huizong .sub-title .text {
     font-size: 14px;
-    font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: bold;
     color: #333333;
   }
@@ -774,21 +774,21 @@
   }
   .section-huizong .yhq-list .yhq-item .yhq-top .yhq-1 .text-1 {
     font-size: 24px;
-    font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: bold;
     color: #00306B;
   }
   .section-huizong .yhq-list .yhq-item .yhq-top .yhq-1 .text-2 {
     margin-left: 5px;
     font-size: 12px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #333333;
   }
   .section-huizong .yhq-list .yhq-item .yhq-top .yhq-2 {
     margin-top: 10px;
     font-size: 12px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #505050;
   }
@@ -797,7 +797,7 @@
     line-height: 32px;
     padding: 0 15px;
     font-size: 12px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #00306B;
   }
@@ -835,14 +835,14 @@
     line-height: 32px;
     padding-right: 10px;
     font-size: 14px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #1F1F1F;
   }
   .yue-info .info-item .info-val {
     line-height: 32px;
     font-size: 14px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #1F1F1F;
   }
@@ -865,14 +865,14 @@
     line-height: 1.7;
     padding-right: 10px;
     font-size: 14px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #1F1F1F;
   }
   .xianxia-info .info-item .info-val {
     line-height: 1.7;
     font-size: 14px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #1F1F1F;
   }

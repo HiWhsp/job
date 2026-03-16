@@ -297,7 +297,7 @@ export default {
 
         .all-title {
           margin-left: 18px;
-          font-family: Microsoft YaHei, Microsoft YaHei;
+          font-family: Poppins, Poppins;
           font-weight: bold;
           font-size: 18px;
           color: #ffffff;

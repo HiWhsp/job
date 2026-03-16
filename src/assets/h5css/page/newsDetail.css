@@ -23,7 +23,7 @@
     border: 1px solid #00306B;
     margin-top: 20px;
     font-size: 14px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #00306B;
   }
@@ -44,7 +44,7 @@
   .ctx-news .ctx-left .news-title {
     text-align: center;
     font-size: 16px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #333333;
     line-height: 1.7;
@@ -54,13 +54,13 @@
     margin: 20px 0 20px;
     text-align: center;
     font-size: 14px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #505050;
   }
   .ctx-news .ctx-left .news-desc a {
     font-size: 14px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #505050;
   }
@@ -104,7 +104,7 @@
   }
   .ctx-news .ctx-left .news-nav .news-nav-item a {
     font-size: 14px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #1F1F1F;
   }

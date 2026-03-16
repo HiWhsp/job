@@ -12,7 +12,7 @@
     line-height: 56px;
     background: #ffffff;
     font-size: 16px;
-    font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: bold;
     color: #333333;
   }
@@ -73,7 +73,7 @@
     background: #fff5f0;
     border-radius: 50%;
     font-size: 20px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #505050;
   }
@@ -81,13 +81,13 @@
     margin-top: 14px;
     margin-bottom: 10px;
     font-size: 14px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #000000;
   }
   .step-box .step-item .step-date {
     font-size: 12px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #808080;
   }
@@ -105,7 +105,7 @@
     background: #f9f9f9;
     border-bottom: 1px solid #e5e5e5;
     font-size: 14px;
-    font-family: Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: bold;
     color: #333333;
   }
@@ -125,7 +125,7 @@
   }
   .order-other .other .item .item-title {
     font-size: 14px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: bold;
     color: #505050;
     color: #333;
@@ -135,7 +135,7 @@
     min-height: 20px;
     font-size: 14px;
     font-size: 12px;
-    font-family: Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     line-height: 20px;
     color: #666;

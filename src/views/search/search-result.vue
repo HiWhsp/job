@@ -398,7 +398,7 @@ export default {
       margin-top: 10px;
       text-align: right;
       font-size: 14px;
-      font-family: Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       color: #1F1F1F;
     }
@@ -619,7 +619,7 @@ export default {
   -webkit-line-clamp: 2;
           height: 48px;
           font-size: 18px;
-          font-family: Microsoft YaHei;
+          font-family: Poppins, Poppins;
           font-weight: 400;
 
           color: #333333;
@@ -628,7 +628,7 @@ export default {
           text-align: left;
           margin-top: 15px;
           font-size: 16px;
-          font-family: Microsoft YaHei;
+          font-family: Poppins, Poppins;
           font-weight: bold;
           line-height: 16px;
           color: #00306B;

@@ -90,7 +90,7 @@ export default {
 
   .text {
     font-size: 16px;
-    font-family: Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #333333;
     margin-bottom: 20px;

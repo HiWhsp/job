@@ -651,7 +651,7 @@ export default {
     line-height: 70px;
     background: #ffffff;
     font-size: 20px;
-    font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: bold;
     color: #1e262e;
 
@@ -721,7 +721,7 @@ export default {
         border-radius: 50%;
 
         font-size: 20px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         color: #505050;
         img {
@@ -734,14 +734,14 @@ export default {
     .step-title {
       margin-top: 14px;
       margin-bottom: 10px;
-      font-family: OPPOSans, OPPOSans;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       font-size: 14px;
       color: #000000;
     }
 
     .step-date {
-      font-family: OPPOSans, OPPOSans;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       font-size: 12px;
       color: #808080;
@@ -764,7 +764,7 @@ export default {
     background: #f5f5f5;
 
     font-size: 20px;
-    font-family: Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: bold;
 
     color: #333333;
@@ -796,7 +796,7 @@ export default {
 
       .info-content {
         font-size: 20px;
-        font-family: Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         line-height: 30px;
         color: #5e5e5e;
@@ -878,7 +878,7 @@ export default {
         margin-left: 10px;
 
         font-size: 14px;
-        font-family: Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: bold;
         line-height: 24px;
         color: #00306B;
@@ -907,7 +907,7 @@ export default {
       border-bottom: 1px solid #e5e5e5;
 
       font-size: 20px;
-      font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: bold;
       color: #1f1f1f;
 
@@ -1032,7 +1032,7 @@ export default {
             height: 30px;
             background: #00306B;
             font-size: 14px;
-            font-family: Microsoft YaHei;
+            font-family: Poppins, Poppins;
             color: #ffffff;
             // border-radius: 14px;
             transition: 0.3s;
@@ -1062,7 +1062,7 @@ export default {
     justify-content: space-between;
     align-items: flex-start;
     font-size: 14px;
-    font-family: Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     line-height: 20px;
     color: #666;
@@ -1085,7 +1085,7 @@ export default {
         }
 
         .label {
-          font-family: Arial, Arial;
+          font-family: Poppins, Poppins;
           font-weight: 400;
           font-size: 20px;
           color: #1f1f1f;
@@ -1093,7 +1093,7 @@ export default {
 
         .value {
           min-width: 100px;
-          font-family: Arial, Arial;
+          font-family: Poppins, Poppins;
           font-weight: 400;
           font-size: 20px;
           color: #1f1f1f;
@@ -1101,7 +1101,7 @@ export default {
 
         .money-num {
           // &.money-total {
-          //   font-family: Arial, Arial;
+          //   font-family: Poppins, Poppins;
           //   font-weight: bold;
           //   font-size: 20px;
           //   color: #00306B;
@@ -1125,7 +1125,7 @@ export default {
         background: #ffffff;
         border-radius: 10px;
         border: 1px solid #EC6A2B;
-        font-family: Arial, Arial;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         font-size: 24px;
         color: #EC6A2B;

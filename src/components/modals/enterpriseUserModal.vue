@@ -109,7 +109,7 @@ export default {
     height: 46px;
     background: #00306B;
     border-radius: 4px 4px 4px 4px;
-    font-family: Microsoft YaHei, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     font-size: 18px;
     color: #ffffff;

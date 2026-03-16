@@ -285,7 +285,7 @@ export default {
     line-height: 56px;
     background: #ffffff;
     font-size: 16px;
-    font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: bold;
     color: #333333;
 
@@ -332,7 +332,7 @@ export default {
     }
 
     .value {
-      font-family: Microsoft YaHei, Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       font-size: 32px;
       color: #f74747;
@@ -342,7 +342,7 @@ export default {
       display: flex;
       align-items: center;
       .text {
-        font-family: Microsoft YaHei, Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         font-size: 16px;
         color: #333333;
@@ -354,7 +354,7 @@ export default {
         background: #ffffff;
         border-radius: 4px 4px 4px 4px;
         border: 1px solid #ffaa2a;
-        font-family: Microsoft YaHei, Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         font-size: 16px;
         color: #ffaa2a;
@@ -377,7 +377,7 @@ export default {
     border-bottom: 3px solid transparent;
     margin-right: 55px;
     font-size: 14px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #333333;
 
@@ -405,7 +405,7 @@ export default {
     padding: 20px;
     border-bottom: 1px solid #eee;
     font-size: 14px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #1F1F1F;
 
@@ -415,7 +415,7 @@ export default {
       background: #f5f5f5;
       border-bottom: 1px solid #e5e5e5;
       font-size: 14px;
-      font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: bold;
       color: #1F1F1F;
     }
@@ -441,14 +441,14 @@ export default {
           overflow: hidden;
           -webkit-line-clamp: 2;
           font-size: 14px;
-          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+          font-family: Poppins, Poppins;
           font-weight: 400;
           color: #333333;
           line-height: 24px;
         }
         .info {
           font-size: 14px;
-          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+          font-family: Poppins, Poppins;
           font-weight: 400;
           color: #505050;
         }
@@ -458,7 +458,7 @@ export default {
       width: 270px;
       &.val {
         font-size: 18px;
-        font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: bold;
         // color: #fc5a00;
       }

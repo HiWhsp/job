@@ -331,7 +331,7 @@ export default {
 
     .left {
       font-size: 16px;
-      font-family: Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: bold;
       color: #ff1312;
 
@@ -341,7 +341,7 @@ export default {
     }
     .right {
       font-size: 12px;
-      font-family: Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       line-height: 24px;
       color: #333333;
@@ -438,7 +438,7 @@ export default {
       // padding-top: 0;
       background: #f9f9f9;
       font-size: 14px;
-      font-family: Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       // line-height: 30px;
       color: #333333;
@@ -666,7 +666,7 @@ export default {
   .section-title {
     margin-bottom: 10px;
     font-size: 14px;
-    font-family: Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: bold;
     line-height: 30px;
     color: #333333;
@@ -674,7 +674,7 @@ export default {
   .section-tip {
     margin-bottom: 10px;
     font-size: 14px;
-    font-family: Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     line-height: 30px;
     color: #1F1F1F;
@@ -722,7 +722,7 @@ export default {
     padding-bottom: 16px;
     border-bottom: 1px solid #d5d8de;
     font-size: 24px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #333333;
   }
@@ -770,14 +770,14 @@ export default {
           padding-bottom: 15px;
           border-bottom: 1px solid #d5d8de;
           font-size: 14px;
-          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+          font-family: Poppins, Poppins;
           font-weight: 400;
           color: #000000;
         }
         .address-bottom {
           padding-top: 15px;
           font-size: 14px;
-          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+          font-family: Poppins, Poppins;
           font-weight: 400;
           color: #505050;
         }
@@ -793,7 +793,7 @@ export default {
         border-radius: 2px 2px 2px 2px;
         border: 1px solid #b9b9b9;
         font-size: 14px;
-        font-family: SourceHanSansCN-Regular-, SourceHanSansCN-Regular;
+        font-family: Poppins, Poppins;
         font-weight: normal;
         color: #1F1F1F;
       }
@@ -824,7 +824,7 @@ export default {
       margin-right: 24px;
       border: 1px solid #00306B;
       font-size: 16px;
-      font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       color: #00306B;
     }

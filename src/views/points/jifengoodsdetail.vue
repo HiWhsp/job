@@ -272,7 +272,7 @@ export default {
               }
               span {
                 font-size: 16px;
-                font-family: PingFang SC;
+                font-family: Poppins, Poppins;
                 font-weight: 400;
                 line-height: 36px;
                 color: #333333;
@@ -289,7 +289,7 @@ export default {
               }
               span {
                 font-size: 16px;
-                font-family: PingFang SC;
+                font-family: Poppins, Poppins;
                 font-weight: 400;
                 line-height: 36px;
                 color: #333333;
@@ -306,14 +306,14 @@ export default {
 
           h2 {
             font-size: 18px; /*no*/
-            font-family: Microsoft YaHei;
+            font-family: Poppins, Poppins;
             font-weight: bold;
             color: #333333;
           }
 
           .remark {
             font-size: 12px; /*no*/
-            font-family: Microsoft YaHei;
+            font-family: Poppins, Poppins;
             font-weight: 400;
             color: #333;
             margin-top: 10px; /*no*/
@@ -362,7 +362,7 @@ export default {
                 background-size: cover;
 
                 font-size: 10px;
-                font-family: PingFang SC;
+                font-family: Poppins, Poppins;
                 font-weight: 400;
                 color: #f13f17;
               }
@@ -382,7 +382,7 @@ export default {
             .text {
               min-width: 100px;
               font-size: 14px;
-              font-family: Microsoft YaHei;
+              font-family: Poppins, Poppins;
               font-weight: 400;
               color: #505050;
             }
@@ -397,7 +397,7 @@ export default {
             .sel-num-title {
               min-width: 100px;
               font-size: 14px;
-              font-family: Microsoft YaHei;
+              font-family: Poppins, Poppins;
               font-weight: 400;
               color: #505050;
             }
@@ -435,7 +435,7 @@ export default {
                 text-align: center;
 
                 font-size: 20px;
-                font-family: Arial;
+                font-family: Poppins, Poppins;
                 font-weight: 400;
                 color: #4a4a4a;
               }
@@ -483,7 +483,7 @@ export default {
                 cursor: pointer;
 
                 font-size: 14px;
-                font-family: Microsoft YaHei;
+                font-family: Poppins, Poppins;
                 font-weight: 400;
                 color: #333333;
                 border-radius: 0;
@@ -610,7 +610,7 @@ export default {
               }
               span {
                 font-size: 14px;
-                font-family: Microsoft YaHei;
+                font-family: Poppins, Poppins;
                 font-weight: 400;
                 line-height: 20px;
                 color: #ffffff;

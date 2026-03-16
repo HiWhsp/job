@@ -1145,7 +1145,7 @@ export default {
           min-width: 0;
 
           .main-title {
-            font-family: Microsoft YaHei, Microsoft YaHei;
+            font-family: Poppins, Poppins;
             font-weight: 600;
             font-size: 16px;
             color: #1f1f1f;
@@ -1204,7 +1204,7 @@ export default {
           padding: 4px 8px;
           background-color: transparent;
           border-radius: 0;
-          font-family: Microsoft YaHei, Microsoft YaHei;
+          font-family: Poppins, Poppins;
           font-weight: 400;
           font-size: 14px;
           color: #1f1f1f;
@@ -1290,7 +1290,7 @@ export default {
         flex-wrap: wrap;
 
         .first-level-title {
-          font-family: Microsoft YaHei, Microsoft YaHei;
+          font-family: Poppins, Poppins;
           font-weight: bold;
           font-size: 18px;
           color: #5b339a;
@@ -1306,7 +1306,7 @@ export default {
 
           .v2-title-horizontal {
             cursor: pointer;
-            font-family: Microsoft YaHei, Microsoft YaHei;
+            font-family: Poppins, Poppins;
             font-weight: normal;
             font-size: 14px;
             color: #1f1f1f;
@@ -1416,7 +1416,7 @@ export default {
           height: 40px;
           background: #00306B;
           border-radius: 4px 4px 4px 4px;
-          font-family: Microsoft YaHei, Microsoft YaHei;
+          font-family: Poppins, Poppins;
           font-weight: 400;
           font-size: 16px;
           color: #ffffff;
@@ -1432,7 +1432,7 @@ export default {
           background: #ffffff;
           border-radius: 4px 4px 4px 4px;
           border: 1px solid #00306B;
-          font-family: Microsoft YaHei, Microsoft YaHei;
+          font-family: Poppins, Poppins;
           font-weight: 400;
           font-size: 16px;
           color: #00306B;
@@ -1476,20 +1476,20 @@ export default {
       .main-title {
         margin-bottom: 31px;
         font-size: 16px;
-        font-family: MicrosoftYaHei;
+        font-family: Poppins, Poppins;
 
         padding-bottom: 14px;
         border-bottom: 1px solid #e8e8e8;
 
         .text {
-          font-family: Microsoft YaHei, Microsoft YaHei;
+          font-family: Poppins, Poppins;
           font-weight: bold;
           font-size: 18px;
           color: #00306B;
         }
 
         a {
-          font-family: Microsoft YaHei, Microsoft YaHei;
+          font-family: Poppins, Poppins;
           font-weight: 400;
           font-size: 14px;
           color: #5e5e5e;
@@ -1498,7 +1498,7 @@ export default {
 
       .news-list {
         .news-item {
-          font-family: Microsoft YaHei, Microsoft YaHei;
+          font-family: Poppins, Poppins;
           font-weight: bold;
           font-size: 18px;
           color: #1f1f1f;
@@ -1585,7 +1585,7 @@ export default {
 
       a {
         font-size: 13px;
-        font-family: MicrosoftYaHei;
+        font-family: Poppins, Poppins;
         line-height: 30px;
         color: #333;
 
@@ -1682,7 +1682,7 @@ export default {
             display: flex;
             align-items: center;
             gap: 8px;
-            font-family: Microsoft YaHei, Microsoft YaHei;
+            font-family: Poppins, Poppins;
             font-size: 14px;
             color: #ff7600;
             font-weight: 500;
@@ -1761,7 +1761,7 @@ export default {
           position: relative;
 
           .coupon-title {
-            font-family: Microsoft YaHei, Microsoft YaHei;
+            font-family: Poppins, Poppins;
             font-weight: bold;
             font-size: 40px;
             color: #fff;
@@ -1771,7 +1771,7 @@ export default {
           .coupon-desc {
             width: 250px;
             height: 123px;
-            font-family: Microsoft YaHei, Microsoft YaHei;
+            font-family: Poppins, Poppins;
             font-size: 30px;
             color: #fff;
             margin-bottom: 24px;
@@ -1936,7 +1936,7 @@ export default {
               justify-content: space-between;
               font-size: 30px;
               color: #ec6a2b;
-              font-family: Microsoft YaHei, Microsoft YaHei;
+              font-family: Poppins, Poppins;
               font-weight: bold;
             }
 
@@ -1957,7 +1957,7 @@ export default {
               -webkit-line-clamp: 3;
               overflow: hidden;
               text-overflow: ellipsis;
-              font-family: MicrosoftYaHei, MicrosoftYaHei;
+              font-family: Poppins, Poppins;
               font-size: 20px;
               font-weight: bold;
               color: #1e262e;
@@ -2499,7 +2499,7 @@ export default {
           height: 44px;
 
           .title {
-            font-family: MicrosoftYaHei, MicrosoftYaHei;
+            font-family: Poppins, Poppins;
             font-weight: normal;
             font-size: 14px;
             color: #3d4248;
@@ -2509,7 +2509,7 @@ export default {
 
         .price {
           margin-top: 16px;
-          font-family: Microsoft YaHei, Microsoft YaHei;
+          font-family: Poppins, Poppins;
           font-weight: 400;
           font-size: 16px;
           color: #5b339a;
@@ -2555,14 +2555,14 @@ export default {
         background: #ffffff;
         border-radius: 8px 8px 8px 8px;
 
-        font-family: Microsoft YaHei, Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: bold;
         font-size: 18px;
         color: #333333;
 
         &.active {
           background: rgba(247, 71, 71, 0.2);
-          font-family: Microsoft YaHei, Microsoft YaHei;
+          font-family: Poppins, Poppins;
           font-weight: bold;
           font-size: 18px;
           color: #5b339a;
@@ -2727,7 +2727,7 @@ export default {
             margin-bottom: 16px;
 
             .title {
-              font-family: MicrosoftYaHei, MicrosoftYaHei;
+              font-family: Poppins, Poppins;
               font-weight: normal;
               font-size: 16px;
               color: #1f1f1f;
@@ -2763,7 +2763,7 @@ export default {
           }
 
           .price {
-            font-family: Microsoft YaHei, Microsoft YaHei;
+            font-family: Poppins, Poppins;
             font-weight: bold;
             font-size: 20px;
             color: #00306B;
@@ -2798,7 +2798,7 @@ export default {
   }
 
   .text {
-    font-family: MicrosoftYaHei, MicrosoftYaHei;
+    font-family: Poppins, Poppins;
     font-weight: normal;
     font-size: 16px;
     color: #ffffff;
@@ -2813,7 +2813,7 @@ export default {
     background: #ff7600;
     border-radius: 12px;
 
-    font-family: MicrosoftYaHei, MicrosoftYaHei;
+    font-family: Poppins, Poppins;
     font-weight: normal;
     font-size: 12px;
     color: #ffffff;

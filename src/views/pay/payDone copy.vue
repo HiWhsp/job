@@ -73,7 +73,7 @@ export default {
   padding-bottom: 16px;
   border-bottom: 1px solid #d5d8de;
   font-size: 24px;
-  font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+  font-family: Poppins, Poppins;
   font-weight: 400;
   color: #333333;
 }
@@ -100,13 +100,13 @@ export default {
     .text-1 {
       margin: 20px 0;
       font-size: 24px;
-      font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       color: #000000;
     }
     .text-2 {
       font-size: 14px;
-      font-family: SourceHanSansCN-Regular-, SourceHanSansCN-Regular;
+      font-family: Poppins, Poppins;
       font-weight: normal;
       color: #000000;
     }
@@ -125,7 +125,7 @@ export default {
         transition: 0.3s;
         border-radius: 4px 4px 4px 4px;
         font-size: 14px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         &:hover {
           opacity: 0.8;

@@ -365,7 +365,7 @@ export default {
         opacity: 1;
         border-radius: 4px;
         font-size: 14px;
-        font-family: PingFang SC;
+        font-family: Poppins, Poppins;
         font-weight: bold;
         color: #ffffff;
       }
@@ -397,7 +397,7 @@ export default {
   align-items: center;
   justify-content: center;
   font-size: 14px;
-  font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+  font-family: Poppins, Poppins;
   font-weight: 400;
   color: #ffffff;
 }
@@ -414,7 +414,7 @@ export default {
   align-items: center;
   justify-content: center;
   font-size: 14px;
-  font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+  font-family: Poppins, Poppins;
   font-weight: 400;
   color: #1d2088;
   margin-left: 24px;

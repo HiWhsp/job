@@ -86,7 +86,7 @@ export default {
         padding-bottom: 20px;
         // border-bottom: 1px solid #d4d4d4;
         font-size: 32px;
-        font-family: Arial, Arial;
+        font-family: Poppins, Poppins;
         font-weight: bold;
         color: #323434;
     }
@@ -94,7 +94,7 @@ export default {
     .rich-content {
         padding: 20px 0;
         font-size: 16px;
-        font-family: Arial, Arial;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         color: #1F1F1F;
         line-height: 1.6;

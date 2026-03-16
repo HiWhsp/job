@@ -240,7 +240,7 @@ export default {
         background: #00306b;
         padding: 16px 0;
         text-align: center;
-        font-family: Microsoft YaHei, Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         font-size: 24px;
         color: #ffffff;
@@ -301,7 +301,7 @@ export default {
 
             .nav-title {
               flex: 1;
-              font-family: Microsoft YaHei, Microsoft YaHei;
+              font-family: Poppins, Poppins;
               font-weight: 400;
               font-size: 20px;
               font-weight: 600;

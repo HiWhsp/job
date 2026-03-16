@@ -326,7 +326,7 @@ export default {
     line-height: 56px;
     background: #ffffff;
     font-size: 16px;
-    font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: bold;
     color: #333333;
   }
@@ -350,7 +350,7 @@ export default {
 
       .date {
         font-size: 14px;
-        font-family: Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         line-height: 20px;
         color: #7d7d7d;
@@ -362,7 +362,7 @@ export default {
         padding-left: 20px;
 
         font-size: 14px;
-        font-family: Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         line-height: 20px;
         color: #7d7d7d;
@@ -374,7 +374,7 @@ export default {
 
       .order-state {
         font-size: 14px;
-        font-family: Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         line-height: 20px;
         color: #505050;
@@ -414,7 +414,7 @@ export default {
             .title {
               text-align: left;
               font-size: 14px;
-              font-family: Microsoft YaHei;
+              font-family: Poppins, Poppins;
               font-weight: 400;
               line-height: 20px;
               color: #333333;
@@ -424,7 +424,7 @@ export default {
               margin-top: 20px;
               text-align: left;
               font-size: 14px;
-              font-family: Microsoft YaHei;
+              font-family: Poppins, Poppins;
               font-weight: 400;
               line-height: 20px;
               color: #333333;
@@ -436,7 +436,7 @@ export default {
 
             .price {
               font-size: 16px;
-              font-family: Microsoft YaHei;
+              font-family: Poppins, Poppins;
               font-weight: 400;
               line-height: 20px;
               color: #333333;
@@ -450,7 +450,7 @@ export default {
             .num {
 
               font-size: 16px;
-              font-family: Microsoft YaHei;
+              font-family: Poppins, Poppins;
               font-weight: 400;
               line-height: 20px;
               color: #505050;
@@ -462,7 +462,7 @@ export default {
 
             .price {
               font-size: 16px;
-              font-family: Microsoft YaHei;
+              font-family: Poppins, Poppins;
               font-weight: 400;
               line-height: 20px;
               color: #333333;
@@ -663,7 +663,7 @@ export default {
     background: #F9F9F9;
     border-radius: 0px 0px 0px 0px;
     border: 2px solid #ddd;
-    font-family: Microsoft YaHei, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     font-size: 12px;
     color: #333333;

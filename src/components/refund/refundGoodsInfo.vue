@@ -76,7 +76,7 @@ export default {
 
     .date {
       font-size: 14px;
-      font-family: Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       line-height: 20px;
       color: #7d7d7d;
@@ -87,7 +87,7 @@ export default {
       padding-left: 20px;
 
       font-size: 14px;
-      font-family: Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       line-height: 20px;
       color: #7d7d7d;
@@ -97,7 +97,7 @@ export default {
     }
     .order-state {
       font-size: 14px;
-      font-family: Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       line-height: 20px;
       color: #505050;
@@ -126,7 +126,7 @@ export default {
           text-align: left;
           padding-left: 20px;
           font-size: 14px;
-          font-family: Microsoft YaHei;
+          font-family: Poppins, Poppins;
           font-weight: 400;
           line-height: 20px;
           color: #333333;
@@ -136,7 +136,7 @@ export default {
         .num {
           width: 100px;
           font-size: 16px;
-          font-family: Microsoft YaHei;
+          font-family: Poppins, Poppins;
           font-weight: 400;
           line-height: 20px;
           color: #505050;
@@ -145,7 +145,7 @@ export default {
           text-align: right;
           width: 150px;
           font-size: 16px;
-          font-family: Microsoft YaHei;
+          font-family: Poppins, Poppins;
           font-weight: 400;
           line-height: 20px;
           color: #333333;
@@ -163,7 +163,7 @@ export default {
           height: 30px;
           background: #00306B;
           font-size: 14px;
-          font-family: Microsoft YaHei;
+          font-family: Poppins, Poppins;
           color: #ffffff;
           border-radius: 14px;
           transition: 0.3s;

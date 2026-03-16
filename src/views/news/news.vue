@@ -389,7 +389,7 @@ export default {
             line-height: 1.5;
             cursor: pointer;
             transition: color 0.3s ease;
-            font-family: Microsoft YaHei, Microsoft YaHei;
+            font-family: Poppins, Poppins;
 
             &:hover {
               color: #EC6A2B;
@@ -406,7 +406,7 @@ export default {
             line-clamp: 3;
             overflow: hidden;
             text-overflow: ellipsis;
-            font-family: Microsoft YaHei, Microsoft YaHei;
+            font-family: Poppins, Poppins;
           }
         }
         // 卡片图片

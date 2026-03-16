@@ -123,7 +123,7 @@ export default {
     text-align: left;
 
     font-size: 16px;
-    font-family: Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: bold;
     line-height: 20px;
     color: #333333;
@@ -152,14 +152,14 @@ export default {
           padding-left: 27px;
           .text-1 {
             font-size: 14px;
-            font-family: PingFang SC;
+            font-family: Poppins, Poppins;
             font-weight: 800;
             line-height: 20px;
             color: #ffffff;
           }
           .text-2 {
             font-size: 30px;
-            font-family: PingFang SC;
+            font-family: Poppins, Poppins;
             font-weight: 800;
             line-height: 42px;
             color: #ffffff;
@@ -181,7 +181,7 @@ export default {
             }
             .text {
               font-size: 16px;
-              font-family: Microsoft YaHei;
+              font-family: Poppins, Poppins;
               font-weight: 400;
               line-height: 24px;
               color: #ffffff;
@@ -248,7 +248,7 @@ export default {
 
         .jifen {
           font-size: 14px;
-          font-family: PingFang SC;
+          font-family: Poppins, Poppins;
           font-weight: 400;
           line-height: 24px;
           color: #222222;
@@ -268,7 +268,7 @@ export default {
           opacity: 1;
           border-radius: 4px;
           font-size: 12px;
-          font-family: PingFang SC;
+          font-family: Poppins, Poppins;
           font-weight: 400;
           color: #7d7d7d;
         }

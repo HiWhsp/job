@@ -153,7 +153,7 @@ export default {
     line-height: 56px;
     background: #ffffff;
     font-size: 16px;
-    font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: bold;
     color: #333333;
 
@@ -202,7 +202,7 @@ export default {
     }
     .price {
       width: 100%;
-      font-family: Microsoft YaHei, Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: bold;
       font-size: 14px;
       color: #f74747;
@@ -268,7 +268,7 @@ export default {
                 text-align: center;
 
                 font-size: 16px;
-                font-family: Arial;
+                font-family: Poppins, Poppins;
                 font-weight: 400;
                 color: #4a4a4a;
               }

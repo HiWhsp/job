@@ -934,7 +934,7 @@ export default {
 // Element UI 组件样式
 /deep/ .el-select {
   width: 100%;
-  font-family: OPPOSans, OPPOSans;
+  font-family: Poppins, Poppins;
   font-weight: 400;
   font-size: 14px;
   color: #1f1f1f;

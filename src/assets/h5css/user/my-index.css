@@ -39,7 +39,7 @@
   .section-1 .left .name {
     margin-top: 10px;
     font-size: 14px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #ffffff;
   }
@@ -60,7 +60,7 @@
   }
   .section-1 .right .text-1 {
     font-size: 14px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #333333;
   }
@@ -74,7 +74,7 @@
   }
   .section-1 .right .text-2 span {
     font-size: 14px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #00306B;
   }
@@ -102,13 +102,13 @@
   .section-2 .list .item .label {
     margin-top: 10px;
     font-size: 14px;
-    font-family: SourceHanSansCN-Regular-, SourceHanSansCN-Regular;
+    font-family: Poppins, Poppins;
     font-weight: normal;
     color: #333333;
   }
   .section-2 .list .item .val span {
     font-size: 16px;
-    font-family: SourceHanSansCN-Regular-, SourceHanSansCN-Regular;
+    font-family: Poppins, Poppins;
     font-weight: normal;
     color: #00306B;
   }
@@ -125,7 +125,7 @@
   }
   .section-title .label {
     font-size: 14px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #333333;
   }
@@ -133,7 +133,7 @@
     display: flex;
     align-items: center;
     font-size: 14px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #00306B;
     cursor: pointer;
@@ -160,7 +160,7 @@
     margin-top: 10px;
     margin-bottom: 20px;
     font-size: 14px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #505050;
   }

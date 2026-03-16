@@ -80,7 +80,7 @@ export default {
       display: inline-flex;
       align-items: center;
 
-      font-family: OPPOSans, OPPOSans;
+      font-family: Poppins, Poppins;
       // font-weight: bold;
       font-size: 15px;
       color: #505050;
@@ -91,14 +91,14 @@ export default {
     }
 
     .link {
-      font-family: OPPOSans, OPPOSans;
+      font-family: Poppins, Poppins;
       // font-weight: bold;
       font-size: 15px;
       color: #505050;
     }
 
     .route-link {
-      font-family: OPPOSans, OPPOSans;
+      font-family: Poppins, Poppins;
       // font-weight: bold;
       font-size: 15px;
       color: #505050;
@@ -110,7 +110,7 @@ export default {
     }
 
     > *:last-child {
-      font-family: OPPOSans, OPPOSans;
+      font-family: Poppins, Poppins;
       // font-weight: bold;
       font-size: 15px;
       color: #000000;

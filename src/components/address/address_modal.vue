@@ -280,7 +280,7 @@ export default {
           &::before {
             margin-right: 3px;
             content: "*";
-            font-family: OPPOSans, OPPOSans;
+            font-family: Poppins, Poppins;
             font-weight: 400;
             font-size: 20px;
             color: #ff0000;
@@ -290,7 +290,7 @@ export default {
         &::after {
           margin-left: 3px;
           content: "";
-          font-family: OPPOSans, OPPOSans;
+          font-family: Poppins, Poppins;
           font-weight: 400;
           font-size: 14px;
           color: #505050;
@@ -315,7 +315,7 @@ export default {
 
       .el-select {
         width: 100%;
-        font-family: OPPOSans, OPPOSans;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         font-size: 14px;
         color: #1f1f1f;

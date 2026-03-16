@@ -146,7 +146,7 @@ export default {
     line-height: 56px;
     background: #ffffff;
     font-size: 16px;
-    font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: bold;
     color: #333333;
   }
@@ -169,7 +169,7 @@ export default {
 
       .date {
         font-size: 14px;
-        font-family: Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         line-height: 20px;
         color: #7d7d7d;
@@ -181,7 +181,7 @@ export default {
         padding-left: 20px;
 
         font-size: 14px;
-        font-family: Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         line-height: 20px;
         color: #7d7d7d;
@@ -193,7 +193,7 @@ export default {
 
       .order-state {
         font-size: 14px;
-        font-family: Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         line-height: 20px;
         color: #505050;
@@ -346,7 +346,7 @@ export default {
 
         .type {
           font-size: 20px;
-          font-family: Microsoft YaHei;
+          font-family: Poppins, Poppins;
           font-weight: bold;
           line-height: 20px;
           color: #333333;
@@ -355,7 +355,7 @@ export default {
         .desc {
           margin-top: 14px;
           font-size: 18px;
-          font-family: Microsoft YaHei;
+          font-family: Poppins, Poppins;
           font-weight: 400;
           color: #999;
         }

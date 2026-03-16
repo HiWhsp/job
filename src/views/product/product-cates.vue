@@ -481,7 +481,7 @@ page{
       display: inline-flex;
       align-items: center;
 
-      font-family: OPPOSans, OPPOSans;
+      font-family: Poppins, Poppins;
       font-size: 15px;
       color: #505050;
 
@@ -491,13 +491,13 @@ page{
     }
 
     .link {
-      font-family: OPPOSans, OPPOSans;
+      font-family: Poppins, Poppins;
       font-size: 15px;
       color: #505050;
     }
 
     .route-link {
-      font-family: OPPOSans, OPPOSans;
+      font-family: Poppins, Poppins;
       font-size: 15px;
       color: #505050;
     }
@@ -508,7 +508,7 @@ page{
     }
 
     > *:last-child {
-      font-family: OPPOSans, OPPOSans;
+      font-family: Poppins, Poppins;
       font-size: 15px;
       color: #000000;
     }
@@ -545,7 +545,7 @@ page{
       justify-content: flex-end;
       padding-right: 25px;
 
-      font-family: Microsoft YaHei, Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       font-size: 20px;
       color: #1E262E;
@@ -598,7 +598,7 @@ page{
       border-radius: 15px 15px 15px 15px;
       background: #FEEEDD;
       border: 1px solid #EC6A2B;
-      font-family: Microsoft YaHei, Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       font-size: 14px;
       color: #EC6A2B;
@@ -610,7 +610,7 @@ page{
       }
 
       .check-title {
-        font-family: Microsoft YaHei, Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         font-size: 13px;
         color: #EC6A2B;
@@ -635,7 +635,7 @@ page{
     margin-right: 32px;
     margin-left: 32px;
     .clear-box {
-      font-family: Microsoft YaHei, Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       font-size: 14px;
       color: #6a6a6a;
@@ -652,7 +652,7 @@ page{
     margin-right: 32px;
     margin-left: 32px;
     .all-box {
-      font-family: Microsoft YaHei, Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       font-size: 14px;
       color: #EC6A2B;
@@ -674,7 +674,7 @@ page{
     height: auto;
     display: flex;
     font-size: 14px;
-    font-family: Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-size: 14px;
     color: #545454;
 
@@ -702,7 +702,7 @@ page{
       }
 
       .text {
-        font-family: Microsoft YaHei, Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         font-size: 14px;
         color: #333333;
@@ -746,7 +746,7 @@ page{
         background: #ffffff;
         border-radius: 0px 0px 0px 0px;
         border: 1px solid #cccccc;
-        font-family: Microsoft YaHei, Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         font-size: 14px;
         color: #333;
@@ -766,7 +766,7 @@ page{
         min-width: 70px;
         height: 32px;
         background: #EC6A2B;
-        font-family: Microsoft YaHei, Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         font-size: 16px;
         color: #ffffff;
@@ -887,7 +887,7 @@ page{
 
           .price-1 {
             margin-right: 10px;
-            font-family: Arial, Arial;
+            font-family: Poppins, Poppins;
             font-weight: 400;
             font-size: 16px;
             color: #ff3a30;
@@ -895,7 +895,7 @@ page{
 
           .price-2 {
             text-decoration: line-through;
-            font-family: PingFang SC, PingFang SC;
+            font-family: Poppins, Poppins;
             font-weight: 400;
             font-size: 14px;
             color: #505050;

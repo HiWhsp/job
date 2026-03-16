@@ -250,7 +250,7 @@ export default {
     background: #FFFFFF;
     border-radius: 50px 50px 50px 50px;
     border: 1px solid #00306B;
-    font-family: Arial, Arial;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     font-size: 14px;
     color: #00306B;

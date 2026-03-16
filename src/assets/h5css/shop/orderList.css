@@ -26,7 +26,7 @@
   }
   .order-list-wrap .info-title .date {
     font-size: 12px;
-    font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: bold;
     color: #333333;
   }
@@ -37,7 +37,7 @@
     text-align: left;
     padding-left: 0;
     font-size: 12px;
-    font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: bold;
     color: #333333;
   }
@@ -50,7 +50,7 @@
     top: 10px;
     padding: 3px 6px;
     font-size: 12px;
-    font-family: Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     line-height: 20px;
     color: #505050;
@@ -81,7 +81,7 @@
     text-align: left;
     padding-left: 0;
     font-size: 12px;
-    font-family: Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     line-height: 20px;
     color: #333333;
@@ -98,7 +98,7 @@
     width: auto;
     min-width: 20px;
     font-size: 12px;
-    font-family: Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     line-height: 20px;
     color: #505050;
@@ -107,7 +107,7 @@
     text-align: right;
     min-width: 80px;
     font-size: 12px;
-    font-family: Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     line-height: 20px;
     color: #333333;
@@ -120,7 +120,7 @@
     padding: 10px;
     border-top: 1px solid #e5e5e5;
     font-size: 14px;
-    font-family: Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     line-height: 20px;
     color: #7d7d7d;
@@ -131,7 +131,7 @@
     align-items: center;
     justify-content: space-between;
     font-size: 12px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #333333;
   }
@@ -167,7 +167,7 @@
     border: 1px solid #cccccc;
     font-size: 14px;
     font-size: 12px;
-    font-family: Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     line-height: 20px;
     color: #7d7d7d;

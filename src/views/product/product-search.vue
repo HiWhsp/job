@@ -159,14 +159,14 @@ export default {
       .bread-divider {
         margin: 0 10px;
         font-size: 14px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         color: #505050;
       }
 
       a {
         font-size: 14px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         color: #505050;
 
@@ -207,7 +207,7 @@ export default {
   padding-bottom: 12px;
   border-bottom: 1px solid #ddd;
   font-size: 18px;
-  font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+  font-family: Poppins, Poppins;
   font-weight: 400;
   color: #808080;
 }
@@ -281,7 +281,7 @@ export default {
 
           .price-1 {
             margin-right: 5px;
-            font-family: Arial, Arial;
+            font-family: Poppins, Poppins;
             font-weight: 400;
             font-size: 16px;
             color: #FF3A30;
@@ -289,7 +289,7 @@ export default {
 
           .price-2 {
             text-decoration: line-through;
-            font-family: PingFang SC, PingFang SC;
+            font-family: Poppins, Poppins;
             font-weight: 400;
             font-size: 14px;
             color: #505050;

@@ -585,7 +585,7 @@ export default {
     line-height: 70px;
     background: #ffffff;
     font-size: 20px;
-    font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: bold;
     color: #1e262e;
     img {
@@ -614,7 +614,7 @@ export default {
     display: flex;
     align-items: center;
     font-size: 20px;
-    font-family: Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     line-height: 20px;
     color: #333333;
@@ -721,7 +721,7 @@ export default {
 
     .date {
       font-size: 20px;
-      font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: bold;
       color: #1f1f1f;
     }
@@ -732,7 +732,7 @@ export default {
       padding-left: 20px;
 
       font-size: 20px;
-      font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: bold;
       color: #1f1f1f;
 
@@ -745,7 +745,7 @@ export default {
       padding: 3px 6px;
       // border: 1px solid #ccc;
       font-size: 14px;
-      font-family: Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       line-height: 20px;
       color: #ec6a2b;
@@ -770,7 +770,7 @@ export default {
         padding: 20px;
         border-bottom: 1px dashed #ccc;
 
-        font-family: OPPOSans, OPPOSans;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         font-size: 14px;
         color: #333333;
@@ -809,7 +809,7 @@ export default {
             width: fit-content;
             cursor: pointer;
             font-size: 20px;
-            font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+            font-family: Poppins, Poppins;
             font-weight: bold;
             color: #1e262e;
 
@@ -842,7 +842,7 @@ export default {
           text-align: center;
           min-width: 150px;
 
-          font-family: OPPOSans, OPPOSans;
+          font-family: Poppins, Poppins;
           font-weight: 400;
           font-size: 20px;
           color: #5e5e5e;
@@ -851,7 +851,7 @@ export default {
           text-align: center;
           min-width: 150px;
 
-          font-family: OPPOSans, OPPOSans;
+          font-family: Poppins, Poppins;
           font-weight: 400;
           font-size: 20px;
           color: #5e5e5e;
@@ -861,7 +861,7 @@ export default {
             text-align: center;
             min-width: 150px;
 
-            font-family: OPPOSans, OPPOSans;
+            font-family: Poppins, Poppins;
             font-weight: 400;
             font-size: 14px;
             color: #5b339a;
@@ -879,7 +879,7 @@ export default {
     align-items: center;
     justify-content: space-between;
     font-size: 20px;
-    font-family: Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     line-height: 20px;
     color: #1e262e;
@@ -888,7 +888,7 @@ export default {
       display: flex;
       align-items: center;
       font-size: 20px;
-      font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       color: #1e262e;
 
@@ -915,7 +915,7 @@ export default {
         background: #ffffff;
         border-radius: 6px;
         border: 1px solid #ec6a2b;
-        font-family: Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         font-size: 22px;
         color: #ec6a2b;

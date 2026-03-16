@@ -73,7 +73,7 @@ export default {
           text-align: left;
 
           font-size: 14px;
-          font-family: Microsoft YaHei;
+          font-family: Poppins, Poppins;
           font-weight: 400;
           color: #333333;
         }
@@ -93,7 +93,7 @@ export default {
       padding-left: 150px;
       text-align: left;
       font-size: 14px;
-      font-family: Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       line-height: 30px;
       color: #222222;
@@ -130,7 +130,7 @@ export default {
       padding-left: 150px;
       text-align: left;
       font-size: 18px;
-      font-family: PingFang SC;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       line-height: 19px;
       color: #999;
@@ -171,7 +171,7 @@ export default {
             text-align: left;
 
             font-size: 14px;
-            font-family: Microsoft YaHei;
+            font-family: Poppins, Poppins;
             font-weight: 400;
             color: #333333;
           }
@@ -185,7 +185,7 @@ export default {
         padding-left: 0;
         text-align: justify;
         font-size: 12px;
-        font-family: Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         line-height: 1.7;
         color: #222222;
@@ -227,7 +227,7 @@ export default {
         padding-left: 0;
         text-align: left;
         font-size: 12px;
-        font-family: PingFang SC;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         line-height: 1.2;
         color: #505050;

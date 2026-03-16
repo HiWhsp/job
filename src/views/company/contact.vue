@@ -273,7 +273,7 @@ export default {
     }
 
     .desc {
-      font-family: OPPOSans, OPPOSans;
+      font-family: Poppins, Poppins;
       // font-weight: bold;
       font-size: 16px;
       color: #555555;

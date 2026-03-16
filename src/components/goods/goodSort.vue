@@ -70,7 +70,7 @@ export default {
 
   display: flex;
   font-size: 14px;
-  font-family: Microsoft YaHei;
+  font-family: Poppins, Poppins;
   font-weight: 400;
   color: #333333;
 

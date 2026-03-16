@@ -278,7 +278,7 @@ export default {
     height: 83px;
     background: #fbfbfb;
 
-    font-family: OPPOSans, OPPOSans;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     font-size: 20px;
     color: #1f1f1f;
@@ -286,7 +286,7 @@ export default {
     .fav-check {
       user-select: none;
       cursor: pointer;
-      font-family: OPPOSans, OPPOSans;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       font-size: 20px;
       color: #1f1f1f;
@@ -307,7 +307,7 @@ export default {
       font-size: 20px;
       cursor: pointer;
 
-      font-family: OPPOSans, OPPOSans;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       color: #1f1f1f;
     }
@@ -361,14 +361,14 @@ export default {
       .text-1 {
         cursor: pointer;
         margin-bottom: 15px;
-        font-family: OPPOSans, OPPOSans;
+        font-family: Poppins, Poppins;
         // font-weight: bold;
         font-size: 14px;
         color: #1f1f1f;
       }
 
       .text-2 {
-        font-family: OPPOSans, OPPOSans;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         font-size: 14px;
         color: #1f1f1f;
@@ -376,7 +376,7 @@ export default {
     }
 
     .goods-price {
-      font-family: OPPOSans, OPPOSans;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       font-size: 20px;
       color: #1e262e;
@@ -391,7 +391,7 @@ export default {
         }
 
         &.btn-cancel {
-          font-family: OPPOSans, OPPOSans;
+          font-family: Poppins, Poppins;
           font-weight: 400;
           font-size: 14px;
           color: #505050;
@@ -408,7 +408,7 @@ export default {
           border-radius: 6px 6px 6px 6px;
           border: 1px solid #ec6a2b;
 
-          font-family: OPPOSans, OPPOSans;
+          font-family: Poppins, Poppins;
           font-weight: 400;
           font-size: 20px;
           color: #fff;

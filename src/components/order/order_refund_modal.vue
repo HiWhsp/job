@@ -117,7 +117,7 @@ export default {
     border-radius: 50px 50px 50px 50px;
     border: 1px solid #00306B;
 
-    font-family: Arial, Arial;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     font-size: 14px;
     color: #00306B;
@@ -155,7 +155,7 @@ export default {
 
     .text-1 {
       margin-top: 20px;
-      font-family: Arial, Arial;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       font-size: 22px;
       color: #000000;
@@ -163,7 +163,7 @@ export default {
 
     .text-2 {
       margin-top: 15px;
-      font-family: Arial, Arial;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       font-size: 14px;
       color: #505050;

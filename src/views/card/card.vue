@@ -222,7 +222,7 @@ export default {
         justify-content: space-around;
 
         .tab-item {
-          font-family: Microsoft YaHei, Microsoft YaHei;
+          font-family: Poppins, Poppins;
           font-weight: 400;
           font-size: 18px;
           color: #2b2b2b;
@@ -258,7 +258,7 @@ export default {
           display: inline-block;
           width: 90px;
           border-right: 1px solid #ccc;
-          font-family: OPPOSans, OPPOSans;
+          font-family: Poppins, Poppins;
           font-weight: 400;
           font-size: 14px;
           color: #7d7d7d;
@@ -278,7 +278,7 @@ export default {
 
           &::-webkit-input-placeholder {
             font-size: 14px;
-            font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+            font-family: Poppins, Poppins;
             font-weight: 400;
             color: #d7d7d7;
           }
@@ -293,7 +293,7 @@ export default {
         justify-content: space-between;
 
         font-size: 14px;
-        font-family: Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         line-height: 24px;
         color: #505050;
@@ -313,7 +313,7 @@ export default {
           background: linear-gradient(90deg, #ff7327 0%, #ea5959 100%);
           background: #009f39;
           font-size: 18px;
-          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+          font-family: Poppins, Poppins;
           font-weight: 400;
           color: #ffffff;
         }
@@ -326,7 +326,7 @@ export default {
 
         a {
           font-size: 14px;
-          font-family: Microsoft YaHei;
+          font-family: Poppins, Poppins;
           font-weight: 400;
           line-height: 24px;
           color: #009f39;
@@ -353,7 +353,7 @@ export default {
 
   .terms-check {
     cursor: pointer;
-    font-family: OPPOSans, OPPOSans;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     font-size: 12px;
     color: #505050;
@@ -367,7 +367,7 @@ export default {
 
   .terms-text {
     cursor: pointer;
-    font-family: OPPOSans, OPPOSans;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     font-size: 12px;
     color: #505050;

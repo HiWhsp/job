@@ -508,7 +508,7 @@ export default {
     line-height: 70px;
     background: #ffffff;
     font-size: 20px;
-    font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: bold;
     color: #1e262e;
   }
@@ -568,7 +568,7 @@ export default {
     color: #1e262e;
     text-align: right;
     font-weight: 400;
-    font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+    font-family: Poppins, Poppins;
   }
   .form-label-text-right {
     width: 200px;
@@ -792,7 +792,7 @@ export default {
 }
 .form-section-texr {
   font-size: 16px;
-  font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+  font-family: Poppins, Poppins;
   font-weight: bold;
   color: #333333;
 }

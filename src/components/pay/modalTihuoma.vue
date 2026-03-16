@@ -119,7 +119,7 @@ export default {
     border-radius: 3px;
 
     font-size: 16px;
-    font-family: Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 300;
     color: #ffffff;
   }
@@ -129,7 +129,7 @@ export default {
     border-radius: 3px;
 
     font-size: 16px;
-    font-family: Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 300;
     color: #414040;
     border-color: #aaa;

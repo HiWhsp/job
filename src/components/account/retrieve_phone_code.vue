@@ -125,7 +125,7 @@ export default {
     width: 90px;
     border-right: 1px solid #ccc;
     font-size: 14px;
-    font-family: Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     line-height: 24px;
     color: #505050;
@@ -141,7 +141,7 @@ export default {
 
     &::-webkit-input-placeholder {
       font-size: 14px;
-      font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       color: #d7d7d7;
     }
@@ -187,7 +187,7 @@ export default {
       /*no */
       border-right: 1px solid #ccc;
       font-size: 14px;
-      font-family: Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       line-height: 24px;
       color: #505050;
@@ -203,7 +203,7 @@ export default {
 
       &::-webkit-input-placeholder {
         font-size: 14px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         color: #d7d7d7;
       }

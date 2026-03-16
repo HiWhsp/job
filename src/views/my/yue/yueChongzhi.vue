@@ -221,7 +221,7 @@ export default {
     line-height: 56px;
     background: #ffffff;
     font-size: 16px;
-    font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: bold;
     color: #333333;
 
@@ -265,7 +265,7 @@ export default {
       text-align: left;
       .text-1 {
         font-size: 26px;
-        font-family: PingFang SC;
+        font-family: Poppins, Poppins;
         font-weight: bold;
         line-height: 40px;
         color: #ffffff;
@@ -274,7 +274,7 @@ export default {
         margin-top: 10px;
         margin-bottom: 30px;
         font-size: 48px;
-        font-family: PingFang SC;
+        font-family: Poppins, Poppins;
         font-weight: bold;
         line-height: 40px;
         color: #ffffff;
@@ -286,7 +286,7 @@ export default {
           height: 34px;
           background: rgba(0, 0, 0, 0.45);
           font-size: 14px;
-          font-family: PingFang SC;
+          font-family: Poppins, Poppins;
           font-weight: 400;
           line-height: 34px;
           color: #ffffff;
@@ -327,14 +327,14 @@ export default {
 
     .currency {
       font-size: 15px;
-      font-family: Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: bold;
       line-height: 15px;
       color: #333;
     }
     .money {
       font-size: 30px;
-      font-family: Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: bold;
       line-height: 40px;
       color: #333;
@@ -358,7 +358,7 @@ export default {
   background: #f5f5f5;
   padding: 24px;
   font-size: 14px;
-  font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+  font-family: Poppins, Poppins;
   font-weight: 400;
   color: #1F1F1F;
   line-height: 28px;
@@ -367,7 +367,7 @@ export default {
 .chongzhi-title {
   margin-bottom: 45px;
   font-size: 18px;
-  font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+  font-family: Poppins, Poppins;
   font-weight: 400;
   color: #333333;
 }
@@ -411,21 +411,21 @@ export default {
       background: linear-gradient(61deg, #00306B 0%, #fe6927 100%);
       border-radius: 20px 0px 20px 0px;
       font-size: 18px;
-      font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       color: #ffffff;
     }
 
     .money {
       font-size: 42px;
-      font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: bold;
       color: #00306B;
     }
     .tip {
       margin-top: 10px;
       font-size: 14px;
-      font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       color: #1F1F1F;
     }
@@ -435,7 +435,7 @@ export default {
 .chongzhi-type {
   margin-bottom: 45px;
   font-size: 18px;
-  font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+  font-family: Poppins, Poppins;
   font-weight: 400;
   color: #333333;
 }
@@ -478,7 +478,7 @@ export default {
     background: #00306B;
     border-radius: 4px;
     font-size: 16px;
-    font-family: PingFang SC;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #ffffff;
   }

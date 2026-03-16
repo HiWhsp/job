@@ -116,7 +116,7 @@ export default {
     border-radius: 50px 50px 50px 50px;
     border: 1px solid #00306B;
 
-    font-family: Arial, Arial;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     font-size: 14px;
     color: #00306B;
@@ -164,7 +164,7 @@ export default {
       flex: 2;
       text-align: center;
       font-size: 16px;
-      font-family: Microsoft YaHei;
+      font-family: Poppins, Poppins;
       // font-weight: bold;
       line-height: 20px;
       color: #333333;

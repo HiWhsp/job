@@ -410,7 +410,7 @@ export default {
     line-height: 70px;
     background: #ffffff;
     font-size: 20px;
-    font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: bold;
     color: #333333;
     img {
@@ -711,7 +711,7 @@ export default {
     .section-title {
       margin-bottom: 50px;
       font-size: 16px;
-      font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       color: #1f1f1f;
     }
@@ -740,7 +740,7 @@ export default {
       .info {
         padding-left: 10px;
         font-size: 14px;
-        font-family: Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         color: #333333;
         display: inline-block;
@@ -755,7 +755,7 @@ export default {
       .action {
         margin-left: 20px;
         font-size: 14px;
-        font-family: Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         color: #00306B;
 
@@ -780,7 +780,7 @@ export default {
     background: #ffffff;
     border-radius: 50px 50px 50px 50px;
     border: 1px solid #00306B;
-    font-family: Arial, Arial;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     font-size: 14px;
     color: #00306B;
@@ -792,7 +792,7 @@ export default {
     height: 32px;
     background: #00306B;
     border-radius: 50px 50px 50px 50px;
-    font-family: Arial, Arial;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     font-size: 14px;
     color: #ffffff;

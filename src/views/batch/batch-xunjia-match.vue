@@ -265,7 +265,7 @@ export default {
 
   .info-left {
     width: 180px;
-    font-family: Microsoft YaHei, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: bold;
     font-size: 40px;
     color: #ffffff;
@@ -282,7 +282,7 @@ export default {
     position: relative;
 
     .text {
-      font-family: Microsoft YaHei, Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       font-size: 30px;
       color: #ffffff;
@@ -370,7 +370,7 @@ export default {
   .result-left {
     .left-title {
       margin-bottom: 26px;
-      font-family: Microsoft YaHei, Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       font-size: 14px;
       color: #333333;
@@ -392,20 +392,20 @@ export default {
         .info-box {
           flex: 1;
           .xuhao {
-            font-family: Microsoft YaHei, Microsoft YaHei;
+            font-family: Poppins, Poppins;
             font-weight: 400;
             font-size: 12px;
             color: #00306B;
           }
           .title {
             margin: 10px 0;
-            font-family: Microsoft YaHei, Microsoft YaHei;
+            font-family: Poppins, Poppins;
             font-weight: 400;
             font-size: 12px;
             color: #333333;
           }
           .num {
-            font-family: Microsoft YaHei, Microsoft YaHei;
+            font-family: Poppins, Poppins;
             font-weight: 400;
             font-size: 12px;
             color: #333333;
@@ -419,7 +419,7 @@ export default {
     flex: 1;
     .right-title {
       margin-bottom: 26px;
-      font-family: Microsoft YaHei, Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       font-size: 14px;
       color: #333333;
@@ -447,19 +447,19 @@ export default {
         margin-left: 18px;
         flex: 1;
         .title {
-          font-family: Microsoft YaHei, Microsoft YaHei;
+          font-family: Poppins, Poppins;
           font-weight: 400;
           font-size: 16px;
           color: #333333;
         }
         .price-box {
           margin-top: 10px;
-          font-family: Microsoft YaHei, Microsoft YaHei;
+          font-family: Poppins, Poppins;
           font-weight: 400;
           font-size: 16px;
           color: #333333;
           .price {
-            font-family: Microsoft YaHei, Microsoft YaHei;
+            font-family: Poppins, Poppins;
             font-weight: 400;
             font-size: 16px;
             color: #00306B;
@@ -470,14 +470,14 @@ export default {
         margin-left: 18px;
         width: 300px;
         .brand {
-          font-family: Microsoft YaHei, Microsoft YaHei;
+          font-family: Poppins, Poppins;
           font-weight: 400;
           font-size: 16px;
           color: #333333;
         }
         .sku {
           margin-top: 10px;
-          font-family: Microsoft YaHei, Microsoft YaHei;
+          font-family: Poppins, Poppins;
           font-weight: 400;
           font-size: 16px;
           color: #333333;
@@ -503,7 +503,7 @@ export default {
     cursor: pointer;
     min-width: 120px;
     width: fit-content;
-    font-family: OPPOSans, OPPOSans;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     font-size: 14px;
     color: #1F1F1F;
@@ -514,7 +514,7 @@ export default {
     width: fit-content;
 
     span {
-      font-family: OPPOSans, OPPOSans;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       font-size: 14px;
       color: #1F1F1F;
@@ -532,7 +532,7 @@ export default {
     text-align: left;
 
     span {
-      font-family: OPPOSans, OPPOSans;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       font-size: 14px;
       color: #1F1F1F;
@@ -547,13 +547,13 @@ export default {
     .num-item {
       margin-right: 30px;
       .label {
-        font-family: Microsoft YaHei, Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         font-size: 12px;
         color: #1F1F1F;
       }
       .value {
-        font-family: Microsoft YaHei, Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         font-size: 12px;
         color: #00306B;
@@ -563,14 +563,14 @@ export default {
 
   .total-number {
     width: fit-content;
-    font-family: OPPOSans, OPPOSans;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     font-size: 14px;
     color: #1F1F1F;
 
     b {
       font-size: 16px;
-      font-family: Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: bold;
       line-height: 20px;
       color: #f13f17;
@@ -582,14 +582,14 @@ export default {
     margin-right: 60px;
     width: fit-content;
 
-    font-family: OPPOSans, OPPOSans;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     font-size: 14px;
     color: #1F1F1F;
 
     b {
       font-size: 16px;
-      font-family: Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: bold;
       line-height: 20px;
       color: #f13f17;
@@ -605,7 +605,7 @@ export default {
     background: #FF9900;
 
     font-size: 16px;
-    font-family: Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: bold;
     color: #ffffff;
     transition: 0.3s;
@@ -625,7 +625,7 @@ export default {
     background: #00306B;
 
     font-size: 16px;
-    font-family: Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: bold;
     color: #ffffff;
     transition: 0.3s;

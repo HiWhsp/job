@@ -174,7 +174,7 @@ export default {
 
   .info-left {
     width: 180px;
-    font-family: Microsoft YaHei, Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-weight: bold;
     font-size: 40px;
     color: #ffffff;
@@ -191,7 +191,7 @@ export default {
     position: relative;
 
     .text {
-      font-family: Microsoft YaHei, Microsoft YaHei;
+      font-family: Poppins, Poppins;
       font-weight: 400;
       font-size: 30px;
       color: #ffffff;
@@ -287,7 +287,7 @@ export default {
       .title {
         margin-top: 20px;
         // 样式
-        font-family: Microsoft YaHei, Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: bold;
         font-size: 20px;
         color: #00306B;
@@ -296,7 +296,7 @@ export default {
       .desc {
         margin-top: 15px;
         // 样式
-        font-family: Microsoft YaHei, Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         font-size: 14px;
         color: #333333;
@@ -311,7 +311,7 @@ export default {
           background: linear-gradient(180deg, #fffefe 0%, #e8e8e8 100%);
           border-radius: 0px 0px 0px 0px;
           border: 1px solid #e5e5e5;
-          font-family: Microsoft YaHei, Microsoft YaHei;
+          font-family: Poppins, Poppins;
           font-weight: 400;
           font-size: 14px;
           color: #333333;
@@ -322,7 +322,7 @@ export default {
             height: 40px;
             background: #00306B;
             border-radius: 0px 0px 0px 0px;
-            font-family: Microsoft YaHei, Microsoft YaHei;
+            font-family: Poppins, Poppins;
             font-weight: 400;
             font-size: 14px;
             color: #ffffff;

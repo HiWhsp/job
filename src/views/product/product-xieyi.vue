@@ -378,7 +378,7 @@ export default {
     height: auto;
     display: flex;
     font-size: 14px;
-    font-family: Microsoft YaHei;
+    font-family: Poppins, Poppins;
     font-size: 14px;
     color: #545454;
 
@@ -446,7 +446,7 @@ export default {
         background: #ffffff;
         border-radius: 0px 0px 0px 0px;
         border: 1px solid #cccccc;
-        font-family: Microsoft YaHei, Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         font-size: 14px;
         color: #b9b9b9;
@@ -569,7 +569,7 @@ export default {
 
           .price-1 {
             margin-right: 10px;
-            font-family: Arial, Arial;
+            font-family: Poppins, Poppins;
             font-weight: 400;
             font-size: 16px;
             color: #ff3a30;
@@ -577,7 +577,7 @@ export default {
 
           .price-2 {
             text-decoration: line-through;
-            font-family: PingFang SC, PingFang SC;
+            font-family: Poppins, Poppins;
             font-weight: 400;
             font-size: 14px;
             color: #505050;

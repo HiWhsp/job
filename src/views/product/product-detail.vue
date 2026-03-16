@@ -1730,7 +1730,7 @@ export default {
       .bread-divider {
         margin: 0 10px;
         font-size: 14px;
-        font-family: sans-serif;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         color: #505050;
       }
@@ -1739,7 +1739,7 @@ export default {
         display: inline-flex;
         align-items: center;
 
-        font-family: OPPOSans, OPPOSans;
+        font-family: Poppins, Poppins;
         font-size: 18px;
         color: #5e5e5e;
 
@@ -1749,13 +1749,13 @@ export default {
       }
 
       .link {
-        font-family: OPPOSans, OPPOSans;
+        font-family: Poppins, Poppins;
         font-size: 15px;
         color: #505050;
       }
 
       .route-link {
-        font-family: OPPOSans, OPPOSans;
+        font-family: Poppins, Poppins;
         font-size: 15px;
         color: #505050;
       }
@@ -1766,7 +1766,7 @@ export default {
       }
 
       > *:last-child {
-        font-family: OPPOSans, OPPOSans;
+        font-family: Poppins, Poppins;
         font-size: 15px;
         color: #000000;
       }
@@ -1859,7 +1859,7 @@ export default {
         .product-title {
           text-align: left;
           font-size: 20px;
-          font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+          font-family: Poppins, Poppins;
           font-weight: bold;
           color: #333333;
 
@@ -1897,7 +1897,7 @@ export default {
 
             span {
               font-size: 12px;
-              font-family: sans-serif;
+              font-family: Poppins, Poppins;
               font-weight: 400;
               color: #1f1f1f;
 
@@ -1938,7 +1938,7 @@ export default {
               border: 1px solid #a6a6a6;
 
               font-size: 12px;
-              font-family: sans-serif;
+              font-family: Poppins, Poppins;
               font-weight: 400;
               color: #505050;
               font-size: 16px;
@@ -1987,7 +1987,7 @@ export default {
 
               span {
                 font-size: 16px;
-                font-family: PingFang SC;
+                font-family: Poppins, Poppins;
                 font-weight: 400;
                 line-height: 36px;
                 color: #333333;
@@ -2018,7 +2018,7 @@ export default {
 
             .price-box {
               margin-left: 100px;
-              font-family: Arial, Arial;
+              font-family: Poppins, Poppins;
               font-weight: bold;
               font-size: 30px;
               color: #ff0000;
@@ -2059,7 +2059,7 @@ export default {
                 padding: 12px 0;
 
                 .label {
-                  font-family: Microsoft YaHei, Microsoft YaHei;
+                  font-family: Poppins, Poppins;
                   font-weight: 400;
                   font-size: 18px;
                   color: #6a6a6a;
@@ -2071,20 +2071,20 @@ export default {
                   //flex: 1;
 
                   font-size: 16px;
-                  font-family: PingFang SC, PingFang SC;
+                  font-family: Poppins, Poppins;
                   font-weight: 500;
                   color: #353535;
 
                   &.vals-price {
                     font-size: 40px;
-                    font-family: PingFang SC, PingFang SC;
+                    font-family: Poppins, Poppins;
                     font-weight: bold;
                     color: #ec6a2b;
                   }
 
                   .val {
                     flex: 1;
-                    font-family: Microsoft YaHei, Microsoft YaHei;
+                    font-family: Poppins, Poppins;
                     font-weight: bold;
                     font-size: 40px;
                     color: #ec6a2b;
@@ -2112,7 +2112,7 @@ export default {
 
               .number {
                 font-size: 28px;
-                font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+                font-family: Poppins, Poppins;
                 font-weight: bold;
                 color: #ea3200;
               }
@@ -2133,7 +2133,7 @@ export default {
               margin-top: 8px;
               min-width: 90px;
 
-              font-family: Microsoft YaHei, Microsoft YaHei;
+              font-family: Poppins, Poppins;
               font-weight: 400;
               font-size: 18px;
               color: #505050;
@@ -2144,7 +2144,7 @@ export default {
               font-size: 18px;
               color: #00306B;
               font-weight: bold;
-              font-family: Microsoft YaHei, Microsoft YaHei;
+              font-family: Poppins, Poppins;
             }
 
             // SKU选择器样式
@@ -2463,8 +2463,8 @@ export default {
 
             .sel-num-title {
               min-width: 90px;
-              font-family: Arial, Arial;
-              font-family: Microsoft YaHei, Microsoft YaHei;
+              font-family: Poppins, Poppins;
+              font-family: Poppins, Poppins;
               font-weight: 400;
               font-size: 14px;
               color: #505050;
@@ -2472,7 +2472,7 @@ export default {
 
             .kucun {
               margin-left: 16px;
-              font-family: Microsoft YaHei, Microsoft YaHei;
+              font-family: Poppins, Poppins;
               font-weight: 400;
               font-size: 14px;
               color: #505050;
@@ -2523,7 +2523,7 @@ export default {
                 text-align: center;
 
                 font-size: 16px;
-                font-family: Arial;
+                font-family: Poppins, Poppins;
                 font-weight: 400;
                 color: #4a4a4a;
               }
@@ -2550,14 +2550,14 @@ export default {
 
             .label {
               min-width: 90px;
-              font-family: Microsoft YaHei, Microsoft YaHei;
+              font-family: Poppins, Poppins;
               font-weight: 400;
               font-size: 14px;
               color: #505050;
             }
 
             .value {
-              font-family: Microsoft YaHei, Microsoft YaHei;
+              font-family: Poppins, Poppins;
               font-weight: 400;
               font-size: 14px;
               color: #505050;
@@ -2619,7 +2619,7 @@ export default {
 
               .btn-buy {
                 background: #ec6a2b;
-                font-family: Microsoft YaHei, Microsoft YaHei;
+                font-family: Poppins, Poppins;
               }
 
               .btn-add-cart {
@@ -2636,7 +2636,7 @@ export default {
                 background: #ffffff;
                 border-radius: 0px 0px 0px 0px;
                 border: 1px solid #00306B;
-                font-family: OPPOSans, OPPOSans;
+                font-family: Poppins, Poppins;
                 // font-weight: bold;
                 font-size: 18px;
                 color: #00306B;
@@ -2652,7 +2652,7 @@ export default {
 
               .box {
                 align-items: flex-end;
-                font-family: Microsoft YaHei, Microsoft YaHei;
+                font-family: Poppins, Poppins;
               }
 
               .summary-item {
@@ -2737,7 +2737,7 @@ export default {
     text-align: center;
     padding: 0 30px;
     font-size: 24px;
-    font-family: sans-serif;
+    font-family: Poppins, Poppins;
     font-weight: 400;
     color: #000000;
 
@@ -2782,7 +2782,7 @@ export default {
 
       span {
         font-size: 14px;
-        font-family: Microsoft YaHei;
+        font-family: Poppins, Poppins;
         font-weight: 400;
         line-height: 20px;
         color: #ffffff;
@@ -2848,7 +2848,7 @@ export default {
           width: 300px;
           padding: 0 24px;
           font-size: 14px;
-          font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+          font-family: Poppins, Poppins;
           font-weight: bold;
           color: #1f1f1f;
 
@@ -2861,7 +2861,7 @@ export default {
           line-height: 50px;
           padding: 0 24px;
           font-size: 14px;
-          font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+          font-family: Poppins, Poppins;
           font-weight: bold;
           color: #1f1f1f;
 
