@@ -12,35 +12,16 @@
               style="width: 260px"
             />
           </el-form-item>
-          <el-form-item label="订单状态">
+          <el-form-item label="回款状态">
             <el-select
-              v-model="queryParams.status"
+              v-model="queryParams.orderStatus"
               placeholder="请选择"
               clearable
               style="width: 140px"
             >
-              <el-option label="启用" value="1" />
-              <el-option label="禁用" value="0" />
-            </el-select>
-          </el-form-item>
-          <el-form-item label="支付方式">
-            <el-select
-              v-model="queryParams.region"
-              placeholder="客户区域"
-              clearable
-              style="width: 140px"
-            >
-              <el-option label="国内" value="国内" />
-              <el-option label="国外" value="国外" />
-              <el-option label="中国" value="中国" />
-              <el-option label="北京" value="北京" />
-              <el-option label="英国" value="英国" />
-            </el-select>
-          </el-form-item>
-          <el-form-item label="回款状态">
-            <el-select v-model="queryParams.attr" placeholder="客户属性" clearable style="width: 140px">
-              <el-option label="企业" value="企业" />
-              <el-option label="个人" value="个人" />
+              <el-option label="待审核" value="1" />
+              <el-option label="已回款" value="2" />
+              <el-option label="驳回" value="-1" />
             </el-select>
           </el-form-item>
         </div>
@@ -93,15 +74,25 @@
           :row-class-name="tableRowClassName"
         >
           <el-table-column type="index" label="序号" width="70" align="center" />
-          <el-table-column prop="orderNo" label="回款单号" min-width="130" />
-          <el-table-column prop="customerName" label="回款金额" min-width="200" />
-          <el-table-column prop="dosageForm" label="所属订单" min-width="80" />
-          <el-table-column prop="address" label="客户名称" min-width="260" />
-          <el-table-column prop="orderAmount" label="订单总金额" min-width="100" align="right" />
-          <el-table-column prop="orderType" label="订单时间" min-width="110" />
-          <el-table-column prop="orderStatus" label="回款凭证" width="100" align="center" />
-          <el-table-column prop="paymentStatus" label="回款状态" width="100" align="center" />
-          <el-table-column prop="orderTime" label="提交时间" width="120" align="center" />
+          <el-table-column prop="payOrderNo" label="回款单号" min-width="140" show-overflow-tooltip />
+          <el-table-column prop="payPrice" label="回款金额" min-width="100" align="right" />
+          <el-table-column prop="remainPrice" label="剩余金额" min-width="100" align="right" />
+          <el-table-column prop="staffOrderNo" label="所属订单" min-width="140" show-overflow-tooltip />
+          <el-table-column prop="customerTitle" label="客户名称" min-width="140" show-overflow-tooltip />
+          <el-table-column prop="orderStatusTitle" label="回款状态" width="100" align="center" />
+          <el-table-column label="回款凭证" width="100" align="center">
+            <template slot-scope="{ row }">
+              <el-image
+                v-if="row.payImage"
+                :src="row.payImage"
+                fit="cover"
+                style="width: 48px; height: 48px; border-radius: 4px; cursor: pointer;"
+                :preview-src-list="[row.payImage]"
+              />
+              <span v-else>—</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="created_at" label="提交时间" width="160" align="center" show-overflow-tooltip />
           <el-table-column label="操作" width="280" align="center" fixed="right">
             <template slot-scope="{ row }">
               <span class="row-acts">
@@ -137,28 +128,30 @@
           <div class="detail-col">
             <div class="detail-item">
               <span class="detail-label">回款单号：</span>
-              <span
-                class="detail-value"
-              >{{ detailRow.paymentNo || detailRow.orderNo || detailRow.id }}</span>
+              <span class="detail-value">{{ detailRow.payOrderNo || '—' }}</span>
             </div>
             <div class="detail-item">
-              <span class="detail-label">订单总金额：</span>
-              <span class="detail-value amount-value">{{ detailRow.orderAmount || '—' }}</span>
+              <span class="detail-label">回款金额：</span>
+              <span class="detail-value amount-value">{{ detailRow.payPrice || '—' }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">剩余金额：</span>
+              <span class="detail-value amount-value">{{ detailRow.remainPrice || '—' }}</span>
             </div>
             <div class="detail-item">
               <span class="detail-label">所属订单：</span>
-              <span class="detail-value">{{ detailRow.orderNo || '—' }}</span>
+              <span class="detail-value">{{ detailRow.staffOrderNo || '—' }}</span>
             </div>
             <div class="detail-item">
               <span class="detail-label">回款状态：</span>
-              <el-tag size="small" type="info">{{ detailRow.paymentStatus || '待审核' }}</el-tag>
+              <el-tag size="small" type="info">{{ detailRow.orderStatusTitle || '待审核' }}</el-tag>
             </div>
             <div class="detail-item">
               <span class="detail-label">回款凭证：</span>
               <div class="voucher-placeholder">
                 <img
-                  v-if="detailRow.voucherUrl"
-                  :src="detailRow.voucherUrl"
+                  v-if="detailRow.payImage"
+                  :src="detailRow.payImage"
                   class="voucher-img"
                   alt="回款凭证"
                 />
@@ -168,22 +161,12 @@
           </div>
           <div class="detail-col">
             <div class="detail-item">
-              <span class="detail-label">回款金额：</span>
-              <span
-                class="detail-value amount-value"
-              >{{ detailRow.paymentAmount || detailRow.paidAmount || '—' }}</span>
+              <span class="detail-label">客户名称：</span>
+              <span class="detail-value">{{ detailRow.customerTitle || '—' }}</span>
             </div>
             <div class="detail-item">
               <span class="detail-label">提交时间：</span>
-              <span class="detail-value">{{ detailRow.orderTime || detailRow.submitTime || '—' }}</span>
-            </div>
-            <div class="detail-item">
-              <span class="detail-label">客户名称：</span>
-              <span class="detail-value">{{ detailRow.customerName || '—' }}</span>
-            </div>
-            <div class="detail-item">
-              <span class="detail-label">审核备注：</span>
-              <span class="detail-value">{{ detailRow.auditRemark || '—' }}</span>
+              <span class="detail-value">{{ detailRow.created_at || '—' }}</span>
             </div>
           </div>
         </div>
@@ -203,77 +186,14 @@ export default {
     return {
       queryParams: {
         keyword: "",
-        status: "",
-        region: "",
-        attr: "",
-        type: "",
+        orderStatus: "1",
+        date: null,
         pageNum: 1,
         pageSize: 20
       },
       total: 0,
       tableHeight: 0,
-      tableData: [
-        {
-          id: 1,
-          orderNo: "2020001-959",
-          customerName: "浙江立汇医疗科技有限公司",
-          dosageForm: "颗粒",
-          address: "浙江立汇医疗科技有限公司天目大道566号",
-          orderAmount: "2564.00",
-          orderType: "标研订单",
-          orderStatus: "待审批",
-          deliveryPlanTime: "2026-01-08",
-          payMethod: "预付款",
-          deliveryMethod: "快递",
-          accountPeriod: "1个月",
-          accountDate: "2026-01-05",
-          payDueDate: "2026-02-05",
-          paymentStatus: "待回款",
-          paidAmount: "0.00",
-          auditStatus: "pending",
-          orderTime: "2026-01-05"
-        },
-        {
-          id: 2,
-          orderNo: "2020001-965",
-          customerName: "浙江中汇医疗科技有限公司",
-          dosageForm: "颗粒",
-          address: "浙江中汇医疗科技有限公司天目大道566号",
-          orderAmount: "2564.00",
-          orderType: "标研订单",
-          orderStatus: "待发货",
-          deliveryPlanTime: "2026-01-10",
-          payMethod: "预付款",
-          deliveryMethod: "快递",
-          accountPeriod: "2个月",
-          accountDate: "2026-01-05",
-          payDueDate: "2026-03-05",
-          paymentStatus: "部分回款",
-          paidAmount: "2000.00",
-          auditStatus: "pending",
-          orderTime: "2026-01-05"
-        },
-        {
-          id: 3,
-          orderNo: "2020001-978",
-          customerName: "示例客户C",
-          dosageForm: "颗粒",
-          address: "示例客户C的收货地址",
-          orderAmount: "1280.00",
-          orderType: "标研订单",
-          orderStatus: "已发货",
-          deliveryPlanTime: "2026-01-06",
-          payMethod: "预付款",
-          deliveryMethod: "快递",
-          accountPeriod: "1个月",
-          accountDate: "2026-01-06",
-          payDueDate: "2026-02-06",
-          paymentStatus: "全部回款",
-          paidAmount: "1280.00",
-          auditStatus: "audited",
-          orderTime: "2026-01-06"
-        }
-      ],
+      tableData: [],
       rowToDelete: null,
       auditDialogVisible: false,
       rowToAudit: null,
@@ -335,11 +255,35 @@ export default {
       return rowIndex % 2 === 1 ? "row-even" : "";
     },
     loadList() {
-      // TODO: 根据 auditTab 调用接口获取列表
-      this.total = this.tableData.length;
+      const params = {
+        page: String(this.queryParams.pageNum),
+        limit: String(this.queryParams.pageSize),
+        keyword: this.queryParams.keyword || "",
+        orderStatus: this.queryParams.orderStatus || ""
+      };
+      this.$api({
+        url: "/getStaffOrderPayList",
+        method: "post",
+        data: params
+      })
+        .then((res) => {
+          if (res && res.code === 200 && res.data) {
+            const list = Array.isArray(res.data.list) ? res.data.list : [];
+            this.tableData = list;
+            this.total = res.data.count ?? list.length;
+          } else {
+            this.tableData = [];
+            this.total = 0;
+          }
+        })
+        .catch(() => {
+          this.tableData = [];
+          this.total = 0;
+        });
     },
     handleAuditTabChange(value) {
       this.auditTab = value;
+      this.queryParams.orderStatus = value === "pending" ? "1" : value === "delivered" ? "2" : value === "rejected" ? "-1" : "";
       this.queryParams.pageNum = 1;
       this.loadList();
     },
@@ -349,6 +293,8 @@ export default {
     },
     resetQuery() {
       this.$refs.queryForm.resetFields();
+      this.queryParams.keyword = "";
+      this.queryParams.orderStatus = this.auditTab === "pending" ? "1" : this.auditTab === "delivered" ? "2" : this.auditTab === "rejected" ? "-1" : "";
       this.queryParams.pageNum = 1;
       this.loadList();
     },

@@ -52,7 +52,7 @@
               <span class="detail-value">{{ detailRow.companyPhone || '—' }}</span>
             </div>
           </div>
-          <div class="detail-row">
+          <div class="detail-row two-col">
             <div class="detail-item full has-block-label">
               <span class="detail-label">营业执照：</span>
               <div class="detail-image-wrap">
@@ -332,6 +332,7 @@ export default {
     grid-template-columns: 1fr 1fr;
     gap: 0 32px;
     margin-bottom: 18px;
+    margin-left: 28px;
   }
 }
 

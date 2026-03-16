@@ -299,6 +299,34 @@ const managerRoutes = [
           hidden: true,
         },
       },
+      // 账号管理
+      {
+        path: "/account-management",
+        name: "account-management",
+        component: () => import("@/views/account-management/index.vue"),
+        meta: {
+          title: "账号管理",
+        },
+        children: [
+          {
+            path: "/account-management/list",
+            name: "account-management-list",
+            component: () => import("@/views/account-management/list.vue"),
+            meta: {
+              title: "账号列表",
+            },
+          },
+          {
+            path: "/account-management/role-management",
+            name: "account-management-add",
+            component: () =>
+              import("@/views/account-management/role-management.vue"),
+            meta: {
+              title: "角色管理",
+            },
+          },
+        ],
+      },
     ],
   },
 ];
@@ -1540,36 +1568,35 @@ const warehouseManagerRoutes = [
 // key: 角色标识（从后端返回的 opRole）
 // value: 对应的路由配置数组
 const roleRouteMap = {
-  1: salesRoutes, // 管理员
-  '1': salesRoutes, // 管理员
+  // 1: managerRoutes, // 管理员
+  // '1': managerRoutes, // 管理员
 
+  9: managerRoutes, // 管理员
+  9: managerRoutes, // 管理员
 
-  // 9: managerRoutes, // 管理员
-  // '9': managerRoutes, // 管理员
+  1: salesRoutes, // 业务员
+  1: salesRoutes, // 业务员
 
-  // 1: salesRoutes, // 业务员
-  // '1': salesRoutes, // 业务员
+  2: marketingRoutes, // 营销员
+  2: marketingRoutes, // 营销员
 
-  // 2: marketingRoutes, // 营销员
-  // '2': marketingRoutes, // 营销员
+  5: generalManagerRoutes, // 总经理
+  5: generalManagerRoutes, // 总经理
 
-  // 5: generalManagerRoutes, // 总经理
-  // '5': generalManagerRoutes, // 总经理
+  6: financeRoutes, // 财务
+  6: financeRoutes, // 财务
 
-  // 6: financeRoutes, // 财务
-  // '6': financeRoutes, // 财务
+  3: purchaseRoutes, // 采购
+  3: purchaseRoutes, // 采购
 
-  // 3: purchaseRoutes, // 采购
-  // '3': purchaseRoutes, // 采购
+  4: productionVicePresidentRoutes, // 生产副总
+  4: productionVicePresidentRoutes, // 生产副总
 
-  // 4: productionVicePresidentRoutes, // 生产副总
-  // '4': productionVicePresidentRoutes, // 生产副总
+  7: warehouseRoutes, // 产品库管
+  7: warehouseRoutes, // 产品库管
 
-  // 7: warehouseRoutes, // 产品库管
-  // '7': warehouseRoutes, // 产品库管
-  
-  // 8: warehouseManagerRoutes, // 原料库管
-  // '8': warehouseManagerRoutes, // 原料库管
+  8: warehouseManagerRoutes, // 原料库管
+  8: warehouseManagerRoutes, // 原料库管
 };
 
 /**

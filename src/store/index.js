@@ -20,14 +20,7 @@ export default new Vuex.Store({
         return {};
       }
     })(),
-    vuex_depart_list: (() => {
-      try {
-        const list = localStorage.getItem("vuex_depart_list");
-        return list ? JSON.parse(list) : [];
-      } catch (e) {
-        return [];
-      }
-    })(),
+    vuex_depart_list: [],
     token: localStorage.getItem("token") || "",
 
     //
@@ -156,7 +149,7 @@ export default new Vuex.Store({
         method: "post",
       }).then((res) => {
         if (res.code == 200) {
-          commit("set_vuex_depart_list", res.data);
+          commit("set_vuex_depart_list", res.data.list);
         } else {
         }
       });

@@ -21,7 +21,6 @@ Vue.use(VueRouter);
 // 角色路由配置
 import { getRoutesByRole } from "./role-routes.js";
 
-
 const layout = () => import("@/views/layout.vue"); // 布局
 const login = () => import("@/views/login/login.vue"); // 登录
 
@@ -80,8 +79,8 @@ const addedRouteNames = new Set();
 function filterRoutesByHidden(routes) {
   if (!routes || !Array.isArray(routes)) return [];
   return routes
-    .filter(route => !(route.meta && route.meta.hidden === false))
-    .map(route => {
+    .filter((route) => !(route.meta && route.meta.hidden === false))
+    .map((route) => {
       const copy = { ...route };
       if (copy.meta) copy.meta = { ...copy.meta };
       if (copy.children && copy.children.length > 0) {
@@ -101,8 +100,8 @@ export function addRoleRoutes(role) {
   const routes = getRoutesByRole(role) || [];
 
   if (routes.length > 0) {
-    const newlyAdded = routes.filter(r => !addedRouteNames.has(r.name));
-    newlyAdded.forEach(route => {
+    const newlyAdded = routes.filter((r) => !addedRouteNames.has(r.name));
+    newlyAdded.forEach((route) => {
       router.addRoute(route);
       addedRouteNames.add(route.name);
     });
@@ -123,14 +122,14 @@ export function getFirstRouteByRole(role) {
   }
 
   const firstRoute = routes[0];
-  
+
   // 如果有子路由，返回第一个子路由的完整路径
   if (firstRoute.children && firstRoute.children.length > 0) {
     const firstChild = firstRoute.children[0];
     // 构建完整路径：父路径 + 子路径
     const parentPath = firstRoute.path;
     // 子路径如果以 / 开头，是绝对路径；否则是相对路径，需要拼接
-    if (firstChild.path.startsWith('/')) {
+    if (firstChild.path.startsWith("/")) {
       // 绝对路径，直接返回
       return firstChild.path;
     } else {
@@ -138,7 +137,7 @@ export function getFirstRouteByRole(role) {
       return `${parentPath}/${firstChild.path}`;
     }
   }
-  
+
   // 如果没有子路由，返回父路由路径
   return firstRoute.path;
 }
@@ -155,22 +154,22 @@ export function getFirstRouteObjectByRole(role) {
   }
 
   const firstRoute = routes[0];
-  
+
   // 如果有子路由，返回第一个子路由
   if (firstRoute.children && firstRoute.children.length > 0) {
     const firstChild = firstRoute.children[0];
     return {
       name: firstChild.name,
-      path: firstChild.path.startsWith('/') 
-        ? firstChild.path 
-        : `${firstRoute.path}/${firstChild.path}`
+      path: firstChild.path.startsWith("/")
+        ? firstChild.path
+        : `${firstRoute.path}/${firstChild.path}`,
     };
   }
-  
+
   // 如果没有子路由，返回父路由
   return {
     name: firstRoute.name,
-    path: firstRoute.path
+    path: firstRoute.path,
   };
 }
 
@@ -179,7 +178,7 @@ export function getFirstRouteObjectByRole(role) {
  */
 export function resetRoutes() {
   // 移除所有动态路由
-  dynamicRoutes.forEach(route => {
+  dynamicRoutes.forEach((route) => {
     router.removeRoute(route.name);
     addedRouteNames.delete(route.name);
   });
@@ -199,7 +198,7 @@ function getUserRole() {
       userRole = roleStr;
     }
   }
-  
+
   // 如果 localStorage 中没有，尝试从 store 获取
   if (!userRole) {
     const app = router.app;
@@ -207,7 +206,7 @@ function getUserRole() {
       userRole = app.$store.state.vuex_role;
     }
   }
-  
+
   return userRole;
 }
 
@@ -218,10 +217,12 @@ router.beforeEach((to, from, next) => {
 
   // 判断是否是刷新页面（from.name 为 null 或 undefined，且 from.path 与 to.path 相同）
   // 或者 from.path 为空字符串（浏览器刷新）
-  const isPageRefresh = (!from.name && from.path === to.path) || (from.path === '' && to.path !== '/login' && to.path !== '/');
+  const isPageRefresh =
+    (!from.name && from.path === to.path) ||
+    (from.path === "" && to.path !== "/login" && to.path !== "/");
 
   // 如果是登录页或首页
-  if (to.path === '/login' || to.path === '/') {
+  if (to.path === "/login" || to.path === "/") {
     // 如果已登录，应该跳转到保存的路由或角色首页
     if (is_login_curr) {
       const userRole = getUserRole();
@@ -236,8 +237,18 @@ router.beforeEach((to, from, next) => {
           if (savedRoute) {
             try {
               const routeInfo = JSON.parse(savedRoute);
-              const query = routeInfo.query && typeof routeInfo.query === 'object' && Object.keys(routeInfo.query).length ? routeInfo.query : undefined;
-              const params = routeInfo.params && typeof routeInfo.params === 'object' && Object.keys(routeInfo.params).length ? routeInfo.params : undefined;
+              const query =
+                routeInfo.query &&
+                typeof routeInfo.query === "object" &&
+                Object.keys(routeInfo.query).length
+                  ? routeInfo.query
+                  : undefined;
+              const params =
+                routeInfo.params &&
+                typeof routeInfo.params === "object" &&
+                Object.keys(routeInfo.params).length
+                  ? routeInfo.params
+                  : undefined;
               // 尝试跳转到保存的路由（含 query、params）
               if (routeInfo.name) {
                 next({ name: routeInfo.name, query, params, replace: true });
@@ -251,7 +262,7 @@ router.beforeEach((to, from, next) => {
             }
           }
         }
-        
+
         // 如果没有保存的路由，跳转到角色首页
         const firstRoute = getFirstRouteObjectByRole(userRole);
         if (firstRoute && firstRoute.name) {
@@ -267,26 +278,46 @@ router.beforeEach((to, from, next) => {
             if (addedRouteNames.size === 0) {
               addRoleRoutes(storeRole);
             }
-            
+
             // 检查是否有保存的路由
             if (isPageRefresh) {
               const savedRoute = localStorage.getItem("last_route");
               if (savedRoute) {
                 try {
                   const routeInfo = JSON.parse(savedRoute);
-                  const query = routeInfo.query && typeof routeInfo.query === 'object' && Object.keys(routeInfo.query).length ? routeInfo.query : undefined;
-                  const params = routeInfo.params && typeof routeInfo.params === 'object' && Object.keys(routeInfo.params).length ? routeInfo.params : undefined;
+                  const query =
+                    routeInfo.query &&
+                    typeof routeInfo.query === "object" &&
+                    Object.keys(routeInfo.query).length
+                      ? routeInfo.query
+                      : undefined;
+                  const params =
+                    routeInfo.params &&
+                    typeof routeInfo.params === "object" &&
+                    Object.keys(routeInfo.params).length
+                      ? routeInfo.params
+                      : undefined;
                   if (routeInfo.name) {
-                    next({ name: routeInfo.name, query, params, replace: true });
+                    next({
+                      name: routeInfo.name,
+                      query,
+                      params,
+                      replace: true,
+                    });
                     return;
                   } else if (routeInfo.path) {
-                    next({ path: routeInfo.path, query, params, replace: true });
+                    next({
+                      path: routeInfo.path,
+                      query,
+                      params,
+                      replace: true,
+                    });
                     return;
                   }
                 } catch (e) {}
               }
             }
-            
+
             const firstRoute = getFirstRouteObjectByRole(storeRole);
             if (firstRoute && firstRoute.name) {
               next({ name: firstRoute.name, replace: true });
@@ -304,20 +335,30 @@ router.beforeEach((to, from, next) => {
   // 如果已登录，优先加载角色路由（刷新页面时必须先加载路由）
   if (is_login_curr) {
     const userRole = getUserRole();
-    
+
     // 如果路由还没加载，必须先加载路由
     if (addedRouteNames.size === 0) {
       if (userRole) {
         addRoleRoutes(userRole);
-        
+
         // 如果是刷新页面，尝试恢复保存的路由
         if (isPageRefresh) {
           const savedRoute = localStorage.getItem("last_route");
           if (savedRoute) {
             try {
               const routeInfo = JSON.parse(savedRoute);
-              const query = routeInfo.query && typeof routeInfo.query === 'object' && Object.keys(routeInfo.query).length ? routeInfo.query : undefined;
-              const params = routeInfo.params && typeof routeInfo.params === 'object' && Object.keys(routeInfo.params).length ? routeInfo.params : undefined;
+              const query =
+                routeInfo.query &&
+                typeof routeInfo.query === "object" &&
+                Object.keys(routeInfo.query).length
+                  ? routeInfo.query
+                  : undefined;
+              const params =
+                routeInfo.params &&
+                typeof routeInfo.params === "object" &&
+                Object.keys(routeInfo.params).length
+                  ? routeInfo.params
+                  : undefined;
               if (routeInfo.name) {
                 next({ name: routeInfo.name, query, params, replace: true });
                 return;
@@ -330,7 +371,7 @@ router.beforeEach((to, from, next) => {
             }
           }
         }
-        
+
         // 路由添加后，需要重新匹配当前路由
         next({ ...to, replace: true });
         return;
@@ -341,26 +382,46 @@ router.beforeEach((to, from, next) => {
           const storeRole = app.$store.state.vuex_role;
           if (storeRole) {
             addRoleRoutes(storeRole);
-            
+
             // 如果是刷新页面，尝试恢复保存的路由
             if (isPageRefresh) {
               const savedRoute = localStorage.getItem("last_route");
               if (savedRoute) {
                 try {
                   const routeInfo = JSON.parse(savedRoute);
-                  const query = routeInfo.query && typeof routeInfo.query === 'object' && Object.keys(routeInfo.query).length ? routeInfo.query : undefined;
-                  const params = routeInfo.params && typeof routeInfo.params === 'object' && Object.keys(routeInfo.params).length ? routeInfo.params : undefined;
+                  const query =
+                    routeInfo.query &&
+                    typeof routeInfo.query === "object" &&
+                    Object.keys(routeInfo.query).length
+                      ? routeInfo.query
+                      : undefined;
+                  const params =
+                    routeInfo.params &&
+                    typeof routeInfo.params === "object" &&
+                    Object.keys(routeInfo.params).length
+                      ? routeInfo.params
+                      : undefined;
                   if (routeInfo.name) {
-                    next({ name: routeInfo.name, query, params, replace: true });
+                    next({
+                      name: routeInfo.name,
+                      query,
+                      params,
+                      replace: true,
+                    });
                     return;
                   } else if (routeInfo.path) {
-                    next({ path: routeInfo.path, query, params, replace: true });
+                    next({
+                      path: routeInfo.path,
+                      query,
+                      params,
+                      replace: true,
+                    });
                     return;
                   }
                 } catch (e) {}
               }
             }
-            
+
             next({ ...to, replace: true });
             return;
           }
@@ -374,15 +435,25 @@ router.beforeEach((to, from, next) => {
         // 路由不存在，可能是动态路由丢失，重新加载
         if (userRole) {
           addRoleRoutes(userRole);
-          
+
           // 如果是刷新页面，尝试恢复保存的路由
           if (isPageRefresh) {
             const savedRoute = localStorage.getItem("last_route");
             if (savedRoute) {
               try {
                 const routeInfo = JSON.parse(savedRoute);
-                const query = routeInfo.query && typeof routeInfo.query === 'object' && Object.keys(routeInfo.query).length ? routeInfo.query : undefined;
-                const params = routeInfo.params && typeof routeInfo.params === 'object' && Object.keys(routeInfo.params).length ? routeInfo.params : undefined;
+                const query =
+                  routeInfo.query &&
+                  typeof routeInfo.query === "object" &&
+                  Object.keys(routeInfo.query).length
+                    ? routeInfo.query
+                    : undefined;
+                const params =
+                  routeInfo.params &&
+                  typeof routeInfo.params === "object" &&
+                  Object.keys(routeInfo.params).length
+                    ? routeInfo.params
+                    : undefined;
                 if (routeInfo.name) {
                   next({ name: routeInfo.name, query, params, replace: true });
                   return;
@@ -393,7 +464,7 @@ router.beforeEach((to, from, next) => {
               } catch (e) {}
             }
           }
-          
+
           next({ ...to, replace: true });
           return;
         }
@@ -405,12 +476,12 @@ router.beforeEach((to, from, next) => {
   // 注意：这里要确保不是动态路由未加载的情况
   if (!is_login_curr) {
     // 检查是否是基础路由（不需要权限）
-    const isConstantRoute = constantRoutes.some(route => {
+    const isConstantRoute = constantRoutes.some((route) => {
       if (route.path === to.path) return true;
-      if (route.path === '*' && to.path !== '/login') return true;
+      if (route.path === "*" && to.path !== "/login") return true;
       return false;
     });
-    
+
     // 如果不是基础路由且需要权限，跳转到登录页
     if (!isConstantRoute && to.meta && to.meta.requireAuth) {
       next("/login");
@@ -423,12 +494,12 @@ router.beforeEach((to, from, next) => {
 
 router.afterEach((to, from) => {
   // 保存当前路由信息到 localStorage（排除登录页和首页）
-  if (to.path !== '/login' && to.path !== '/') {
+  if (to.path !== "/login" && to.path !== "/") {
     const routeInfo = {
       name: to.name,
       path: to.path,
       params: to.params,
-      query: to.query
+      query: to.query,
     };
     localStorage.setItem("last_route", JSON.stringify(routeInfo));
   }

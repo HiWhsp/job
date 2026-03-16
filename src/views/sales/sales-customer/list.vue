@@ -14,13 +14,17 @@
           </el-form-item>
           <el-form-item label="客户属地">
             <el-select
-              v-model="queryParams.status"
+              v-model="queryParams.territory"
               placeholder="请选择"
               clearable
               style="width: 140px"
             >
-              <el-option label="启用" value="1" />
-              <el-option label="禁用" value="0" />
+              <el-option
+                v-for="item in customerBelongOptions"
+                :key="item.value"
+                :label="item.name"
+                :value="item.value"
+              />
             </el-select>
           </el-form-item>
           <el-form-item label="客户区域">
@@ -30,25 +34,44 @@
               clearable
               style="width: 140px"
             >
-              <el-option label="国内" value="国内" />
-              <el-option label="国外" value="国外" />
-              <el-option label="中国" value="中国" />
-              <el-option label="北京" value="北京" />
-              <el-option label="英国" value="英国" />
+              <el-option
+                v-for="item in customerRegionOptions"
+                :key="item.value"
+                :label="item.name"
+                :value="item.value"
+              />
             </el-select>
           </el-form-item>
           <el-form-item label="客户属性A">
-            <el-select v-model="queryParams.attr" placeholder="客户属性" clearable style="width: 140px">
-              <el-option label="企业" value="企业" />
-              <el-option label="个人" value="个人" />
+            <el-select
+              v-model="queryParams.attributeA"
+              placeholder="客户属性A"
+              clearable
+              style="width: 140px"
+            >
+              <el-option
+                v-for="item in customerAttrAOptions"
+                :key="item.value"
+                :label="item.name"
+                :value="item.value"
+              />
             </el-select>
           </el-form-item>
         </div>
         <div class="search-row">
           <el-form-item label="客户属性B">
-            <el-select v-model="queryParams.type" placeholder="请选择" clearable style="width: 140px">
-              <el-option label="类型A" value="A" />
-              <el-option label="类型B" value="B" />
+            <el-select
+              v-model="queryParams.attributeB"
+              placeholder="客户属性B"
+              clearable
+              style="width: 140px"
+            >
+              <el-option
+                v-for="item in customerAttrBOptions"
+                :key="item.value"
+                :label="item.name"
+                :value="item.value"
+              />
             </el-select>
           </el-form-item>
           <el-form-item>
@@ -63,15 +86,19 @@
     <div class="table-view">
       <div class="table-util-bar">
         <div class="table-tabs">
-          <div
-            v-for="(tab, index) in auditTabs"
-            :key="index"
+          <span
+            v-for="tab in auditTabs"
+            :key="tab.value"
             class="tab-item"
             :class="{ active: auditTab === tab.value }"
             @click="handleAuditTabChange(tab.value)"
-          >{{ tab.label }}</div>
+          >
+            {{ tab.label }}
+          </span>
         </div>
         <div class="table-acts">
+          <el-button type="primary" size="small" @click="handleImport">客户导入</el-button>
+          <el-button type="primary" size="small" @click="handleExport">导出</el-button>
           <el-button type="primary" size="small" @click="handleAdd">新增客户</el-button>
         </div>
       </div>
@@ -85,24 +112,24 @@
           @selection-change="handleSelectionChange"
         >
           <el-table-column type="selection" width="55" align="center" />
-          <el-table-column prop="code" label="客户编码" min-width="100" show-overflow-tooltip />
-          <el-table-column prop="name" label="客户名称" min-width="180" show-overflow-tooltip>
+          <el-table-column prop="customerNo" label="客户编码" min-width="100" show-overflow-tooltip />
+          <el-table-column prop="title" label="客户名称" min-width="180" show-overflow-tooltip>
             <template slot-scope="{ row }">
-              <span class="link-name" @click="handleView(row)">{{ row.name }}</span>
+              <span class="link-name" @click="handleView(row)">{{ row.title }}</span>
             </template>
           </el-table-column>
           <el-table-column prop="territory" label="客户属地" min-width="90" show-overflow-tooltip />
           <el-table-column prop="region" label="客户区域" min-width="90" show-overflow-tooltip />
-          <el-table-column prop="attrA" label="客户属性A" min-width="100" show-overflow-tooltip />
-          <el-table-column prop="attrB" label="客户属性B" min-width="100" show-overflow-tooltip />
+          <el-table-column prop="attributeA" label="客户属性A" min-width="100" show-overflow-tooltip />
+          <el-table-column prop="attributeB" label="客户属性B" min-width="100" show-overflow-tooltip />
           <el-table-column
-            prop="contactPerson"
+            prop="contact"
             label="客户直接联系人"
             min-width="120"
             show-overflow-tooltip
           />
           <el-table-column
-            prop="contactPhone"
+            prop="phone"
             label="客户联系电话"
             min-width="120"
             show-overflow-tooltip
@@ -119,15 +146,6 @@
           <el-table-column prop="introducer" label="客户引入人" min-width="100" show-overflow-tooltip />
           <el-table-column prop="manager" label="客户负责人" min-width="100" show-overflow-tooltip />
           <el-table-column prop="other" label="其他" min-width="120" show-overflow-tooltip />
-          <el-table-column prop="auditStatus" label="审核状态" width="100" align="center">
-            <template slot-scope="{ row }">
-              <el-tag v-if="row.auditStatus === 'pending'" type="info" size="small">待审核</el-tag>
-              <el-tag v-else-if="row.auditStatus === 'rejected'" type="danger" size="small">审核未通过</el-tag>
-              <el-tag v-else-if="row.auditStatus === 'audited'" type="success" size="small">已审核</el-tag>
-              <span v-else>—</span>
-            </template>
-          </el-table-column>
-          <el-table-column prop="updateTime" label="更新时间" width="120" align="center" />
           <el-table-column label="操作" width="220" align="center" fixed="right">
             <template slot-scope="{ row }">
               <span class="row-acts">
@@ -161,24 +179,35 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 import DeleteDialog from "./components/delete-dialog.vue";
 import DetailDrawer from "./components/detail-drawer.vue";
 
 export default {
-  name: "Customer",
+  name: "SalesCustomer",
 
   components: {
     DeleteDialog,
     DetailDrawer
   },
+
+  computed: {
+    ...mapState([
+      "customerBelongOptions",
+      "customerRegionOptions",
+      "customerAttrAOptions",
+      "customerAttrBOptions"
+    ])
+  },
+
   data() {
     return {
       queryParams: {
         keyword: "",
-        status: "",
+        territory: "",
         region: "",
-        attr: "",
-        type: "",
+        attributeA: "",
+        attributeB: "",
         pageNum: 1,
         pageSize: 20
       },
@@ -190,46 +219,7 @@ export default {
         { label: "已审核", value: "delivered" },
         { label: "审核未通过", value: "rejected" }
       ],
-      tableData: [
-        {
-          id: 1,
-          code: "L2026001",
-          name: "浙江省惠工医疗科技有限公司",
-          territory: "浙江",
-          region: "中国",
-          attrA: "企业",
-          attrB: "—",
-          contactPerson: "—",
-          contactPhone: "15931263178",
-          companyPhone: "0573-84006364",
-          address: "浙江省惠工医疗科技有限公司天目大道566号",
-          receiver: "—",
-          receiverPhone: "—",
-          introducer: "郭小仙",
-          manager: "郭小红",
-          other: "",
-          status: "启用"
-        },
-        {
-          id: 2,
-          code: "A2025001",
-          name: "示例客户B",
-          territory: "北京",
-          region: "北京",
-          attrA: "个人",
-          attrB: "—",
-          contactPerson: "—",
-          contactPhone: "—",
-          companyPhone: "—",
-          address: "—",
-          receiver: "—",
-          receiverPhone: "—",
-          introducer: "—",
-          manager: "—",
-          other: "",
-          status: "禁用"
-        }
-      ],
+      tableData: [],
       selectedRows: [],
       deleteDialogVisible: false,
       rowToDelete: null,
@@ -269,9 +259,61 @@ export default {
     tableRowClassName({ rowIndex }) {
       return rowIndex % 2 === 1 ? "row-even" : "";
     },
+    /** 将接口单条数据映射为表格行（与 manager 一致：territory 文案、addressJson/otherJson 解析） */
+    mapApiRowToTableRow(item) {
+      let addressObj = {};
+      try {
+        addressObj =
+          typeof item.addressJson === "string"
+            ? JSON.parse(item.addressJson || "{}")
+            : item.addressJson || {};
+      } catch (e) {
+        addressObj = {};
+      }
+      const otherObj = this._parseJsonField(item.otherJson);
+      const territoryText =
+        item.territory === 1 ? "国内" : item.territory === 2 ? "国外" : (item.territory ?? "");
+      return {
+        ...item,
+        territory: territoryText,
+        address: addressObj.address ?? "",
+        receiver: addressObj.name ?? "",
+        receiverPhone: addressObj.phone ?? "",
+        introducer: otherObj.introducer ?? "",
+        manager: otherObj.superintendent ?? "",
+        other: otherObj.other ?? ""
+      };
+    },
     loadList() {
-      // TODO: 调用接口获取列表
-      this.total = this.tableData.length;
+      const params = {
+        page: String(this.queryParams.pageNum),
+        limit: String(this.queryParams.pageSize),
+        keyword: this.queryParams.keyword || "",
+        territory: this.queryParams.territory || "",
+        region: this.queryParams.region || "",
+        attributeA: this.queryParams.attributeA || "",
+        attributeB: this.queryParams.attributeB || "",
+        status: this.auditTab || ""
+      };
+      this.$api({
+        url: "/getCustomerList",
+        method: "post",
+        data: params
+      })
+        .then(res => {
+          if (res && res.data) {
+            const list = res.data.list || res.data.rows || [];
+            this.tableData = list.map(row => this.mapApiRowToTableRow(row));
+            this.total = res.data.count ?? res.data.total ?? this.tableData.length;
+          } else {
+            this.tableData = [];
+            this.total = 0;
+          }
+        })
+        .catch(() => {
+          this.tableData = [];
+          this.total = 0;
+        });
     },
     handleQuery() {
       this.queryParams.pageNum = 1;
@@ -279,19 +321,96 @@ export default {
     },
     resetQuery() {
       this.$refs.queryForm.resetFields();
-      this.queryParams.pageNum = 1;
+      this.queryParams = {
+        keyword: "",
+        territory: "",
+        region: "",
+        attributeA: "",
+        attributeB: "",
+        pageNum: 1,
+        pageSize: 20
+      };
       this.loadList();
     },
     handleSelectionChange(selection) {
       this.selectedRows = selection;
     },
+    _parseJsonField(val) {
+      if (val == null) return {};
+      if (typeof val === "object") return val;
+      try {
+        return typeof val === "string" ? JSON.parse(val || "{}") : {};
+      } catch (e) {
+        return {};
+      }
+    },
+    /** 将详情接口返回映射为详情抽屉展示（与 manager 一致：territory 文案、paymentJson/addressJson/otherJson 解析） */
+    mapDetailApiToDrawer(data) {
+      const payment = this._parseJsonField(data.paymentJson);
+      const address = this._parseJsonField(data.addressJson);
+      const other = this._parseJsonField(data.otherJson);
+      const territoryText =
+        data.territory === 1 ? "国内" : data.territory === 2 ? "国外" : (data.territory ?? "");
+      return {
+        ...data,
+        territory: territoryText,
+        termMonth: data.paymentTerm ?? data.termMonth ?? "",
+        accountName: payment.account ?? "",
+        accountNo: payment.code ?? "",
+        bankName: payment.bank ?? "",
+        address: address.address ?? "",
+        receiver: address.name ?? "",
+        receiverPhone: address.phone ?? "",
+        introducer: other.introducer ?? "",
+        manager: other.superintendent ?? "",
+        other: other.other ?? ""
+      };
+    },
+    /** 将 manager 详情格式转为本页详情抽屉所用字段（code/name/attrA/contactPerson 等） */
+    mapDetailToSalesDrawer(mapped) {
+      const licenseArr = Array.isArray(mapped.licenseImage) ? mapped.licenseImage : [];
+      return {
+        ...mapped,
+        code: mapped.customerNo ?? "",
+        name: mapped.title ?? "",
+        attrA: mapped.attributeA ?? "",
+        attrB: mapped.attributeB ?? "",
+        contactPerson: mapped.contact ?? "",
+        contactPhone: mapped.phone ?? "",
+        businessLicense: mapped.businessLicenseImage ?? "",
+        medicalLicense1: licenseArr[0] ?? ""
+      };
+    },
+    /** 调用详情接口并打开抽屉（与 manager 客户管理接口一致） */
     handleView(row) {
-      this.detailRow = row;
+      const id = row.id;
+      if (id == null || id === "") {
+        this.$message.warning("缺少客户 id");
+        return;
+      }
+      this.detailRow = null;
       this.detailDrawerVisible = true;
+      this.$api({
+        url: "/getCustomer",
+        method: "post",
+        data: { id }
+      })
+        .then(res => {
+          if (res && res.data) {
+            const mapped = this.mapDetailApiToDrawer(res.data);
+            this.detailRow = this.mapDetailToSalesDrawer(mapped);
+          } else {
+            this.$message.error("获取详情失败");
+            this.detailDrawerVisible = false;
+          }
+        })
+        .catch(() => {
+          this.$message.error("获取详情失败");
+          this.detailDrawerVisible = false;
+        });
     },
     handleEdit(row) {
-      // TODO: 编辑
-      this.$message.info("编辑：" + row.name);
+      this.$router.push({ path: "/sales/sales-customer/add", query: { id: row.id } });
     },
     handleDelete(row) {
       this.rowToDelete = row;
@@ -299,13 +418,30 @@ export default {
     },
     handleDeleteConfirm() {
       if (!this.rowToDelete) return;
-      // TODO: 调用删除接口，例如：await deleteCustomer(this.rowToDelete.id);
-      this.$message.success("删除成功");
-      this.rowToDelete = null;
-      this.loadList();
+      const id = this.rowToDelete.id;
+      this.$api({
+        url: "/delCustomer",
+        method: "post",
+        data: { id: String(id) }
+      })
+        .then(() => {
+          this.$message.success("删除成功");
+          this.rowToDelete = null;
+          this.deleteDialogVisible = false;
+          this.loadList();
+        })
+        .catch(err => {
+          this.$message.error(err && err.msg ? err.msg : "删除失败");
+        });
     },
     handleAdd() {
       this.$router.push("/sales/sales-customer/add");
+    },
+    handleImport() {
+      this.$message.info("客户导入");
+    },
+    handleExport() {
+      this.$message.info("导出");
     },
     handleSizeChange(val) {
       this.queryParams.pageSize = val;
@@ -373,7 +509,6 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-bottom: 20px;
   margin: 0 27px 25px;
   background: #fff;
   border-bottom: 1px solid #edf0f6;
