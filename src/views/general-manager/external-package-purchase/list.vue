@@ -13,13 +13,13 @@
           </el-form-item>
           <el-form-item label="状态" prop="status">
             <el-select v-model="queryParams.status" placeholder="请选择" clearable style="width: 140px">
-              <el-option label="待审核" value="pending" />
-              <el-option label="已审核" value="reviewed" />
-              <el-option label="审核未通过" value="rejected" />
-              <el-option label="待采购" value="to_purchase" />
-              <el-option label="采购完成" value="purchased" />
-              <el-option label="质检入库中" value="qc_ing" />
-              <el-option label="已完成" value="completed" />
+              <el-option label="生产副总审核" value="1" />
+              <el-option label="总经理审核" value="2" />
+              <el-option label="待财务付款" value="3" />
+              <el-option label="待采购" value="4" />
+              <el-option label="质检入库" value="5" />
+              <el-option label="已完成" value="6" />
+              <el-option label="审核未通过" value="-1" />
             </el-select>
           </el-form-item>
           <el-form-item label="时间筛选" prop="dateRange">
@@ -54,31 +54,27 @@
           <el-table-column type="index" label="序号" width="70" align="center">
             <template slot-scope="scope">{{ (queryParams.pageNum - 1) * queryParams.pageSize + scope.$index + 1 }}</template>
           </el-table-column>
-          <el-table-column prop="requisitionNo" label="外采包装采购单单号" min-width="160" show-overflow-tooltip />
-          <el-table-column prop="packageSpec" label="包装规格" min-width="120" show-overflow-tooltip />
-          <el-table-column prop="quantity" label="数量" width="90" align="center" />
-          <el-table-column prop="amount" label="金额" min-width="100" align="right">
-            <template slot-scope="{ row }">{{ row.amount }}</template>
-          </el-table-column>
-          <el-table-column prop="orderNo" label="所属订单号" min-width="120" show-overflow-tooltip />
-          <el-table-column prop="customerName" label="客户名称" min-width="160" show-overflow-tooltip />
-          <el-table-column prop="orderTime" label="订单时间" width="120" align="center" />
-          <el-table-column prop="orderAmount" label="订单金额" min-width="110" align="right">
-            <template slot-scope="{ row }">{{ row.orderAmount }}</template>
-          </el-table-column>
-          <el-table-column prop="status" label="状态" width="100" align="center">
+          <el-table-column prop="purchaseNo" label="外采包装采购单号" min-width="180" show-overflow-tooltip />
+          <el-table-column prop="title" label="采购单名称" min-width="160" show-overflow-tooltip />
+          <el-table-column prop="staffOrderNo" label="所属订单号" min-width="120" show-overflow-tooltip />
+          <el-table-column prop="customerTitle" label="客户名称" min-width="160" show-overflow-tooltip />
+          <el-table-column prop="allNum" label="总数量" width="90" align="right" />
+          <el-table-column prop="onePrice" label="单价" width="90" align="right" />
+          <el-table-column prop="price" label="采购金额" min-width="110" align="right" />
+          <el-table-column prop="expectedTime" label="预计到货" width="120" align="center" />
+          <el-table-column prop="orderStatus" label="状态" width="120" align="center">
             <template slot-scope="{ row }">
-              <el-tag v-if="row.status === '待审核' || row.status === '待采购'" type="info" size="small" effect="light">{{ row.status }}</el-tag>
-              <el-tag v-else-if="row.status === '审核未通过'" type="danger" size="small" effect="light">审核未通过</el-tag>
-              <el-tag v-else type="success" size="small" effect="light">{{ row.status }}</el-tag>
+              <el-tag :type="orderStatusTagType(row.orderStatus)" size="small" effect="light">
+                {{ orderStatusText(row.orderStatus) }}
+              </el-tag>
             </template>
           </el-table-column>
-          <el-table-column prop="submitTime" label="提交时间" width="120" align="center" />
+          <el-table-column prop="updated_at" label="提交时间" width="160" align="center" />
           <el-table-column label="操作" width="160" align="center" fixed="right">
             <template slot-scope="{ row }">
               <span class="row-acts">
                 <span class="row-act" @click="handleView(row)">查看详情</span>
-                <span v-if="row.status === '待审核'" class="row-act" @click="handleAudit(row)">立即审核</span>
+                <span v-if="String(row.orderStatus) === '2'" class="row-act" @click="handleAudit(row)">立即审核</span>
               </span>
             </template>
           </el-table-column>
@@ -131,25 +127,17 @@
 </template>
 
 <script>
+const LIST_API = "/getPurchaseMaterialOrderList";
+const REVIEW_API = "/reviewPurchaseMaterialOrder";
+
 export default {
   name: "ExternalPackagePurchaseList",
   data() {
     return {
       queryParams: { keyword: "", status: "", dateRange: null, pageNum: 1, pageSize: 20 },
-      total: 295,
+      total: 0,
       tableHeight: 0,
-      tableData: [
-        { id: 1, requisitionNo: "4521414", packageSpec: "箱/盒", quantity: 20, amount: "1200.00", orderNo: "78456456", customerName: "浙江求实医疗科技有限公司", orderTime: "2026-01-05", orderAmount: "5000.00", status: "待审核", submitTime: "2026-01-05" },
-        { id: 2, requisitionNo: "4521414", packageSpec: "箱/盒", quantity: 15, amount: "900.00", orderNo: "78456456", customerName: "浙江求实医疗科技有限公司", orderTime: "2026-01-05", orderAmount: "5000.00", status: "待审核", submitTime: "2026-01-05" },
-        { id: 3, requisitionNo: "4521415", packageSpec: "箱/盒", quantity: 10, amount: "600.00", orderNo: "4521414", customerName: "浙江求实医疗科技有限公司", orderTime: "2026-01-05", orderAmount: "5000.00", status: "审核未通过", submitTime: "2026-01-05" },
-        { id: 4, requisitionNo: "4521416", packageSpec: "箱/盒", quantity: 30, amount: "1800.00", orderNo: "4521414", customerName: "浙江求实医疗科技有限公司", orderTime: "2026-01-05", orderAmount: "5000.00", status: "待采购", submitTime: "2026-01-05" },
-        { id: 5, requisitionNo: "4521417", packageSpec: "箱/盒", quantity: 25, amount: "1500.00", orderNo: "4521414", customerName: "浙江求实医疗科技有限公司", orderTime: "2026-01-05", orderAmount: "5000.00", status: "采购完成", submitTime: "2026-01-05" },
-        { id: 6, requisitionNo: "4521418", packageSpec: "箱/盒", quantity: 18, amount: "1080.00", orderNo: "4521414", customerName: "浙江求实医疗科技有限公司", orderTime: "2026-01-05", orderAmount: "5000.00", status: "质检入库中", submitTime: "2026-01-05" },
-        { id: 7, requisitionNo: "4521419", packageSpec: "箱/盒", quantity: 22, amount: "1320.00", orderNo: "4521414", customerName: "浙江求实医疗科技有限公司", orderTime: "2026-01-05", orderAmount: "5000.00", status: "已完成", submitTime: "2026-01-05" },
-        { id: 8, requisitionNo: "4521420", packageSpec: "箱/盒", quantity: 12, amount: "720.00", orderNo: "4521414", customerName: "浙江求实医疗科技有限公司", orderTime: "2026-01-05", orderAmount: "5000.00", status: "已完成", submitTime: "2026-01-05" },
-        { id: 9, requisitionNo: "4521421", packageSpec: "箱/盒", quantity: 28, amount: "1680.00", orderNo: "4521414", customerName: "浙江求实医疗科技有限公司", orderTime: "2026-01-05", orderAmount: "5000.00", status: "已完成", submitTime: "2026-01-05" },
-        { id: 10, requisitionNo: "4521422", packageSpec: "箱/盒", quantity: 16, amount: "960.00", orderNo: "4521414", customerName: "浙江求实医疗科技有限公司", orderTime: "2026-01-05", orderAmount: "5000.00", status: "已完成", submitTime: "2026-01-05" }
-      ],
+      tableData: [],
       auditDialogVisible: false,
       rowToAudit: null,
       auditChoice: "pass",
@@ -182,8 +170,37 @@ export default {
       return rowIndex % 2 === 1 ? "row-even" : "";
     },
     loadList() {
-      // TODO: 根据 queryParams 调用接口
-      this.total = 295;
+      const [start_time = "", end_time = ""] = this.queryParams.dateRange || [];
+      const params = {
+        limit: String(this.queryParams.pageSize),
+        page: String(this.queryParams.pageNum),
+        orderStatus: String(this.queryParams.status || ""),
+        keyword: this.queryParams.keyword || "",
+        start_time: start_time || "",
+        end_time: end_time || "",
+        isPay: "",
+        materialType: "2"
+      };
+
+      this.$api({
+        url: LIST_API,
+        method: "post",
+        data: params
+      })
+        .then(res => {
+          if (res && res.code === 200 && res.data) {
+            const list = Array.isArray(res.data.list) ? res.data.list : [];
+            this.tableData = list;
+            this.total = res.data.count ?? list.length;
+          } else {
+            this.tableData = [];
+            this.total = 0;
+          }
+        })
+        .catch(() => {
+          this.tableData = [];
+          this.total = 0;
+        });
     },
     handleQuery() {
       this.queryParams.pageNum = 1;
@@ -214,11 +231,51 @@ export default {
     },
     submitAudit() {
       if (!this.rowToAudit) return;
-      this.$message.success(
-        this.auditChoice === "pass" ? "审核通过" : "审核未通过"
-      );
-      this.closeAuditDialog();
-      this.loadList();
+      const id = this.rowToAudit.id;
+      const status = this.auditChoice === "pass" ? "1" : "-1";
+      const cont = (this.auditRemark || "").trim();
+      if (status === "-1" && !cont) {
+        this.$message.warning("驳回时请填写审核原因");
+        return;
+      }
+
+      this.$api({
+        url: REVIEW_API,
+        method: "post",
+        data: { id: String(id), status, cont }
+      })
+        .then(res => {
+          if (res && res.code === 200) {
+            this.$message.success(status === "1" ? "审核通过" : "审核驳回");
+            this.closeAuditDialog();
+            this.loadList();
+          } else {
+            this.$message.error((res && res.msg) || "提交失败");
+          }
+        })
+        .catch(err => {
+          this.$message.error((err && err.msg) ? err.msg : "提交失败");
+        });
+    },
+    orderStatusText(v) {
+      const s = Number(v);
+      const map = {
+        1: "生产副总审核",
+        2: "总经理审核",
+        3: "待财务付款",
+        4: "待采购",
+        5: "质检入库",
+        6: "已完成",
+        [-1]: "审核未通过"
+      };
+      return map[s] != null ? map[s] : (v != null ? String(v) : "—");
+    },
+    orderStatusTagType(v) {
+      const s = Number(v);
+      if (s === -1) return "danger";
+      if (s === 6) return "success";
+      if (s === 3) return "warning";
+      return "info";
     },
     handleSizeChange(val) {
       this.queryParams.pageSize = val;

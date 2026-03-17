@@ -15,45 +15,57 @@
           </el-col>
           <el-col :span="12" class="field-item">
             <span class="field-label">采购单名称：</span>
-            <span class="field-value">{{ detail.purchaseName }}</span>
+            <span class="field-value">{{ detail.title || detail.purchaseName }}</span>
           </el-col>
         </el-row>
         <el-row :gutter="24" class="field-row">
           <el-col :span="12" class="field-item">
             <span class="field-label">提交时间：</span>
-            <span class="field-value">{{ detail.submitTime }}</span>
+            <span class="field-value">{{ detail.updated_at || detail.submitTime }}</span>
           </el-col>
           <el-col :span="12" class="field-item">
             <span class="field-label">订单状态：</span>
-            <el-tag :type="statusTagType" size="small" effect="plain">{{ detail.orderStatus }}</el-tag>
+            <el-tag :type="statusTagType" size="small" effect="plain">{{ orderStatusText(detail.orderStatus) }}</el-tag>
           </el-col>
         </el-row>
         <el-row :gutter="24" class="field-row">
           <el-col :span="12" class="field-item">
-            <span class="field-label">订单金额：</span>
-            <span class="field-value">{{ detail.orderAmount }}</span>
+            <span class="field-label">采购金额：</span>
+            <span class="field-value">{{ detail.price || detail.orderAmount }}</span>
           </el-col>
           <el-col :span="12" class="field-item">
-            <span class="field-label">审核备注：</span>
-            <span class="field-value">{{ detail.auditRemark || '--' }}</span>
+            <span class="field-label">客户名称：</span>
+            <span class="field-value">{{ detail.customerTitle || '--' }}</span>
+          </el-col>
+        </el-row>
+        <el-row :gutter="24" class="field-row">
+          <el-col :span="12" class="field-item">
+            <span class="field-label">订单号：</span>
+            <span class="field-value">{{ detail.staffOrderNo || '--' }}</span>
+          </el-col>
+          <el-col :span="12" class="field-item">
+            <span class="field-label">订单时间：</span>
+            <span class="field-value">{{ formatTime(detail.staffOrderTime) }}</span>
           </el-col>
         </el-row>
       </div>
     </div>
 
-    <!-- 原料信息 -->
+    <!-- 外购产品信息 -->
     <div class="section-card">
       <div class="section-header">
-        <span class="section-title">原料信息</span>
+        <span class="section-title">外购产品信息</span>
       </div>
       <div class="section-body">
-        <el-table :data="detail.materialList" class="material-table" :row-class-name="tableRowClassName">
-          <el-table-column prop="materialCode" label="原料编码" min-width="140" />
-          <el-table-column prop="materialName" label="原料名称" min-width="140" />
-          <el-table-column prop="spec" label="规格" min-width="140" />
-          <el-table-column prop="quantity" label="数量" width="100" align="center" />
-          <el-table-column prop="category" label="所属分类" min-width="120" />
-          <el-table-column prop="unit" label="单位" width="80" align="center" />
+        <el-table :data="productList" class="material-table" :row-class-name="tableRowClassName">
+          <el-table-column prop="info.productNo" label="产品编号" min-width="140" show-overflow-tooltip />
+          <el-table-column prop="info.title" label="产品名称" min-width="160" show-overflow-tooltip />
+          <el-table-column prop="info.keyVals" label="规格" min-width="180" show-overflow-tooltip />
+          <el-table-column prop="info.unit" label="单位" width="90" align="center" />
+          <el-table-column prop="num" label="采购数量" width="110" align="right" />
+          <el-table-column prop="rkNum" label="入库数量" width="110" align="right" />
+          <el-table-column prop="price" label="单价" width="110" align="right" />
+          <el-table-column prop="totalPrice" label="小计" width="110" align="right" />
         </el-table>
       </div>
     </div>
@@ -67,38 +79,55 @@
 </template>
 
 <script>
+const DETAIL_API = "/getPurchaseForeignProductOrder";
+
 export default {
-  name: 'MaterialPurchaseDetail',
+  name: 'ExternalProductPurchaseDetail',
   data() {
     return {
       detail: {
-        purchaseNo: '2026001-999',
-        purchaseName: '采购单名称',
-        submitTime: '2026-01-01',
-        orderStatus: '待审核',
-        orderAmount: '2545.00',
-        auditRemark: '',
-        materialList: [
-          { materialCode: '4578786954', materialName: '原料名称', spec: '98,A1,10mm', quantity: 20, category: '原料分类', unit: '盒' },
-          { materialCode: '4578786954', materialName: '原料名称', spec: '98,A1,10mm', quantity: 20, category: '原料分类', unit: '盒' },
-          { materialCode: '4578786954', materialName: '原料名称', spec: '98,A1,10mm', quantity: 20, category: '原料分类', unit: '盒' },
-          { materialCode: '4578786954', materialName: '原料名称', spec: '98,A1,10mm', quantity: 20, category: '原料分类', unit: '盒' },
-          { materialCode: '4578786954', materialName: '原料名称', spec: '98,A1,10mm', quantity: 20, category: '原料分类', unit: '盒' },
-          { materialCode: '4578786954', materialName: '原料名称', spec: '98,A1,10mm', quantity: 20, category: '原料分类', unit: '盒' },
-          { materialCode: '4578786954', materialName: '原料名称', spec: '98,A1,10mm', quantity: 20, category: '原料分类', unit: '盒' },
-          { materialCode: '4578786954', materialName: '原料名称', spec: '98,A1,10mm', quantity: 20, category: '原料分类', unit: '盒' },
-          { materialCode: '4578786954', materialName: '原料名称', spec: '98,A1,10mm', quantity: 20, category: '原料分类', unit: '盒' },
-          { materialCode: '4578786954', materialName: '原料名称', spec: '98,A1,10mm', quantity: 20, category: '原料分类', unit: '盒' }
-        ]
+        purchaseNo: "",
+        title: "",
+        price: "",
+        orderStatus: "",
+        pdfUrl: "",
+        created_at: "",
+        updated_at: "",
+        isPay: 0,
+        payJson: null,
+        reviewJson: [],
+        staffOrderNo: "",
+        staffOrderTime: "",
+        customerTitle: "",
+        ruKuNo: "",
+        ruKuJson: null,
+        productJson: []
       }
     }
   },
   computed: {
     statusTagType() {
-      const s = this.detail.orderStatus
-      if (s === '待审核') return 'info'
-      if (s === '审核未通过') return 'danger'
-      return 'success'
+      const s = Number(this.detail.orderStatus);
+      if (s === -1) return "danger";
+      if (s === 6) return "success";
+      if (s === 3) return "warning";
+      return "info";
+    },
+    productList() {
+      const list = Array.isArray(this.detail.productJson) ? this.detail.productJson : [];
+      return list.map(item => ({
+        ...item,
+        info: item && item.info ? item.info : {}
+      }));
+    },
+    reviewList() {
+      return Array.isArray(this.detail.reviewJson) ? this.detail.reviewJson : [];
+    },
+    payInfo() {
+      return (this.detail && this.detail.payJson) ? this.detail.payJson : {};
+    },
+    ruKuInfo() {
+      return (this.detail && this.detail.ruKuJson) ? this.detail.ruKuJson : {};
     }
   },
   mounted() {
@@ -110,7 +139,72 @@ export default {
   },
   methods: {
     loadDetail(id) {
-      // TODO: 接口获取详情后赋值 this.detail
+      this.$api({
+        url: DETAIL_API,
+        method: "post",
+        data: { id: String(id) }
+      })
+        .then(res => {
+          if (res && res.code === 200 && res.data) {
+            const d = res.data || {};
+            const normalized = {
+              ...d,
+              payJson: this.safeJson(d.payJson, {}),
+              reviewJson: this.safeJson(d.reviewJson, []),
+              ruKuJson: this.safeJson(d.ruKuJson, {}),
+              productJson: this.safeJson(d.productJson, [])
+            };
+            this.detail = normalized;
+          } else {
+            this.$message.error((res && res.msg) || "获取详情失败");
+          }
+        })
+        .catch(err => {
+          this.$message.error((err && err.msg) ? err.msg : "获取详情失败");
+        });
+    },
+    safeJson(val, fallback) {
+      if (val == null) return fallback;
+      if (typeof val === "string") {
+        const s = val.trim();
+        if (!s) return fallback;
+        try {
+          return JSON.parse(s);
+        } catch (e) {
+          return fallback;
+        }
+      }
+      return val;
+    },
+    formatTime(v) {
+      if (!v) return "--";
+      const s = String(v);
+      if (s.includes("T")) {
+        const d = new Date(s);
+        if (!isNaN(d.getTime())) {
+          const yyyy = d.getFullYear();
+          const mm = String(d.getMonth() + 1).padStart(2, "0");
+          const dd = String(d.getDate()).padStart(2, "0");
+          const hh = String(d.getHours()).padStart(2, "0");
+          const mi = String(d.getMinutes()).padStart(2, "0");
+          const ss = String(d.getSeconds()).padStart(2, "0");
+          return `${yyyy}-${mm}-${dd} ${hh}:${mi}:${ss}`;
+        }
+      }
+      return s;
+    },
+    orderStatusText(v) {
+      const s = Number(v);
+      const map = {
+        1: "生产副总审核",
+        2: "总经理审核",
+        3: "待财务付款",
+        4: "待采购",
+        5: "质检入库",
+        6: "已完成",
+        [-1]: "审核未通过"
+      };
+      return map[s] != null ? map[s] : (v != null ? String(v) : "—");
     },
     tableRowClassName({ rowIndex }) {
       return rowIndex % 2 === 1 ? 'row-even' : ''
@@ -214,6 +308,27 @@ export default {
     background: #fff;
     color: #606266;
   }
+}
+
+.empty-tip {
+  margin-top: 12px;
+  color: #909399;
+  font-size: 13px;
+  text-align: left;
+}
+
+.img-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.preview-img {
+  width: 120px;
+  height: 120px;
+  border-radius: 6px;
+  border: 1px solid #ebeef5;
+  background: #fff;
 }
 
 .form-footer {

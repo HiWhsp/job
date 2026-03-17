@@ -7,7 +7,7 @@
           <el-form-item label="关键词" prop="keyword">
             <el-input
               v-model="queryParams.keyword"
-              placeholder="请购单单号/订单号/客户名称"
+              placeholder="采购单号/订单号/客户名称"
               clearable
               style="width: 260px"
             />
@@ -58,25 +58,25 @@
               {{ String((queryParams.pageNum - 1) * queryParams.pageSize + scope.$index + 1).padStart(3, '0') }}
             </template>
           </el-table-column>
-          <el-table-column prop="requisitionNo" label="外购请购单单号" min-width="140" show-overflow-tooltip />
-          <el-table-column prop="orderNo" label="所属订单号" min-width="120" show-overflow-tooltip />
-          <el-table-column prop="customerName" label="客户名称" min-width="180" show-overflow-tooltip />
-          <el-table-column prop="orderAmount" label="订单金额" min-width="120" align="right">
-            <template slot-scope="{ row }">{{ row.orderAmount }}</template>
+          <el-table-column prop="purchaseNo" label="外购请购单单号" align="center" show-overflow-tooltip />
+          <el-table-column prop="staffOrderNo" label="所属订单号" align="center" show-overflow-tooltip />
+          <el-table-column prop="customerTitle" label="客户名称" align="center" show-overflow-tooltip />
+          <el-table-column prop="price" label="订单金额" align="center">
+            <template slot-scope="{ row }">{{ row.price }}</template>
           </el-table-column>
-          <el-table-column prop="status" label="状态" width="100" align="center">
+          <el-table-column prop="orderStatus" label="状态" width="100" align="center">
             <template slot-scope="{ row }">
-              <el-tag v-if="row.status === '待审核'" type="info" size="small">待审核</el-tag>
-              <el-tag v-else-if="row.status === '审核未通过'" type="danger" size="small">审核未通过</el-tag>
-              <el-tag v-else type="success" size="small">已审核</el-tag>
+              <el-tag :type="orderStatusTagType(row.orderStatus)" size="small" effect="light">
+                {{ orderStatusText(row.orderStatus) }}
+              </el-tag>
             </template>
           </el-table-column>
-          <el-table-column prop="submitTime" label="提交时间" width="120" align="center" />
-          <el-table-column label="操作" width="180" align="center" fixed="right">
+          <el-table-column prop="updated_at" label="提交时间" width="160" align="center" />
+          <el-table-column label="操作" width="220" align="center">
             <template slot-scope="{ row }">
               <span class="row-acts">
                 <span class="row-act" @click="handleView(row)">查看详情</span>
-                <span v-if="row.status === '待审核'" class="row-act" @click="handleAudit(row)">立即审核</span>
+                <span v-if="String(row.orderStatus) === '2'" class="row-act" @click="handleAudit(row)">立即审核</span>
               </span>
             </template>
           </el-table-column>
@@ -130,7 +130,10 @@
   </div>
 </template>
   
-  <script>
+<script>
+const LIST_API = "/getPurchaseForeignProductOrderList";
+const REVIEW_API = "/reviewForeignProductOrder";
+
 export default {
   name: "ExternalProductPurchaseList",
   data() {
@@ -141,26 +144,15 @@ export default {
         pageNum: 1,
         pageSize: 20
       },
-      total: 295,
+      total: 0,
       tableHeight: 0,
-      statusTab: "pending", // pending | reviewed | rejected
+      statusTab: "2", // orderStatus：1生产副总审核,2总经理审核,3待财务付款,4待采购,5质检入库,6已完成,-1审核未通过
       statusTabs: [
-        { label: "待审核", value: "pending" },
-        { label: "已审核", value: "reviewed" },
-        { label: "审核未通过", value: "rejected" }
+        { label: "待审核", value: "2" },
+        { label: "已审核", value: "4" },
+        { label: "审核未通过", value: "-1" }
       ],
-      tableData: [
-        { id: 1, requisitionNo: "4521414", orderNo: "78456456", customerName: "浙江求实医疗科技有限公司", orderAmount: "5000.00", status: "待审核", submitTime: "2026-01-05" },
-        { id: 2, requisitionNo: "4521414", orderNo: "78456456", customerName: "浙江求实医疗科技有限公司", orderAmount: "5000.00", status: "待审核", submitTime: "2026-01-05" },
-        { id: 3, requisitionNo: "4521414", orderNo: "4521414", customerName: "浙江求实医疗科技有限公司", orderAmount: "5000.00", status: "审核未通过", submitTime: "2026-01-05" },
-        { id: 4, requisitionNo: "4521414", orderNo: "4521414", customerName: "浙江求实医疗科技有限公司", orderAmount: "5000.00", status: "已审核", submitTime: "2026-01-05" },
-        { id: 5, requisitionNo: "4521414", orderNo: "4521414", customerName: "浙江求实医疗科技有限公司", orderAmount: "5000.00", status: "已审核", submitTime: "2026-01-05" },
-        { id: 6, requisitionNo: "4521414", orderNo: "4521414", customerName: "浙江求实医疗科技有限公司", orderAmount: "5000.00", status: "已审核", submitTime: "2026-01-05" },
-        { id: 7, requisitionNo: "4521414", orderNo: "4521414", customerName: "浙江求实医疗科技有限公司", orderAmount: "5000.00", status: "已审核", submitTime: "2026-01-05" },
-        { id: 8, requisitionNo: "4521414", orderNo: "4521414", customerName: "浙江求实医疗科技有限公司", orderAmount: "5000.00", status: "已审核", submitTime: "2026-01-05" },
-        { id: 9, requisitionNo: "4521414", orderNo: "4521414", customerName: "浙江求实医疗科技有限公司", orderAmount: "5000.00", status: "已审核", submitTime: "2026-01-05" },
-        { id: 10, requisitionNo: "4521414", orderNo: "4521414", customerName: "浙江求实医疗科技有限公司", orderAmount: "5000.00", status: "已审核", submitTime: "2026-01-05" }
-      ],
+      tableData: [],
       auditDialogVisible: false,
       rowToAudit: null,
       auditChoice: "pass",
@@ -193,8 +185,35 @@ export default {
       return rowIndex % 2 === 1 ? "row-even" : "";
     },
     loadList() {
-      // TODO: 根据 statusTab、queryParams 调用接口
-      this.total = 295;
+      const [start_time = "", end_time = ""] = this.queryParams.dateRange || [];
+      const params = {
+        page: String(this.queryParams.pageNum),
+        limit: String(this.queryParams.pageSize),
+        orderStatus: String(this.statusTab || ""),
+        keyword: this.queryParams.keyword || "",
+        start_time: start_time || "",
+        end_time: end_time || ""
+      };
+
+      this.$api({
+        url: LIST_API,
+        method: "post",
+        data: params
+      })
+        .then(res => {
+          if (res && res.code === 200 && res.data) {
+            const list = Array.isArray(res.data.list) ? res.data.list : [];
+            this.tableData = list;
+            this.total = res.data.count ?? list.length;
+          } else {
+            this.tableData = [];
+            this.total = 0;
+          }
+        })
+        .catch(() => {
+          this.tableData = [];
+          this.total = 0;
+        });
     },
     handleStatusTabChange(value) {
       this.statusTab = value;
@@ -230,12 +249,51 @@ export default {
     },
     submitAudit() {
       if (!this.rowToAudit) return;
-      // TODO: 调用审核接口
-      this.$message.success(
-        this.auditChoice === "pass" ? "审核通过" : "审核未通过"
-      );
-      this.closeAuditDialog();
-      this.loadList();
+      const id = this.rowToAudit.id;
+      const status = this.auditChoice === "pass" ? "1" : "-1";
+      const cont = (this.auditRemark || "").trim();
+      if (status === "-1" && !cont) {
+        this.$message.warning("驳回时请填写审核原因");
+        return;
+      }
+
+      this.$api({
+        url: REVIEW_API,
+        method: "post",
+        data: { id: String(id), status, cont }
+      })
+        .then(res => {
+          if (res && res.code === 200) {
+            this.$message.success(status === "1" ? "审核通过" : "审核驳回");
+            this.closeAuditDialog();
+            this.loadList();
+          } else {
+            this.$message.error((res && res.msg) || "提交失败");
+          }
+        })
+        .catch(err => {
+          this.$message.error((err && err.msg) ? err.msg : "提交失败");
+        });
+    },
+    orderStatusText(v) {
+      const s = Number(v);
+      const map = {
+        1: "生产副总审核",
+        2: "总经理审核",
+        3: "待财务付款",
+        4: "待采购",
+        5: "质检入库",
+        6: "已完成",
+        [-1]: "审核未通过"
+      };
+      return map[s] != null ? map[s] : (v != null ? String(v) : "—");
+    },
+    orderStatusTagType(v) {
+      const s = Number(v);
+      if (s === -1) return "danger";
+      if (s === 6) return "success";
+      if (s === 3) return "warning";
+      return "info";
     },
     handleSizeChange(val) {
       this.queryParams.pageSize = val;

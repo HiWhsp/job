@@ -6,19 +6,19 @@
           <el-form-item label="关键词" prop="keyword">
             <el-input
               v-model="queryParams.keyword"
-              placeholder="订单号"
+              placeholder="采购单号/采购单名称"
               clearable
               style="width: 260px"
             />
           </el-form-item>
           <el-form-item label="状态" prop="status">
             <el-select v-model="queryParams.status" placeholder="请选择" clearable style="width: 140px">
-              <el-option label="待审核" value="pending" />
-              <el-option label="审核未通过" value="rejected" />
-              <el-option label="待采购" value="to_purchase" />
-              <el-option label="采购完成" value="purchased" />
-              <el-option label="质检中" value="qc_ing" />
-              <el-option label="已完成" value="completed" />
+              <el-option label="生产副总审核" value="1" />
+              <el-option label="总经理审核" value="2" />
+              <el-option label="待财务付款" value="3" />
+              <el-option label="待采购" value="4" />
+              <el-option label="已采购" value="5" />
+              <el-option label="审核未通过" value="-1" />
             </el-select>
           </el-form-item>
           <el-form-item label="时间筛选" prop="dateRange">
@@ -55,24 +55,22 @@
               {{ String((queryParams.pageNum - 1) * queryParams.pageSize + scope.$index + 1).padStart(3, '0') }}
             </template>
           </el-table-column>
-          <el-table-column prop="purchaseNo" label="采购单号" min-width="120" show-overflow-tooltip />
-          <el-table-column prop="purchaseName" label="采购名称" min-width="120" show-overflow-tooltip />
-          <el-table-column prop="amount" label="金额" min-width="110" align="right">
-            <template slot-scope="{ row }">{{ row.amount }}</template>
-          </el-table-column>
-          <el-table-column prop="status" label="状态" width="100" align="center">
+          <el-table-column prop="purchaseNo" label="采购单号" align="center" show-overflow-tooltip />
+          <el-table-column prop="title" label="采购名称" align="center" show-overflow-tooltip />
+          <el-table-column prop="price" label="金额" align="center" />
+          <el-table-column prop="orderStatus" label="状态" align="center">
             <template slot-scope="{ row }">
-              <el-tag v-if="row.status === '待审核'" type="info" size="small">待审核</el-tag>
-              <el-tag v-else-if="row.status === '审核未通过'" type="danger" size="small">审核未通过</el-tag>
-              <el-tag v-else type="success" size="small">{{ row.status }}</el-tag>
+              <el-tag :type="orderStatusTagType(row.orderStatus)" size="small" effect="light">
+                {{ orderStatusText(row.orderStatus) }}
+              </el-tag>
             </template>
           </el-table-column>
-          <el-table-column prop="submitTime" label="提交时间" width="120" align="center" />
+          <el-table-column prop="updated_at" label="提交时间" align="center" />
           <el-table-column label="操作" width="160" align="center" fixed="right">
             <template slot-scope="{ row }">
               <span class="row-acts">
                 <span class="row-act" @click="handleView(row)">查看详情</span>
-                <span v-if="row.status === '待审核' || row.status === '审核未通过'" class="row-act" @click="handleAudit(row)">立即审核</span>
+                <span v-if="String(row.orderStatus) === '2'" class="row-act" @click="handleAudit(row)">立即审核</span>
               </span>
             </template>
           </el-table-column>
@@ -125,25 +123,17 @@
 </template>
 
 <script>
+const LIST_API = "/getPurchaseEquipmentOrderList";
+const REVIEW_API = "/reviewPurchaseEquipmentOrder";
+
 export default {
   name: "DevicePurchaseList",
   data() {
     return {
       queryParams: { keyword: "", status: "", dateRange: null, pageNum: 1, pageSize: 20 },
-      total: 295,
+      total: 0,
       tableHeight: 0,
-      tableData: [
-        { id: 1, purchaseNo: "4521414", purchaseName: "采购名称", amount: "2500.00", status: "待审核", submitTime: "2026-01-05" },
-        { id: 2, purchaseNo: "4521414", purchaseName: "采购名称", amount: "2500.00", status: "待审核", submitTime: "2026-01-05" },
-        { id: 3, purchaseNo: "4521414", purchaseName: "采购名称", amount: "2500.00", status: "审核未通过", submitTime: "2026-01-05" },
-        { id: 4, purchaseNo: "4521414", purchaseName: "采购名称", amount: "2500.00", status: "待采购", submitTime: "2026-01-05" },
-        { id: 5, purchaseNo: "4521414", purchaseName: "采购名称", amount: "2500.00", status: "采购完成", submitTime: "2026-01-05" },
-        { id: 6, purchaseNo: "4521414", purchaseName: "采购名称", amount: "2500.00", status: "质检中", submitTime: "2026-01-05" },
-        { id: 7, purchaseNo: "4521414", purchaseName: "采购名称", amount: "2500.00", status: "已完成", submitTime: "2026-01-05" },
-        { id: 8, purchaseNo: "4521414", purchaseName: "采购名称", amount: "2500.00", status: "已完成", submitTime: "2026-01-05" },
-        { id: 9, purchaseNo: "4521414", purchaseName: "采购名称", amount: "2500.00", status: "已完成", submitTime: "2026-01-05" },
-        { id: 10, purchaseNo: "4521414", purchaseName: "采购名称", amount: "2500.00", status: "已完成", submitTime: "2026-01-05" }
-      ],
+      tableData: [],
       auditDialogVisible: false,
       rowToAudit: null,
       auditChoice: "pass",
@@ -176,8 +166,36 @@ export default {
       return rowIndex % 2 === 1 ? "row-even" : "";
     },
     loadList() {
-      // TODO: 根据 queryParams 调用接口
-      this.total = 295;
+      const [start_time = "", end_time = ""] = this.queryParams.dateRange || [];
+      const params = {
+        limit: String(this.queryParams.pageSize),
+        page: String(this.queryParams.pageNum),
+        status: String(this.queryParams.status || ""),
+        keyword: this.queryParams.keyword || "",
+        start_time: start_time || "",
+        end_time: end_time || "",
+        isPay: ""
+      };
+
+      this.$api({
+        url: LIST_API,
+        method: "post",
+        data: params
+      })
+        .then(res => {
+          if (res && res.code === 200 && res.data) {
+            const list = Array.isArray(res.data.list) ? res.data.list : [];
+            this.tableData = list;
+            this.total = res.data.count ?? list.length;
+          } else {
+            this.tableData = [];
+            this.total = 0;
+          }
+        })
+        .catch(() => {
+          this.tableData = [];
+          this.total = 0;
+        });
     },
     handleQuery() {
       this.queryParams.pageNum = 1;
@@ -208,11 +226,50 @@ export default {
     },
     submitAudit() {
       if (!this.rowToAudit) return;
-      this.$message.success(
-        this.auditChoice === "pass" ? "审核通过" : "审核未通过"
-      );
-      this.closeAuditDialog();
-      this.loadList();
+      const id = this.rowToAudit.id;
+      const status = this.auditChoice === "pass" ? "1" : "-1";
+      const cont = (this.auditRemark || "").trim();
+      if (status === "-1" && !cont) {
+        this.$message.warning("驳回时请填写审核原因");
+        return;
+      }
+
+      this.$api({
+        url: REVIEW_API,
+        method: "post",
+        data: { id: String(id), status, cont }
+      })
+        .then(res => {
+          if (res && res.code === 200) {
+            this.$message.success(status === "1" ? "审核通过" : "审核驳回");
+            this.closeAuditDialog();
+            this.loadList();
+          } else {
+            this.$message.error((res && res.msg) || "提交失败");
+          }
+        })
+        .catch(err => {
+          this.$message.error((err && err.msg) ? err.msg : "提交失败");
+        });
+    },
+    orderStatusText(v) {
+      const s = Number(v);
+      const map = {
+        1: "生产副总审核",
+        2: "总经理审核",
+        3: "待财务付款",
+        4: "待采购",
+        5: "已采购",
+        [-1]: "审核未通过"
+      };
+      return map[s] != null ? map[s] : (v != null ? String(v) : "—");
+    },
+    orderStatusTagType(v) {
+      const s = Number(v);
+      if (s === -1) return "danger";
+      if (s === 5) return "success";
+      if (s === 3) return "warning";
+      return "info";
     },
     handleSizeChange(val) {
       this.queryParams.pageSize = val;

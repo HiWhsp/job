@@ -23,7 +23,7 @@
           </el-col>
           <el-col :span="12" class="field-item">
             <span class="field-label">订单状态：</span>
-            <el-tag :type="statusTagType" size="small" effect="plain">{{ detail.orderStatus }}</el-tag>
+            <el-tag :type="statusTagType" size="small" effect="plain">{{ orderStatusText(detail.orderStatus) }}</el-tag>
           </el-col>
         </el-row>
         <el-row :gutter="24" class="field-row">
@@ -54,7 +54,7 @@
       </div>
     </div>
     <div class="form-footer">
-      <el-button type="primary" @click="handleAudit">审核</el-button>
+      <el-button type="primary" v-if="String(detail.orderStatus) === '2'" @click="handleAudit">审核</el-button>
       <el-button @click="handleCancel">取消</el-button>
     </div>
   </div>
@@ -69,7 +69,7 @@ export default {
         purchaseNo: "",
         purchaseName: "",
         submitTime: "",
-        orderStatus: "待审核",
+        orderStatus: "",
         orderAmount: "",
         auditRemark: "",
         itemList: []
@@ -78,10 +78,11 @@ export default {
   },
   computed: {
     statusTagType() {
-      const s = this.detail.orderStatus;
-      if (s === "待审核") return "info";
-      if (s === "审核未通过") return "danger";
-      return "success";
+      const s = Number(this.detail.orderStatus);
+      if (s === -1) return "danger";
+      if (s === 6) return "success";
+      if (s === 3) return "warning";
+      return "info";
     }
   },
   mounted() {
@@ -90,7 +91,82 @@ export default {
   },
   methods: {
     loadDetail(id) {
-      // TODO: 接口
+      this.$api({
+        url: "/getPurchaseMaterialOrder",
+        method: "post",
+        data: { id: String(id) }
+      })
+        .then(res => {
+          if (res && res.code === 200 && res.data) {
+            const d = res.data || {};
+            const reviewList = this.safeJson(d.reviewJson, []);
+            const auditRemark = Array.isArray(reviewList) ? this.lastNonEmptyCont(reviewList) : "";
+            const productList = this.safeJson(d.productJson, []);
+
+            const itemList = Array.isArray(productList)
+              ? productList.map(p => {
+                  const info = (p && p.info) ? p.info : {};
+                  return {
+                    itemCode: info.sn || (info.id != null ? String(info.id) : (p && p.id != null ? String(p.id) : "")),
+                    itemName: info.title || "",
+                    spec: info.keyVals || "",
+                    quantity: p && p.num != null ? p.num : "",
+                    category: info.productCateTitle || "",
+                    unit: info.unit || ""
+                  };
+                })
+              : [];
+
+            this.detail = {
+              purchaseNo: d.purchaseNo || "",
+              purchaseName: d.title || d.purchaseName || "",
+              submitTime: d.updated_at || d.submitTime || "",
+              orderStatus: d.orderStatus != null ? d.orderStatus : "",
+              orderAmount: d.price || d.orderAmount || "",
+              auditRemark: auditRemark || "",
+              itemList
+            };
+          } else {
+            this.$message.error((res && res.msg) || "获取详情失败");
+          }
+        })
+        .catch(err => {
+          this.$message.error((err && err.msg) ? err.msg : "获取详情失败");
+        });
+    },
+    safeJson(val, fallback) {
+      if (val == null) return fallback;
+      if (typeof val === "string") {
+        const s = val.trim();
+        if (!s) return fallback;
+        try {
+          return JSON.parse(s);
+        } catch (e) {
+          return fallback;
+        }
+      }
+      return val;
+    },
+    lastNonEmptyCont(list) {
+      for (let i = list.length - 1; i >= 0; i--) {
+        const it = list[i];
+        const c = it && typeof it.cont === "string" ? it.cont.trim() : "";
+        if (c) return c;
+      }
+      return "";
+    },
+    orderStatusText(v) {
+      const s = Number(v);
+      const map = {
+        1: "生产副总审核",
+        2: "总经理审核",
+        3: "待财务付款",
+        4: "待采购",
+        5: "质检入库",
+        6: "已完成",
+        [-1]: "审核未通过"
+      };
+      return map[s] != null ? map[s] : (v != null ? String(v) : "—");
     },
     tableRowClassName({ rowIndex }) {
       return rowIndex % 2 === 1 ? "row-even" : "";
