@@ -5,24 +5,12 @@
       <el-form :model="queryParams" ref="queryForm" inline class="search-form" label-width="80px">
         <div class="search-row">
           <el-form-item label="关键词" prop="keyword">
-            <el-input
-              v-model="queryParams.keyword"
-              placeholder="采购单号/采购单名称"
-              clearable
-              style="width: 260px"
-            />
+            <el-input v-model="queryParams.keyword" placeholder="采购单号/采购单名称" clearable style="width: 260px" />
           </el-form-item>
           <el-form-item label="时间筛选" prop="dateRange">
-            <el-date-picker
-              v-model="queryParams.dateRange"
-              type="daterange"
-              range-separator="-"
-              start-placeholder="开始时间"
-              end-placeholder="结束时间"
-              clearable
-              style="width: 236px"
-              value-format="yyyy-MM-dd"
-            />
+            <el-date-picker v-model="queryParams.dateRange" type="daterange" range-separator="-"
+              start-placeholder="开始时间" end-placeholder="结束时间" clearable style="width: 236px"
+              value-format="yyyy-MM-dd" />
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="handleQuery">搜索</el-button>
@@ -36,77 +24,50 @@
     <div class="table-view">
       <div class="table-util-bar">
         <div class="table-tabs">
-          <div
-            v-for="(tab, index) in statusTabs"
-            :key="index"
-            class="tab-item"
-            :class="{ active: statusTab === tab.value }"
-            @click="handleStatusTabChange(tab.value)"
-          >{{ tab.label }}</div>
+          <div v-for="(tab, index) in statusTabs" :key="index" class="tab-item"
+            :class="{ active: statusTab === tab.value }" @click="handleStatusTabChange(tab.value)">{{ tab.label }}</div>
         </div>
       </div>
       <div class="table-box">
-        <el-table
-          ref="tableH"
-          :height="tableHeight"
-          :data="tableData"
-          header-cell-class-name="table-header-cell"
-          :row-class-name="tableRowClassName"
-        >
+        <el-table ref="tableH" :height="tableHeight" :data="tableData" header-cell-class-name="table-header-cell"
+          :row-class-name="tableRowClassName">
           <el-table-column type="index" label="序号" width="70" align="center">
-            <template
-              slot-scope="scope"
-            >{{ (queryParams.pageNum - 1) * queryParams.pageSize + scope.$index + 1 }}</template>
+            <template slot-scope="scope">{{ (queryParams.pageNum - 1) * queryParams.pageSize + scope.$index + 1
+            }}</template>
           </el-table-column>
-          <el-table-column prop="purchaseNo" label="采购单号" min-width="120" show-overflow-tooltip />
-          <el-table-column prop="purchaseName" label="采购单名称" min-width="140" show-overflow-tooltip />
-          <el-table-column prop="orderAmount" label="订单金额" min-width="120" align="right">
-            <template slot-scope="{ row }">{{ row.orderAmount }}</template>
+          <el-table-column prop="purchaseNo" label="采购单号" align="center" show-overflow-tooltip />
+          <el-table-column prop="title" label="采购单名称" align="center" show-overflow-tooltip />
+          <el-table-column prop="price" label="订单金额" align="center">
+            <template slot-scope="{ row }">{{ row.price }}</template>
           </el-table-column>
-          <el-table-column prop="status" label="状态" width="120" align="center">
+          <el-table-column prop="orderStatus" label="状态" align="center">
             <template slot-scope="{ row }">
-              <el-tag v-if="row.status === '待审核'" type="primary" size="small" effect="light">待审核</el-tag>
-              <el-tag
-                v-else-if="row.status === '审核未通过'"
-                type="danger"
-                size="small"
-                effect="light"
-              >审核未通过</el-tag>
-              <el-tag v-else type="success" size="small" effect="light">{{ row.status }}</el-tag>
+              <el-tag :type="orderStatusTagType(row.orderStatus)" size="small" effect="light">
+                {{ orderStatusText(row.orderStatus) }}
+              </el-tag>
             </template>
           </el-table-column>
-          <el-table-column prop="submitTime" label="提交时间" width="120" align="center" />
+          <el-table-column prop="updated_at" label="提交时间" align="center" />
           <el-table-column label="操作" width="180" align="center" fixed="right">
             <template slot-scope="{ row }">
               <span class="row-acts">
                 <span class="row-act" @click="handleView(row)">查看详情</span>
-                <span v-if="row.status === '待审核'" class="row-act" @click="handleAudit(row)">立即审核</span>
+                <span v-if="String(row.orderStatus) === '2'" class="row-act" @click="handleAudit(row)">立即审核</span>
               </span>
             </template>
           </el-table-column>
         </el-table>
         <div class="pagination-wrap">
-          <el-pagination
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :current-page="queryParams.pageNum"
-            :page-sizes="[10, 20, 50, 100]"
-            :page-size="queryParams.pageSize"
-            layout="total, prev, pager, next, jumper"
-            :total="total"
-          />
+          <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
+            :current-page="queryParams.pageNum" :page-sizes="[10, 20, 50, 100]" :page-size="queryParams.pageSize"
+            layout="total, prev, pager, next, jumper" :total="total" />
         </div>
       </div>
     </div>
 
     <!-- 审核弹框 -->
-    <el-dialog
-      title="审核"
-      :visible.sync="auditDialogVisible"
-      width="480px"
-      :close-on-click-modal="false"
-      @close="closeAuditDialog"
-    >
+    <el-dialog title="审核" :visible.sync="auditDialogVisible" width="480px" :close-on-click-modal="false"
+      @close="closeAuditDialog">
       <el-form label-width="100px">
         <el-form-item label="审核状态:" style="text-align: left;">
           <el-radio-group v-model="auditChoice">
@@ -115,15 +76,8 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="审核备注:">
-          <el-input
-            v-model="auditRemark"
-            placeholder="请输入"
-            clearable
-            type="textarea"
-            :rows="3"
-            maxlength="500"
-            show-word-limit
-          />
+          <el-input v-model="auditRemark" placeholder="请输入" clearable type="textarea" :rows="3" maxlength="500"
+            show-word-limit />
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -133,8 +87,8 @@
     </el-dialog>
   </div>
 </template>
-  
-  <script>
+
+<script>
 export default {
   name: "MaterialPurchaseList",
   data() {
@@ -145,43 +99,18 @@ export default {
         pageNum: 1,
         pageSize: 20
       },
-      total: 295,
+      total: 0,
       tableHeight: 0,
-      statusTab: "pending", // pending | to_purchase | purchased | qc_ing | completed | rejected
+      statusTab: "2", // orderStatus：1生产副总审核,2总经理审核,3待财务付款,4待采购,5质检入库,6已完成,-1审核未通过
       statusTabs: [
-        { label: "待审核", value: "pending" },
-        { label: "待采购", value: "to_purchase" },
-        { label: "采购完成", value: "purchased" },
-        { label: "质检入库中", value: "qc_ing" },
-        { label: "已完成", value: "completed" },
-        { label: "审核未通过", value: "rejected" }
+        { label: "待审核", value: "2" },
+        { label: "待采购", value: "4" },
+        // { label: "采购完成", value: "6" },
+        { label: "质检入库", value: "5" },
+        { label: "已完成", value: "6" },
+        { label: "审核未通过", value: "-1" }
       ],
-      tableData: [
-        {
-          id: 1,
-          purchaseNo: "4521414",
-          purchaseName: "采购单名称",
-          orderAmount: "5000.00",
-          status: "待审核",
-          submitTime: "2026-01-05"
-        },
-        {
-          id: 2,
-          purchaseNo: "4521415",
-          purchaseName: "采购单名称",
-          orderAmount: "3200.00",
-          status: "待审核",
-          submitTime: "2026-01-05"
-        },
-        {
-          id: 3,
-          purchaseNo: "4521416",
-          purchaseName: "采购单名称",
-          orderAmount: "8000.00",
-          status: "审核未通过",
-          submitTime: "2026-01-04"
-        }
-      ],
+      tableData: [],
       auditDialogVisible: false,
       rowToAudit: null,
       auditChoice: "pass",
@@ -198,15 +127,12 @@ export default {
         const refTable = this.$refs.tableH;
         if (!refTable) return;
         const tableEl = refTable.$el || refTable;
-        const tableOffsetTop = tableEl.offsetTop + 85;
-        this.tableHeight = Math.max(
-          window.innerHeight - tableOffsetTop - 80,
-          200
-        );
+        const rect = tableEl.getBoundingClientRect();
+        this.tableHeight = Math.max(window.innerHeight - rect.top - 120, 200);
         const that = this;
-        window.onresize = function() {
-          const top = tableEl.offsetTop + 84 + 80;
-          that.tableHeight = Math.max(window.innerHeight - top, 200);
+        window.onresize = function () {
+          const r = tableEl.getBoundingClientRect();
+          that.tableHeight = Math.max(window.innerHeight - r.top - 120, 200);
         };
       });
     },
@@ -214,8 +140,36 @@ export default {
       return rowIndex % 2 === 1 ? "row-even" : "";
     },
     loadList() {
-      // TODO: 根据 statusTab、queryParams 调用接口
-      this.total = 295;
+      const [start_time = "", end_time = ""] = this.queryParams.dateRange || [];
+      const params = {
+        page: String(this.queryParams.pageNum),
+        limit: String(this.queryParams.pageSize),
+        orderStatus: String(this.statusTab || ""),
+        keyword: this.queryParams.keyword || "",
+        start_time: start_time || "",
+        end_time: end_time || "",
+        isPay: "",
+        materialType: "" // 如需固定原料/外购包装可在这里传 1/2
+      };
+      this.$api({
+        url: "/getPurchaseMaterialOrderList",
+        method: "post",
+        data: params
+      })
+        .then(res => {
+          if (res && res.code === 200 && res.data) {
+            const list = Array.isArray(res.data.list) ? res.data.list : [];
+            this.tableData = list;
+            this.total = res.data.count ?? list.length;
+          } else {
+            this.tableData = [];
+            this.total = 0;
+          }
+        })
+        .catch(() => {
+          this.tableData = [];
+          this.total = 0;
+        });
     },
     handleStatusTabChange(value) {
       this.statusTab = value;
@@ -233,7 +187,7 @@ export default {
     },
     handleView(row) {
       // TODO: 跳转详情
-      this.$message.info("查看详情：" + row.purchaseNo);
+      // this.$message.info("查看详情：" + row.purchaseNo);
       this.$router.push({
         path: "/general-manager/material-purchase/detail",
         query: {
@@ -255,12 +209,56 @@ export default {
     },
     submitAudit() {
       if (!this.rowToAudit) return;
-      // TODO: 调用审核接口
-      this.$message.success(
-        this.auditChoice === "pass" ? "审核通过" : "审核未通过"
-      );
-      this.closeAuditDialog();
-      this.loadList();
+      const id = this.rowToAudit.id != null ? String(this.rowToAudit.id) : "";
+      if (!id) {
+        this.$message.warning("缺少采购单id");
+        return;
+      }
+      const status = this.auditChoice === "pass" ? "1" : "-1";
+      const cont = (this.auditRemark || "").trim();
+      this.$api({
+        url: "/reviewPurchaseMaterialOrder",
+        method: "post",
+        data: { id, status, cont }
+      })
+        .then(res => {
+          if (res && res.code === 200) {
+            this.$message.success(status === "1" ? "审核通过" : "审核驳回");
+            this.closeAuditDialog();
+            this.loadList();
+          } else {
+            this.$message.error((res && res.msg) || "提交失败");
+          }
+        })
+        .catch(err => {
+          this.$message.error((err && err.msg) ? err.msg : "提交失败");
+        });
+    },
+    orderStatusText(v) {
+      const s = Number(v);
+      const map = {
+        1: "生产副总审核",
+        2: "总经理审核",
+        3: "待财务付款",
+        4: "待采购",
+        5: "质检入库",
+        6: "已完成",
+        [-1]: "审核未通过"
+      };
+      return map[s] != null ? map[s] : (v != null ? String(v) : "—");
+    },
+    orderStatusTagType(v) {
+      const s = Number(v);
+      if (s === -1) return "danger";
+      if (s === 6) return "success";
+      if (s === 3) return "warning";
+      return "info";
+    },
+    materialTypeText(v) {
+      const s = Number(v);
+      if (s === 1) return "原料";
+      if (s === 2) return "外购包装";
+      return v != null ? String(v) : "—";
     },
     handleSizeChange(val) {
       this.queryParams.pageSize = val;
@@ -273,8 +271,8 @@ export default {
   }
 };
 </script>
-  
-  <style lang="less" scoped>
+
+<style lang="less" scoped>
 .material-purchase-page {
   background: #fff;
   border-radius: 8px;
@@ -390,7 +388,7 @@ export default {
       background: #f3f7fa;
     }
 
-    .el-table__body tr:hover > td {
+    .el-table__body tr:hover>td {
       background: #f5f7fa !important;
     }
   }
@@ -401,11 +399,13 @@ export default {
     border-color: #d9ecff;
     color: #3377fe;
   }
+
   ::v-deep .el-tag--danger.el-tag--light {
     background-color: #fef0f0;
     border-color: #fde2e2;
     color: #f56c6c;
   }
+
   ::v-deep .el-tag--success.el-tag--light {
     background-color: #f0f9eb;
     border-color: #e1f3d8;
@@ -443,4 +443,3 @@ export default {
   text-align: center;
 }
 </style>
-  

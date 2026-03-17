@@ -16,67 +16,67 @@
           </el-col>
           <el-col :span="8" class="field-item">
             <span class="field-label">下单时间：</span>
-            <span class="field-value">{{ detail.orderTime }}</span>
+            <span class="field-value">{{ detail.created_at || detail.orderTime }}</span>
           </el-col>
           <el-col :span="8" class="field-item">
             <span class="field-label">销售金额：</span>
-            <span class="field-value">{{ detail.orderAmount }}</span>
+            <span class="field-value">{{ detail.orderPrice != null ? detail.orderPrice : detail.orderAmount }}</span>
           </el-col>
         </el-row>
 
         <el-row :gutter="24" class="field-row">
           <el-col :span="8" class="field-item">
             <span class="field-label">订单类型：</span>
-            <span class="field-value">{{ detail.orderType }}</span>
+            <span class="field-value">{{ orderTypeText(detail.orderType) }}</span>
           </el-col>
           <el-col :span="8" class="field-item">
             <span class="field-label">是否需要审批：</span>
-            <span class="field-value">{{ detail.needApprove ? '是' : '否' }}</span>
+            <span class="field-value">{{ isApprovalText(detail.isApproval != null ? detail.isApproval : (detail.needApprove ? 1 : 2)) }}</span>
           </el-col>
           <el-col :span="8" class="field-item">
             <span class="field-label">支付方式：</span>
-            <span class="field-value">{{ detail.payMethod }}</span>
+            <span class="field-value">{{ payTypeText(detail.payType != null ? detail.payType : detail.payMethod) }}</span>
           </el-col>
         </el-row>
 
         <el-row :gutter="24" class="field-row">
           <el-col :span="8" class="field-item">
             <span class="field-label">是否付款：</span>
-            <span class="field-value">{{ detail.needMark ? '是' : '否' }}</span>
+            <span class="field-value">{{ isPayText(detail.isPay != null ? detail.isPay : (detail.needMark ? 1 : 0)) }}</span>
           </el-col>
           <el-col :span="8" class="field-item">
             <span class="field-label">付款金额：</span>
-            <span class="field-value">{{ detail.payAmount }}</span>
+            <span class="field-value">{{ detail.payPrice != null ? detail.payPrice : detail.payAmount }}</span>
           </el-col>
           <el-col :span="8" class="field-item">
-            <span class="field-label">库存是否满足订单要求：</span>
-            <span class="field-value">{{ detail.batchDelivery ? '是' : '否' }}</span>
+            <span class="field-label">库存是否满足要求：</span>
+            <span class="field-value">{{ isManKuCunText(detail.isManKuCun != null ? detail.isManKuCun : (detail.batchDelivery ? 1 : 2)) }}</span>
           </el-col>
         </el-row>
 
         <el-row :gutter="24" class="field-row">
           <el-col :span="8" class="field-item">
             <span class="field-label">是否接受分批发货：</span>
-            <span class="field-value">{{ detail.packageSpec }}</span>
+            <span class="field-value">{{ isMoreFaHuoText(detail.isMoreFaHuo != null ? detail.isMoreFaHuo : detail.packageSpec) }}</span>
           </el-col>
           <el-col :span="8" class="field-item">
             <span class="field-label">包装规格：</span>
-            <span class="field-value">{{ detail.packageSpec }}</span>
-          </el-col>
-          <el-col :span="8" class="field-item">
-            <span class="field-label">订单类型：</span>
-            <el-tag :type="orderStatusTagType" size="small">{{ detail.orderStatus }}</el-tag>
+            <span class="field-value">{{ packTypeText(detail.packType, detail.packStr || detail.packageSpec) }}</span>
           </el-col>
         </el-row>
 
         <el-row :gutter="24" class="field-row">
           <el-col :span="8" class="field-item">
             <span class="field-label">订单状态：</span>
-            <el-tag :type="orderStatusTagType" size="small">{{ detail.orderStatus }}</el-tag>
+            <el-tag :type="orderStatusTagType" size="small">
+              {{ orderStatusText(detail.orderStatus) }}
+            </el-tag>
           </el-col>
           <el-col :span="8" class="field-item">
             <span class="field-label">回款状态：</span>
-            <el-tag :type="paymentStatusTagType" size="small">{{ detail.paymentStatus }}</el-tag>
+            <el-tag :type="paymentStatusTagType" size="small">
+              {{ payStatusText(detail.payStatus != null ? detail.payStatus : detail.paymentStatus) }}
+            </el-tag>
           </el-col>
         </el-row>
 
@@ -85,7 +85,7 @@
             <span class="field-label">合同图片：</span>
             <div class="image-list">
               <el-image
-                v-for="(img, index) in detail.contractImages"
+                v-for="(img, index) in (detail.contractimages || detail.contractImages || [])"
                 :key="index"
                 :src="img"
                 fit="cover"
@@ -100,7 +100,7 @@
             <span class="field-label">付款凭证：</span>
             <div class="image-list">
               <el-image
-                v-for="(img, index) in detail.payImages"
+                v-for="(img, index) in (detail.payImage || detail.payImages || [])"
                 :key="index"
                 :src="img"
                 fit="cover"
@@ -129,14 +129,14 @@
           </el-col>
           <el-col :span="8" class="field-item">
             <span class="field-label">客户属地：</span>
-            <span class="field-value">{{ detail.customer.region }}</span>
+            <span class="field-value">{{ detail.customer.territory || detail.customer.region }}</span>
           </el-col>
         </el-row>
 
         <el-row :gutter="24" class="field-row">
           <el-col :span="8" class="field-item">
             <span class="field-label">客户区域：</span>
-            <span class="field-value">{{ detail.customer.contactPerson }}</span>
+            <span class="field-value">{{ detail.customer.region }}</span>
           </el-col>
           <el-col :span="8" class="field-item">
             <span class="field-label">客户属性A：</span>
@@ -185,11 +185,11 @@
           </el-col>
           <el-col :span="8" class="field-item">
             <span class="field-label">收货人：</span>
-            <span class="field-value">{{ detail.customer.address }}</span>
+            <span class="field-value">{{ detail.customer.receiver || detail.customer.address }}</span>
           </el-col>
           <el-col :span="8" class="field-item">
             <span class="field-label">收货人联系方式：</span>
-            <span class="field-value">{{ detail.customer.address }}</span>
+            <span class="field-value">{{ detail.customer.receiverPhone || detail.customer.address }}</span>
           </el-col>
         </el-row>
       </div>
@@ -209,9 +209,19 @@
           <el-table-column prop="unit" label="单位" width="80" />
           <el-table-column prop="guidePrice" label="指导单价" min-width="120" />
           <el-table-column prop="quantity" label="数量" width="80" />
-          <el-table-column prop="totalPrice" label="实际价格" min-width="120" />
+          <el-table-column prop="totalPrice" label="总价" min-width="120" />
+          <el-table-column prop="stockQty" label="库存数量" min-width="100" />
+          <el-table-column label="库存状态" min-width="100">
+            <template slot-scope="scope">
+              <span :class="[
+                'stock-status-text',
+                scope.row.stockStatus === '缺货' ? 'is-shortage' : 'is-normal'
+              ]">
+                {{ scope.row.stockStatus }}
+              </span>
+            </template>
+          </el-table-column>
         </el-table>
-        <div class="block-total">产品总价: {{ productTotal }}</div>
       </div>
     </div>
 
@@ -227,10 +237,20 @@
           <el-table-column prop="spec" label="规格" min-width="140" />
           <el-table-column prop="unitPrice" label="单价" min-width="100" />
           <el-table-column prop="quantity" label="数量" min-width="80" />
+          <el-table-column prop="arrivalQty" label="到货数量" min-width="100" />
+          <el-table-column label="是否缺货" min-width="100">
+            <template slot-scope="scope">
+              <span :class="[
+                'stock-status-text',
+                scope.row.isShortage ? 'is-shortage' : 'is-normal'
+              ]">
+                {{ scope.row.isShortage ? '缺货' : '有货' }}
+              </span>
+            </template>
+          </el-table-column>
           <el-table-column prop="totalPrice" label="总价" min-width="120" />
           <el-table-column prop="unit" label="单位" width="80" />
         </el-table>
-        <div class="block-total">外购产品总价: {{ productTotal }}</div>
       </div>
     </div>
 
@@ -442,17 +462,31 @@ export default {
 
   computed: {
     orderStatusTagType() {
-      const status = this.detail.orderStatus;
-      if (status === "待审核") return "info";
-      if (status === "待发货" || status === "部分发货") return "warning";
-      if (status === "已发货") return "success";
+      const v = this.detail.orderStatus;
+      const s = typeof v === "number" || (typeof v === "string" && /^-?\d+$/.test(v)) ? Number(v) : null;
+      // 数字状态（与 manager 一致）
+      if (s != null) {
+        if (s === 5 || s === -1) return "danger";
+        if (s === 7) return "success";
+        if (s === 6) return "warning";
+        return "info";
+      }
+      // 文本状态（兼容旧 mock）
+      if (v === "待发货" || v === "部分发货") return "warning";
+      if (v === "已发货") return "success";
       return "info";
     },
     paymentStatusTagType() {
-      const status = this.detail.paymentStatus;
-      if (status === "待回款") return "info";
-      if (status === "部分回款") return "warning";
-      if (status === "全部回款") return "success";
+      const v = this.detail.payStatus != null ? this.detail.payStatus : this.detail.paymentStatus;
+      const s = typeof v === "number" || (typeof v === "string" && /^-?\d+$/.test(v)) ? Number(v) : null;
+      if (s != null) {
+        if (s === 1) return "info";
+        if (s === 2) return "warning";
+        if (s === 3) return "success";
+        return "info";
+      }
+      if (v === "部分回款") return "warning";
+      if (v === "全部回款") return "success";
       return "info";
     },
     orderTotal() {
@@ -467,6 +501,89 @@ export default {
   },
 
   methods: {
+    // 1销售订单, 2样品订单
+    orderTypeText(v) {
+      const s = Number(v);
+      if (s === 1) return "销售订单";
+      if (s === 2) return "样品订单";
+      return v != null ? String(v) : "—";
+    },
+    // 1需要审核, 2不需要
+    isApprovalText(v) {
+      const s = Number(v);
+      if (s === 1) return "需要审核";
+      if (s === 2) return "不需要";
+      if (typeof v === "boolean") return v ? "需要审核" : "不需要";
+      return v != null ? String(v) : "—";
+    },
+    // 1现结, 2账期, 3分期付款
+    payTypeText(v) {
+      const s = Number(v);
+      if (s === 1) return "现结";
+      if (s === 2) return "账期";
+      if (s === 3) return "分期付款";
+      return v != null ? String(v) : "—";
+    },
+    // 0未付款, 1已付款
+    isPayText(v) {
+      const s = Number(v);
+      if (s === 0) return "未付款";
+      if (s === 1) return "已付款";
+      if (typeof v === "boolean") return v ? "已付款" : "未付款";
+      return v != null ? String(v) : "—";
+    },
+    // 库存是否满足: 1满足, 2不满足
+    isManKuCunText(v) {
+      const s = Number(v);
+      if (s === 1) return "满足";
+      if (s === 2) return "不满足";
+      if (typeof v === "boolean") return v ? "满足" : "不满足";
+      return v != null ? String(v) : "—";
+    },
+    // 是否接受分批发货: 1是, 2否
+    isMoreFaHuoText(v) {
+      const s = Number(v);
+      if (s === 1) return "是";
+      if (s === 2) return "否";
+      if (typeof v === "boolean") return v ? "是" : "否";
+      return v != null ? String(v) : "—";
+    },
+    // 1标准彩盒, 2标准白盒, 3无包装, 4客户定制包装, 5其他(输入形式)
+    packTypeText(type, packStr) {
+      const s = Number(type);
+      if (s === 1) return "标准彩盒";
+      if (s === 2) return "标准白盒";
+      if (s === 3) return "无包装";
+      if (s === 4) return "客户定制包装";
+      if (s === 5) return packStr ? `其他(${packStr})` : "其他";
+      if (packStr) return packStr;
+      return type != null ? String(type) : "—";
+    },
+    // 1待营销总监审核, 2待总经理审核, 3缺货审核, 4待发货, 5缺货, 6暂停, 7已发货, -1驳回
+    orderStatusText(v) {
+      const s = Number(v);
+      const map = {
+        1: "待营销总监审核",
+        2: "待总经理审核",
+        3: "缺货审核",
+        4: "待发货",
+        5: "缺货",
+        6: "暂停",
+        7: "已发货",
+        [-1]: "驳回"
+      };
+      if (!Number.isNaN(s) && map[s] != null) return map[s];
+      return v != null ? String(v) : "—";
+    },
+    // 1未回款, 2部分回款, 3全部回款
+    payStatusText(status) {
+      const s = Number(status);
+      if (s === 1) return "未回款";
+      if (s === 2) return "部分回款";
+      if (s === 3) return "全部回款";
+      if (status === "待回款") return "未回款";
+      return status != null ? String(status) : "—";
+    },
     submitDelivery() {
       if (!this.deliveryForm.approveType) {
         this.$message.error("请选择审批结果");

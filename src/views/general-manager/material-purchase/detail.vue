@@ -25,7 +25,7 @@
           </el-col>
           <el-col :span="12" class="field-item">
             <span class="field-label">订单状态：</span>
-            <el-tag :type="statusTagType" size="small" effect="plain">{{ detail.orderStatus }}</el-tag>
+            <el-tag :type="statusTagType" size="small" effect="plain">{{ orderStatusText(detail.orderStatus) }}</el-tag>
           </el-col>
         </el-row>
         <el-row :gutter="24" class="field-row">
@@ -48,19 +48,19 @@
       </div>
       <div class="section-body">
         <el-table :data="detail.materialList" class="material-table" :row-class-name="tableRowClassName">
-          <el-table-column prop="materialCode" label="原料编码" min-width="140" />
-          <el-table-column prop="materialName" label="原料名称" min-width="140" />
-          <el-table-column prop="spec" label="规格" min-width="140" />
-          <el-table-column prop="quantity" label="数量" width="100" align="center" />
-          <el-table-column prop="category" label="所属分类" min-width="120" />
-          <el-table-column prop="unit" label="单位" width="80" align="center" />
+          <el-table-column prop="materialCode" label="原料编码" />
+          <el-table-column prop="materialName" label="原料名称" />
+          <el-table-column prop="spec" label="规格" />
+          <el-table-column prop="quantity" label="数量" align="center" />
+          <el-table-column prop="category" label="所属分类" />
+          <el-table-column prop="unit" label="单位" align="center" />
         </el-table>
       </div>
     </div>
 
     <!-- 底部操作 -->
     <div class="form-footer">
-      <el-button type="primary" @click="handleAudit">审核</el-button>
+      <el-button type="primary" v-if="String(detail.orderStatus) === '2'" @click="handleAudit">审核</el-button>
       <el-button @click="handleCancel">取消</el-button>
     </div>
   </div>
@@ -95,22 +95,76 @@ export default {
   },
   computed: {
     statusTagType() {
-      const s = this.detail.orderStatus
-      if (s === '待审核') return 'info'
-      if (s === '审核未通过') return 'danger'
-      return 'success'
+      const s = Number(this.detail.orderStatus)
+      if (s === -1) return 'danger'
+      if (s === 6) return 'success'
+      if (s === 3) return 'warning'
+      return 'info'
     }
   },
   mounted() {
     const id = this.$route.query.id || this.$route.params.id
     if (id) {
-      // TODO: 根据 id 请求详情接口
       this.loadDetail(id)
+    } else {
+      this.$message.warning('缺少采购单id')
     }
   },
   methods: {
+    orderStatusText(v) {
+      const s = Number(v)
+      const map = {
+        1: '生产副总审核',
+        2: '总经理审核',
+        3: '待财务付款',
+        4: '待采购',
+        5: '质检入库',
+        6: '已完成',
+        [-1]: '审核未通过'
+      }
+      return map[s] != null ? map[s] : (v != null ? String(v) : '—')
+    },
     loadDetail(id) {
-      // TODO: 接口获取详情后赋值 this.detail
+      this.$api({
+        url: '/getPurchaseMaterialOrder',
+        method: 'post',
+        data: { id: String(id) }
+      })
+        .then((res) => {
+          if (!res || res.code !== 200 || !res.data) {
+            this.$message.error('获取采购单详情失败')
+            return
+          }
+          const d = res.data
+          const productJson = Array.isArray(d.productJson) ? d.productJson : []
+          const materialList = productJson.map(item => {
+            const info = (item && item.info) ? item.info : {}
+            return {
+              materialCode: info.sn || '',
+              materialName: info.title || '',
+              spec: info.keyVals || '',
+              quantity: item && item.num != null ? item.num : '',
+              category: info.productCateTitle || '',
+              unit: info.unit || '—',
+              raw: item
+            }
+          })
+
+          // 兼容：列表字段为 title/price/created_at/orderStatus 等
+          this.detail = {
+            ...this.detail,
+            purchaseNo: d.purchaseNo || '',
+            purchaseName: d.title || d.purchaseName || '',
+            submitTime: d.updated_at || d.submitTime || '',
+            orderStatus: d.orderStatus != null ? d.orderStatus : (d.status || ''),
+            orderAmount: d.price != null ? d.price : (d.orderAmount || ''),
+            auditRemark: d.cont || d.auditRemark || '',
+            materialList
+          }
+        })
+        .catch(() => {
+          this.$message.error('获取采购单详情失败')
+        })
     },
     tableRowClassName({ rowIndex }) {
       return rowIndex % 2 === 1 ? 'row-even' : ''

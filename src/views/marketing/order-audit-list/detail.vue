@@ -289,7 +289,7 @@
 
 <script>
 export default {
-  name: 'OrderDetail',
+  name: 'OrderAuditDetail',
 
   data() {
     return {
