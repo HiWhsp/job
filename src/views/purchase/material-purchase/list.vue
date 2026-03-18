@@ -56,30 +56,30 @@
               {{ String((queryParams.pageNum - 1) * queryParams.pageSize + scope.$index + 1).padStart(3, '0') }}
             </template>
           </el-table-column>
-          <el-table-column prop="purchaseNo" label="采购单号" min-width="120" show-overflow-tooltip />
-          <el-table-column prop="purchaseName" label="采购单名称" min-width="140" show-overflow-tooltip />
-          <el-table-column prop="orderAmount" label="订单金额" min-width="110" align="right" />
-          <el-table-column prop="status" label="状态" width="120" align="center">
+          <el-table-column prop="purchaseNo" label="采购单号" align="center" show-overflow-tooltip />
+          <el-table-column prop="purchaseName" label="采购单名称" align="center" show-overflow-tooltip />
+          <el-table-column prop="orderAmount" label="订单金额" align="center" />
+          <el-table-column prop="orderStatus" label="状态" align="center">
             <template slot-scope="{ row }">
-              <el-tag v-if="row.status === '待审核'" type="info" size="small" effect="plain">待审核</el-tag>
-              <el-tag v-else-if="row.status === '审核未通过'" type="danger" size="small" effect="plain">审核未通过</el-tag>
-              <el-tag v-else-if="row.status === '财务付款中'" type="success" size="small" effect="plain">财务付款中</el-tag>
-              <el-tag v-else-if="row.status === '待采购'" type="success" size="small" effect="plain">待采购</el-tag>
-              <el-tag v-else-if="row.status === '质检入库中'" type="success" size="small" effect="plain">质检入库中</el-tag>
-              <el-tag v-else-if="row.status === '已完成'" type="success" size="small" effect="plain">已完成</el-tag>
+              <el-tag
+                v-if="row.orderStatus != null && row.orderStatus !== ''"
+                :type="orderStatusTagType(row.orderStatus)"
+                size="small"
+                effect="plain"
+              >{{ orderStatusText(row.orderStatus) }}</el-tag>
               <span v-else>—</span>
             </template>
           </el-table-column>
-          <el-table-column prop="submitTime" label="提交时间" width="120" align="center" />
-          <el-table-column label="操作" min-width="280" align="center" fixed="right">
+          <el-table-column prop="submitTime" label="提交时间" align="center" />
+          <el-table-column label="操作" width="300" align="left">
             <template slot-scope="{ row }">
               <span class="row-acts">
                 <span class="row-act" @click="handleView(row)">查看详情</span>
-                <template v-if="row.status === '待审核' || row.status === '审核未通过'">
+                <template v-if="row.orderStatus == 1 || row.orderStatus == -1">
                   <span class="row-act" @click="handleEdit(row)">编辑</span>
                   <span class="row-act" @click="handleDelete(row)">删除</span>
                 </template>
-                <template v-if="row.status === '待采购'">
+                <template v-if="row.orderStatus == 4">
                   <span class="row-act" @click="handleUploadContract(row)">上传合同</span>
                   <span class="row-act" @click="handleCompleteAndWarehouse(row)">采购完成并提交入库</span>
                 </template>
@@ -133,6 +133,13 @@
 </template>
 
 <script>
+import axios from "axios";
+import { UPLOAD_ROOT } from "@/config/env.js";
+
+const LIST_API = "/getPurchaseMaterialOrderList";
+const SET_CONTRACT_API = "/setPurchaseMaterialContract";
+const FINISH_PURCHASE_API = "/finishPurchaseMaterialOrder";
+
 export default {
   name: "MaterialPurchase",
   data() {
@@ -154,14 +161,7 @@ export default {
         { label: "已完成", value: "completed" },
         { label: "审核未通过", value: "rejected" }
       ],
-      tableData: [
-        { id: 1, purchaseNo: "4521414", purchaseName: "采购单名称", orderAmount: "5000.00", status: "待审核", submitTime: "2026-01-05" },
-        { id: 2, purchaseNo: "4521414", purchaseName: "采购单名称", orderAmount: "5000.00", status: "待审核", submitTime: "2026-01-05" },
-        { id: 3, purchaseNo: "4521414", purchaseName: "采购单名称", orderAmount: "5000.00", status: "审核未通过", submitTime: "2026-01-05" },
-        { id: 4, purchaseNo: "4521414", purchaseName: "采购单名称", orderAmount: "5000.00", status: "财务付款中", submitTime: "2026-01-05" },
-        { id: 5, purchaseNo: "4521414", purchaseName: "采购单名称", orderAmount: "5000.00", status: "待采购", submitTime: "2026-01-05" },
-        { id: 6, purchaseNo: "4521414", purchaseName: "采购单名称", orderAmount: "5000.00", status: "质检入库中", submitTime: "2026-01-05" }
-      ],
+      tableData: [],
       // 上传合同弹框
       uploadContractDialogVisible: false,
       uploadContractRow: null,
@@ -196,9 +196,78 @@ export default {
     tableRowClassName({ rowIndex }) {
       return rowIndex % 2 === 1 ? "row-even" : "";
     },
+    _orderStatusByTab(tab) {
+      const map = {
+        pending: 1, // 生产副总审核
+        pending_payment: 3, // 待财务付款
+        to_purchase: 4, // 待采购
+        qc_ing: 5, // 质检入库
+        completed: 6, // 已完成
+        rejected: -1 // 审核未通过
+      };
+      return map[tab] != null ? map[tab] : "";
+    },
+    orderStatusText(v) {
+      const s = Number(v);
+      const map = {
+        1: "生产副总审核",
+        2: "总经理审核",
+        3: "待财务付款",
+        4: "待采购",
+        5: "质检入库",
+        6: "已完成",
+        [-1]: "审核未通过"
+      };
+      return map[s] != null ? map[s] : (v != null ? String(v) : "—");
+    },
+    orderStatusTagType(v) {
+      const s = Number(v);
+      if (s === -1) return "danger";
+      if (s === 6) return "success";
+      if (s === 3) return "warning";
+      return "info";
+    },
     loadList() {
-      // TODO: 调用原料采购列表接口
-      this.total = this.tableData.length;
+      const [start_time = "", end_time = ""] = this.queryParams.dateRange || [];
+      const params = {
+        limit: String(this.queryParams.pageSize),
+        page: String(this.queryParams.pageNum),
+        orderStatus: String(this._orderStatusByTab(this.statusTab)),
+        keyword: this.queryParams.keyword || "",
+        start_time: start_time || "",
+        end_time: end_time || "",
+        // 后端要求必传：原料=1，外购包装=2（库管入库时不需要传）
+        materialType: "1",
+        // 采购端该页不以付款状态为筛选项，按接口要求占位传空
+        isPay: ""
+      };
+      this.$api({
+        url: LIST_API,
+        method: "post",
+        data: params
+      })
+        .then(res => {
+          if (res && res.code === 200 && res.data) {
+            const list = Array.isArray(res.data.list) ? res.data.list : [];
+            this.tableData = list.map(it => ({
+              ...it,
+              purchaseNo: it.purchaseNo,
+              purchaseName: it.title,
+              orderAmount: it.price,
+              // 保留 status 字段给旧逻辑兼容（操作列判断等），同时状态列改用 orderStatus 枚举展示
+              status: this.orderStatusText(it.orderStatus),
+             submitTime: it.created_at
+            }));
+            this.total = res.data.count ?? list.length;
+          } else {
+            this.tableData = [];
+            this.total = 0;
+          }
+        })
+        .catch(() => {
+          this.tableData = [];
+          this.total = 0;
+        });
     },
     handleQuery() {
       this.queryParams.pageNum = 1;
@@ -224,8 +293,13 @@ export default {
       this.$router.push({ name: "material-purchase-add" });
     },
     handleEdit(row) {
-      // TODO: 跳转编辑页
-      this.$message.info("编辑：" + row.purchaseNo);
+      const id = row && row.id != null ? String(row.id) : "";
+      if (!id) {
+        this.$message.warning("缺少采购单id");
+        return;
+      }
+      // 编辑同新增页：带 id 进入 add 页
+      this.$router.push({ name: "material-purchase-add", query: { id } });
     },
     handleDelete(row) {
       this.$confirm("确定删除该采购单吗？", "提示", {
@@ -263,15 +337,76 @@ export default {
         this.$message.warning("请先选择合同文件");
         return;
       }
-      // TODO: 调用上传接口，传入 this.uploadContractRow.id 与 this.uploadContractForm.file
-      this.$message.success("上传成功");
-      this.uploadContractDialogVisible = false;
-      this.closeUploadContractDialog();
-      this.loadList();
+      const id = this.uploadContractRow && this.uploadContractRow.id != null ? String(this.uploadContractRow.id) : "";
+      if (!id) {
+        this.$message.warning("缺少采购单id");
+        return;
+      }
+      const file = this.uploadContractForm.file;
+      const formData = new FormData();
+      formData.append("file", file);
+      const token = localStorage.getItem("token");
+      axios
+        .post(UPLOAD_ROOT, formData, {
+          headers: { Authorization: "Bearer " + token },
+          timeout: 60000
+        })
+        .then(res => {
+          const data = res.data || res;
+          const payload = (data && data.data) ? data.data : data;
+          const pdfUrl = (payload && (payload.path || payload.url)) || (data && data.path) || "";
+          if (!pdfUrl) {
+            this.$message.error("合同上传失败");
+            return Promise.reject(new Error("no pdfUrl"));
+          }
+          return this.$api({
+            url: SET_CONTRACT_API,
+            method: "post",
+            data: { id, pdfUrl }
+          });
+        })
+        .then(res => {
+          if (res && res.code === 200) {
+            this.$message.success("上传成功");
+            this.uploadContractDialogVisible = false;
+            this.closeUploadContractDialog();
+            this.loadList();
+          } else {
+            this.$message.error((res && res.msg) || "上传失败");
+          }
+        })
+        .catch(err => {
+          if (err && err.message === "no pdfUrl") return;
+          this.$message.error((err && err.msg) ? err.msg : "上传失败");
+        });
     },
     handleCompleteAndWarehouse(row) {
-      // TODO: 采购完成并提交入库
-      this.$message.info("采购完成并提交入库：" + row.purchaseNo);
+      const id = row && row.id != null ? String(row.id) : "";
+      if (!id) {
+        this.$message.warning("缺少采购单id");
+        return;
+      }
+      this.$confirm("确认提交入库吗？提交后将进入入库流程。", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          return this.$api({
+            url: FINISH_PURCHASE_API,
+            method: "post",
+            data: { id }
+          });
+        })
+        .then(res => {
+          if (res && res.code === 200) {
+            this.$message.success("提交成功");
+            this.loadList();
+          } else {
+            this.$message.error((res && res.msg) || "提交失败");
+          }
+        })
+        .catch(() => {});
     },
     handleSizeChange(val) {
       this.queryParams.pageSize = val;
@@ -399,7 +534,7 @@ export default {
 .row-acts {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   flex-wrap: wrap;
   gap: 0 12px;
   .row-act {

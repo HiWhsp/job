@@ -19,8 +19,8 @@
               clearable
               style="width: 180px"
             >
-              <el-option label="待生成采购单" value="pending" />
-              <el-option label="已生成采购单" value="generated" />
+              <el-option label="待生成采购单" value="4" />
+              <el-option label="已生成采购单" value="5" />
             </el-select>
           </el-form-item>
           <el-form-item label="时间筛选" prop="dateRange">
@@ -61,23 +61,23 @@
               {{ String((queryParams.pageNum - 1) * queryParams.pageSize + scope.$index + 1).padStart(3, '0') }}
             </template>
           </el-table-column>
-          <el-table-column prop="orderNo" label="订单号" min-width="120" show-overflow-tooltip />
-          <el-table-column prop="customerName" label="客户名称" min-width="200" show-overflow-tooltip />
-          <el-table-column prop="orderTime" label="订单时间" width="120" align="center" />
-          <el-table-column prop="orderAmount" label="订单金额" min-width="110" align="right" />
-          <el-table-column prop="status" label="状态" width="140" align="center">
+          <el-table-column prop="orderNo" label="订单号" show-overflow-tooltip />
+          <el-table-column prop="customerName" label="客户名称" show-overflow-tooltip />
+          <el-table-column prop="orderTime" label="订单时间" align="center" />
+          <el-table-column prop="orderAmount" label="订单金额" align="center" />
+          <el-table-column prop="status" label="状态" align="center">
             <template slot-scope="{ row }">
-              <el-tag v-if="row.status === '待生成采购单'" type="info" size="small" effect="plain">待生成采购单</el-tag>
-              <el-tag v-else-if="row.status === '已生成采购单'" type="success" size="small" effect="plain">已生成采购单</el-tag>
+              <el-tag v-if="String(row.orderStatus) === '4'" type="info" size="small" effect="plain">待生成采购单</el-tag>
+              <el-tag v-else-if="String(row.orderStatus) === '5'" type="success" size="small" effect="plain">已生成采购单</el-tag>
               <span v-else>—</span>
             </template>
           </el-table-column>
-          <el-table-column prop="submitTime" label="提交时间" width="120" align="center" />
-          <el-table-column label="操作" min-width="180" align="center" fixed="right">
+          <el-table-column prop="submitTime" label="提交时间" align="center" />
+          <el-table-column label="操作" min-width="180" align="center">
             <template slot-scope="{ row }">
               <span class="row-acts">
                 <span class="row-act" @click="handleView(row)">查看详情</span>
-                <span v-if="row.status === '待生成采购单'" class="row-act" @click="handleGenerate(row)">生成采购单</span>
+                <span v-if="String(row.orderStatus) === '4'" class="row-act" @click="handleGenerate(row)">生成采购单</span>
               </span>
             </template>
           </el-table-column>
@@ -99,6 +99,8 @@
 </template>
 
 <script>
+const LIST_API = "/getPurchaseForeignProductOrderList";
+
 export default {
   name: "ExternalProductRequisitionList",
   data() {
@@ -112,13 +114,7 @@ export default {
       },
       total: 0,
       tableHeight: 0,
-      tableData: [
-        { id: 1, orderNo: "4521414", customerName: "浙江求实医疗科技有限公司", orderTime: "2026-01-05", orderAmount: "5000.00", status: "待生成采购单", submitTime: "2026-01-05" },
-        { id: 2, orderNo: "4521414", customerName: "浙江求实医疗科技有限公司", orderTime: "2026-01-05", orderAmount: "5000.00", status: "待生成采购单", submitTime: "2026-01-05" },
-        { id: 3, orderNo: "4521414", customerName: "浙江求实医疗科技有限公司", orderTime: "2026-01-05", orderAmount: "5000.00", status: "待生成采购单", submitTime: "2026-01-05" },
-        { id: 4, orderNo: "4521414", customerName: "浙江求实医疗科技有限公司", orderTime: "2026-01-05", orderAmount: "5000.00", status: "已生成采购单", submitTime: "2026-01-05" },
-        { id: 5, orderNo: "4521414", customerName: "浙江求实医疗科技有限公司", orderTime: "2026-01-05", orderAmount: "5000.00", status: "已生成采购单", submitTime: "2026-01-05" }
-      ]
+      tableData: []
     };
   },
   mounted() {
@@ -144,8 +140,47 @@ export default {
       return rowIndex % 2 === 1 ? "row-even" : "";
     },
     loadList() {
-      // TODO: 调用外采产品请购单列表接口
-      this.total = this.tableData.length;
+      const [start_time = "", end_time = ""] = this.queryParams.dateRange || [];
+      const params = {
+        limit: String(this.queryParams.pageSize),
+        page: String(this.queryParams.pageNum),
+        // status 为采购流程状态：4 可创建/生成采购单，5 已生成采购单
+        status: this.queryParams.status ? String(this.queryParams.status) : "",
+        keyword: this.queryParams.keyword || "",
+        start_time: start_time || "",
+        end_time: end_time || "",
+        // 接口必传，页面不按付款状态过滤时传空
+        isPay: ""
+      };
+      this.$api({
+        url: LIST_API,
+        method: "post",
+        data: params
+      })
+        .then(res => {
+          if (res && res.code === 200 && res.data) {
+            const list = Array.isArray(res.data.list) ? res.data.list : [];
+            this.tableData = list.map(it => ({
+              ...it,
+              orderNo: it.staffOrderNo || "",
+              customerName: it.customerTitle || "",
+              orderTime: it.staffOrderTime || "",
+              // 页面字段叫“订单金额”，后端当前示例未返回 staffOrderAmount，先用采购单金额兜底
+              orderAmount: it.price || "",
+              // 兼容旧字段（状态列/按钮权限已改为 orderStatus 判断）
+              status: String(it.orderStatus) === "5" ? "已生成采购单" : "待生成采购单",
+              submitTime: it.created_at || ""
+            }));
+            this.total = res.data.count ?? list.length;
+          } else {
+            this.tableData = [];
+            this.total = 0;
+          }
+        })
+        .catch(() => {
+          this.tableData = [];
+          this.total = 0;
+        });
     },
     handleQuery() {
       this.queryParams.pageNum = 1;

@@ -153,64 +153,136 @@
 </template>
 
 <script>
+const DETAIL_API = "/getPurchaseMaterialOrder";
+
 export default {
   name: "MaterialPurchaseDetail",
   data() {
     return {
       detail: {
-        purchaseNo: "2026001-999",
-        purchaseName: "采购单名称",
-        contractFile: "采购合同.pdf",
-        submitTime: "2006-01-01",
-        status: "待审核",
-        orderAmount: "2545.00",
+        purchaseNo: "",
+        purchaseName: "",
+        contractFile: "",
+        submitTime: "",
+        status: "",
+        orderAmount: "",
         auditRemark: ""
       },
-      materialList: [
-        { materialCode: "4578786954", materialName: "原料名称", spec: "规格名称", quantity: 20, category: "原料分类", productCategory: "产品大类、产品大类", unit: "盒" },
-        { materialCode: "4578786954", materialName: "原料名称", spec: "规格名称", quantity: 20, category: "原料分类", productCategory: "产品大类、产品大类", unit: "盒" },
-        { materialCode: "4578786954", materialName: "原料名称", spec: "规格名称", quantity: 20, category: "原料分类", productCategory: "产品大类、产品大类", unit: "盒" },
-        { materialCode: "4578786954", materialName: "原料名称", spec: "规格名称", quantity: 20, category: "原料分类", productCategory: "产品大类、产品大类", unit: "盒" },
-        { materialCode: "4578786954", materialName: "原料名称", spec: "规格名称", quantity: 20, category: "原料分类", productCategory: "产品大类、产品大类", unit: "盒" },
-        { materialCode: "4578786954", materialName: "原料名称", spec: "规格名称", quantity: 20, category: "原料分类", productCategory: "产品大类、产品大类", unit: "盒" },
-        { materialCode: "4578786954", materialName: "原料名称", spec: "规格名称", quantity: 20, category: "原料分类", productCategory: "产品大类、产品大类", unit: "盒" },
-        { materialCode: "4578786954", materialName: "原料名称", spec: "规格名称", quantity: 20, category: "原料分类", productCategory: "产品大类、产品大类", unit: "盒" },
-        { materialCode: "4578786954", materialName: "原料名称", spec: "规格名称", quantity: 20, category: "原料分类", productCategory: "产品大类、产品大类", unit: "盒" },
-        { materialCode: "4578786954", materialName: "原料名称", spec: "规格名称", quantity: 20, category: "原料分类", productCategory: "产品大类、产品大类", unit: "盒" }
-      ],
-      approvalList: [
-        { approver: "总经理", approvalTime: "2026-3-23 15:23:24", approvalStatus: "审核通过", approvalRemark: "审核通过" },
-        { approver: "生产部经理", approvalTime: "2026-3-23 15:23:24", approvalStatus: "审核通过", approvalRemark: "审核通过" }
-      ],
-      paymentList: [
-        { amount: "5000.00", paymentTime: "2026-3-23 15:23:24", voucherUrl: "" }
-      ],
-      inboundList: [
-        { inboundNo: "78974556", inboundTime: "2026-3-23 15:23:24", reportUrl: "", qcRemark: "质检入库" }
-      ]
+      materialList: [],
+      approvalList: [],
+      paymentList: [],
+      inboundList: []
     };
   },
   created() {
     const id = this.$route.query.id;
     if (id) {
-      // TODO: 根据 id 请求详情接口，赋值 detail 和 materialList
+      this.loadDetail(String(id));
     }
   },
   methods: {
     tableRowClassName({ rowIndex }) {
       return rowIndex % 2 === 1 ? "row-even" : "";
     },
+    _parseJson(val) {
+      if (val == null || val === "") return null;
+      if (typeof val === "object") return val;
+      try {
+        return typeof val === "string" ? JSON.parse(val) : val;
+      } catch (e) {
+        return null;
+      }
+    },
+    _orderStatusText(v) {
+      const s = Number(v);
+      const map = {
+        1: "生产副总审核",
+        2: "总经理审核",
+        3: "待财务付款",
+        4: "待采购",
+        5: "质检入库",
+        6: "已完成",
+        [-1]: "审核未通过"
+      };
+      return map[s] != null ? map[s] : (v != null ? String(v) : "--");
+    },
+    loadDetail(id) {
+      this.$api({
+        url: DETAIL_API,
+        method: "post",
+        data: { id }
+      })
+        .then(res => {
+          if (!res || res.code !== 200 || !res.data) {
+            this.$message.error("获取采购单详情失败");
+            return;
+          }
+          const d = res.data;
+
+          this.detail.purchaseNo = d.purchaseNo || "";
+          this.detail.purchaseName = d.title || "";
+          this.detail.contractFile = d.pdfUrl || "";
+          this.detail.submitTime = d.created_at || "";
+          this.detail.status = this._orderStatusText(d.orderStatus);
+          this.detail.orderAmount = d.price || "";
+
+          const reviewArr = Array.isArray(d.reviewJson) ? d.reviewJson : (this._parseJson(d.reviewJson) || []);
+          const reviews = Array.isArray(reviewArr) ? reviewArr : [];
+          this.approvalList = reviews.map(it => ({
+            approver: it && it.name ? it.name : "",
+            approvalTime: it && it.created_at ? it.created_at : "",
+            approvalStatus: it && (it.statusTxt || it.status) ? (it.statusTxt || it.status) : "",
+            approvalRemark: it && it.cont ? it.cont : ""
+          }));
+          const lastRemark = reviews.length ? (reviews[reviews.length - 1].cont || "") : "";
+          this.detail.auditRemark = lastRemark;
+
+          const payObj = this._parseJson(d.payJson) || {};
+          this.paymentList = payObj && (payObj.created_at || payObj.price || payObj.image) ? [{
+            amount: payObj.price || "",
+            paymentTime: payObj.created_at || "",
+            voucherUrl: payObj.image || ""
+          }] : [];
+
+          const ruKuObj = this._parseJson(d.ruKuJson) || {};
+          const ruKuNo = d.ruKuNo || "";
+          this.inboundList = (ruKuNo || (ruKuObj && (ruKuObj.created_at || ruKuObj.image))) ? [{
+            inboundNo: ruKuNo,
+            inboundTime: ruKuObj.created_at || "",
+            reportUrl: ruKuObj.image || "",
+            qcRemark: ruKuObj.cont || ""
+          }] : [];
+
+          const productArr = Array.isArray(d.productJson) ? d.productJson : (this._parseJson(d.productJson) || []);
+          const products = Array.isArray(productArr) ? productArr : [];
+          this.materialList = products.map(it => {
+            const info = it && it.info ? it.info : {};
+            return {
+              materialCode: info.sn || "",
+              materialName: info.title || "",
+              spec: info.keyVals || "",
+              quantity: it && it.num != null ? it.num : "",
+              category: info.productCateTitle || "",
+              productCategory: info.useProductCateTitle || info.productCategoryTitle || "",
+              unit: info.unit || ""
+            };
+          });
+        })
+        .catch(() => {
+          this.$message.error("获取采购单详情失败");
+        });
+    },
     handleViewContract() {
       // TODO: 下载或预览采购合同
-      this.$message.info("查看采购合同");
+      window.open(this.detail.contractFile, '_blank');
     },
     handleViewVoucher(row) {
       // TODO: 查看付款凭证
-      this.$message.info("查看付款凭证");
+      window.open(row.voucherUrl, '_blank');
     },
     handleViewReport(row) {
       // TODO: 查看质检报告
-      this.$message.info("查看质检报告");
+      window.open(row.reportUrl, '_blank');
     },
     handleConfirm() {
       this.$router.push({ name: "material-purchase-list" });

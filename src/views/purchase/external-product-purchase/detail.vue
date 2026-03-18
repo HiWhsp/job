@@ -158,82 +158,114 @@
 </template>
 
 <script>
+const DETAIL_API = "/getPurchaseForeignProductOrder";
+
 export default {
   name: "ExternalProductRequisitionDetail",
   data() {
     return {
       detail: {
-        requisitionNo: "2026001-999",
-        orderNo: "2026001-999",
-        orderTime: "2006-01-01",
-        status: "待审核",
-        salesAmount: "2545.00"
+        requisitionNo: "",
+        orderNo: "",
+        orderTime: "",
+        status: "",
+        salesAmount: ""
       },
-      productList: [
-        {
-          productName: "单层牙齿盘",
-          spec: "98.A1.10mm",
-          unitPrice: "2000.00",
-          quantity: 20,
-          totalPrice: "40000.00",
-          unit: "盒"
-        },
-        {
-          productName: "单层牙齿盘",
-          spec: "98.A1.10mm",
-          unitPrice: "2000.00",
-          quantity: 20,
-          totalPrice: "40000.00",
-          unit: "盒"
-        },
-        {
-          productName: "单层牙齿盘",
-          spec: "98.A1.10mm",
-          unitPrice: "2000.00",
-          quantity: 20,
-          totalPrice: "40000.00",
-          unit: "盒"
-        },
-        {
-          productName: "单层牙齿盘",
-          spec: "98.A1.10mm",
-          unitPrice: "2000.00",
-          quantity: 20,
-          totalPrice: "40000.00",
-          unit: "盒"
-        }
-      ],
-      approvalList: [
-        {
-          approver: "总经理",
-          approvalTime: "2026-3-23 15:23:24",
-          approvalStatus: "审核通过",
-          approvalRemark: "审核通过"
-        },
-        {
-          approver: "生产部经理",
-          approvalTime: "2026-3-23 15:23:24",
-          approvalStatus: "审核通过",
-          approvalRemark: "审核通过"
-        }
-      ],
-      paymentList: [
-        { amount: "5000.00", paymentTime: "2026-3-23 15:23:24", voucherUrl: "" }
-      ],
-      inboundList: [
-        { inboundNo: "78974556", inboundTime: "2026-3-23 15:23:24", reportUrl: "", qcRemark: "质检入库" }
-      ]
+      productList: [],
+      approvalList: [],
+      paymentList: [],
+      inboundList: []
     };
   },
   created() {
     const id = this.$route.query.id;
     if (id) {
-      // TODO: 根据 id 请求请购单详情，赋值 detail、productList、approvalList、paymentList、inboundList
+      this.loadDetail(String(id));
     }
   },
   methods: {
     tableRowClassName({ rowIndex }) {
       return rowIndex % 2 === 1 ? "row-even" : "";
+    },
+    _parseJson(val) {
+      if (val == null || val === "") return null;
+      if (typeof val === "object") return val;
+      try {
+        return typeof val === "string" ? JSON.parse(val) : val;
+      } catch (e) {
+        return null;
+      }
+    },
+    _orderStatusText(v) {
+      const s = Number(v);
+      const map = {
+        1: "生产副总审核",
+        2: "总经理审核",
+        3: "待财务付款",
+        4: "待采购",
+        5: "质检入库",
+        6: "已完成",
+        [-1]: "审核未通过"
+      };
+      return map[s] != null ? map[s] : (v != null ? String(v) : "—");
+    },
+    loadDetail(id) {
+      this.$api({ url: DETAIL_API, method: "post", data: { id } })
+        .then(res => {
+          if (!res || res.code !== 200 || !res.data) {
+            this.$message.error("获取采购单详情失败");
+            return;
+          }
+          const d = res.data;
+
+          this.detail.requisitionNo = d.purchaseNo || "";
+          this.detail.orderNo = d.staffOrderNo || "";
+          this.detail.orderTime = d.staffOrderTime || "";
+          this.detail.salesAmount = d.price || "";
+          this.detail.status = this._orderStatusText(d.orderStatus);
+
+          const products = Array.isArray(d.productJson) ? d.productJson : (this._parseJson(d.productJson) || []);
+          const productRows = Array.isArray(products) ? products : [];
+          this.productList = productRows.map(it => {
+            const info = it && it.info ? it.info : {};
+            return {
+              productName: info.title || "",
+              spec: info.keyVals || "",
+              unitPrice: it && it.price != null ? it.price : "",
+              quantity: it && it.num != null ? it.num : "",
+              totalPrice: it && it.totalPrice != null ? it.totalPrice : "",
+              unit: info.unit || ""
+            };
+          });
+
+          const reviewArr = Array.isArray(d.reviewJson) ? d.reviewJson : (this._parseJson(d.reviewJson) || []);
+          const reviews = Array.isArray(reviewArr) ? reviewArr : [];
+          this.approvalList = reviews.map(it => ({
+            approver: it && it.name ? it.name : "",
+            approvalTime: it && it.created_at ? it.created_at : "",
+            approvalStatus: it && (it.statusTxt || it.status) ? (it.statusTxt || it.status) : "",
+            approvalRemark: it && it.cont ? it.cont : ""
+          }));
+
+          const payObj = this._parseJson(d.payJson) || {};
+          this.paymentList = payObj && (payObj.created_at || payObj.price || payObj.image) ? [{
+            amount: payObj.price || "",
+            paymentTime: payObj.created_at || "",
+            voucherUrl: payObj.image || ""
+          }] : [];
+
+          const ruKuObj = this._parseJson(d.ruKuJson) || {};
+          const ruKuNo = d.ruKuNo || "";
+          this.inboundList = (ruKuNo || (ruKuObj && (ruKuObj.created_at || ruKuObj.image))) ? [{
+            inboundNo: ruKuNo,
+            inboundTime: ruKuObj.created_at || "",
+            reportUrl: ruKuObj.image || "",
+            qcRemark: ruKuObj.cont || ""
+          }] : [];
+        })
+        .catch(() => {
+          this.$message.error("获取采购单详情失败");
+        });
     },
     handleViewVoucher(row) {
       // TODO: 查看付款凭证

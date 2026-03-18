@@ -1604,8 +1604,8 @@ const warehouseManagerRoutes = [
 // key: 角色标识（从后端返回的 opRole）
 // value: 对应的路由配置数组
 const roleRouteMap = {
-  1: financeRoutes, // 管理员
-  '1': financeRoutes, // 管理员
+  1: purchaseRoutes, // 管理员
+  '1': purchaseRoutes, // 管理员
 
   // 9: managerRoutes, // 管理员
   // 9: managerRoutes, // 管理员

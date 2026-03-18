@@ -106,6 +106,7 @@
           :data="productList"
           header-cell-class-name="table-header-cell"
           :row-class-name="tableRowClassName"
+          @selection-change="handleProductSelectionChange"
         >
           <el-table-column type="selection" width="50" align="center" />
           <el-table-column type="index" label="序号" width="70" align="center">
@@ -162,36 +163,38 @@
 </template>
 
 <script>
+const DETAIL_API = "/getPurchaseForeignProductOrder";
+const CUSTOMER_API = "/getCustomer";
+const ADD_API = "/addForeignProductOrder";
+
 export default {
   name: "GeneratePurchaseOrder",
   data() {
     return {
       form: {
-        purchaseName: ""
+        purchaseName: "",
+        id: ""
       },
+      staffOrderId: "",
       customer: {
-        customerNo: "L2026001",
-        customerName: "浙江求实医疗科技有限公司",
-        region: "国外",
-        area: "美国",
-        attrA: "临床",
-        attrB: "经销商",
-        contact: "郭亚菲",
-        contactPhone: "15931263178",
-        companyPhone: "0573-84986384",
-        accountName: "浙江求实医疗科技有限公司",
-        accountNo: "78544212657855",
-        bank: "中国银行",
-        shippingAddress: "浙江省嘉兴市嘉善县天凝镇天凝大道666号",
-        consignee: "郭菲菲",
-        consigneePhone: "15931263178"
+        customerNo: "",
+        customerName: "",
+        region: "",
+        area: "",
+        attrA: "",
+        attrB: "",
+        contact: "",
+        contactPhone: "",
+        companyPhone: "",
+        accountName: "",
+        accountNo: "",
+        bank: "",
+        shippingAddress: "",
+        consignee: "",
+        consigneePhone: ""
       },
-      productList: [
-        { productName: "单层牙齿盘", spec: "98,A1,10mm", unitPrice: 20, quantity: 20, unit: "盒", stock: 20, stockStatus: "有货", totalPrice: 400 },
-        { productName: "单层牙齿盘", spec: "98,A1,10mm", unitPrice: 20, quantity: 20, unit: "盒", stock: 20, stockStatus: "缺货", totalPrice: 400 },
-        { productName: "单层牙齿盘", spec: "98,A1,10mm", unitPrice: 20, quantity: 20, unit: "盒", stock: 20, stockStatus: "有货", totalPrice: 400 },
-        { productName: "单层牙齿盘", spec: "98,A1,10mm", unitPrice: 20, quantity: 20, unit: "盒", stock: 20, stockStatus: "缺货", totalPrice: 400 }
-      ]
+      productList: [],
+      selectedProducts: []
     };
   },
   computed: {
@@ -202,13 +205,111 @@ export default {
   created() {
     const id = this.$route.query.id;
     if (id) {
-      // TODO: 根据请购单 id 拉取客户信息、产品列表
+      this.form.id = String(id);
+      this.loadDetail(String(id));
     }
-    this.productList.forEach(row => this.calcRowTotal(row));
   },
   methods: {
     tableRowClassName({ rowIndex }) {
       return rowIndex % 2 === 1 ? "row-even" : "";
+    },
+    _parseJson(val) {
+      if (val == null || val === "") return null;
+      if (typeof val === "object") return val;
+      try {
+        return typeof val === "string" ? JSON.parse(val) : val;
+      } catch (e) {
+        return null;
+      }
+    },
+    _parseCustomerJson(val) {
+      if (val == null || val === "") return {};
+      if (typeof val === "object") return val || {};
+      try {
+        return typeof val === "string" ? (JSON.parse(val) || {}) : {};
+      } catch (e) {
+        return {};
+      }
+    },
+    loadCustomerDetail(userId) {
+      if (!userId) return;
+      this.$api({
+        url: CUSTOMER_API,
+        method: "post",
+        data: { id: String(userId) }
+      })
+        .then(res => {
+          if (!res || !res.data) return;
+          const data = res.data;
+          const payment = this._parseCustomerJson(data.paymentJson);
+          const address = this._parseCustomerJson(data.addressJson);
+          this.customer = {
+            ...this.customer,
+            customerNo: data.customerNo ?? "",
+            customerName: data.title ?? "",
+            region: data.territory === 1 ? "国内" : data.territory === 2 ? "国外" : (data.territory ?? ""),
+            area: data.region ?? "",
+            attrA: data.attributeA ?? "",
+            attrB: data.attributeB ?? "",
+            contact: data.contact ?? "",
+            contactPhone: data.phone ?? "",
+            companyPhone: data.companyPhone ?? "",
+            accountName: payment.account ?? "",
+            accountNo: payment.bankNo ?? "",
+            bank: payment.bankName ?? "",
+            shippingAddress: address.address ?? "",
+            consignee: address.name ?? "",
+            consigneePhone: address.phone ?? ""
+          };
+        })
+        .catch(() => {});
+    },
+    loadDetail(id) {
+      this.$api({ url: DETAIL_API, method: "post", data: { id } })
+        .then(res => {
+          if (!res || res.code !== 200 || !res.data) {
+            this.$message.error("获取采购单详情失败");
+            return;
+          }
+          const d = res.data;
+          // 基础信息：采购单名称
+          this.form.purchaseName = d.title || "";
+          this.staffOrderId = d.staffOrderId != null ? String(d.staffOrderId) : "";
+
+          // 客户信息：优先用客户详情接口（按 userId），同时保留 customerTitle 兜底
+          this.customer.customerName = d.customerTitle || "";
+          if (d.userId != null && d.userId !== "") {
+            this.loadCustomerDetail(String(d.userId));
+          }
+
+          // 产品列表
+          const products = Array.isArray(d.productJson) ? d.productJson : (this._parseJson(d.productJson) || []);
+          const rows = Array.isArray(products) ? products : [];
+          this.productList = rows.map(it => {
+            const info = it && it.info ? it.info : {};
+            const unitPrice = it && it.price != null ? Number(it.price) : 0;
+            const quantity = it && it.num != null ? Number(it.num) : 0;
+            return {
+              foreignProductId: it && it.foreignProductId != null ? String(it.foreignProductId) : (info.id != null ? String(info.id) : ""),
+              productName: info.title || "",
+              spec: info.keyVals || "",
+              unitPrice,
+              quantity,
+              unit: info.unit || "",
+              stock: "",
+              stockStatus: "",
+              totalPrice: "0.00"
+            };
+          });
+          this.productList.forEach(row => this.calcRowTotal(row));
+          this.selectedProducts = [];
+        })
+        .catch(() => {
+          this.$message.error("获取采购单详情失败");
+        });
+    },
+    handleProductSelectionChange(selection) {
+      this.selectedProducts = selection || [];
     },
     calcRowTotal(row) {
       const price = Number(row.unitPrice) || 0;
@@ -224,9 +325,44 @@ export default {
         this.$message.warning("请输入采购单名称");
         return;
       }
-      // TODO: 提交生成采购单接口
-      this.$message.success("生成成功");
-      this.$router.push({ name: "external-product-purchase-list" });
+      if (!this.staffOrderId) {
+        this.$message.warning("缺少业务员订单id");
+        return;
+      }
+      const rows = (this.selectedProducts && this.selectedProducts.length) ? this.selectedProducts : this.productList;
+      if (!rows || !rows.length) {
+        this.$message.warning("请至少选择一条产品");
+        return;
+      }
+      const items = rows
+        .map(r => ({
+          foreignProductId: String(r.foreignProductId || ""),
+          price: String(r.unitPrice != null ? r.unitPrice : ""),
+          num: String(r.quantity != null ? r.quantity : "")
+        }))
+        .filter(it => it.foreignProductId && it.price && it.num && Number(it.num) > 0);
+      if (!items.length) {
+        this.$message.warning("请选择产品并填写有效数量/单价");
+        return;
+      }
+      const data = {
+        title: this.form.purchaseName,
+        productJson: JSON.stringify(items),
+        staffOrderId: String(this.staffOrderId)
+      };
+      if (this.form.id) data.id = String(this.form.id);
+      this.$api({ url: ADD_API, method: "post", data })
+        .then(res => {
+          if (res && res.code === 200) {
+            this.$message.success("生成成功");
+            this.$router.push({ name: "external-product-purchase-list" });
+          } else {
+            this.$message.error((res && res.msg) || "生成失败");
+          }
+        })
+        .catch(() => {
+          this.$message.error("生成失败");
+        });
     },
     handleCancel() {
       this.$router.push({ name: "external-product-purchase-list" });

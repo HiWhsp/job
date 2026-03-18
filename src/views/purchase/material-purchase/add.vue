@@ -50,7 +50,7 @@
           <el-table-column prop="productCategory" label="用于产品大类" min-width="140" show-overflow-tooltip />
           <el-table-column prop="unit" label="单位" width="80" align="center" />
           <el-table-column label="操作" width="80" align="center" fixed="right">
-            <template slot-scope="{ row, $index }">
+            <template slot-scope="{ $index }">
               <span class="row-act" @click="handleDeleteRow($index)">删除</span>
             </template>
           </el-table-column>
@@ -90,8 +90,12 @@
               clearable
               style="width: 180px"
             >
-              <el-option label="原料分类名称" value="原料分类名称" />
-              <el-option label="原料分类" value="原料分类" />
+              <el-option
+                v-for="opt in cateOptions"
+                :key="opt.value"
+                :label="opt.label"
+                :value="opt.value"
+              />
             </el-select>
           </el-form-item>
           <el-form-item>
@@ -134,165 +138,122 @@
 </template>
 
 <script>
+const ADD_API = "/addPurchaseMaterialOrder";
+const MATERIAL_LIST_API = "/getMaterialList";
+const DETAIL_API = "/getPurchaseMaterialOrder";
+const MATERIAL_CATE_API = "/getMaterialCateList";
+
 export default {
   name: "MaterialPurchaseAdd",
   data() {
     return {
       form: {
         purchaseName: "",
-        purchaseAmount: ""
+        purchaseAmount: "",
+        id: ""
       },
       baseRules: {
         purchaseName: [{ required: true, message: "请输入采购单名称", trigger: "blur" }],
         purchaseAmount: [{ required: true, message: "请输入采购单金额", trigger: "blur" }]
       },
-      materialList: [
-        {
-          id: 1,
-          materialCode: "4578786954",
-          materialName: "原料名称",
-          spec: "规格名称",
-          quantity: 20,
-          category: "原料分类",
-          productCategory: "产品大类、产品大类",
-          unit: "盒"
-        },
-        {
-          id: 2,
-          materialCode: "4578786954",
-          materialName: "原料名称",
-          spec: "规格名称",
-          quantity: 20,
-          category: "原料分类",
-          productCategory: "产品大类、产品大类",
-          unit: "盒"
-        },
-        {
-          id: 3,
-          materialCode: "4578786954",
-          materialName: "原料名称",
-          spec: "规格名称",
-          quantity: 20,
-          category: "原料分类",
-          productCategory: "产品大类、产品大类",
-          unit: "盒"
-        },
-        {
-          id: 4,
-          materialCode: "4578786954",
-          materialName: "原料名称",
-          spec: "规格名称",
-          quantity: 20,
-          category: "原料分类",
-          productCategory: "产品大类、产品大类",
-          unit: "盒"
-        },
-        {
-          id: 5,
-          materialCode: "4578786954",
-          materialName: "原料名称",
-          spec: "规格名称",
-          quantity: 20,
-          category: "原料分类",
-          productCategory: "产品大类、产品大类",
-          unit: "盒"
-        },
-        {
-          id: 6,
-          materialCode: "4578786954",
-          materialName: "原料名称",
-          spec: "规格名称",
-          quantity: 20,
-          category: "原料分类",
-          productCategory: "产品大类、产品大类",
-          unit: "盒"
-        },
-        {
-          id: 7,
-          materialCode: "4578786954",
-          materialName: "原料名称",
-          spec: "规格名称",
-          quantity: 20,
-          category: "原料分类",
-          productCategory: "产品大类、产品大类",
-          unit: "盒"
-        },
-        {
-          id: 8,
-          materialCode: "4578786954",
-          materialName: "原料名称",
-          spec: "规格名称",
-          quantity: 20,
-          category: "原料分类",
-          productCategory: "产品大类、产品大类",
-          unit: "盒"
-        },
-        {
-          id: 9,
-          materialCode: "4578786954",
-          materialName: "原料名称",
-          spec: "规格名称",
-          quantity: 20,
-          category: "原料分类",
-          productCategory: "产品大类、产品大类",
-          unit: "盒"
-        },
-        {
-          id: 10,
-          materialCode: "4578786954",
-          materialName: "原料名称",
-          spec: "规格名称",
-          quantity: 20,
-          category: "原料分类",
-          productCategory: "产品大类、产品大类",
-          unit: "盒"
-        }
-      ],
+      materialList: [],
       selectedRows: [],
       // 添加原料弹框
       addMaterialDialogVisible: false,
       addMaterialQuery: {
         keyword: "",
-        category: ""
+        category: "",
+        pageNum: 1,
+        pageSize: 10
       },
-      addMaterialList: [
-        {
-          id: "dm1",
-          materialCode: "4578786954",
-          materialName: "原料名称",
-          spec: "98,A1,10mm",
-          category: "原料分类名称",
-          unit: "盒",
-          productCategory: "产品大类、产品大类",
-          quantity: ""
-        },
-        {
-          id: "dm2",
-          materialCode: "4578786955",
-          materialName: "原料名称",
-          spec: "98,A1,10mm",
-          category: "原料分类名称",
-          unit: "盒",
-          productCategory: "产品大类、产品大类",
-          quantity: ""
-        },
-        {
-          id: "dm3",
-          materialCode: "4578786956",
-          materialName: "原料名称",
-          spec: "98,A1,10mm",
-          category: "原料分类名称",
-          unit: "盒",
-          productCategory: "产品大类、产品大类",
-          quantity: ""
-        }
-      ],
+      cateOptions: [],
+      addMaterialList: [],
       addMaterialSelected: []
     };
+  },
+  created() {
+    const id = this.$route.query.id;
+    if (id) {
+      this.form.id = String(id);
+      this.loadEditDetail(String(id));
+    }
+    this.loadMaterialCateOptions();
   },
   methods: {
     tableRowClassName({ rowIndex }) {
       return rowIndex % 2 === 1 ? "row-even" : "";
+    },
+    _parseJson(val) {
+      if (val == null || val === "") return null;
+      if (typeof val === "object") return val;
+      try {
+        return typeof val === "string" ? JSON.parse(val) : val;
+      } catch (e) {
+        return null;
+      }
+    },
+    _walkCateTree(nodes, prefix = "") {
+      const arr = Array.isArray(nodes) ? nodes : [];
+      const out = [];
+      arr.forEach(n => {
+        if (!n) return;
+        const title = n.title != null ? String(n.title) : "";
+        const path = prefix ? `${prefix}/${title}` : title;
+        const children = n.child;
+        const hasChildren = Array.isArray(children) && children.length > 0;
+        if (hasChildren) {
+          out.push(...this._walkCateTree(children, path));
+        } else {
+          const id = n.id != null ? String(n.id) : "";
+          if (!id) return;
+          out.push({ label: path || id, value: id });
+        }
+      });
+      return out;
+    },
+    loadMaterialCateOptions() {
+      this.$api({ url: MATERIAL_CATE_API, method: "post", data: {} })
+        .then(res => {
+          if (res && res.code === 200) {
+            const data = res.data;
+            this.cateOptions = this._walkCateTree(data);
+          } else {
+            this.cateOptions = [];
+          }
+        })
+        .catch(() => {
+          this.cateOptions = [];
+        });
+    },
+    loadEditDetail(id) {
+      this.$api({ url: DETAIL_API, method: "post", data: { id } })
+        .then(res => {
+          if (!res || res.code !== 200 || !res.data) return;
+          const d = res.data;
+          this.form.purchaseName = d.title || "";
+          this.form.purchaseAmount = d.price || "";
+          const productArr = Array.isArray(d.productJson) ? d.productJson : (this._parseJson(d.productJson) || []);
+          const products = Array.isArray(productArr) ? productArr : [];
+          this.materialList = products.map(it => {
+            const info = it && it.info ? it.info : {};
+            const materialId = info.id || it.materialId || "";
+            const inventoryId = it.inventoryId || info.inventoryId || "";
+            const key = `${materialId}_${inventoryId}`;
+            return {
+              id: key,
+              materialId: String(materialId || ""),
+              inventoryId: String(inventoryId || ""),
+              materialCode: info.sn || info.materialNo || "",
+              materialName: info.title || "",
+              spec: info.keyVals || info.storageConditions || "",
+              quantity: it.num != null ? Number(it.num) : "",
+              category: info.cateTitle || info.productCateTitle || "",
+              productCategory: info.useProductCateTitle || info.productCategoryTitle || "",
+              unit: info.unit || ""
+            };
+          });
+        })
+        .catch(() => {});
     },
     handleSelectionChange(selection) {
       this.selectedRows = selection;
@@ -315,14 +276,47 @@ export default {
     closeAddMaterialDialog() {
       this.addMaterialQuery.keyword = "";
       this.addMaterialQuery.category = "";
+      this.addMaterialQuery.pageNum = 1;
       this.addMaterialSelected = [];
     },
     searchAddMaterial() {
-      // TODO: 根据 addMaterialQuery 调用原料列表接口
-      // 示例数据已放在 addMaterialList，实际可替换为接口返回
+      const params = {
+        limit: String(this.addMaterialQuery.pageSize),
+        page: String(this.addMaterialQuery.pageNum),
+        keyword: this.addMaterialQuery.keyword || "",
+        cateId: this.addMaterialQuery.category ? String(this.addMaterialQuery.category) : ""
+      };
+      this.$api({ url: MATERIAL_LIST_API, method: "post", data: params })
+        .then(res => {
+          if (res && res.code === 200 && res.data) {
+            const list = Array.isArray(res.data.list) ? res.data.list : [];
+            this.addMaterialList = list.map(it => {
+              const materialId = it.id != null ? String(it.id) : "";
+              const inventoryId = it.inventoryId != null ? String(it.inventoryId) : "";
+              return {
+                id: `${materialId}_${inventoryId}`,
+                materialId,
+                inventoryId,
+                materialCode: it.materialNo || "",
+                materialName: it.title || "",
+                spec: it.storageConditions || it.batchNo || "",
+                category: it.cateTitle || "",
+                unit: it.unit || "",
+                productCategory: it.productCateTitle || "",
+                quantity: ""
+              };
+            });
+          } else {
+            this.addMaterialList = [];
+          }
+        })
+        .catch(() => {
+          this.addMaterialList = [];
+        });
     },
     resetAddMaterialQuery() {
       this.$refs.addMaterialQueryForm && this.$refs.addMaterialQueryForm.resetFields();
+      this.addMaterialQuery.pageNum = 1;
       this.searchAddMaterial();
     },
     handleAddMaterialSelectionChange(selection) {
@@ -338,18 +332,27 @@ export default {
         this.$message.warning("请为勾选的原料填写数量");
         return;
       }
-      const maxId = this.materialList.length ? Math.max(...this.materialList.map(m => m.id)) : 0;
-      toAdd.forEach((row, i) => {
-        this.materialList.push({
-          id: maxId + i + 1,
-          materialCode: row.materialCode,
-          materialName: row.materialName,
-          spec: row.spec,
-          quantity: Number(row.quantity) || 0,
-          category: row.category,
-          productCategory: row.productCategory || "",
-          unit: row.unit || ""
-        });
+      toAdd.forEach(row => {
+        const key = row.id;
+        const exists = this.materialList.find(m => m.id === key);
+        const qty = Number(row.quantity) || 0;
+        if (exists) {
+          const old = Number(exists.quantity) || 0;
+          exists.quantity = old + qty;
+        } else {
+          this.materialList.push({
+            id: key,
+            materialId: row.materialId,
+            inventoryId: row.inventoryId,
+            materialCode: row.materialCode,
+            materialName: row.materialName,
+            spec: row.spec,
+            quantity: qty,
+            category: row.category,
+            productCategory: row.productCategory || "",
+            unit: row.unit || ""
+          });
+        }
       });
       this.addMaterialDialogVisible = false;
       this.$message.success("添加成功");
@@ -364,9 +367,35 @@ export default {
           this.$message.warning("请至少添加一条原料");
           return;
         }
-        // TODO: 调用提交接口
-        this.$message.success("提交成功");
-        this.$router.push({ name: "material-purchase-list" });
+        const items = (this.materialList || [])
+          .map(it => ({
+            materialId: String(it.materialId || ""),
+            inventoryId: String(it.inventoryId || ""),
+            num: String(it.quantity != null ? it.quantity : "")
+          }))
+          .filter(it => it.materialId && it.inventoryId && it.num && Number(it.num) > 0);
+        if (!items.length) {
+          this.$message.warning("请为原料填写有效数量");
+          return;
+        }
+        const data = {
+          title: this.form.purchaseName,
+          price: String(this.form.purchaseAmount),
+          productJson: JSON.stringify(items)
+        };
+        if (this.form.id) data.id = String(this.form.id);
+        this.$api({ url: ADD_API, method: "post", data })
+          .then(res => {
+            if (res && res.code === 200) {
+              this.$message.success("提交成功");
+              this.$router.push({ name: "material-purchase-list" });
+            } else {
+              this.$message.error((res && res.msg) || "提交失败");
+            }
+          })
+          .catch(() => {
+            this.$message.error("提交失败");
+          });
       });
     },
     handleCancel() {
