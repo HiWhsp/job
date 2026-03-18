@@ -106,12 +106,14 @@
         <el-form-item label="付款凭证:">
           <el-upload
             class="pay-upload"
-            action="#"
-            :auto-upload="false"
-            :on-change="handlePayFileChange"
-            :file-list="payForm.voucherList"
             list-type="picture-card"
+            :action="uploadAction"
+            name="file"
+            :file-list="payForm.voucherList"
             accept="image/*"
+            :on-success="(res, file, list) => handlePayUploadSuccess(res, file, list)"
+            :on-remove="(file, list) => handlePayUploadRemove(file, list)"
+            :http-request="handlePayUploadRequest"
           >
             <div class="upload-inner">
               <i class="el-icon-plus" />
@@ -125,61 +127,142 @@
         <el-button @click="closePayDialog">取消</el-button>
       </span>
     </el-dialog>
+
+    <!-- 其他采购单详情：抽屉形式查看 -->
+    <el-drawer
+      title="其他采购单详情"
+      :visible.sync="detailVisible"
+      direction="rtl"
+      size="800px"
+      :before-close="closeDetailDrawer"
+      custom-class="purchase-detail-drawer"
+    >
+      <div v-loading="detailLoading" class="detail-body">
+        <div v-if="!detailRow && !detailLoading" class="detail-empty">—</div>
+        <div v-else-if="detailRow">
+          <div class="detail-row">
+            <div class="detail-item">
+              <span class="detail-label">采购单号:</span>
+              <span class="detail-value">{{ detailRow.purchaseNo || "—" }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">采购名称:</span>
+              <span class="detail-value">{{ detailRow.title || "—" }}</span>
+            </div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-item">
+              <span class="detail-label">提交时间:</span>
+              <span class="detail-value">{{ detailRow.created_at || "—" }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">订单状态:</span>
+              <span class="detail-value">
+                <el-tag :type="orderStatusTagType(detailRow.orderStatus)" size="small">
+                  {{ orderStatusText(detailRow.orderStatus) }}
+                </el-tag>
+              </span>
+            </div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-item">
+              <span class="detail-label">订单金额:</span>
+              <span class="detail-value detail-amount">{{ detailRow.price || "—" }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">付款状态:</span>
+              <span class="detail-value">
+                <el-tag :type="payTagType(detailRow.isPay)" size="small">{{ payText(detailRow.isPay) }}</el-tag>
+              </span>
+            </div>
+          </div>
+
+          <div class="detail-section">
+            <div class="detail-section-title">付款信息</div>
+            <div class="detail-row">
+              <div class="detail-item">
+                <span class="detail-label">付款时间:</span>
+                <span class="detail-value">{{ payJsonDetail.created_at || "—" }}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">付款人:</span>
+                <span class="detail-value">{{ payJsonDetail.name || "—" }}</span>
+              </div>
+            </div>
+            <div class="detail-row">
+              <div class="detail-item">
+                <span class="detail-label">付款金额:</span>
+                <span class="detail-value">{{ payJsonDetail.price || "—" }}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">付款凭证:</span>
+                <div class="detail-value">
+                  <el-image
+                    v-if="payJsonDetail.image"
+                    :src="payJsonDetail.image"
+                    fit="contain"
+                    class="voucher-preview"
+                    :preview-src-list="[payJsonDetail.image]"
+                  />
+                  <span v-else>—</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="detail-section">
+            <div class="detail-section-title">审核记录</div>
+            <el-table :data="reviewList" border size="mini" class="detail-table">
+              <el-table-column prop="created_at" label="时间" min-width="160" />
+              <el-table-column prop="name" label="审核人" min-width="120" />
+              <el-table-column prop="statusTxt" label="状态" min-width="120" />
+              <el-table-column prop="cont" label="备注" min-width="160" show-overflow-tooltip />
+            </el-table>
+          </div>
+
+          <div class="detail-section">
+            <div class="detail-section-title">采购明细</div>
+            <el-table :data="productList" border size="mini" class="detail-table">
+              <el-table-column prop="title" label="名称" min-width="160" show-overflow-tooltip />
+              <el-table-column prop="price" label="单价" width="120" align="right" />
+              <el-table-column prop="num" label="数量" width="100" align="center" />
+              <el-table-column prop="unit" label="单位" width="80" align="center" />
+              <el-table-column prop="totalPrice" label="总价" width="140" align="right" />
+            </el-table>
+          </div>
+        </div>
+      </div>
+    </el-drawer>
   </div>
 </template>
 
 <script>
+import axios from "axios";
+import { UPLOAD_ROOT } from "@/config/env.js";
+
+const LIST_API = "/getPurchaseOtherOrderList";
+const DETAIL_API = "/getPurchaseOtherOrder";
+const PAY_API = "/payPurchaseOtherOrder";
+
 export default {
   name: "OtherPurchasePayment",
   data() {
     return {
+      uploadAction: UPLOAD_ROOT,
       queryParams: {
         keyword: "",
         dateRange: null,
         pageNum: 1,
-        pageSize: 20
+        pageSize: 20,
+        isPay: "99"
       },
       total: 0,
       tableHeight: 0,
-      tableData: [
-        {
-          id: 1,
-          requestNo: "4521414",
-          purchaseName: "采购单名称",
-          orderNo: "78456456",
-          customerName: "浙江求实医疗科技有限公司",
-          orderTime: "2026-01-05",
-          purchaseAmount: "5000.00",
-          status: "待付款",
-          submitTime: "2026-01-05"
-        },
-        {
-          id: 2,
-          requestNo: "4521414",
-          purchaseName: "采购单名称",
-          orderNo: "78456456",
-          customerName: "浙江求实医疗科技有限公司",
-          orderTime: "2026-01-05",
-          purchaseAmount: "5000.00",
-          status: "待付款",
-          submitTime: "2026-01-05"
-        },
-        {
-          id: 3,
-          requestNo: "4521414",
-          purchaseName: "采购单名称",
-          orderNo: "4521414",
-          customerName: "浙江求实医疗科技有限公司",
-          orderTime: "2026-01-05",
-          purchaseAmount: "5000.00",
-          status: "已付款",
-          submitTime: "2026-01-05"
-        }
-      ],
-      statusTab: "pending",
+      tableData: [],
+      statusTab: "99",
       statusTabs: [
-        { label: "待付款", value: "pending" },
-        { label: "已付款", value: "paid" }
+        { label: "待付款", value: "99" },
+        { label: "已付款", value: "1" }
       ],
       payDialogVisible: false,
       rowToPay: null,
@@ -192,8 +275,33 @@ export default {
           { required: true, message: "请输入付款金额", trigger: "blur" },
           { pattern: /^\d+(\.\d{1,2})?$/, message: "请输入有效金额（最多两位小数）", trigger: "blur" }
         ]
-      }
+      },
+      detailVisible: false,
+      detailLoading: false,
+      detailRow: null
     };
+  },
+  computed: {
+    payJsonDetail() {
+      return this.detailRow ? this._parseJson(this.detailRow.payJson) || {} : {};
+    },
+    reviewList() {
+      const list = this.detailRow ? this.detailRow.reviewJson : [];
+      const arr = Array.isArray(list) ? list : (this._parseJson(list) || []);
+      return Array.isArray(arr) ? arr : [];
+    },
+    productList() {
+      const list = this.detailRow ? this.detailRow.productJson : [];
+      const arr = Array.isArray(list) ? list : (this._parseJson(list) || []);
+      const rows = Array.isArray(arr) ? arr : [];
+      return rows.map(it => ({
+        title: it.title || "",
+        price: it.price || "",
+        num: it.num != null ? it.num : "",
+        unit: it.unit || "",
+        totalPrice: it.totalPrice || ""
+      }));
+    }
   },
   mounted() {
     this.setView();
@@ -218,8 +326,42 @@ export default {
       return rowIndex % 2 === 1 ? "row-even" : "";
     },
     loadList() {
-      // TODO: 根据 statusTab 调用外采产品付款列表接口
-      this.total = this.tableData.length;
+      const [start_time = "", end_time = ""] = this.queryParams.dateRange || [];
+      const params = {
+        limit: String(this.queryParams.pageSize),
+        page: String(this.queryParams.pageNum),
+        keyword: this.queryParams.keyword || "",
+        start_time: start_time || "",
+        end_time: end_time || "",
+        status: "",
+        isPay: String(this.queryParams.isPay || "")
+      };
+      this.$api({
+        url: LIST_API,
+        method: "post",
+        data: params
+      })
+        .then(res => {
+          if (res && res.code === 200 && res.data) {
+            const list = Array.isArray(res.data.list) ? res.data.list : [];
+            this.tableData = list.map(it => ({
+              ...it,
+              requestNo: it.purchaseNo,
+              purchaseName: it.title,
+              purchaseAmount: it.price,
+              status: String(it.isPay) === "1" ? "已付款" : "待付款",
+              submitTime: it.created_at
+            }));
+            this.total = res.data.count ?? list.length;
+          } else {
+            this.tableData = [];
+            this.total = 0;
+          }
+        })
+        .catch(() => {
+          this.tableData = [];
+          this.total = 0;
+        });
     },
     handleQuery() {
       this.queryParams.pageNum = 1;
@@ -232,15 +374,40 @@ export default {
     },
     handleTabChange(value) {
       this.statusTab = value;
+      this.queryParams.isPay = value;
       this.queryParams.pageNum = 1;
       this.loadList();
     },
     handleView(row) {
-      // TODO: 跳转详情或弹窗
+      const id = row && row.id != null ? String(row.id) : "";
+      if (!id) {
+        this.$message.warning("缺少采购单id");
+        return;
+      }
+      this.detailVisible = true;
+      this.detailRow = null;
+      this.loadDetail(id);
+    },
+    loadDetail(id) {
+      this.detailLoading = true;
+      this.$api({ url: DETAIL_API, method: "post", data: { id } })
+        .then(res => {
+          if (res && res.code === 200 && res.data) {
+            this.detailRow = res.data;
+          } else {
+            this.$message.error("获取采购单详情失败");
+          }
+        })
+        .catch(() => {
+          this.$message.error("获取采购单详情失败");
+        })
+        .finally(() => {
+          this.detailLoading = false;
+        });
     },
     handlePay(row) {
       this.rowToPay = row;
-      this.payForm.amount = "";
+      this.payForm.amount = row && row.purchaseAmount != null ? String(row.purchaseAmount) : "";
       this.payForm.voucherList = [];
       this.payDialogVisible = true;
     },
@@ -251,17 +418,75 @@ export default {
       this.payForm.voucherList = [];
       this.$refs.payForm && this.$refs.payForm.resetFields();
     },
-    handlePayFileChange(file, fileList) {
+    handlePayUploadRequest(option) {
+      const formData = new FormData();
+      formData.append("file", option.file);
+      const token = localStorage.getItem("token");
+      axios
+        .post(UPLOAD_ROOT, formData, {
+          headers: { Authorization: "Bearer " + token },
+          timeout: 60000
+        })
+        .then(res => {
+          const data = res.data || res;
+          const payload = (data && data.data) ? data.data : data;
+          const url = (payload && (payload.path || payload.url)) || (data && data.path) || "";
+          option.onSuccess({ url });
+        })
+        .catch(err => {
+          this.$message.error(
+            (err.response && err.response.data && err.response.data.msg) || "上传失败"
+          );
+          option.onError(err);
+        });
+    },
+    handlePayUploadSuccess(res, file, fileList) {
       this.payForm.voucherList = fileList;
+      const r = res || (file && file.response);
+      const payload = (r && r.data) ? r.data : r;
+      const url = (payload && (payload.path || payload.url)) || (r && r.path) || (file && file.url) || "";
+      if (url && file) file.url = url;
+    },
+    handlePayUploadRemove(file, fileList) {
+      this.payForm.voucherList = fileList || [];
+    },
+    getPayVoucherUrls() {
+      const list = this.payForm.voucherList || [];
+      return list.map(f => f.url || (f.response && f.response.url)).filter(Boolean);
     },
     submitPay() {
       this.$refs.payForm.validate(valid => {
         if (!valid) return;
         if (!this.rowToPay) return;
-        // TODO: 调用外采产品付款接口，上传凭证
-        this.$message.success("提交成功");
-        this.closePayDialog();
-        this.loadList();
+        const id = this.rowToPay.id != null ? String(this.rowToPay.id) : "";
+        if (!id) {
+          this.$message.warning("缺少采购单id");
+          return;
+        }
+        const urls = this.getPayVoucherUrls();
+        if (!urls.length) {
+          this.$message.warning("请上传付款凭证");
+          return;
+        }
+        const image = urls.join(",");
+        const price = String(this.payForm.amount || "0");
+        this.$api({
+          url: PAY_API,
+          method: "post",
+          data: { id, price, image }
+        })
+          .then(res => {
+            if (res && res.code === 200) {
+              this.$message.success("提交成功");
+              this.closePayDialog();
+              this.loadList();
+            } else {
+              this.$message.error((res && res.msg) || "提交失败");
+            }
+          })
+          .catch(err => {
+            this.$message.error((err && err.msg) ? err.msg : "提交失败");
+          });
       });
     },
     handleSizeChange(val) {
@@ -271,6 +496,46 @@ export default {
     handleCurrentChange(val) {
       this.queryParams.pageNum = val;
       this.loadList();
+    },
+    closeDetailDrawer(done) {
+      this.detailVisible = false;
+      this.detailRow = null;
+      if (typeof done === "function") done();
+    },
+    _parseJson(val) {
+      if (val == null || val === "") return null;
+      if (typeof val === "object") return val;
+      try {
+        return typeof val === "string" ? JSON.parse(val) : val;
+      } catch (e) {
+        return null;
+      }
+    },
+    orderStatusText(v) {
+      const s = Number(v);
+      const map = {
+        1: "生产副总审核",
+        2: "总经理审核",
+        3: "待财务付款",
+        4: "待采购",
+        5: "质检入库",
+        6: "已完成",
+        [-1]: "审核未通过"
+      };
+      return map[s] != null ? map[s] : (v != null ? String(v) : "—");
+    },
+    orderStatusTagType(v) {
+      const s = Number(v);
+      if (s === -1) return "danger";
+      if (s === 6) return "success";
+      if (s === 3) return "warning";
+      return "info";
+    },
+    payText(isPay) {
+      return String(isPay) === "1" ? "已付款" : "待付款";
+    },
+    payTagType(isPay) {
+      return String(isPay) === "1" ? "success" : "warning";
     }
   }
 };
@@ -411,5 +676,78 @@ export default {
     font-size: 12px;
     color: #909399;
   }
+}
+
+/* 采购单详情抽屉（与原料采购同一套） */
+.detail-body {
+  padding: 18px 20px;
+}
+.detail-empty {
+  color: #909399;
+  padding: 24px 0;
+  text-align: center;
+}
+.detail-row {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 12px;
+}
+.detail-item {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.detail-label {
+  width: 96px;
+  color: #606266;
+  text-align: left;
+  flex: 0 0 auto;
+  font-size: 14px;
+}
+.detail-value {
+  color: #303133;
+  flex: 1 1 auto;
+  min-width: 0;
+  word-break: break-all;
+  font-size: 14px;
+  text-align: left;
+}
+.detail-amount {
+  font-weight: 600;
+}
+.detail-section {
+  margin-top: 18px;
+}
+.detail-section-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #303133;
+  margin-bottom: 20px;
+  text-align: left;
+}
+.detail-table {
+  width: 100%;
+}
+.voucher-preview {
+  width: 120px;
+  height: 80px;
+  border: 1px solid #ebeef5;
+  border-radius: 4px;
+  background: #f5f7fa;
+}
+::v-deep .el-drawer.rtl {
+  width: 800px !important;
+}
+::v-deep .el-drawer__header {
+  margin-bottom: 20px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #303133;
+  text-align: left;
+}
+::v-deep .el-drawer__body {
+  padding: 0 24px 24px;
 }
 </style>

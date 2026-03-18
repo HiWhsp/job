@@ -111,12 +111,14 @@
         <el-form-item label="付款凭证:">
           <el-upload
             class="pay-upload"
-            action="#"
-            :auto-upload="false"
-            :on-change="handlePayFileChange"
-            :file-list="payForm.voucherList"
             list-type="picture-card"
+            :action="uploadAction"
+            name="file"
+            :file-list="payForm.voucherList"
             accept="image/*"
+            :on-success="(res, file, list) => handlePayUploadSuccess(res, file, list)"
+            :on-remove="(file, list) => handlePayUploadRemove(file, list)"
+            :http-request="handlePayUploadRequest"
           >
             <div class="upload-inner">
               <i class="el-icon-plus" />
@@ -130,67 +132,176 @@
         <el-button @click="closePayDialog">取消</el-button>
       </span>
     </el-dialog>
+
+    <!-- 采购单详情：从右到左打开的抽屉，与原料采购同一套 -->
+    <el-drawer
+      title="采购单详情"
+      :visible.sync="detailVisible"
+      direction="rtl"
+      size="800px"
+      :before-close="closeDetailDrawer"
+      custom-class="purchase-detail-drawer"
+    >
+      <div v-loading="detailLoading" class="detail-body">
+        <div v-if="!detailRow && !detailLoading" class="detail-empty">—</div>
+        <div v-else-if="detailRow">
+          <div class="detail-row">
+            <div class="detail-item">
+              <span class="detail-label">采购单号:</span>
+              <span class="detail-value">{{ detailRow.purchaseNo || "—" }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">采购单名称:</span>
+              <span class="detail-value">{{ detailRow.title || "—" }}</span>
+            </div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-item">
+              <span class="detail-label">提交时间:</span>
+              <span class="detail-value">{{ detailRow.created_at || "—" }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">订单状态:</span>
+              <span class="detail-value">
+                <el-tag :type="orderStatusTagType(detailRow.orderStatus)" size="small">
+                  {{ orderStatusText(detailRow.orderStatus) }}
+                </el-tag>
+              </span>
+            </div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-item">
+              <span class="detail-label">订单金额:</span>
+              <span class="detail-value detail-amount">{{ detailRow.price || "—" }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">付款状态:</span>
+              <span class="detail-value">
+                <el-tag :type="payTagType(detailRow.isPay)" size="small">{{ payText(detailRow.isPay) }}</el-tag>
+              </span>
+            </div>
+          </div>
+
+          <div class="detail-section">
+            <div class="detail-section-title">付款信息</div>
+            <div class="detail-row">
+              <div class="detail-item">
+                <span class="detail-label">付款时间:</span>
+                <span class="detail-value">{{ payJsonDetail.created_at || "—" }}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">付款人:</span>
+                <span class="detail-value">{{ payJsonDetail.name || "—" }}</span>
+              </div>
+            </div>
+            <div class="detail-row">
+              <div class="detail-item">
+                <span class="detail-label">付款金额:</span>
+                <span class="detail-value">{{ payJsonDetail.price || "—" }}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">付款凭证:</span>
+                <div class="detail-value">
+                  <el-image
+                    v-if="payJsonDetail.image"
+                    :src="payJsonDetail.image"
+                    fit="contain"
+                    class="voucher-preview"
+                    :preview-src-list="[payJsonDetail.image]"
+                  />
+                  <span v-else>—</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="detail-section">
+            <div class="detail-section-title">入库信息</div>
+            <div class="detail-row">
+              <div class="detail-item">
+                <span class="detail-label">入库单号:</span>
+                <span class="detail-value">{{ detailRow.ruKuNo || "—" }}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">入库时间:</span>
+                <span class="detail-value">{{ ruKuJsonDetail.created_at || "—" }}</span>
+              </div>
+            </div>
+            <div class="detail-row">
+              <div class="detail-item">
+                <span class="detail-label">入库人:</span>
+                <span class="detail-value">{{ ruKuJsonDetail.name || "—" }}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">入库凭证:</span>
+                <div class="detail-value">
+                  <el-image
+                    v-if="ruKuJsonDetail.image"
+                    :src="ruKuJsonDetail.image"
+                    fit="contain"
+                    class="voucher-preview"
+                    :preview-src-list="[ruKuJsonDetail.image]"
+                  />
+                  <span v-else>—</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="detail-section">
+            <div class="detail-section-title">审核记录</div>
+            <el-table :data="reviewList" border size="mini" class="detail-table">
+              <el-table-column prop="created_at" label="时间" min-width="160" />
+              <el-table-column prop="name" label="审核人" min-width="120" />
+              <el-table-column prop="statusTxt" label="状态" min-width="120" />
+              <el-table-column prop="cont" label="备注" min-width="160" show-overflow-tooltip />
+            </el-table>
+          </div>
+
+          <div class="detail-section">
+            <div class="detail-section-title">原料明细</div>
+            <el-table :data="productList" border size="mini" class="detail-table">
+              <el-table-column prop="sn" label="原料编码" min-width="120" />
+              <el-table-column prop="title" label="原料名称" min-width="140" show-overflow-tooltip />
+              <el-table-column prop="spec" label="规格" min-width="140" show-overflow-tooltip />
+              <el-table-column prop="category" label="所属分类" min-width="140" show-overflow-tooltip />
+              <el-table-column prop="num" label="采购数量" width="100" align="center" />
+              <el-table-column prop="rkNum" label="入库数量" width="100" align="center" />
+            </el-table>
+          </div>
+        </div>
+      </div>
+    </el-drawer>
   </div>
 </template>
 
 <script>
+import axios from "axios";
+import { UPLOAD_ROOT } from "@/config/env.js";
+
+const LIST_API = "/getPurchaseMaterialOrderList";
+const DETAIL_API = "/getPurchaseMaterialOrder";
+const PAY_API = "/payPurchaseMaterialOrder";
+
 export default {
   name: "ExternalPackagePayment",
   data() {
     return {
       queryParams: {
         keyword: "",
+        isPay: "99",
         dateRange: null,
         pageNum: 1,
         pageSize: 20
       },
       total: 0,
       tableHeight: 0,
-      tableData: [
-        {
-          id: 1,
-          packageOrderNo: "PK2026001",
-          packageSpec: "10ml/盒",
-          quantity: 100,
-          amount: "3000.00",
-          orderNo: "78456456",
-          customerName: "浙江求实医疗科技有限公司",
-          orderTime: "2026-01-05",
-          orderAmount: "5000.00",
-          status: "待付款",
-          submitTime: "2026-01-05"
-        },
-        {
-          id: 2,
-          packageOrderNo: "PK2026002",
-          packageSpec: "20ml/瓶",
-          quantity: 50,
-          amount: "2000.00",
-          orderNo: "78456456",
-          customerName: "浙江求实医疗科技有限公司",
-          orderTime: "2026-01-05",
-          orderAmount: "5000.00",
-          status: "待付款",
-          submitTime: "2026-01-05"
-        },
-        {
-          id: 3,
-          packageOrderNo: "PK2026003",
-          packageSpec: "10ml/盒",
-          quantity: 80,
-          amount: "2400.00",
-          orderNo: "4521414",
-          customerName: "浙江求实医疗科技有限公司",
-          orderTime: "2026-01-05",
-          orderAmount: "5000.00",
-          status: "已付款",
-          submitTime: "2026-01-05"
-        }
-      ],
-      statusTab: "pending",
+      tableData: [],
+      uploadAction: UPLOAD_ROOT,
+      statusTab: "99",
       statusTabs: [
-        { label: "待付款", value: "pending" },
-        { label: "已付款", value: "paid" }
+        { label: "待付款", value: "99" },
+        { label: "已付款", value: "1" }
       ],
       payDialogVisible: false,
       rowToPay: null,
@@ -207,8 +318,40 @@ export default {
             trigger: "blur"
           }
         ]
-      }
+      },
+      detailVisible: false,
+      detailLoading: false,
+      detailRow: null
     };
+  },
+  computed: {
+    payJsonDetail() {
+      return this.detailRow ? this._parseJson(this.detailRow.payJson) : {};
+    },
+    ruKuJsonDetail() {
+      return this.detailRow ? this._parseJson(this.detailRow.ruKuJson) : {};
+    },
+    reviewList() {
+      const list = this.detailRow ? this.detailRow.reviewJson : [];
+      const arr = Array.isArray(list) ? list : (this._parseJson(list) || []);
+      return Array.isArray(arr) ? arr : [];
+    },
+    productList() {
+      const list = this.detailRow ? this.detailRow.productJson : [];
+      const arr = Array.isArray(list) ? list : (this._parseJson(list) || []);
+      const rows = Array.isArray(arr) ? arr : [];
+      return rows.map(it => {
+        const info = (it && it.info) ? it.info : {};
+        return {
+          sn: info.sn || "",
+          title: info.title || "",
+          spec: info.keyVals || "",
+          category: info.productCateTitle || "",
+          num: it && it.num != null ? it.num : "",
+          rkNum: it && it.rkNum != null ? it.rkNum : ""
+        };
+      });
+    }
   },
   mounted() {
     this.setView();
@@ -236,8 +379,53 @@ export default {
       return rowIndex % 2 === 1 ? "row-even" : "";
     },
     loadList() {
-      // TODO: 根据 statusTab 调用外采产品付款列表接口
-      this.total = this.tableData.length;
+      const [start_time = "", end_time = ""] = this.queryParams.dateRange || [];
+      const params = {
+        limit: String(this.queryParams.pageSize),
+        page: String(this.queryParams.pageNum),
+        keyword: this.queryParams.keyword || "",
+        start_time: start_time || "",
+        end_time: end_time || "",
+        isPay: String(this.queryParams.isPay || "")
+      };
+      this.$api({
+        url: LIST_API,
+        method: "post",
+        data: params
+      })
+        .then(res => {
+          if (res && res.code === 200 && res.data) {
+            const list = Array.isArray(res.data.list) ? res.data.list : [];
+            // 不增不减页面内容：仅做字段赋值映射
+            this.tableData = list.map(it => {
+              const num = it.allNum != null ? it.allNum : "";
+              const onePrice = it.onePrice != null ? it.onePrice : "";
+              const totalPrice = it.price != null ? it.price : "";
+              return {
+                ...it,
+                packageOrderNo: it.purchaseNo,
+                // 页面叫“包装规格”，后端当前无单独字段，优先取 title，其次取单价/数量拼接兜底
+                packageSpec: it.title || (onePrice && num ? `${onePrice} × ${num}` : ""),
+                quantity: it.allNum,
+                amount: totalPrice,
+                orderNo: it.staffOrderNo,
+                customerName: it.customerTitle,
+                orderTime: it.staffOrderTime,
+                orderAmount: totalPrice,
+                status: String(it.isPay) === "1" ? "已付款" : "待付款",
+                submitTime: it.created_at
+              };
+            });
+            this.total = res.data.count ?? list.length;
+          } else {
+            this.tableData = [];
+            this.total = 0;
+          }
+        })
+        .catch(() => {
+          this.tableData = [];
+          this.total = 0;
+        });
     },
     handleQuery() {
       this.queryParams.pageNum = 1;
@@ -250,15 +438,80 @@ export default {
     },
     handleTabChange(value) {
       this.statusTab = value;
+      this.queryParams.isPay = value;
       this.queryParams.pageNum = 1;
       this.loadList();
     },
     handleView(row) {
-      // TODO: 跳转详情或弹窗
+      const id = row && row.id != null ? String(row.id) : "";
+      if (!id) {
+        this.$message.warning("缺少采购单id");
+        return;
+      }
+      this.detailVisible = true;
+      this.detailRow = null;
+      this.loadDetail(id);
+    },
+    loadDetail(id) {
+      this.detailLoading = true;
+      this.$api({ url: DETAIL_API, method: "post", data: { id } })
+        .then(res => {
+          if (res && res.code === 200 && res.data) {
+            this.detailRow = res.data;
+          } else {
+            this.$message.error("获取采购单详情失败");
+          }
+        })
+        .catch(() => {
+          this.$message.error("获取采购单详情失败");
+        })
+        .finally(() => {
+          this.detailLoading = false;
+        });
+    },
+    closeDetailDrawer(done) {
+      this.detailVisible = false;
+      this.detailRow = null;
+      if (typeof done === "function") done();
+    },
+    _parseJson(val) {
+      if (val == null || val === "") return null;
+      if (typeof val === "object") return val;
+      try {
+        return typeof val === "string" ? JSON.parse(val) : val;
+      } catch (e) {
+        return null;
+      }
+    },
+    orderStatusText(v) {
+      const s = Number(v);
+      const map = {
+        1: "生产副总审核",
+        2: "总经理审核",
+        3: "待财务付款",
+        4: "待采购",
+        5: "质检入库",
+        6: "已完成",
+        [-1]: "审核未通过"
+      };
+      return map[s] != null ? map[s] : (v != null ? String(v) : "—");
+    },
+    orderStatusTagType(v) {
+      const s = Number(v);
+      if (s === -1) return "danger";
+      if (s === 6) return "success";
+      if (s === 3) return "warning";
+      return "info";
+    },
+    payText(isPay) {
+      return String(isPay) === "1" ? "已付款" : "待付款";
+    },
+    payTagType(isPay) {
+      return String(isPay) === "1" ? "success" : "warning";
     },
     handlePay(row) {
       this.rowToPay = row;
-      this.payForm.amount = "";
+      this.payForm.amount = row && row.amount != null ? String(row.amount) : "";
       this.payForm.voucherList = [];
       this.payDialogVisible = true;
     },
@@ -269,17 +522,75 @@ export default {
       this.payForm.voucherList = [];
       this.$refs.payForm && this.$refs.payForm.resetFields();
     },
-    handlePayFileChange(file, fileList) {
+    handlePayUploadRequest(option) {
+      const formData = new FormData();
+      formData.append("file", option.file);
+      const token = localStorage.getItem("token");
+      axios
+        .post(UPLOAD_ROOT, formData, {
+          headers: { Authorization: "Bearer " + token },
+          timeout: 60000
+        })
+        .then(res => {
+          const data = res.data || res;
+          const payload = (data && data.data) ? data.data : data;
+          const url = (payload && (payload.path || payload.url)) || (data && data.path) || "";
+          option.onSuccess({ url });
+        })
+        .catch(err => {
+          this.$message.error(
+            (err.response && err.response.data && err.response.data.msg) || "上传失败"
+          );
+          option.onError(err);
+        });
+    },
+    handlePayUploadSuccess(res, file, fileList) {
       this.payForm.voucherList = fileList;
+      const r = res || (file && file.response);
+      const payload = (r && r.data) ? r.data : r;
+      const url = (payload && (payload.path || payload.url)) || (r && r.path) || (file && file.url) || "";
+      if (url && file) file.url = url;
+    },
+    handlePayUploadRemove(file, fileList) {
+      this.payForm.voucherList = fileList || [];
+    },
+    getPayVoucherUrls() {
+      const list = this.payForm.voucherList || [];
+      return list.map(f => f.url || (f.response && f.response.url)).filter(Boolean);
     },
     submitPay() {
       this.$refs.payForm.validate(valid => {
         if (!valid) return;
         if (!this.rowToPay) return;
-        // TODO: 调用外采产品付款接口，上传凭证
-        this.$message.success("提交成功");
-        this.closePayDialog();
-        this.loadList();
+        const id = this.rowToPay.id != null ? String(this.rowToPay.id) : "";
+        if (!id) {
+          this.$message.warning("缺少采购单id");
+          return;
+        }
+        const urls = this.getPayVoucherUrls();
+        if (!urls.length) {
+          this.$message.warning("请上传付款凭证");
+          return;
+        }
+        const image = urls.join(",");
+        const price = String(this.payForm.amount || "0");
+        this.$api({
+          url: PAY_API,
+          method: "post",
+          data: { id, price, image }
+        })
+          .then(res => {
+            if (res && res.code === 200) {
+              this.$message.success("提交成功");
+              this.closePayDialog();
+              this.loadList();
+            } else {
+              this.$message.error((res && res.msg) || "提交失败");
+            }
+          })
+          .catch(err => {
+            this.$message.error((err && err.msg) ? err.msg : "提交失败");
+          });
       });
     },
     handleSizeChange(val) {
@@ -439,5 +750,78 @@ export default {
     font-size: 12px;
     color: #909399;
   }
+}
+
+/* 采购单详情抽屉（与原料采购同一套） */
+.detail-body {
+  padding: 18px 20px;
+}
+.detail-empty {
+  color: #909399;
+  padding: 24px 0;
+  text-align: center;
+}
+.detail-row {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 12px;
+}
+.detail-item {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.detail-label {
+  width: 96px;
+  color: #606266;
+  text-align: left;
+  flex: 0 0 auto;
+  font-size: 14px;
+}
+.detail-value {
+  color: #303133;
+  flex: 1 1 auto;
+  min-width: 0;
+  word-break: break-all;
+  font-size: 14px;
+  text-align: left;
+}
+.detail-amount {
+  font-weight: 600;
+}
+.detail-section {
+  margin-top: 18px;
+}
+.detail-section-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #303133;
+  margin-bottom: 20px;
+  text-align: left;
+}
+.detail-table {
+  width: 100%;
+}
+.voucher-preview {
+  width: 120px;
+  height: 80px;
+  border: 1px solid #ebeef5;
+  border-radius: 4px;
+  background: #f5f7fa;
+}
+::v-deep .el-drawer.rtl {
+  width: 800px !important;
+}
+::v-deep .el-drawer__header {
+  margin-bottom: 20px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #303133;
+  text-align: left;
+}
+::v-deep .el-drawer__body {
+  padding: 0 24px 24px;
 }
 </style>

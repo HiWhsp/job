@@ -23,7 +23,7 @@
           </el-col>
           <el-col :span="12" class="field-item">
             <span class="field-label">订单状态：</span>
-            <el-tag :type="statusTagType" size="small" effect="plain">{{ detail.orderStatus }}</el-tag>
+            <el-tag :type="statusTagType" size="small" effect="plain">{{ orderStatusText(detail.orderStatus) }}</el-tag>
           </el-col>
         </el-row>
         <el-row :gutter="24" class="field-row">
@@ -44,59 +44,189 @@
       </div>
       <div class="section-body">
         <el-table :data="detail.itemList" class="data-table" :row-class-name="tableRowClassName">
-          <el-table-column prop="itemCode" label="物品编码" min-width="140" />
-          <el-table-column prop="itemName" label="物品名称" min-width="140" />
-          <el-table-column prop="spec" label="规格" min-width="140" />
-          <el-table-column prop="quantity" label="数量" width="100" align="center" />
-          <el-table-column prop="category" label="所属分类" min-width="120" />
-          <el-table-column prop="unit" label="单位" width="80" align="center" />
+          <el-table-column prop="title" label="名称" align="center" show-overflow-tooltip />
+          <el-table-column prop="price" label="单价" align="center" />
+          <el-table-column prop="num" label="数量" align="center" />
+          <el-table-column prop="unit" label="单位" align="center" />
+          <el-table-column prop="totalPrice" label="总价" align="center" />
         </el-table>
       </div>
     </div>
     <div class="form-footer">
-      <el-button type="primary" @click="handleAudit">审核</el-button>
+      <el-button type="primary" v-if="String(detail.orderStatus) === '2'" @click="handleAudit">审核</el-button>
       <el-button @click="handleCancel">取消</el-button>
     </div>
+    <el-dialog
+      title="审核"
+      :visible.sync="auditDialogVisible"
+      width="480px"
+      :close-on-click-modal="false"
+      @close="closeAuditDialog"
+    >
+      <el-form label-width="100px">
+        <el-form-item label="审核状态:" style="text-align: left;">
+          <el-radio-group v-model="auditChoice">
+            <el-radio label="pass">通过</el-radio>
+            <el-radio label="reject">不通过</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="审核备注:">
+          <el-input
+            v-model="auditRemark"
+            placeholder="请输入"
+            clearable
+            type="textarea"
+            :rows="3"
+            maxlength="500"
+            show-word-limit
+          />
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitAudit">提交</el-button>
+        <el-button @click="closeAuditDialog">取消</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+const REVIEW_API = "/reviewPurchaseOtherOrder";
+
 export default {
   name: "OtherPurchaseDetail",
   data() {
     return {
       detail: {
+        id: null,
         purchaseNo: "",
         purchaseName: "",
         submitTime: "",
-        orderStatus: "待审核",
+        orderStatus: "",
         orderAmount: "",
         auditRemark: "",
         itemList: []
-      }
+      },
+      auditDialogVisible: false,
+      auditChoice: "pass",
+      auditRemark: ""
     };
   },
   computed: {
     statusTagType() {
-      const s = this.detail.orderStatus;
-      if (s === "待审核") return "info";
-      if (s === "审核未通过") return "danger";
-      return "success";
+      const s = Number(this.detail.orderStatus);
+      if (s === -1) return "danger";
+      if (s === 5) return "success";
+      if (s === 3) return "warning";
+      return "info";
     }
   },
   mounted() {
     const id = this.$route.query.id || this.$route.params.id;
     if (id) this.loadDetail(id);
+    else this.$message.warning("缺少采购单id");
   },
   methods: {
+    orderStatusText(v) {
+      const s = Number(v);
+      const map = {
+        1: "生产副总审核",
+        2: "总经理审核",
+        3: "待财务付款",
+        4: "待采购",
+        5: "已采购",
+        [-1]: "审核未通过"
+      };
+      return map[s] != null ? map[s] : (v != null ? String(v) : "—");
+    },
     loadDetail(id) {
-      // TODO: 接口
+      this.$api({
+        url: "/getPurchaseOtherOrder",
+        method: "post",
+        data: { id: String(id) }
+      })
+        .then(res => {
+          if (!res || res.code !== 200 || !res.data) {
+            this.$message.error("获取其他采购单详情失败");
+            return;
+          }
+          const d = res.data;
+          let productJson = d.productJson;
+          if (typeof productJson === "string") {
+            try {
+              productJson = JSON.parse(productJson);
+            } catch (e) {
+              productJson = [];
+            }
+          }
+          productJson = Array.isArray(productJson) ? productJson : [];
+          let reviewJson = d.reviewJson;
+          if (typeof reviewJson === "string") {
+            try {
+              reviewJson = JSON.parse(reviewJson);
+            } catch (e) {
+              reviewJson = [];
+            }
+          }
+          reviewJson = Array.isArray(reviewJson) ? reviewJson : [];
+          const lastReview = reviewJson.length ? reviewJson[reviewJson.length - 1] : null;
+          this.detail = {
+            id: d.id,
+            purchaseNo: d.purchaseNo || "",
+            purchaseName: d.title || "",
+            submitTime: d.created_at || "",
+            orderStatus: d.orderStatus != null ? d.orderStatus : "",
+            orderAmount: d.price != null ? d.price : "",
+            auditRemark: (lastReview && lastReview.cont) ? lastReview.cont : "",
+            itemList: productJson
+          };
+        })
+        .catch(() => {
+          this.$message.error("获取其他采购单详情失败");
+        });
     },
     tableRowClassName({ rowIndex }) {
       return rowIndex % 2 === 1 ? "row-even" : "";
     },
     handleAudit() {
-      this.$message.info("审核");
+      this.auditChoice = "pass";
+      this.auditRemark = "";
+      this.auditDialogVisible = true;
+    },
+    closeAuditDialog() {
+      this.auditDialogVisible = false;
+      this.auditChoice = "pass";
+      this.auditRemark = "";
+    },
+    submitAudit() {
+      const id = this.detail.id;
+      if (id == null || id === "") {
+        this.$message.warning("缺少采购单id");
+        return;
+      }
+      const status = this.auditChoice === "pass" ? "1" : "-1";
+      const cont = (this.auditRemark || "").trim();
+      if (status === "-1" && !cont) {
+        this.$message.warning("驳回时请填写审核原因");
+        return;
+      }
+      this.$api({
+        url: REVIEW_API,
+        method: "post",
+        data: { id: String(id), status, cont }
+      })
+        .then(res => {
+          if (res && res.code === 200) {
+            this.$message.success(status === "1" ? "审核通过" : "审核驳回");
+            this.closeAuditDialog();
+            this.loadDetail(id);
+          } else {
+            this.$message.error((res && res.msg) || "提交失败");
+          }
+        })
+        .catch(err => {
+          this.$message.error((err && err.msg) ? err.msg : "提交失败");
+        });
     },
     handleCancel() {
       this.$router.go(-1);

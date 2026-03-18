@@ -12,62 +12,24 @@
               style="width: 260px"
             />
           </el-form-item>
-          <el-form-item label="订单状态" prop="orderStatus">
-            <el-select
-              v-model="queryParams.orderStatus"
-              placeholder="请选择"
-              clearable
-              style="width: 140px"
-            >
-              <el-option label="待审批" value="待审批" />
-              <el-option label="待发货" value="待发货" />
-              <el-option label="已发货" value="已发货" />
-              <el-option label="已取消" value="已取消" />
+          <el-form-item label="回款状态" prop="orderStatus">
+            <el-select v-model="queryParams.orderStatus" placeholder="请选择" clearable style="width: 140px">
+              <el-option label="待审核" value="1" />
+              <el-option label="已回款" value="2" />
+              <el-option label="驳回" value="-1" />
             </el-select>
-          </el-form-item>
-          <el-form-item label="支付方式" prop="payMethod">
-            <el-select
-              v-model="queryParams.payMethod"
-              placeholder="请选择"
-              clearable
-              style="width: 140px"
-            >
-              <el-option label="现结" value="现结" />
-              <el-option label="账期" value="账期" />
-              <el-option label="分期付款" value="分期付款" />
-            </el-select>
-          </el-form-item>
-          <el-form-item label="回款状态" prop="receiptStatus">
-            <el-select
-              v-model="queryParams.receiptStatus"
-              placeholder="请选择"
-              clearable
-              style="width: 140px"
-            >
-              <el-option label="待审核" value="待审核" />
-              <el-option label="已回款" value="已回款" />
-              <el-option label="审核未通过" value="审核未通过" />
-            </el-select>
-          </el-form-item>
-        </div>
-        <div class="search-row">
-          <el-form-item label="时间筛选" prop="dateRange">
-            <el-date-picker
-              v-model="queryParams.dateRange"
-              type="daterange"
-              range-separator="-"
-              start-placeholder="开始时间"
-              end-placeholder="结束时间"
-              clearable
-              style="width: 236px"
-              value-format="yyyy-MM-dd"
-            />
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="handleQuery">搜索</el-button>
             <el-button @click="resetQuery">重置</el-button>
           </el-form-item>
         </div>
+        <!-- <div class="search-row">
+          <el-form-item>
+            <el-button type="primary" @click="handleQuery">搜索</el-button>
+            <el-button @click="resetQuery">重置</el-button>
+          </el-form-item>
+        </div> -->
       </el-form>
     </div>
     <!-- 表格区域：标签页 + 导出 -->
@@ -99,40 +61,33 @@
               slot-scope="scope"
             >{{ (queryParams.pageNum - 1) * queryParams.pageSize + scope.$index + 1 }}</template>
           </el-table-column>
-          <el-table-column
-            prop="receiptNo"
-            label="回款单号"
-            min-width="120"
-            align="center"
-            show-overflow-tooltip
-          />
-          <el-table-column prop="receiptAmount" label="回款金额" min-width="100" align="right" />
-          <el-table-column prop="orderNo" label="所属订单" min-width="130" show-overflow-tooltip />
-          <el-table-column prop="customerName" label="客户名称" min-width="180" show-overflow-tooltip />
-          <el-table-column prop="orderTime" label="订单时间" width="120" align="center" />
-          <el-table-column label="回款凭证" width="100" align="center">
+          <el-table-column prop="payOrderNo" label="回款单号" show-overflow-tooltip />
+          <el-table-column prop="payPrice" label="回款金额" align="center" />
+          <el-table-column prop="staffOrderNo" label="所属订单" align="center" show-overflow-tooltip />
+          <el-table-column prop="customerTitle" label="客户名称" align="center" show-overflow-tooltip />
+          <el-table-column prop="created_at" label="订单时间" align="center" />
+          <el-table-column label="回款凭证" align="center">
             <template slot-scope="{ row }">
-              <div v-if="row.voucherUrl" class="voucher-thumb" @click="handlePreviewVoucher(row)">
-                <img :src="row.voucherUrl" alt="凭证" class="voucher-img" />
+              <div v-if="row.payImage" class="voucher-thumb" @click="handlePreviewVoucher(row)">
+                <img :src="row.payImage" alt="凭证" class="voucher-img" />
               </div>
               <span v-else class="voucher-placeholder">—</span>
             </template>
           </el-table-column>
-          <el-table-column prop="receiptStatus" label="回款状态" width="100" align="center">
+          <el-table-column prop="orderStatusTitle" label="回款状态" width="100" align="center">
             <template slot-scope="{ row }">
-              <el-tag v-if="row.receiptStatus === '待审核'" type="info" size="small">待审核</el-tag>
-              <el-tag v-else-if="row.receiptStatus === '审核未通过'" type="danger" size="small">审核未通过</el-tag>
-              <el-tag v-else-if="row.receiptStatus === '已回款'" type="success" size="small">已回款</el-tag>
-              <span v-else>—</span>
+              <el-tag :type="receiptStatusTagType(row.orderStatus)" size="small">
+                {{ receiptStatusText(row.orderStatus, row.orderStatusTitle) }}
+              </el-tag>
             </template>
           </el-table-column>
-          <el-table-column prop="submitTime" label="提交时间" width="120" align="center" />
+          <el-table-column prop="created_at" label="提交时间" width="160" align="center" />
           <el-table-column label="操作" width="180" align="center" fixed="right">
             <template slot-scope="{ row }">
               <span class="row-acts">
                 <span class="row-act" @click="handleView(row)">查看详情</span>
                 <span
-                  v-if="row.receiptStatus === '待审核'"
+                  v-if="String(row.orderStatus) === '1'"
                   class="row-act"
                   @click="handleAudit(row)"
                 >审核回款</span>
@@ -163,56 +118,51 @@
       :before-close="closeDetailDrawer"
       custom-class="receipt-detail-drawer"
     >
-      <div v-if="detailRow" class="detail-body">
+      <div v-loading="detailLoading" class="detail-body">
+        <div v-if="!detailRow && !detailLoading" class="detail-empty">—</div>
+        <div v-else-if="detailRow">
         <div class="detail-row">
           <div class="detail-item">
             <span class="detail-label">回款单号:</span>
-            <span class="detail-value">{{ detailRow.receiptNo || "—" }}</span>
+            <span class="detail-value">{{ detailRow.payOrderNo || "—" }}</span>
           </div>
           <div class="detail-item">
             <span class="detail-label">回款金额:</span>
-            <span class="detail-value detail-amount">{{ detailRow.receiptAmount || "—" }}</span>
+            <span class="detail-value detail-amount">{{ detailRow.payPrice || "—" }}</span>
           </div>
         </div>
         <div class="detail-row">
           <div class="detail-item">
             <span class="detail-label">所属订单:</span>
-            <span class="detail-value">{{ detailRow.orderNo || "—" }}</span>
+            <span class="detail-value">{{ detailRow.staffOrderNo || "—" }}</span>
           </div>
           <div class="detail-item">
             <span class="detail-label">提交时间:</span>
-            <span class="detail-value">{{ detailRow.submitTime || "—" }}</span>
+            <span class="detail-value">{{ detailRow.created_at || "—" }}</span>
           </div>
         </div>
         <div class="detail-row">
           <div class="detail-item">
             <span class="detail-label">客户名称:</span>
-            <span class="detail-value">{{ detailRow.customerName || "—" }}</span>
+            <span class="detail-value">{{ detailRow.customerTitle || "—" }}</span>
           </div>
           <div class="detail-item">
-            <span class="detail-label">订单时间:</span>
-            <span class="detail-value">{{ detailRow.orderTime || "—" }}</span>
+            <span class="detail-label">未回款金额:</span>
+            <span class="detail-value">{{ detailRow.remainPrice || "—" }}</span>
           </div>
         </div>
         <div class="detail-row">
           <div class="detail-item">
             <span class="detail-label">回款状态:</span>
             <span class="detail-value">
-              <el-tag v-if="detailRow.receiptStatus === '待审核'" type="info" size="small">待审核</el-tag>
-              <el-tag
-                v-else-if="detailRow.receiptStatus === '审核未通过'"
-                type="danger"
-                size="small"
-              >审核未通过</el-tag>
-              <el-tag v-else-if="detailRow.receiptStatus === '已回款'" type="success" size="small">已回款</el-tag>
-              <span v-else>—</span>
+              <el-tag :type="receiptStatusTagType(detailRow.orderStatus)" size="small">
+                {{ receiptStatusText(detailRow.orderStatus, detailRow.orderStatusTitle) }}
+              </el-tag>
             </span>
           </div>
           <div class="detail-item">
-            <span class="detail-label">审核备注:</span>
-            <span
-              class="detail-value"
-            >{{ detailRow.auditRemark != null ? detailRow.auditRemark : "—" }}</span>
+            <span class="detail-label">所属订单号:</span>
+            <span class="detail-value">{{ detailRow.staffOrderNo || "—" }}</span>
           </div>
         </div>
         <div class="detail-row">
@@ -220,15 +170,16 @@
             <span class="detail-label">回款凭证:</span>
             <div class="detail-voucher">
               <el-image
-                v-if="detailRow.voucherUrl"
-                :src="detailRow.voucherUrl"
+                v-if="payImageList(detailRow.payImage).length"
+                :src="payImageList(detailRow.payImage)[0]"
                 fit="contain"
                 class="voucher-preview"
-                :preview-src-list="[detailRow.voucherUrl]"
+                :preview-src-list="payImageList(detailRow.payImage)"
               />
               <div v-else class="voucher-placeholder-box" />
             </div>
           </div>
+        </div>
         </div>
       </div>
     </el-drawer>
@@ -247,8 +198,8 @@
         </el-form-item>
         <el-form-item label="审批:">
           <el-radio-group v-model="auditForm.approval">
-            <el-radio label="已回款">已回款</el-radio>
-            <el-radio label="未回款">未回款</el-radio>
+            <el-radio label="pass">通过</el-radio>
+            <el-radio label="reject">驳回</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="审核备注:">
@@ -270,75 +221,42 @@
 </template>
 
 <script>
+const LIST_API = "/getStaffOrderPayList";
+const DETAIL_API = "/getStaffOrderPay";
+
 export default {
   name: "OrderPaymentReceiptApproval",
   data() {
     return {
       queryParams: {
         keyword: "",
-        orderStatus: "",
-        payMethod: "",
-        receiptStatus: "待审核",
-        dateRange: null,
+        orderStatus: "1",
         pageNum: 1,
         pageSize: 20
       },
       total: 0,
       tableHeight: 0,
-      tableData: [
-        {
-          id: 1,
-          receiptNo: "2026001",
-          receiptAmount: "500.00",
-          orderNo: "2026001-999",
-          customerName: "浙江求实医疗科技有限公司",
-          orderTime: "2026-01-05",
-          voucherUrl: "",
-          receiptStatus: "待审核",
-          submitTime: "2026-01-05"
-        },
-        {
-          id: 2,
-          receiptNo: "2026001",
-          receiptAmount: "500.00",
-          orderNo: "2026001-999",
-          customerName: "浙江求实医疗科技有限公司",
-          orderTime: "2026-01-05",
-          voucherUrl: "",
-          receiptStatus: "审核未通过",
-          submitTime: "2026-01-05"
-        },
-        {
-          id: 3,
-          receiptNo: "2026001",
-          receiptAmount: "500.00",
-          orderNo: "2026001-999",
-          customerName: "浙江求实医疗科技有限公司",
-          orderTime: "2026-01-05",
-          voucherUrl: "",
-          receiptStatus: "已回款",
-          submitTime: "2026-01-05"
-        }
-      ],
-      statusTab: "pending",
+      tableData: [],
+      statusTab: "1",
       statusTabs: [
-        { label: "待审核", value: "pending" },
-        { label: "已回款", value: "received" },
-        { label: "审核未通过", value: "rejected" }
+        { label: "待审核", value: "1" },
+        { label: "已回款", value: "2" },
+        { label: "审核未通过", value: "-1" }
       ],
       detailVisible: false,
       detailRow: null,
+      detailLoading: false,
       auditDialogVisible: false,
       rowToAudit: null,
       auditForm: {
-        approval: "未回款",
+        approval: "pass",
         auditRemark: ""
       }
     };
   },
   computed: {
     auditReceiptAmount() {
-      return this.rowToAudit ? this.rowToAudit.receiptAmount || "—" : "—";
+      return this.rowToAudit ? this.rowToAudit.payPrice || "—" : "—";
     }
   },
   mounted() {
@@ -367,8 +285,31 @@ export default {
       return rowIndex % 2 === 1 ? "row-even" : "";
     },
     loadList() {
-      // TODO: 调用订单回款审核列表接口
-      this.total = this.tableData.length;
+      const params = {
+        page: String(this.queryParams.pageNum),
+        limit: String(this.queryParams.pageSize),
+        keyword: this.queryParams.keyword || "",
+        orderStatus: this.queryParams.orderStatus || ""
+      };
+      this.$api({
+        url: LIST_API,
+        method: "post",
+        data: params
+      })
+        .then((res) => {
+          if (res && res.code === 200 && res.data) {
+            const list = Array.isArray(res.data.list) ? res.data.list : [];
+            this.tableData = list;
+            this.total = res.data.count ?? list.length;
+          } else {
+            this.tableData = [];
+            this.total = 0;
+          }
+        })
+        .catch(() => {
+          this.tableData = [];
+          this.total = 0;
+        });
     },
     handleQuery() {
       this.queryParams.pageNum = 1;
@@ -376,32 +317,52 @@ export default {
     },
     resetQuery() {
       this.$refs.queryForm.resetFields();
-      this.queryParams.receiptStatus = this.getReceiptStatusByTab(
-        this.statusTab
-      );
+      this.queryParams.keyword = "";
+      this.queryParams.orderStatus = this.statusTab;
       this.queryParams.pageNum = 1;
       this.loadList();
     },
-    getReceiptStatusByTab(tab) {
-      const map = {
-        pending: "待审核",
-        received: "已回款",
-        rejected: "审核未通过"
-      };
-      return map[tab] || "";
-    },
     handleTabChange(value) {
       this.statusTab = value;
-      this.queryParams.receiptStatus = this.getReceiptStatusByTab(value);
+      this.queryParams.orderStatus = value;
       this.queryParams.pageNum = 1;
       this.loadList();
     },
     handleExport() {
       this.$message.info("导出");
     },
+    loadDetail(id) {
+      if (!id) return Promise.resolve(null);
+      this.detailLoading = true;
+      return this.$api({
+        url: DETAIL_API,
+        method: "post",
+        data: { id: String(id) }
+      })
+        .then((res) => {
+          if (res && res.code === 200 && res.data) return res.data;
+          return null;
+        })
+        .finally(() => {
+          this.detailLoading = false;
+        });
+    },
     handleView(row) {
-      this.detailRow = row;
+      const id = row && row.id != null ? String(row.id) : "";
+      if (!id) {
+        this.$message.warning("缺少回款单id");
+        return;
+      }
       this.detailVisible = true;
+      this.detailRow = null;
+      this.loadDetail(id).then((data) => {
+        if (!this.detailVisible) return;
+        if (!data) {
+          this.$message.error("获取回款单详情失败");
+          return;
+        }
+        this.detailRow = data;
+      });
     },
     closeDetailDrawer(done) {
       this.detailRow = null;
@@ -409,30 +370,45 @@ export default {
     },
     handleAudit(row) {
       this.rowToAudit = row;
-      this.auditForm.approval = "未回款";
+      this.auditForm.approval = "pass";
       this.auditForm.auditRemark = "";
       this.auditDialogVisible = true;
     },
     closeAuditDialog() {
       this.auditDialogVisible = false;
       this.rowToAudit = null;
-      this.auditForm.approval = "未回款";
+      this.auditForm.approval = "pass";
       this.auditForm.auditRemark = "";
     },
     submitAudit() {
       if (!this.rowToAudit) return;
-      // TODO: 调用审核回款接口，传 approval、auditRemark
-      const statusText =
-        this.auditForm.approval === "已回款" ? "已回款" : "审核未通过";
-      this.$message.success("审核提交成功");
+      // TODO: 调用审核回款接口（后端未提供），参数一般为：id + status(1/-1) + cont
+      this.$message.success("审核提交成功（待接审核接口）");
       this.closeAuditDialog();
       this.loadList();
     },
     handlePreviewVoucher(row) {
-      if (row.voucherUrl) {
-        // TODO: 预览大图或新窗口打开
-        this.$message.info("预览回款凭证");
+      if (row && row.payImage) this.$message.info("点击图片可预览");
+    },
+    payImageList(val) {
+      if (Array.isArray(val)) return val;
+      if (typeof val === "string" && val.trim()) {
+        return val.split(",").map(s => s.trim()).filter(Boolean);
       }
+      return [];
+    },
+    receiptStatusText(status, fallbackTitle) {
+      const s = Number(status);
+      if (s === 1) return "待审核";
+      if (s === 2) return "已回款";
+      if (s === -1) return "驳回";
+      return fallbackTitle || (status != null ? String(status) : "—");
+    },
+    receiptStatusTagType(status) {
+      const s = Number(status);
+      if (s === 2) return "success";
+      if (s === -1) return "danger";
+      return "info";
     },
     handleSizeChange(val) {
       this.queryParams.pageSize = val;

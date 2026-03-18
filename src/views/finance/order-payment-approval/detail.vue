@@ -332,7 +332,7 @@
 
 <script>
 export default {
-  name: "OrderDetail",
+  name: "OrderDeliveryApprovalDetail",
 
   data() {
     return {
@@ -395,14 +395,13 @@ export default {
     orderStatusTagType() {
       const v = this.detail.orderStatus;
       const s = typeof v === "number" || (typeof v === "string" && /^-?\d+$/.test(v)) ? Number(v) : null;
-      // 数字状态（与 manager 一致）
+      // 1生产副总审核 2总经理审核 3待财务付款 4待采购 5质检入库 6已完成 -1审核未通过
       if (s != null) {
-        if (s === 5 || s === -1) return "danger";
-        if (s === 7) return "success";
-        if (s === 6) return "warning";
+        if (s === -1) return "danger";
+        if (s === 6) return "success";
+        if (s === 3) return "warning";
         return "info";
       }
-      // 文本状态（兼容旧 mock）
       if (v === "待发货" || v === "部分发货") return "warning";
       if (v === "已发货") return "success";
       return "info";
@@ -695,14 +694,13 @@ export default {
     orderStatusText(v) {
       const s = Number(v);
       const map = {
-        1: "待营销总监审核",
-        2: "待总经理审核",
-        3: "缺货审核",
-        4: "待发货",
-        5: "缺货",
-        6: "暂停",
-        7: "已发货",
-        [-1]: "驳回"
+        1: "生产副总审核",
+        2: "总经理审核",
+        3: "待财务付款",
+        4: "待采购",
+        5: "质检入库",
+        6: "已完成",
+        [-1]: "审核未通过"
       };
       if (!Number.isNaN(s) && map[s] != null) return map[s];
       return v != null ? String(v) : "—";

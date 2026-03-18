@@ -771,11 +771,36 @@ const financeRoutes = [
         name: "order-payment-approval",
         component: () =>
           import("@/views/finance/order-payment-approval/index.vue"),
+        redirect: "/finance/order-payment-approval/list",
         meta: {
           title: "订单管理",
           requireAuth: true,
           hidden: true,
         },
+        children: [
+          {
+            path: "list",
+            name: "order-payment-approval-list",
+            component: () =>
+              import("@/views/finance/order-payment-approval/list.vue"),
+            meta: {
+              title: "订单管理列表",
+              requireAuth: true,
+              hidden: false,
+            },
+          },
+          {
+            path: "detail",
+            name: "order-payment-approval-detail",
+            component: () =>
+              import("@/views/finance/order-payment-approval/detail.vue"),
+            meta: {
+              title: "订单管理详情",
+              requireAuth: true,
+              hidden: false,
+            },
+          },
+        ],
       },
       // 订单回款审核
       {
@@ -1579,8 +1604,8 @@ const warehouseManagerRoutes = [
 // key: 角色标识（从后端返回的 opRole）
 // value: 对应的路由配置数组
 const roleRouteMap = {
-  1: generalManagerRoutes, // 管理员
-  '1': generalManagerRoutes, // 管理员
+  1: financeRoutes, // 管理员
+  '1': financeRoutes, // 管理员
 
   // 9: managerRoutes, // 管理员
   // 9: managerRoutes, // 管理员
