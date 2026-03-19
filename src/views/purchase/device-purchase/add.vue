@@ -9,16 +9,10 @@
           <el-input v-model="form.purchaseName" placeholder="请输入" clearable style="width: 400px" />
         </el-form-item>
         <el-form-item label="合同图片:">
-          <el-upload
-            class="contract-upload"
-            action="#"
-            :auto-upload="false"
-            :on-change="handleContractChange"
-            :on-remove="handleContractRemove"
-            :file-list="contractFileList"
-            list-type="picture-card"
-            accept="image/*"
-          >
+          <el-upload class="contract-upload" list-type="picture-card" :action="uploadAction" name="file"
+            :file-list="contractFileList" accept="image/*"
+            :on-success="(res, file, list) => handleContractUploadSuccess(res, file, list)"
+            :on-remove="(file, list) => handleContractRemove(file, list)" :http-request="handleContractUploadRequest">
             <div class="upload-inner">
               <i class="el-icon-plus" />
               <span class="upload-tip">添加图片</span>
@@ -38,13 +32,8 @@
         </div>
       </div>
       <div class="table-box">
-        <el-table
-          ref="deviceTable"
-          :data="deviceList"
-          header-cell-class-name="table-header-cell"
-          :row-class-name="tableRowClassName"
-          @selection-change="handleSelectionChange"
-        >
+        <el-table ref="deviceTable" :data="deviceList" header-cell-class-name="table-header-cell"
+          :row-class-name="tableRowClassName" @selection-change="handleSelectionChange">
           <el-table-column type="selection" width="50" align="center" :selectable="selectableRow" />
           <el-table-column type="index" label="序号" width="70" align="center">
             <template slot-scope="scope">
@@ -53,39 +42,22 @@
           </el-table-column>
           <el-table-column label="设备名称" min-width="140">
             <template slot-scope="{ row }">
-              <el-input
-                v-if="row.isEditing"
-                v-model="row.deviceName"
-                placeholder="请输入"
-                size="small"
-                style="width: 100%"
-              />
+              <el-input v-if="row.isEditing" v-model="row.deviceName" placeholder="请输入" size="small"
+                style="width: 100%" />
               <span v-else>{{ row.deviceName }}</span>
             </template>
           </el-table-column>
           <el-table-column label="单价" min-width="100" align="center">
             <template slot-scope="{ row }">
-              <el-input
-                v-if="row.isEditing"
-                v-model="row.unitPrice"
-                placeholder="请输入"
-                size="small"
-                style="width: 90px"
-                @input="calcRowTotal(row)"
-              />
+              <el-input v-if="row.isEditing" v-model="row.unitPrice" placeholder="请输入" size="small" style="width: 90px"
+                @input="calcRowTotal(row)" />
               <span v-else>{{ row.unitPrice }}</span>
             </template>
           </el-table-column>
           <el-table-column label="数量" min-width="90" align="center">
             <template slot-scope="{ row }">
-              <el-input
-                v-if="row.isEditing"
-                v-model="row.quantity"
-                placeholder="请输入"
-                size="small"
-                style="width: 80px"
-                @input="calcRowTotal(row)"
-              />
+              <el-input v-if="row.isEditing" v-model="row.quantity" placeholder="请输入" size="small" style="width: 80px"
+                @input="calcRowTotal(row)" />
               <span v-else>{{ row.quantity }}</span>
             </template>
           </el-table-column>
@@ -96,13 +68,7 @@
           </el-table-column>
           <el-table-column label="单位" width="90" align="center">
             <template slot-scope="{ row }">
-              <el-input
-                v-if="row.isEditing"
-                v-model="row.unit"
-                placeholder="请输入"
-                size="small"
-                style="width: 70px"
-              />
+              <el-input v-if="row.isEditing" v-model="row.unit" placeholder="请输入" size="small" style="width: 70px" />
               <span v-else>{{ row.unit }}</span>
             </template>
           </el-table-column>
@@ -130,29 +96,86 @@
       <el-button type="primary" @click="handleSubmit">提交</el-button>
       <el-button @click="handleCancel">取消</el-button>
     </div>
+
+    <!-- 添加采购产品弹框 -->
+    <el-dialog title="添加采购产品" :visible.sync="addProductDialogVisible" width="820px" custom-class="add-product-dialog"
+      :close-on-click-modal="false" @close="closeAddProductDialog">
+      <div class="dialog-search">
+        <el-form :model="addProductQuery" ref="addProductQueryForm" inline label-width="80px">
+          <el-form-item label="关键词" prop="keyword">
+            <el-input v-model="addProductQuery.keyword" placeholder="产品名称/产品编码" clearable style="width: 220px" />
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="searchAddProduct">搜索</el-button>
+            <el-button @click="resetAddProductQuery">重置</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
+
+      <div class="dialog-table-wrap">
+        <el-table ref="addProductTable" :data="addProductList" max-height="380"
+          header-cell-class-name="table-header-cell" @selection-change="handleAddProductSelectionChange">
+          <el-table-column type="selection" width="50" align="center" />
+          <el-table-column prop="productNo" label="产品编码" min-width="120" show-overflow-tooltip />
+          <el-table-column prop="title" label="产品名称" min-width="140" show-overflow-tooltip />
+          <el-table-column prop="spec" label="规格" min-width="140" show-overflow-tooltip />
+          <el-table-column prop="cateTitle" label="所属分类" min-width="120" show-overflow-tooltip />
+          <el-table-column label="单价" width="110" align="center">
+            <template slot-scope="{ row }">
+              <el-input v-model="row.unitPrice" placeholder="请填写" size="small" style="width: 90px" />
+            </template>
+          </el-table-column>
+          <el-table-column label="数量" width="110" align="center">
+            <template slot-scope="{ row }">
+              <el-input v-model="row.quantity" placeholder="请填写" size="small" style="width: 90px" />
+            </template>
+          </el-table-column>
+          <el-table-column prop="unit" label="单位" width="80" align="center" />
+        </el-table>
+      </div>
+
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="addProductDialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="confirmAddProduct">确定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 let rowId = 1;
+import axios from "axios";
+import { UPLOAD_ROOT } from "@/config/env.js";
+
+const ADD_API = "/addPurchaseEquipmentOrder";
+const DETAIL_API = "/getPurchaseEquipmentOrder";
+const PRODUCT_LIST_API = "/getProductList";
+
 export default {
   name: "DevicePurchaseAdd",
   data() {
     return {
       form: {
-        purchaseName: ""
+        purchaseName: "",
+        pdfUrl: "",
+        id: ""
       },
       baseRules: {
         purchaseName: [{ required: true, message: "请输入采购名称", trigger: "blur" }]
       },
+      uploadAction: UPLOAD_ROOT,
       contractFileList: [],
-      deviceList: [
-        { id: rowId++, deviceName: "设备名称", unitPrice: "2000.00", quantity: 20, totalPrice: "40000.00", unit: "台", isEditing: false },
-        { id: rowId++, deviceName: "设备名称", unitPrice: "2000.00", quantity: 20, totalPrice: "40000.00", unit: "台", isEditing: false },
-        { id: rowId++, deviceName: "设备名称", unitPrice: "2000.00", quantity: 20, totalPrice: "40000.00", unit: "台", isEditing: false },
-        { id: rowId++, deviceName: "设备名称", unitPrice: "2000.00", quantity: 20, totalPrice: "40000.00", unit: "台", isEditing: false }
-      ],
-      selectedRows: []
+      deviceList: [],
+      selectedRows: [],
+      // 添加采购产品弹框
+      addProductDialogVisible: false,
+      addProductQuery: {
+        keyword: "",
+        pageNum: 1,
+        pageSize: 10
+      },
+      addProductList: [],
+      addProductSelected: []
     };
   },
   computed: {
@@ -161,6 +184,13 @@ export default {
         const total = parseFloat(row.totalPrice) || 0;
         return sum + total;
       }, 0);
+    }
+  },
+  created() {
+    const id = this.$route.query.id;
+    if (id) {
+      this.form.id = String(id);
+      this.loadEditDetail(String(id));
     }
   },
   methods: {
@@ -173,11 +203,40 @@ export default {
     handleSelectionChange(selection) {
       this.selectedRows = selection;
     },
-    handleContractChange(file, fileList) {
+    handleContractUploadRequest(option) {
+      const formData = new FormData();
+      formData.append("file", option.file);
+      const token = localStorage.getItem("token");
+      axios
+        .post(UPLOAD_ROOT, formData, {
+          headers: { Authorization: "Bearer " + token },
+          timeout: 60000
+        })
+        .then(res => {
+          const data = res.data || res;
+          const payload = (data && data.data) ? data.data : data;
+          const url = (payload && (payload.path || payload.url)) || (data && data.path) || "";
+          option.onSuccess({ url });
+        })
+        .catch(err => {
+          this.$message.error(
+            (err.response && err.response.data && err.response.data.msg) || "上传失败"
+          );
+          option.onError(err);
+        });
+    },
+    handleContractUploadSuccess(res, file, fileList) {
       this.contractFileList = fileList;
+      const r = res || (file && file.response);
+      const payload = (r && r.data) ? r.data : r;
+      const url = (payload && (payload.path || payload.url)) || (r && r.path) || (file && file.url) || "";
+      if (url && file) file.url = url;
+      if (url) this.form.pdfUrl = url;
     },
     handleContractRemove(file, fileList) {
-      this.contractFileList = fileList;
+      this.contractFileList = fileList || [];
+      const urls = this.contractFileList.map(f => f.url || (f.response && f.response.url)).filter(Boolean);
+      this.form.pdfUrl = urls[0] || "";
     },
     calcRowTotal(row) {
       const price = parseFloat(row.unitPrice) || 0;
@@ -190,20 +249,45 @@ export default {
       return isNaN(n) ? "0.00" : n.toFixed(2);
     },
     handleAddDevice() {
-      const hasEditing = this.deviceList.some(row => row.isEditing);
-      if (hasEditing) {
-        this.$message.warning("请先保存当前编辑行");
-        return;
-      }
-      this.deviceList.push({
-        id: rowId++,
-        deviceName: "",
-        unitPrice: "",
-        quantity: "",
-        totalPrice: "0.00",
-        unit: "台",
-        isEditing: true
+      this.addProductDialogVisible = true;
+      this.$nextTick(() => {
+        this.searchAddProduct();
       });
+    },
+    _parseJson(val) {
+      if (val == null || val === "") return null;
+      if (typeof val === "object") return val;
+      try {
+        return typeof val === "string" ? JSON.parse(val) : val;
+      } catch (e) {
+        return null;
+      }
+    },
+    loadEditDetail(id) {
+      this.$api({ url: DETAIL_API, method: "post", data: { id } })
+        .then(res => {
+          if (!res || res.code !== 200 || !res.data) return;
+          const d = res.data;
+          this.form.purchaseName = d.title || "";
+          this.form.pdfUrl = d.pdfUrl || "";
+          if (this.form.pdfUrl) {
+            this.contractFileList = [{ name: "合同图片", url: this.form.pdfUrl }];
+          } else {
+            this.contractFileList = [];
+          }
+          const arr = Array.isArray(d.productJson) ? d.productJson : (this._parseJson(d.productJson) || []);
+          const rows = Array.isArray(arr) ? arr : [];
+          this.deviceList = rows.map(it => ({
+            id: rowId++,
+            deviceName: it.title || "",
+            unitPrice: it.price || "",
+            quantity: it.num != null ? it.num : "",
+            totalPrice: it.totalPrice || this.formatMoney((Number(it.price) || 0) * (Number(it.num) || 0)),
+            unit: it.unit || "台",
+            isEditing: false
+          }));
+        })
+        .catch(() => { });
     },
     handleSaveRow(index) {
       const row = this.deviceList[index];
@@ -237,6 +321,78 @@ export default {
       this.deviceList = this.deviceList.filter(item => !ids.includes(item.id));
       this.$message.success("删除成功");
     },
+    closeAddProductDialog() {
+      this.addProductQuery.keyword = "";
+      this.addProductQuery.pageNum = 1;
+      this.addProductSelected = [];
+    },
+    searchAddProduct() {
+      const params = {
+        limit: String(this.addProductQuery.pageSize),
+        page: String(this.addProductQuery.pageNum),
+        keyword: this.addProductQuery.keyword || "",
+        cateId: ""
+      };
+      this.$api({ url: PRODUCT_LIST_API, method: "post", data: params })
+        .then(res => {
+          if (res && res.code === 200 && res.data) {
+            const list = Array.isArray(res.data.list) ? res.data.list : [];
+            this.addProductList = list.map(it => ({
+              id: it.id != null ? String(it.id) : "",
+              title: it.title || "",
+              productNo: it.productNo || "",
+              spec: it.keyVals || "",
+              unit: it.unit || "",
+              cateTitle: it.cateTitle || "",
+              inventoryId: it.inventoryId != null ? String(it.inventoryId) : "",
+              unitPrice: "",
+              quantity: ""
+            }));
+          } else {
+            this.addProductList = [];
+          }
+        })
+        .catch(() => {
+          this.addProductList = [];
+        });
+    },
+    resetAddProductQuery() {
+      this.$refs.addProductQueryForm && this.$refs.addProductQueryForm.resetFields();
+      this.addProductQuery.pageNum = 1;
+      this.searchAddProduct();
+    },
+    handleAddProductSelectionChange(selection) {
+      this.addProductSelected = selection || [];
+    },
+    confirmAddProduct() {
+      if (!this.addProductSelected.length) {
+        this.$message.warning("请先勾选要添加的产品");
+        return;
+      }
+      const toAdd = this.addProductSelected.filter(r => r.unitPrice !== "" && r.quantity !== "");
+      if (!toAdd.length) {
+        this.$message.warning("请为勾选的产品填写单价和数量");
+        return;
+      }
+      toAdd.forEach(p => {
+        const unitPrice = String(p.unitPrice || "");
+        const quantity = String(p.quantity || "");
+        const totalPrice = this.formatMoney((Number(unitPrice) || 0) * (Number(quantity) || 0));
+        this.deviceList.push({
+          id: rowId++,
+          deviceName: p.title,
+          unitPrice,
+          quantity,
+          totalPrice,
+          unit: p.unit || "台",
+          isEditing: false,
+          productId: p.id,
+          inventoryId: p.inventoryId
+        });
+      });
+      this.addProductDialogVisible = false;
+      this.$message.success("添加成功");
+    },
     handleSubmit() {
       this.$refs.baseForm.validate(valid => {
         if (!valid) return;
@@ -249,9 +405,40 @@ export default {
           this.$message.warning("请至少添加一条设备");
           return;
         }
-        // TODO: 调用提交接口
-        this.$message.success("提交成功");
-        this.$router.push({ name: "device-purchase-list" });
+        const productArr = this.deviceList.map(r => {
+          const price = String(r.unitPrice != null ? r.unitPrice : "");
+          const num = String(r.quantity != null ? r.quantity : "");
+          const totalPrice = this.formatMoney((Number(r.unitPrice) || 0) * (Number(r.quantity) || 0));
+          return {
+            title: r.deviceName || "",
+            price,
+            num,
+            unit: r.unit || "",
+            totalPrice
+          };
+        }).filter(it => it.title && it.price && it.num && Number(it.num) > 0);
+        if (!productArr.length) {
+          this.$message.warning("请填写有效的设备名称/单价/数量");
+          return;
+        }
+        const data = {
+          title: this.form.purchaseName,
+          pdfUrl: this.form.pdfUrl || "",
+          productJson: JSON.stringify(productArr)
+        };
+        if (this.form.id) data.id = String(this.form.id);
+        this.$api({ url: ADD_API, method: "post", data })
+          .then(res => {
+            if (res && res.code === 200) {
+              this.$message.success("提交成功");
+              this.$router.push({ name: "device-purchase-list" });
+            } else {
+              this.$message.error((res && res.msg) || "提交失败");
+            }
+          })
+          .catch(() => {
+            this.$message.error("提交失败");
+          });
       });
     },
     handleCancel() {
@@ -280,15 +467,18 @@ export default {
 
 .form-section {
   margin-bottom: 32px;
+
   .base-form {
     ::v-deep .el-form-item__label {
       color: #303133;
       font-size: 14px;
     }
+
     ::v-deep .el-input__inner {
       border-radius: 4px;
       border-color: #dcdfe6;
     }
+
     ::v-deep .el-form-item__content {
       text-align: left;
     }
@@ -296,6 +486,8 @@ export default {
 }
 
 .contract-upload {
+  display: flex;
+
   ::v-deep .el-upload--picture-card {
     width: 120px;
     height: 120px;
@@ -304,16 +496,23 @@ export default {
     align-items: center;
     justify-content: center;
   }
+  ::v-deep .el-upload-list__item {
+    width: 120px;
+    height: 120px;
+  }
+
   .upload-inner {
     display: flex;
     flex-direction: column;
     align-items: center;
+
     .el-icon-plus {
       font-size: 28px;
       margin-bottom: 8px;
       color: #8c939d;
     }
   }
+
   .upload-tip {
     font-size: 12px;
     color: #909399;
@@ -322,6 +521,7 @@ export default {
 
 .device-section {
   margin-bottom: 40px;
+
   .section-header {
     background: #EFEFEF;
     height: 50px;
@@ -332,16 +532,19 @@ export default {
     justify-content: space-between;
     margin-bottom: 16px;
   }
+
   .section-title {
     font-size: 16px;
     font-weight: 500;
     color: #303133;
     margin: 0;
   }
+
   .section-actions {
     display: flex;
     gap: 12px;
   }
+
   .el-button--primary {
     background: linear-gradient(90deg, #157de9 0%, #3697fd 100%) !important;
     border: none;
@@ -351,26 +554,32 @@ export default {
 .table-box {
   ::v-deep .el-table {
     font-size: 14px;
+
     .table-header-cell {
       background: #f5f7fa;
       color: #303133;
       font-weight: 500;
     }
+
     .el-table__body tr.row-even td {
       background: #f3f7fa;
     }
-    .el-table__body tr:hover > td {
+
+    .el-table__body tr:hover>td {
       background: #f5f7fa !important;
     }
+
     .el-input__inner {
       border-radius: 4px;
     }
   }
+
   .row-act {
     color: #3377fe;
     cursor: pointer;
     font-size: 14px;
     margin: 0 4px;
+
     &:hover {
       text-decoration: underline;
     }
@@ -387,9 +596,11 @@ export default {
   color: #333;
   background: #EFEFEF;
   margin-top: 16px;
+
   .total-label {
     margin-right: 8px;
   }
+
   .total-value {
     font-size: 16px;
   }
@@ -400,10 +611,12 @@ export default {
   gap: 12px;
   padding-top: 24px;
   margin-top: 8px;
+
   .el-button--primary {
     background: linear-gradient(90deg, #157de9 0%, #3697fd 100%) !important;
     border: none;
   }
+
   .el-button:not(.el-button--primary) {
     background: #fff;
     border-color: #dcdfe6;

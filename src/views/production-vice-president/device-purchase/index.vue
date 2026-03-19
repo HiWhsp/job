@@ -18,12 +18,13 @@
               clearable
               style="width: 180px"
             >
-              <el-option label="待审核" value="pending" />
-              <el-option label="审核未通过" value="rejected" />
-              <el-option label="待采购" value="to_purchase" />
-              <el-option label="采购完成" value="purchase_done" />
-              <el-option label="质检入库中" value="qc_ing" />
-              <el-option label="已完成" value="completed" />
+              <el-option label="待审核" value="1" />
+              <el-option label="总经理审核" value="2" />
+              <el-option label="待财务付款" value="3" />
+              <el-option label="待采购" value="4" />
+              <el-option label="质检入库" value="5" />
+              <el-option label="已完成" value="6" />
+              <el-option label="审核未通过" value="-1" />
             </el-select>
           </el-form-item>
           <el-form-item label="时间筛选" prop="dateRange">
@@ -134,6 +135,9 @@
 </template>
 
 <script>
+const LIST_API = "/getPurchaseEquipmentOrderList";
+const REVIEW_API = "/reviewPurchaseEquipmentOrder";
+
 export default {
   name: "ProductionVicePresidentDevicePurchase",
   data() {
@@ -145,20 +149,9 @@ export default {
         pageNum: 1,
         pageSize: 20
       },
-      total: 295,
+      total: 0,
       tableHeight: 0,
-      tableData: [
-        { id: 1, purchaseNo: "4521414", purchaseName: "采购单名称", orderAmount: "5000.00", status: "待审核", submitTime: "2026-01-05" },
-        { id: 2, purchaseNo: "4521414", purchaseName: "采购单名称", orderAmount: "5000.00", status: "待审核", submitTime: "2026-01-05" },
-        { id: 3, purchaseNo: "4521414", purchaseName: "采购单名称", orderAmount: "5000.00", status: "审核未通过", submitTime: "2026-01-05" },
-        { id: 4, purchaseNo: "4521414", purchaseName: "采购单名称", orderAmount: "5000.00", status: "待采购", submitTime: "2026-01-05" },
-        { id: 5, purchaseNo: "4521414", purchaseName: "采购单名称", orderAmount: "5000.00", status: "采购完成", submitTime: "2026-01-05" },
-        { id: 6, purchaseNo: "4521414", purchaseName: "采购单名称", orderAmount: "5000.00", status: "质检入库中", submitTime: "2026-01-05" },
-        { id: 7, purchaseNo: "4521414", purchaseName: "采购单名称", orderAmount: "5000.00", status: "已完成", submitTime: "2026-01-05" },
-        { id: 8, purchaseNo: "4521414", purchaseName: "采购单名称", orderAmount: "5000.00", status: "已完成", submitTime: "2026-01-05" },
-        { id: 9, purchaseNo: "4521414", purchaseName: "采购单名称", orderAmount: "5000.00", status: "已完成", submitTime: "2026-01-05" },
-        { id: 10, purchaseNo: "4521414", purchaseName: "采购单名称", orderAmount: "5000.00", status: "已完成", submitTime: "2026-01-05" }
-      ],
+      tableData: [],
       auditDialogVisible: false,
       auditRow: null,
       auditForm: {
@@ -192,8 +185,52 @@ export default {
     tableRowClassName({ rowIndex }) {
       return rowIndex % 2 === 1 ? "row-even" : "";
     },
+    _orderStatusText(v) {
+      const s = Number(v);
+      const map = {
+        1: "待审核",
+        2: "待审核",
+        3: "待财务付款",
+        4: "待采购",
+        5: "质检入库中",
+        6: "已完成",
+        [-1]: "审核未通过"
+      };
+      return map[s] != null ? map[s] : (v != null ? String(v) : "—");
+    },
     loadList() {
-      // TODO: 调用设备采购列表接口（生产副总端）
+      const [start_time = "", end_time = ""] = this.queryParams.dateRange || [];
+      const params = {
+        page: String(this.queryParams.pageNum),
+        limit: String(this.queryParams.pageSize),
+        status: String(this.queryParams.status || ""),
+        keyword: this.queryParams.keyword || "",
+        start_time: start_time || "",
+        end_time: end_time || "",
+        isPay: ""
+      };
+      this.$api({ url: LIST_API, method: "post", data: params })
+        .then(res => {
+          if (res && res.code === 200 && res.data) {
+            const list = Array.isArray(res.data.list) ? res.data.list : [];
+            this.tableData = list.map(it => ({
+              ...it,
+              purchaseNo: it.purchaseNo,
+              purchaseName: it.title,
+              orderAmount: it.price,
+              status: this._orderStatusText(it.orderStatus),
+              submitTime: it.created_at
+            }));
+            this.total = res.data.count ?? list.length;
+          } else {
+            this.tableData = [];
+            this.total = 0;
+          }
+        })
+        .catch(() => {
+          this.tableData = [];
+          this.total = 0;
+        });
     },
     handleQuery() {
       this.queryParams.pageNum = 1;
@@ -226,11 +263,34 @@ export default {
         this.$message.warning("审核未通过时请填写审核备注");
         return;
       }
-      // TODO: 调用审核接口
-      this.$message.success("审核成功");
-      this.auditDialogVisible = false;
-      this.closeAuditDialog();
-      this.loadList();
+      const id = this.auditRow && this.auditRow.id != null ? String(this.auditRow.id) : "";
+      if (!id) {
+        this.$message.warning("缺少采购单id");
+        return;
+      }
+      const status = this.auditForm.result === "pass" ? "1" : "-1";
+      this.$api({
+        url: REVIEW_API,
+        method: "post",
+        data: {
+          id,
+          status,
+          cont: this.auditForm.remark || ""
+        }
+      })
+        .then(res => {
+          if (res && res.code === 200) {
+            this.$message.success("审核成功");
+            this.auditDialogVisible = false;
+            this.closeAuditDialog();
+            this.loadList();
+          } else {
+            this.$message.error((res && res.msg) || "审核失败");
+          }
+        })
+        .catch(() => {
+          this.$message.error("审核失败");
+        });
     },
     handleSizeChange(val) {
       this.queryParams.pageSize = val;

@@ -1,5 +1,5 @@
 <template>
-  <div class="view-wrap detail-page">
+  <div class="view-wrap requisition-detail-page">
     <h1 class="page-title">订单详情</h1>
 
     <!-- 订单基础信息 -->
@@ -11,22 +11,23 @@
       <div class="info-grid">
         <div class="info-col">
           <div class="info-item">
-            <span class="info-label">采购单单号:</span>
-            <span class="info-value">{{ detail.purchaseNo }}</span>
+            <span class="info-label">外购请购单单号:</span>
+            <span class="info-value">{{ detail.requisitionNo }}</span>
           </div>
           <div class="info-item">
             <span class="info-label">下单时间:</span>
             <span class="info-value">{{ detail.orderTime }}</span>
           </div>
+
           <div class="info-item">
-            <span class="info-label">采购金额:</span>
-            <span class="info-value">{{ detail.purchaseAmount }}</span>
+            <span class="info-label">销售金额:</span>
+            <span class="info-value">{{ detail.salesAmount }}</span>
           </div>
         </div>
         <div class="info-col">
           <div class="info-item">
-            <span class="info-label">采购单名称:</span>
-            <span class="info-value">{{ detail.purchaseName }}</span>
+            <span class="info-label">所属订单号:</span>
+            <span class="info-value">{{ detail.orderNo }}</span>
           </div>
           <div class="info-item">
             <span class="info-label">订单状态:</span>
@@ -46,26 +47,27 @@
       </div>
     </div>
 
-    <!-- 采购信息 -->
+    <!-- 外购产品信息 -->
     <div class="section-block">
       <div class="section-title-bar">
         <span class="title-line" />
-        <h2 class="section-title">采购信息</h2>
+        <h2 class="section-title">外购产品信息</h2>
       </div>
       <div class="table-box">
         <el-table
-          :data="deviceList"
+          :data="productList"
           header-cell-class-name="table-header-cell"
           :row-class-name="tableRowClassName"
         >
-          <el-table-column type="index" label="序号" width="70" align="center">
+          <el-table-column type="index" label="序号" align="center">
             <template slot-scope="scope">{{ String(scope.$index + 1).padStart(3, '0') }}</template>
           </el-table-column>
-          <el-table-column prop="deviceName" label="设备名称" min-width="120" show-overflow-tooltip />
-          <el-table-column prop="unitPrice" label="单价" min-width="110" align="right" />
-          <el-table-column prop="quantity" label="数量" width="90" align="center" />
-          <el-table-column prop="totalPrice" label="总价" min-width="110" align="right" />
-          <el-table-column prop="unit" label="单位" width="80" align="center" />
+          <el-table-column prop="productName" label="产品名称" show-overflow-tooltip />
+          <el-table-column prop="spec" label="规格" show-overflow-tooltip />
+          <el-table-column prop="unitPrice" label="单价" align="center" />
+          <el-table-column prop="quantity" label="数量" align="center" />
+          <el-table-column prop="totalPrice" label="总价" align="center" />
+          <el-table-column prop="unit" label="单位" align="center" />
         </el-table>
       </div>
     </div>
@@ -82,9 +84,9 @@
           header-cell-class-name="table-header-cell"
           :row-class-name="tableRowClassName"
         >
-          <el-table-column prop="approver" label="审核人" min-width="120" />
-          <el-table-column prop="approvalTime" label="审核时间" min-width="160" />
-          <el-table-column prop="approvalStatus" label="审核状态" width="120" align="center">
+          <el-table-column prop="approver" label="审核人" />
+          <el-table-column prop="approvalTime" label="审核时间" />
+          <el-table-column prop="approvalStatus" label="审核状态" align="center">
             <template slot-scope="{ row }">
               <el-tag
                 v-if="row.approvalStatus === '审核通过'"
@@ -98,7 +100,6 @@
           <el-table-column
             prop="approvalRemark"
             label="审核备注"
-            min-width="120"
             show-overflow-tooltip
           />
         </el-table>
@@ -117,16 +118,11 @@
           header-cell-class-name="table-header-cell"
           :row-class-name="tableRowClassName"
         >
-          <el-table-column prop="amount" label="付款金额" min-width="120" align="right" />
-          <el-table-column prop="paymentTime" label="付款时间" min-width="160" />
-          <el-table-column label="付款凭证" min-width="140" align="center">
+          <el-table-column prop="amount" label="付款金额" align="left" />
+          <el-table-column prop="paymentTime" label="付款时间" align="left" />
+          <el-table-column label="付款凭证" align="left">
             <template slot-scope="{ row }">
-              <a
-                v-if="row.voucherUrl"
-                href="javascript:;"
-                class="link"
-                @click="handleViewVoucher(row)"
-              >查看</a>
+              <a v-if="row.voucherUrl" href="javascript:;" class="link" @click="handleViewVoucher(row)">查看</a>
               <span v-else class="voucher-placeholder">—</span>
             </template>
           </el-table-column>
@@ -134,32 +130,27 @@
       </div>
     </div>
 
-    <!-- 质检 -->
+    <!-- 入库记录 -->
     <div class="section-block">
       <div class="section-title-bar">
         <span class="title-line" />
-        <h2 class="section-title">质检</h2>
+        <h2 class="section-title">入库记录</h2>
       </div>
       <div class="table-box">
         <el-table
-          :data="qcList"
+          :data="inboundList"
           header-cell-class-name="table-header-cell"
           :row-class-name="tableRowClassName"
         >
-          <el-table-column prop="qcNo" label="质检单号" min-width="120" />
-          <el-table-column prop="qcTime" label="质检时间" min-width="160" />
-          <el-table-column label="质检报告" min-width="140" align="center">
+          <el-table-column prop="inboundNo" label="入库单号" align="left" />
+          <el-table-column prop="inboundTime" label="入库时间" align="left" />
+          <el-table-column label="质检报告" align="left">
             <template slot-scope="{ row }">
-              <a
-                v-if="row.reportUrl"
-                href="javascript:;"
-                class="link"
-                @click="handleViewReport(row)"
-              >查看</a>
+              <a v-if="row.reportUrl" href="javascript:;" class="link" @click="handleViewReport(row)">查看</a>
               <span v-else class="voucher-placeholder">—</span>
             </template>
           </el-table-column>
-          <el-table-column prop="qcRemark" label="质检备注" min-width="120" show-overflow-tooltip />
+          <el-table-column prop="qcRemark" label="质检备注" show-overflow-tooltip align="left" />
         </el-table>
       </div>
     </div>
@@ -167,23 +158,23 @@
 </template>
 
 <script>
-const DETAIL_API = "/getPurchaseEquipmentOrder";
+const DETAIL_API = "/getPurchaseForeignProductOrder";
 
 export default {
-  name: "DevicePurchaseDetail",
+  name: "ProductionVicePresidentExternalProductPurchaseDetail",
   data() {
     return {
       detail: {
-        purchaseNo: "",
-        purchaseName: "",
+        requisitionNo: "",
+        orderNo: "",
         orderTime: "",
         status: "",
-        purchaseAmount: ""
+        salesAmount: ""
       },
-      deviceList: [],
+      productList: [],
       approvalList: [],
       paymentList: [],
-      qcList: []
+      inboundList: []
     };
   },
   created() {
@@ -226,21 +217,26 @@ export default {
             return;
           }
           const d = res.data;
-          this.detail.purchaseNo = d.purchaseNo || "";
-          this.detail.purchaseName = d.title || "";
-          this.detail.orderTime = d.created_at || "";
-          this.detail.purchaseAmount = d.price || "";
+
+          this.detail.requisitionNo = d.purchaseNo || "";
+          this.detail.orderNo = d.staffOrderNo || "";
+          this.detail.orderTime = d.staffOrderTime || "";
+          this.detail.salesAmount = d.price || "";
           this.detail.status = this._orderStatusText(d.orderStatus);
 
           const products = Array.isArray(d.productJson) ? d.productJson : (this._parseJson(d.productJson) || []);
-          const rows = Array.isArray(products) ? products : [];
-          this.deviceList = rows.map(it => ({
-            deviceName: it && it.title ? it.title : "",
-            unitPrice: it && it.price != null ? it.price : "",
-            quantity: it && it.num != null ? it.num : "",
-            totalPrice: it && it.totalPrice != null ? it.totalPrice : "",
-            unit: it && it.unit ? it.unit : ""
-          }));
+          const productRows = Array.isArray(products) ? products : [];
+          this.productList = productRows.map(it => {
+            const info = it && it.info ? it.info : {};
+            return {
+              productName: info.title || "",
+              spec: info.keyVals || "",
+              unitPrice: it && it.price != null ? it.price : "",
+              quantity: it && it.num != null ? it.num : "",
+              totalPrice: it && it.totalPrice != null ? it.totalPrice : "",
+              unit: info.unit || ""
+            };
+          });
 
           const reviewArr = Array.isArray(d.reviewJson) ? d.reviewJson : (this._parseJson(d.reviewJson) || []);
           const reviews = Array.isArray(reviewArr) ? reviewArr : [];
@@ -258,27 +254,31 @@ export default {
             voucherUrl: payObj.image || ""
           }] : [];
 
-          // 设备采购详情当前未返回质检信息字段，保留结构为空（不改 UI）
-          this.qcList = [];
+          const ruKuObj = this._parseJson(d.ruKuJson) || {};
+          const ruKuNo = d.ruKuNo || "";
+          this.inboundList = (ruKuNo || (ruKuObj && (ruKuObj.created_at || ruKuObj.image))) ? [{
+            inboundNo: ruKuNo,
+            inboundTime: ruKuObj.created_at || "",
+            reportUrl: ruKuObj.image || "",
+            qcRemark: ruKuObj.cont || ""
+          }] : [];
         })
-        .catch(() => {
-          this.$message.error("获取采购单详情失败");
-        });
+        .catch(() => {});
     },
     handleViewVoucher(row) {
-      // TODO: 查看付款凭证
-      this.$message.info("查看付款凭证");
+      if (!row || !row.voucherUrl) return;
+      window.open(row.voucherUrl);
     },
     handleViewReport(row) {
-      // TODO: 查看质检报告
-      this.$message.info("查看质检报告");
+      if (!row || !row.reportUrl) return;
+      window.open(row.reportUrl);
     }
   }
 };
 </script>
 
 <style lang="less" scoped>
-.detail-page {
+.requisition-detail-page {
   background: #fff;
   border-radius: 8px;
   border: 1px solid #e6e6e6;
@@ -314,9 +314,8 @@ export default {
   .section-title {
     font-size: 16px;
     font-weight: bold;
-    color: #303133;
-    margin: 0;
     color: #2373c8;
+    margin: 0;
   }
 }
 
@@ -362,16 +361,6 @@ export default {
     .el-table__body tr:hover > td {
       background: #f5f7fa !important;
     }
-  }
-  ::v-deep .el-tag--info.el-tag--plain {
-    background-color: #f4f4f5;
-    border-color: #e9e9eb;
-    color: #909399;
-  }
-  ::v-deep .el-tag--success.el-tag--plain {
-    background-color: #f0f9eb;
-    border-color: #e1f3d8;
-    color: #67c23a;
   }
   .link {
     color: #3377fe;

@@ -170,7 +170,7 @@
 const DETAIL_API = "/getPurchaseEquipmentOrder";
 
 export default {
-  name: "DevicePurchaseDetail",
+  name: "ProductionVicePresidentDevicePurchaseDetail",
   data() {
     return {
       detail: {
@@ -258,20 +258,17 @@ export default {
             voucherUrl: payObj.image || ""
           }] : [];
 
-          // 设备采购详情当前未返回质检信息字段，保留结构为空（不改 UI）
           this.qcList = [];
         })
-        .catch(() => {
-          this.$message.error("获取采购单详情失败");
-        });
+        .catch(() => {});
     },
     handleViewVoucher(row) {
-      // TODO: 查看付款凭证
-      this.$message.info("查看付款凭证");
+      if (!row || !row.voucherUrl) return;
+      window.open(row.voucherUrl);
     },
     handleViewReport(row) {
-      // TODO: 查看质检报告
-      this.$message.info("查看质检报告");
+      if (!row || !row.reportUrl) return;
+      window.open(row.reportUrl);
     }
   }
 };
@@ -314,9 +311,8 @@ export default {
   .section-title {
     font-size: 16px;
     font-weight: bold;
-    color: #303133;
-    margin: 0;
     color: #2373c8;
+    margin: 0;
   }
 }
 
@@ -362,16 +358,6 @@ export default {
     .el-table__body tr:hover > td {
       background: #f5f7fa !important;
     }
-  }
-  ::v-deep .el-tag--info.el-tag--plain {
-    background-color: #f4f4f5;
-    border-color: #e9e9eb;
-    color: #909399;
-  }
-  ::v-deep .el-tag--success.el-tag--plain {
-    background-color: #f0f9eb;
-    border-color: #e1f3d8;
-    color: #67c23a;
   }
   .link {
     color: #3377fe;

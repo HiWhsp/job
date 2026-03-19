@@ -1188,6 +1188,17 @@ const productionVicePresidentRoutes = [
           hidden: true,
         },
       },
+      {
+        path: "material-purchase/detail",
+        name: "production-vice-president-material-purchase-detail",
+        component: () =>
+          import("@/views/production-vice-president/material-purchase/detail.vue"),
+        meta: {
+          title: "原料采购详情",
+          requireAuth: true,
+          hidden: false,
+        },
+      },
       // 外采产品采购
       {
         path: "external-product-purchase",
@@ -1202,6 +1213,19 @@ const productionVicePresidentRoutes = [
           hidden: true,
         },
       },
+      {
+        path: "external-product-purchase/detail",
+        name: "production-vice-president-external-product-purchase-detail",
+        component: () =>
+          import(
+            "@/views/production-vice-president/external-product-purchase/detail.vue"
+          ),
+        meta: {
+          title: "外采产品采购详情",
+          requireAuth: true,
+          hidden: false,
+        },
+      },
       // 设备采购
       {
         path: "device-purchase",
@@ -1214,6 +1238,17 @@ const productionVicePresidentRoutes = [
           hidden: true,
         },
       },
+      {
+        path: "device-purchase/detail",
+        name: "production-vice-president-device-purchase-detail",
+        component: () =>
+          import("@/views/production-vice-president/device-purchase/detail.vue"),
+        meta: {
+          title: "设备采购详情",
+          requireAuth: true,
+          hidden: false,
+        },
+      },
       // 其他采购
       {
         path: "other-purchase",
@@ -1224,6 +1259,17 @@ const productionVicePresidentRoutes = [
           title: "其他采购",
           requireAuth: true,
           hidden: true,
+        },
+      },
+      {
+        path: "other-purchase/detail",
+        name: "production-vice-president-other-purchase-detail",
+        component: () =>
+          import("@/views/production-vice-president/other-purchase/detail.vue"),
+        meta: {
+          title: "其他采购详情",
+          requireAuth: true,
+          hidden: false,
         },
       },
     ],
@@ -1604,9 +1650,12 @@ const warehouseManagerRoutes = [
 // key: 角色标识（从后端返回的 opRole）
 // value: 对应的路由配置数组
 const roleRouteMap = {
-  1: purchaseRoutes, // 管理员
-  '1': purchaseRoutes, // 管理员
+  // 测试用
+  9: warehouseRoutes, // 管理员
+  '9': warehouseRoutes, // 管理员
+  
 
+  // 正式用 需要解除注释
   // 9: managerRoutes, // 管理员
   // 9: managerRoutes, // 管理员
 

@@ -11,13 +11,14 @@
         <el-form-item label="合同图片:">
           <el-upload
             class="contract-upload"
-            action="#"
-            :auto-upload="false"
-            :on-change="handleContractChange"
-            :on-remove="handleContractRemove"
+            :action="uploadAction"
+            name="file"
             :file-list="contractFileList"
             list-type="picture-card"
             accept="image/*"
+            :on-success="(res, file, list) => handleContractUploadSuccess(res, file, list)"
+            :on-remove="(file, list) => handleContractRemove(file, list)"
+            :http-request="handleContractUploadRequest"
           >
             <div class="upload-inner">
               <i class="el-icon-plus" />
@@ -130,27 +131,101 @@
       <el-button type="primary" @click="handleSubmit">提交</el-button>
       <el-button @click="handleCancel">取消</el-button>
     </div>
+
+    <!-- 添加采购产品弹框（同设备采购） -->
+    <el-dialog
+      title="添加采购产品"
+      :visible.sync="addProductDialogVisible"
+      width="820px"
+      custom-class="add-product-dialog"
+      :close-on-click-modal="false"
+      @close="closeAddProductDialog"
+    >
+      <div class="dialog-search">
+        <el-form :model="addProductQuery" ref="addProductQueryForm" inline label-width="80px">
+          <el-form-item label="关键词" prop="keyword">
+            <el-input
+              v-model="addProductQuery.keyword"
+              placeholder="产品名称/产品编码"
+              clearable
+              style="width: 220px"
+            />
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="searchAddProduct">搜索</el-button>
+            <el-button @click="resetAddProductQuery">重置</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
+
+      <div class="dialog-table-wrap">
+        <el-table
+          ref="addProductTable"
+          :data="addProductList"
+          max-height="380"
+          header-cell-class-name="table-header-cell"
+          @selection-change="handleAddProductSelectionChange"
+        >
+          <el-table-column type="selection" width="50" align="center" />
+          <el-table-column prop="productNo" label="产品编码" min-width="120" show-overflow-tooltip />
+          <el-table-column prop="title" label="产品名称" min-width="140" show-overflow-tooltip />
+          <el-table-column prop="spec" label="规格" min-width="140" show-overflow-tooltip />
+          <el-table-column prop="cateTitle" label="所属分类" min-width="120" show-overflow-tooltip />
+          <el-table-column label="单价" width="110" align="center">
+            <template slot-scope="{ row }">
+              <el-input v-model="row.unitPrice" placeholder="请填写" size="small" style="width: 90px" />
+            </template>
+          </el-table-column>
+          <el-table-column label="数量" width="110" align="center">
+            <template slot-scope="{ row }">
+              <el-input v-model="row.quantity" placeholder="请填写" size="small" style="width: 90px" />
+            </template>
+          </el-table-column>
+          <el-table-column prop="unit" label="单位" width="80" align="center" />
+        </el-table>
+      </div>
+
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="addProductDialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="confirmAddProduct">确定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 let rowId = 1;
+import axios from "axios";
+import { UPLOAD_ROOT } from "@/config/env.js";
+
+const ADD_API = "/addPurchaseOtherOrder";
+const DETAIL_API = "/getPurchaseOtherOrder";
+const PRODUCT_LIST_API = "/getProductList";
+
 export default {
   name: "OtherPurchaseAdd",
   data() {
     return {
       form: {
-        purchaseName: ""
+        purchaseName: "",
+        pdfUrl: "",
+        id: ""
       },
       baseRules: {
         purchaseName: [{ required: true, message: "请输入采购名称", trigger: "blur" }]
       },
+      uploadAction: UPLOAD_ROOT,
       contractFileList: [],
-      productList: [
-        { id: rowId++, productName: "采购产品名称", unitPrice: "2000.00", quantity: 20, totalPrice: "40000.00", unit: "台", isEditing: false },
-        { id: rowId++, productName: "设备名称", unitPrice: "2000.00", quantity: 20, totalPrice: "40000.00", unit: "台", isEditing: false }
-      ],
-      selectedRows: []
+      productList: [],
+      selectedRows: [],
+      addProductDialogVisible: false,
+      addProductQuery: {
+        keyword: "",
+        pageNum: 1,
+        pageSize: 10
+      },
+      addProductList: [],
+      addProductSelected: []
     };
   },
   computed: {
@@ -159,6 +234,13 @@ export default {
         const total = parseFloat(row.totalPrice) || 0;
         return sum + total;
       }, 0);
+    }
+  },
+  created() {
+    const id = this.$route.query.id;
+    if (id) {
+      this.form.id = String(id);
+      this.loadEditDetail(String(id));
     }
   },
   methods: {
@@ -171,11 +253,40 @@ export default {
     handleSelectionChange(selection) {
       this.selectedRows = selection;
     },
-    handleContractChange(file, fileList) {
-      this.contractFileList = fileList;
+    handleContractUploadRequest(option) {
+      const formData = new FormData();
+      formData.append("file", option.file);
+      const token = localStorage.getItem("token");
+      axios
+        .post(UPLOAD_ROOT, formData, {
+          headers: { Authorization: "Bearer " + token },
+          timeout: 60000
+        })
+        .then(res => {
+          const data = res.data || res;
+          const payload = (data && data.data) ? data.data : data;
+          const url = (payload && (payload.path || payload.url)) || (data && data.path) || "";
+          option.onSuccess({ url });
+        })
+        .catch(err => {
+          this.$message.error(
+            (err.response && err.response.data && err.response.data.msg) || "上传失败"
+          );
+          option.onError(err);
+        });
+    },
+    handleContractUploadSuccess(res, file, fileList) {
+      this.contractFileList = fileList || [];
+      const r = res || (file && file.response);
+      const payload = (r && r.data) ? r.data : r;
+      const url = (payload && (payload.path || payload.url)) || (r && r.path) || (file && file.url) || "";
+      if (url && file) file.url = url;
+      if (url) this.form.pdfUrl = url;
     },
     handleContractRemove(file, fileList) {
-      this.contractFileList = fileList;
+      this.contractFileList = fileList || [];
+      const urls = this.contractFileList.map(f => f.url || (f.response && f.response.url)).filter(Boolean);
+      this.form.pdfUrl = urls[0] || "";
     },
     calcRowTotal(row) {
       const price = parseFloat(row.unitPrice) || 0;
@@ -188,19 +299,9 @@ export default {
       return isNaN(n) ? "0.00" : n.toFixed(2);
     },
     handleAddProduct() {
-      const hasEditing = this.productList.some(row => row.isEditing);
-      if (hasEditing) {
-        this.$message.warning("请先保存当前编辑行");
-        return;
-      }
-      this.productList.push({
-        id: rowId++,
-        productName: "",
-        unitPrice: "",
-        quantity: "",
-        totalPrice: "0.00",
-        unit: "台",
-        isEditing: true
+      this.addProductDialogVisible = true;
+      this.$nextTick(() => {
+        this.searchAddProduct();
       });
     },
     handleSaveRow(index) {
@@ -235,6 +336,113 @@ export default {
       this.productList = this.productList.filter(item => !ids.includes(item.id));
       this.$message.success("删除成功");
     },
+    _parseJson(val) {
+      if (val == null || val === "") return null;
+      if (typeof val === "object") return val;
+      try {
+        return typeof val === "string" ? JSON.parse(val) : val;
+      } catch (e) {
+        return null;
+      }
+    },
+    loadEditDetail(id) {
+      this.$api({ url: DETAIL_API, method: "post", data: { id } })
+        .then(res => {
+          if (!res || res.code !== 200 || !res.data) return;
+          const d = res.data;
+          this.form.purchaseName = d.title || "";
+          this.form.pdfUrl = d.pdfUrl || "";
+          if (this.form.pdfUrl) {
+            this.contractFileList = [{ name: "合同图片", url: this.form.pdfUrl }];
+          } else {
+            this.contractFileList = [];
+          }
+          const arr = Array.isArray(d.productJson) ? d.productJson : (this._parseJson(d.productJson) || []);
+          const rows = Array.isArray(arr) ? arr : [];
+          this.productList = rows.map(it => ({
+            id: rowId++,
+            productName: it.title || "",
+            unitPrice: it.price || "",
+            quantity: it.num != null ? it.num : "",
+            totalPrice: it.totalPrice || this.formatMoney((Number(it.price) || 0) * (Number(it.num) || 0)),
+            unit: it.unit || "单位",
+            isEditing: false
+          }));
+        })
+        .catch(() => {});
+    },
+    closeAddProductDialog() {
+      this.addProductQuery.keyword = "";
+      this.addProductQuery.pageNum = 1;
+      this.addProductSelected = [];
+    },
+    searchAddProduct() {
+      const params = {
+        limit: String(this.addProductQuery.pageSize),
+        page: String(this.addProductQuery.pageNum),
+        keyword: this.addProductQuery.keyword || "",
+        cateId: ""
+      };
+      this.$api({ url: PRODUCT_LIST_API, method: "post", data: params })
+        .then(res => {
+          if (res && res.code === 200 && res.data) {
+            const list = Array.isArray(res.data.list) ? res.data.list : [];
+            this.addProductList = list.map(it => ({
+              id: it.id != null ? String(it.id) : "",
+              title: it.title || "",
+              productNo: it.productNo || "",
+              spec: it.keyVals || "",
+              unit: it.unit || "",
+              cateTitle: it.cateTitle || "",
+              inventoryId: it.inventoryId != null ? String(it.inventoryId) : "",
+              unitPrice: "",
+              quantity: ""
+            }));
+          } else {
+            this.addProductList = [];
+          }
+        })
+        .catch(() => {
+          this.addProductList = [];
+        });
+    },
+    resetAddProductQuery() {
+      this.$refs.addProductQueryForm && this.$refs.addProductQueryForm.resetFields();
+      this.addProductQuery.pageNum = 1;
+      this.searchAddProduct();
+    },
+    handleAddProductSelectionChange(selection) {
+      this.addProductSelected = selection || [];
+    },
+    confirmAddProduct() {
+      if (!this.addProductSelected.length) {
+        this.$message.warning("请先勾选要添加的产品");
+        return;
+      }
+      const toAdd = this.addProductSelected.filter(r => r.unitPrice !== "" && r.quantity !== "");
+      if (!toAdd.length) {
+        this.$message.warning("请为勾选的产品填写单价和数量");
+        return;
+      }
+      toAdd.forEach(p => {
+        const unitPrice = String(p.unitPrice || "");
+        const quantity = String(p.quantity || "");
+        const totalPrice = this.formatMoney((Number(unitPrice) || 0) * (Number(quantity) || 0));
+        this.productList.push({
+          id: rowId++,
+          productName: p.title,
+          unitPrice,
+          quantity,
+          totalPrice,
+          unit: p.unit || "单位",
+          isEditing: false,
+          productId: p.id,
+          inventoryId: p.inventoryId
+        });
+      });
+      this.addProductDialogVisible = false;
+      this.$message.success("添加成功");
+    },
     handleSubmit() {
       this.$refs.baseForm.validate(valid => {
         if (!valid) return;
@@ -247,9 +455,40 @@ export default {
           this.$message.warning("请至少添加一条采购产品");
           return;
         }
-        // TODO: 调用提交接口，上传合同图片、采购名称、采购产品列表
-        this.$message.success("提交成功");
-        this.$router.push({ name: "other-purchase-list" });
+        const productArr = this.productList
+          .map(r => {
+            const totalPrice = this.formatMoney((Number(r.unitPrice) || 0) * (Number(r.quantity) || 0));
+            return {
+              title: r.productName || "",
+              price: String(r.unitPrice != null ? r.unitPrice : ""),
+              num: String(r.quantity != null ? r.quantity : ""),
+              unit: r.unit || "",
+              totalPrice
+            };
+          })
+          .filter(it => it.title && it.price && it.num && Number(it.num) > 0);
+        if (!productArr.length) {
+          this.$message.warning("请填写有效的采购产品/单价/数量");
+          return;
+        }
+        const data = {
+          title: this.form.purchaseName,
+          pdfUrl: this.form.pdfUrl || "",
+          productJson: JSON.stringify(productArr)
+        };
+        if (this.form.id) data.id = String(this.form.id);
+        this.$api({ url: ADD_API, method: "post", data })
+          .then(res => {
+            if (res && res.code === 200) {
+              this.$message.success("提交成功");
+              this.$router.push({ name: "other-purchase-list" });
+            } else {
+              this.$message.error((res && res.msg) || "提交失败");
+            }
+          })
+          .catch(() => {
+            this.$message.error("提交失败");
+          });
       });
     },
     handleCancel() {
@@ -294,6 +533,7 @@ export default {
 }
 
 .contract-upload {
+  display: flex;
   ::v-deep .el-upload--picture-card {
     width: 120px;
     height: 120px;
@@ -301,6 +541,10 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+  ::v-deep .el-upload-list__item {
+    width: 120px;
+    height: 120px;
   }
   .upload-inner {
     display: flex;

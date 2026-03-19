@@ -18,9 +18,12 @@
             clearable
             style="width: 200px"
           >
-            <el-option label="树脂盘" value="1" />
-            <el-option label="硅橡胶" value="2" />
-            <el-option label="其他产品" value="3" />
+            <el-option
+              v-for="opt in cateOptions"
+              :key="opt.value"
+              :label="opt.label"
+              :value="opt.value"
+            />
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -115,6 +118,9 @@
 </template>
 
 <script>
+const LIST_API = '/getMaterialKuCunList';
+const CATE_API = '/getMaterialCateList';
+
 export default {
   name: 'MaterialWarehouseManagementList',
 
@@ -126,53 +132,21 @@ export default {
         pageNum: 1,
         pageSize: 20
       },
-      total: 295,
+      cateOptions: [],
+      total: 0,
       tableHeight: 0,
       warnDialogVisible: false,
       currentWarnRow: null,
       warnForm: {
         warnQuantity: ''
       },
-      tableData: [
-        {
-          id: 1,
-          code: '4578786954',
-          name: '单层牙齿盘',
-          spec: '98,A1,10mm',
-          categoryName: '树脂盘',
-          unit: '盒',
-          stockQuantity: 200,
-          warnQuantity: 10,
-          isWarn: false
-        },
-        {
-          id: 2,
-          code: '4578786955',
-          name: '示例产品B',
-          spec: '—',
-          categoryName: '树脂盘',
-          unit: '个',
-          stockQuantity: 200,
-          warnQuantity: 10,
-          isWarn: false
-        },
-        {
-          id: 3,
-          code: '4578786956',
-          name: '示例产品C',
-          spec: '—',
-          categoryName: '硅橡胶',
-          unit: '盒',
-          stockQuantity: 5,
-          warnQuantity: 10,
-          isWarn: true
-        }
-      ]
+      tableData: []
     };
   },
 
   mounted() {
     this.setView();
+    this.loadCategoryOptions();
     this.loadList();
   },
 
@@ -195,10 +169,76 @@ export default {
     tableRowClassName({ rowIndex }) {
       return rowIndex % 2 === 1 ? 'row-even' : '';
     },
+    _walkCateTree(list, acc = []) {
+      if (!Array.isArray(list)) return acc;
+      list.forEach(node => {
+        if (!node || node.id == null) return;
+        acc.push({
+          value: String(node.id),
+          label: node.title || String(node.id)
+        });
+        if (Array.isArray(node.child) && node.child.length) {
+          this._walkCateTree(node.child, acc);
+        }
+      });
+      return acc;
+    },
+    loadCategoryOptions() {
+      this.$api({
+        url: CATE_API,
+        method: 'post',
+        data: {}
+      })
+        .then(res => {
+          const data = res && res.data;
+          this.cateOptions = this._walkCateTree(Array.isArray(data) ? data : []);
+        })
+        .catch(() => {
+          this.cateOptions = [];
+        });
+    },
     loadList() {
-      // TODO: 调用接口获取产品库存列表
-      // this.total = res.total;
-      // this.tableData = res.list;
+      const params = {
+        page: String(this.queryParams.pageNum),
+        limit: String(this.queryParams.pageSize),
+        keyword: this.queryParams.keyword || '',
+        cateId: this.queryParams.categoryId ? String(this.queryParams.categoryId) : ''
+      };
+      this.$api({
+        url: LIST_API,
+        method: 'post',
+        data: params
+      })
+        .then(res => {
+          if (res && res.code === 200 && res.data) {
+            const list = Array.isArray(res.data.list) ? res.data.list : [];
+            this.tableData = list.map(it => {
+              const material = it && (it.material || it.product) ? (it.material || it.product) : {};
+              const inventory = it && it.inventory ? it.inventory : {};
+              const stockQuantity = Number(it && it.num != null ? it.num : 0);
+              const warnQuantity = Number(it && it.yjNum != null ? it.yjNum : 0);
+              return {
+                ...it,
+                code: material.materialNo || material.productNo || '',
+                name: material.title || '',
+                spec: material.batchNo || inventory.keyVals || inventory.sn || '',
+                categoryName: it.cateTitle || '',
+                unit: material.unit || '',
+                stockQuantity,
+                warnQuantity,
+                isWarn: Number(it.yjStatus) === 1
+              };
+            });
+            this.total = res.data.count ?? list.length;
+          } else {
+            this.tableData = [];
+            this.total = 0;
+          }
+        })
+        .catch(() => {
+          this.tableData = [];
+          this.total = 0;
+        });
     },
     handleQuery() {
       this.queryParams.pageNum = 1;

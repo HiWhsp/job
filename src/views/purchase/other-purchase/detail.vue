@@ -137,49 +137,104 @@
 </template>
 
 <script>
+const DETAIL_API = "/getPurchaseOtherOrder";
+
 export default {
   name: "OtherPurchaseDetail",
   data() {
     return {
       detail: {
-        purchaseNo: "2026001-999",
-        purchaseName: "采购单名称",
-        orderTime: "2006-01-01",
-        status: "待审核",
-        purchaseAmount: "2545.00"
+        purchaseNo: "",
+        purchaseName: "",
+        orderTime: "",
+        status: "",
+        purchaseAmount: ""
       },
-      productList: [
-        { productName: "采购产品名称", unitPrice: "2000.00", quantity: 20, totalPrice: "40000.00", unit: "台" },
-        { productName: "采购产品名称", unitPrice: "2000.00", quantity: 20, totalPrice: "40000.00", unit: "台" },
-        { productName: "采购产品名称", unitPrice: "2000.00", quantity: 20, totalPrice: "40000.00", unit: "台" },
-        { productName: "采购产品名称", unitPrice: "2000.00", quantity: 20, totalPrice: "40000.00", unit: "台" }
-      ],
-      approvalList: [
-        {
-          approver: "总经理",
-          approvalTime: "2026-3-23 15:23:24",
-          approvalStatus: "审核通过",
-          approvalRemark: "审核通过"
-        }
-      ],
-      paymentList: [
-        { amount: "5000.00", paymentTime: "2026-3-23 15:23:24", voucherUrl: "" }
-      ]
+      productList: [],
+      approvalList: [],
+      paymentList: []
     };
   },
   created() {
     const id = this.$route.query.id;
     if (id) {
-      // TODO: 根据 id 请求其他采购单详情，赋值 detail、productList、approvalList、paymentList
+      this.loadDetail(String(id));
     }
   },
   methods: {
     tableRowClassName({ rowIndex }) {
       return rowIndex % 2 === 1 ? "row-even" : "";
     },
+    _parseJson(val) {
+      if (val == null || val === "") return null;
+      if (typeof val === "object") return val;
+      try {
+        return typeof val === "string" ? JSON.parse(val) : val;
+      } catch (e) {
+        return null;
+      }
+    },
+    _orderStatusText(v) {
+      const s = Number(v);
+      const map = {
+        1: "待审核",
+        2: "待审核",
+        3: "待财务付款",
+        4: "待采购",
+        5: "质检入库",
+        6: "已完成",
+        [-1]: "审核未通过"
+      };
+      return map[s] != null ? map[s] : (v != null ? String(v) : "");
+    },
+    loadDetail(id) {
+      this.$api({
+        url: DETAIL_API,
+        method: "post",
+        data: { id }
+      })
+        .then(res => {
+          if (!res || res.code !== 200 || !res.data) return;
+          const d = res.data;
+
+          this.detail = {
+            purchaseNo: d.purchaseNo || "",
+            purchaseName: d.title || "",
+            orderTime: d.created_at || "",
+            status: this._orderStatusText(d.orderStatus),
+            purchaseAmount: d.price || ""
+          };
+
+          const productArr = Array.isArray(d.productJson) ? d.productJson : (this._parseJson(d.productJson) || []);
+          this.productList = (Array.isArray(productArr) ? productArr : []).map(it => ({
+            productName: it.title || "",
+            unitPrice: it.price || "",
+            quantity: it.num != null ? it.num : "",
+            totalPrice: it.totalPrice || "",
+            unit: it.unit || ""
+          }));
+
+          const reviewArr = Array.isArray(d.reviewJson) ? d.reviewJson : (this._parseJson(d.reviewJson) || []);
+          this.approvalList = (Array.isArray(reviewArr) ? reviewArr : []).map(it => ({
+            approver: it.name || "",
+            approvalTime: it.created_at || "",
+            approvalStatus: it.statusTxt || "",
+            approvalRemark: it.cont || ""
+          }));
+
+          const payObj = d.payJson && typeof d.payJson === "object" ? d.payJson : (this._parseJson(d.payJson) || null);
+          const payList = payObj ? [payObj] : [];
+          this.paymentList = payList.map(it => ({
+            amount: it.price || "",
+            paymentTime: it.created_at || "",
+            voucherUrl: it.image || ""
+          }));
+        })
+        .catch(() => {});
+    },
     handleViewVoucher(row) {
-      // TODO: 查看付款凭证
-      this.$message.info("查看付款凭证");
+      if (!row || !row.voucherUrl) return;
+      window.open(row.voucherUrl);
     }
   }
 };
