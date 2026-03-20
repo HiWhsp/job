@@ -54,7 +54,7 @@
           <el-table-column prop="outNo" label="出库单号" min-width="120" show-overflow-tooltip />
           <el-table-column prop="outName" label="出库单名称" min-width="120" show-overflow-tooltip />
           <el-table-column prop="remark" label="出库单备注" min-width="340" show-overflow-tooltip />
-          <el-table-column prop="outTime" label="出库时间" width="120" align="center" />
+          <el-table-column prop="outTime" label="出库时间" width="170" align="center" />
           <el-table-column label="操作" width="120" align="center" fixed="right">
             <template slot-scope="{ row }">
               <span class="row-act" @click="handleViewDetail(row)">查看详情</span>
@@ -129,6 +129,9 @@
 </template>
 
 <script>
+const LIST_API = '/getMaterialOutboundOrderList';
+const DETAIL_API = '/getMaterialOutboundOrder';
+
 export default {
   name: 'WarehouseMaterialOutManagementList',
   data() {
@@ -139,14 +142,9 @@ export default {
         pageNum: 1,
         pageSize: 20
       },
-      total: 295,
+      total: 0,
       tableHeight: 0,
-      tableData: Array.from({ length: 10 }, () => ({
-        outNo: '4521414',
-        outName: '出库单名称',
-        remark: '出库单备注信息出库单备注信息出库单备注信息出库单备注信息出库单备注信息出库单备注信息出库单备注信息',
-        outTime: '2026-01-05'
-      })),
+      tableData: [],
       detailDrawerVisible: false,
       detailInfo: {
         outNo: '',
@@ -180,15 +178,51 @@ export default {
       return rowIndex % 2 === 1 ? 'row-even' : '';
     },
     loadList() {
-      // TODO: 调用原料出库管理列表接口
+      const dr = this.queryParams.dateRange;
+      const start_time = Array.isArray(dr) && dr[0] ? dr[0] : '';
+      const end_time = Array.isArray(dr) && dr[1] ? dr[1] : '';
+      this.$api({
+        url: LIST_API,
+        method: 'post',
+        data: {
+          page: String(this.queryParams.pageNum),
+          limit: String(this.queryParams.pageSize),
+          keyword: this.queryParams.keyword || '',
+          start_time,
+          end_time
+        }
+      })
+        .then(res => {
+          if (res && res.code === 200 && res.data) {
+            const list = Array.isArray(res.data.list) ? res.data.list : [];
+            this.tableData = list.map(it => ({
+              id: it.id,
+              outNo: it.outboundNo || '',
+              outName: it.title || '',
+              remark: it.cont || '',
+              outTime: it.created_at || ''
+            }));
+            this.total = res.data.count != null ? res.data.count : list.length;
+          } else {
+            this.tableData = [];
+            this.total = 0;
+            if (res && res.msg) this.$message.error(res.msg);
+          }
+        })
+        .catch(() => {
+          this.tableData = [];
+          this.total = 0;
+        });
     },
     handleQuery() {
       this.queryParams.pageNum = 1;
       this.loadList();
     },
     resetQuery() {
-      this.$refs.queryForm.resetFields();
+      this.queryParams.keyword = '';
+      this.queryParams.dateRange = null;
       this.queryParams.pageNum = 1;
+      this.$refs.queryForm && this.$refs.queryForm.resetFields();
       this.loadList();
     },
     handleSizeChange(val) {
@@ -207,15 +241,51 @@ export default {
       this.$router.push('/warehouse/material-out-management/add');
     },
     handleViewDetail(row) {
-      // TODO: 可根据 row.id 请求详情接口，这里用示例数据
-      this.detailInfo = { ...row };
-      this.detailMaterials = Array.from({ length: 10 }, () => ({
-        materialName: '原料名称1',
-        spec: '98,A1,10mm',
-        unit: '盒',
-        quantity: 10
-      }));
-      this.detailDrawerVisible = true;
+      const id = row.id != null ? String(row.id) : '';
+      if (!id) {
+        this.$message.warning('缺少出库单 id');
+        return;
+      }
+      const loading = this.$loading({ lock: true, text: '加载中...', spinner: 'el-icon-loading' });
+      this.$api({
+        url: DETAIL_API,
+        method: 'post',
+        data: { id }
+      })
+        .then(res => {
+          loading.close();
+          if (res && res.code === 200 && res.data) {
+            const d = res.data;
+            this.detailInfo = {
+              outNo: d.outboundNo || '',
+              outTime: d.created_at || '',
+              outName: d.title || '',
+              remark: d.cont || ''
+            };
+            let products = d.productJson;
+            if (typeof products === 'string') {
+              try {
+                products = JSON.parse(products);
+              } catch (e) {
+                products = [];
+              }
+            }
+            if (!Array.isArray(products)) products = [];
+            this.detailMaterials = products.map(p => ({
+              materialName: p.title || '',
+              spec: p.keyVals || '',
+              unit: p.unit || '',
+              quantity: p.num != null ? p.num : ''
+            }));
+            this.detailDrawerVisible = true;
+          } else {
+            this.$message.error((res && res.msg) || '获取详情失败');
+          }
+        })
+        .catch(() => {
+          loading.close();
+          this.$message.error('获取详情失败');
+        });
     },
     closeDetailDrawer(done) {
       if (typeof done === 'function') done();

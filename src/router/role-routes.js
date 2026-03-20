@@ -1651,37 +1651,37 @@ const warehouseManagerRoutes = [
 // value: 对应的路由配置数组
 const roleRouteMap = {
   // 测试用
-  9: warehouseRoutes, // 管理员
-  '9': warehouseRoutes, // 管理员
+  // 9: warehouseManagerRoutes, // 管理员
+  // '9': warehouseManagerRoutes, // 管理员
   
 
   // 正式用 需要解除注释
-  // 9: managerRoutes, // 管理员
-  // 9: managerRoutes, // 管理员
+  9: managerRoutes, // 管理员
+  9: managerRoutes, // 管理员
 
-  // 1: salesRoutes, // 业务员
-  // 1: salesRoutes, // 业务员
+  1: salesRoutes, // 业务员
+  1: salesRoutes, // 业务员
 
-  // 2: marketingRoutes, // 营销员
-  // 2: marketingRoutes, // 营销员
+  2: marketingRoutes, // 营销员
+  2: marketingRoutes, // 营销员
 
-  // 5: generalManagerRoutes, // 总经理
-  // 5: generalManagerRoutes, // 总经理
+  5: generalManagerRoutes, // 总经理
+  5: generalManagerRoutes, // 总经理
 
-  // 6: financeRoutes, // 财务
-  // 6: financeRoutes, // 财务
+  6: financeRoutes, // 财务
+  6: financeRoutes, // 财务
 
-  // 3: purchaseRoutes, // 采购
-  // 3: purchaseRoutes, // 采购
+  3: purchaseRoutes, // 采购
+  3: purchaseRoutes, // 采购
 
-  // 4: productionVicePresidentRoutes, // 生产副总
-  // 4: productionVicePresidentRoutes, // 生产副总
+  4: productionVicePresidentRoutes, // 生产副总
+  4: productionVicePresidentRoutes, // 生产副总
 
-  // 7: warehouseRoutes, // 产品库管
-  // 7: warehouseRoutes, // 产品库管
+  7: warehouseRoutes, // 产品库管
+  7: warehouseRoutes, // 产品库管
 
-  // 8: warehouseManagerRoutes, // 原料库管
-  // 8: warehouseManagerRoutes, // 原料库管
+  8: warehouseManagerRoutes, // 原料库管
+  8: warehouseManagerRoutes, // 原料库管
 };
 
 /**

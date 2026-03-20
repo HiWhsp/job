@@ -224,7 +224,7 @@
                             />
                         </el-form-item>
                     </el-form>
-                    <el-button type="primary" class="add-product-btn" @click="addEditInProduct">添加产品</el-button>
+                    <el-button type="primary" class="add-product-btn" @click="openEditAddProductDialog">添加产品</el-button>
                 </div>
                 <div class="add-in-table-wrap">
                     <el-table :data="editInProductList" border header-cell-class-name="table-header-cell">
@@ -276,24 +276,86 @@
                 </div>
             </div>
         </el-drawer>
+
+        <!-- 编辑入库：添加产品弹框（与列表新增入库一致） -->
+        <el-dialog
+            title="添加产品"
+            :visible.sync="editProductDialogVisible"
+            width="820px"
+            custom-class="add-product-dialog"
+            :close-on-click-modal="false"
+            append-to-body
+            @close="closeEditProductDialog"
+        >
+            <div class="dialog-search">
+                <el-form :model="editProductQuery" ref="editProductQueryForm" inline label-width="80px">
+                    <el-form-item label="关键词" prop="keyword">
+                        <el-input
+                            v-model="editProductQuery.keyword"
+                            placeholder="产品名称/产品编码"
+                            clearable
+                            style="width: 220px"
+                        />
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="searchEditProduct">搜索</el-button>
+                        <el-button @click="resetEditProductQuery">重置</el-button>
+                    </el-form-item>
+                </el-form>
+            </div>
+            <div class="dialog-table-wrap">
+                <el-table
+                    ref="editProductTable"
+                    :data="editProductList"
+                    max-height="380"
+                    header-cell-class-name="table-header-cell"
+                    @selection-change="handleEditProductSelectionChange"
+                >
+                    <el-table-column type="selection" width="50" align="center" />
+                    <el-table-column prop="productNo" label="产品编码" min-width="120" show-overflow-tooltip />
+                    <el-table-column prop="title" label="产品名称" min-width="140" show-overflow-tooltip />
+                    <el-table-column prop="spec" label="规格" min-width="140" show-overflow-tooltip />
+                    <el-table-column prop="cateTitle" label="所属分类" min-width="120" show-overflow-tooltip />
+                    <el-table-column label="本次入库数量" width="120" align="center">
+                        <template slot-scope="{ row }">
+                            <el-input v-model="row.quantity" placeholder="请输入" size="small" style="width: 90px" />
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="unit" label="单位" width="80" align="center" />
+                </el-table>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="editProductDialogVisible = false">取消</el-button>
+                <el-button type="primary" @click="confirmEditAddProduct">确定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
 <script>
+const DETAIL_API = '/getProductKuCun';
+const LOG_LIST_API = '/getProductKuCunLogList';
+/** 库存变动记录详情：出入库单条记录 id */
+const LOG_DETAIL_API = '/getProductKuCunLog';
+/** 新增/编辑入库（编辑时多传 id） */
+const ADD_IN_API = '/addProductKuCunRu';
+const PRODUCT_LIST_API = '/getProductList';
+
 export default {
     name: 'ProductInventoryDetail',
 
     data() {
         return {
-            productId: '',
+            kuCunId: '',
+            inventoryId: '',
             productInfo: {
-                code: '4578786954',
-                name: '单层牙齿盘',
-                categoryName: '树脂盘',
-                spec: '98,A1,10mm',
-                unit: '盒',
-                stockQuantity: 200,
-                warnQuantity: 10
+                code: '',
+                name: '',
+                categoryName: '',
+                spec: '',
+                unit: '',
+                stockQuantity: '',
+                warnQuantity: ''
             },
             activeTab: 'in',
             inQueryParams: {
@@ -301,24 +363,15 @@ export default {
                 pageNum: 1,
                 pageSize: 20
             },
-            inTotal: 4,
-            inTableData: [
-                { id: 1, inQuantity: 200, inDate: '2026-01-01', quantityBefore: 0, quantityAfter: 200 },
-                { id: 2, inQuantity: 200, inDate: '2026-01-01', quantityBefore: 200, quantityAfter: 400 },
-                { id: 3, inQuantity: 200, inDate: '2026-01-01', quantityBefore: 400, quantityAfter: 600 },
-                { id: 4, inQuantity: 200, inDate: '2026-01-01', quantityBefore: 600, quantityAfter: 800 }
-            ],
+            inTotal: 0,
+            inTableData: [],
             outQueryParams: {
                 orderNo: '',
                 pageNum: 1,
                 pageSize: 20
             },
-            outTotal: 3,
-            outTableData: [
-                { id: 1, outQuantity: 200, outDate: '2026-01-01', orderNo: '4578786954', customerName: '浙江求实医疗科技有限公司' },
-                { id: 2, outQuantity: 200, outDate: '2026-01-01', orderNo: '4578786954', customerName: '浙江求实医疗科技有限公司' },
-                { id: 3, outQuantity: 200, outDate: '2026-01-01', orderNo: '4578786954', customerName: '浙江求实医疗科技有限公司' }
-            ],
+            outTotal: 0,
+            outTableData: [],
             inDetailDrawerVisible: false,
             inDetailInfo: {
                 orderNo: '',
@@ -338,22 +391,69 @@ export default {
             editInForm: {
                 inTime: ''
             },
-            editInProductList: []
+            editInProductList: [],
+            editInRowId: 0,
+            // 编辑入库：添加产品弹框
+            editProductDialogVisible: false,
+            editProductQuery: {
+                keyword: '',
+                pageNum: 1,
+                pageSize: 50
+            },
+            editProductList: [],
+            editProductSelected: []
         };
     },
 
     created() {
-        this.productId = this.$route.query.id || '';
+        this.kuCunId = this.$route.query.id || '';
         this.loadProductInfo();
-    },
-
-    mounted() {
-        this.loadInList();
     },
 
     methods: {
         loadProductInfo() {
-            // TODO: 根据 this.productId 请求产品详情，赋值 productInfo
+            const id = this.kuCunId;
+            if (!id) {
+                this.$message.warning('缺少库存记录id');
+                return;
+            }
+            this.$api({
+                url: DETAIL_API,
+                method: 'post',
+                data: { id: String(id) }
+            })
+                .then(res => {
+                    if (res && res.code === 200 && res.data) {
+                        const d = res.data;
+                        const product = d.product || {};
+                        const inventory = d.inventory || {};
+                        this.inventoryId =
+                            d.inventoryId != null
+                                ? String(d.inventoryId)
+                                : inventory.id != null
+                                    ? String(inventory.id)
+                                    : '';
+                        this.productInfo = {
+                            code: product.productNo || '',
+                            name: product.title || '',
+                            categoryName: d.cateTitle || '',
+                            spec: inventory.keyVals || inventory.sn || '',
+                            unit: product.unit || '',
+                            stockQuantity: d.num != null ? String(d.num) : '',
+                            warnQuantity: d.yjNum != null ? String(d.yjNum) : ''
+                        };
+                        if (this.activeTab === 'in') {
+                            this.loadInList();
+                        } else {
+                            this.loadOutList();
+                        }
+                    } else {
+                        this.$message.error((res && res.msg) || '获取详情失败');
+                    }
+                })
+                .catch(() => {
+                    this.$message.error('获取详情失败');
+                });
         },
         handleTabClick(tab) {
             if (tab.name === 'in') {
@@ -365,9 +465,48 @@ export default {
         tableRowClassName({ rowIndex }) {
             return rowIndex % 2 === 1 ? 'row-even' : '';
         },
-        // 入库记录
+        // 入库记录 type=1
         loadInList() {
-            // TODO: 调用入库记录接口
+            if (!this.inventoryId) {
+                this.inTableData = [];
+                this.inTotal = 0;
+                return;
+            }
+            this.$api({
+                url: LOG_LIST_API,
+                method: 'post',
+                data: {
+                    page: String(this.inQueryParams.pageNum),
+                    limit: String(this.inQueryParams.pageSize),
+                    type: '1',
+                    inventoryId: this.inventoryId
+                }
+            })
+                .then(res => {
+                    if (res && res.code === 200 && res.data) {
+                        const raw = Array.isArray(res.data.list) ? res.data.list : [];
+                        const list = raw.map(it => ({
+                            id: it.id,
+                            kuNo: it.kuNo || '',
+                            inQuantity: it.num != null ? String(it.num) : '',
+                            inDate: it.created_at || '',
+                            quantityBefore: it.yNum != null ? String(it.yNum) : '',
+                            quantityAfter: it.xNum != null ? String(it.xNum) : ''
+                        }));
+                        const kw = (this.inQueryParams.orderNo || '').trim();
+                        this.inTableData = kw
+                            ? list.filter(r => (r.kuNo || '').indexOf(kw) !== -1)
+                            : list;
+                        this.inTotal = res.data.count != null ? res.data.count : raw.length;
+                    } else {
+                        this.inTableData = [];
+                        this.inTotal = 0;
+                    }
+                })
+                .catch(() => {
+                    this.inTableData = [];
+                    this.inTotal = 0;
+                });
         },
         handleInQuery() {
             this.inQueryParams.pageNum = 1;
@@ -386,19 +525,155 @@ export default {
             this.inQueryParams.pageNum = val;
             this.loadInList();
         },
-        handleInDetail(row) {
-            // TODO: 可根据 row.id 请求入库单详情接口，这里用示例数据
-            this.inDetailInfo = {
-                orderNo: '2026001',
-                inTime: '2026-01-05'
+        _parseJson(val) {
+            if (val == null || val === '') return null;
+            if (typeof val === 'object') return val;
+            try {
+                return typeof val === 'string' ? JSON.parse(val) : val;
+            } catch (e) {
+                return null;
+            }
+        },
+        /** 单对象详情里解析多行明细（goodsList / productJson 等） */
+        _parseLogDetailGoods(d) {
+            if (!d || typeof d !== 'object') return [];
+            let arr = null;
+            if (Array.isArray(d.goodsList)) arr = d.goodsList;
+            else if (Array.isArray(d.products)) arr = d.products;
+            else if (Array.isArray(d.list)) arr = d.list;
+            else if (d.productJson != null) {
+                const p = this._parseJson(d.productJson);
+                if (Array.isArray(p)) arr = p;
+            }
+            if (arr && arr.length) {
+                return arr.map(it => ({
+                    productName: it.title || it.productName || it.name || '',
+                    spec:
+                        it.spec ||
+                        it.keyVals ||
+                        (it.inventory && (it.inventory.keyVals || it.inventory.sn)) ||
+                        '',
+                    unit: it.unit || '',
+                    quantity:
+                        it.num != null
+                            ? String(it.num)
+                            : it.quantity != null
+                                ? String(it.quantity)
+                                : ''
+                }));
+            }
+            const p = d.product || {};
+            const inv = d.inventory || {};
+            if (p.title || p.productNo || inv.keyVals) {
+                return [
+                    {
+                        productName: p.title || '',
+                        spec: inv.keyVals || inv.sn || '',
+                        unit: p.unit || '',
+                        quantity: d.num != null ? String(d.num) : ''
+                    }
+                ];
+            }
+            return [];
+        },
+        /**
+         * 详情接口 data 可能是数组（同一 kuNo 多条规格）或单对象
+         * 示例数组项：product / inventory / num / kuNo / created_at
+         */
+        normalizeLogDetailResponse(data) {
+            if (Array.isArray(data)) {
+                if (!data.length) {
+                    return { header: {}, goods: [] };
+                }
+                const first = data[0];
+                const header = {
+                    kuNo: first.kuNo || '',
+                    created_at: first.created_at || '',
+                    customerName:
+                        first.customerName ||
+                        (first.customer &&
+                            (first.customer.title || first.customer.name || first.customer.companyName)) ||
+                        ''
+                };
+                const goods = data.map(it => {
+                    const p = it.product || {};
+                    const inv = it.inventory || {};
+                    return {
+                        productName: p.title || '',
+                        spec: inv.keyVals || inv.sn || '',
+                        unit: p.unit || '',
+                        quantity: it.num != null ? String(it.num) : ''
+                    };
+                });
+                return { header, goods };
+            }
+            const d = data && typeof data === 'object' ? data : {};
+            let goods = this._parseLogDetailGoods(d);
+            if (!goods.length) {
+                goods = [
+                    {
+                        productName: this.productInfo.name,
+                        spec: this.productInfo.spec,
+                        unit: this.productInfo.unit,
+                        quantity: d.num != null ? String(d.num) : ''
+                    }
+                ];
+            }
+            return {
+                header: {
+                    kuNo: d.kuNo || d.orderNo || '',
+                    created_at: d.created_at || d.inTime || d.outTime || d.time || '',
+                    customerName:
+                        d.customerName ||
+                        (d.customer &&
+                            (d.customer.title || d.customer.name || d.customer.companyName)) ||
+                        ''
+                },
+                goods
             };
-            this.inDetailGoodsList = Array.from({ length: 10 }, () => ({
-                productName: '单层牙齿盘',
-                spec: '98,A1,10mm',
-                unit: '盒',
-                quantity: 10
-            }));
-            this.inDetailDrawerVisible = true;
+        },
+        applyLogDetailToInDrawer(data) {
+            const { header, goods } = this.normalizeLogDetailResponse(data);
+            this.inDetailInfo = {
+                orderNo: header.kuNo || '',
+                inTime: header.created_at || ''
+            };
+            this.inDetailGoodsList = goods;
+        },
+        applyLogDetailToOutDrawer(data) {
+            const { header, goods } = this.normalizeLogDetailResponse(data);
+            this.outDetailInfo = {
+                orderNo: header.kuNo || '',
+                outTime: header.created_at || '',
+                customerName: header.customerName || ''
+            };
+            this.outDetailGoodsList = goods;
+        },
+        fetchLogDetail(id) {
+            return this.$api({
+                url: LOG_DETAIL_API,
+                method: 'post',
+                data: { id: String(id) }
+            });
+        },
+        handleInDetail(row) {
+            const id = row.id != null ? String(row.id) : '';
+            if (!id) {
+                this.$message.warning('缺少变动记录id');
+                return;
+            }
+            this.fetchLogDetail(id)
+                .then(res => {
+                    if (res && res.code === 200 && res.data != null) {
+                        this.applyLogDetailToInDrawer(res.data);
+                        this.inDetailDrawerVisible = true;
+                    } else {
+                        this.$message.error((res && res.msg) || '获取详情失败');
+                    }
+                })
+                .catch(() => {
+                    this.$message.error('获取详情失败');
+                });
         },
         closeInDetailDrawer(done) {
             if (typeof done === 'function') {
@@ -410,15 +685,90 @@ export default {
         confirmInDetail() {
             this.inDetailDrawerVisible = false;
         },
+        /**
+         * 编辑入库：根据 getProductKuCunLog 返回（数组或单对象）回填表格
+         */
+        applyEditInFromDetail(data) {
+            let rows = [];
+            this.editInRowId = 0;
+            if (Array.isArray(data)) {
+                data.forEach(it => {
+                    const p = it.product || {};
+                    const inv = it.inventory || {};
+                    this.editInRowId += 1;
+                    rows.push({
+                        _key: this.editInRowId,
+                        productName: p.title || '',
+                        spec: inv.keyVals || inv.sn || '',
+                        unit: p.unit || '',
+                        quantity: it.num != null ? String(it.num) : '',
+                        productId:
+                            it.productId != null ? String(it.productId) : p.id != null ? String(p.id) : '',
+                        inventoryId:
+                            it.inventoryId != null
+                                ? String(it.inventoryId)
+                                : inv.id != null
+                                    ? String(inv.id)
+                                    : '',
+                        isEditing: false
+                    });
+                });
+            } else {
+                const d = data || {};
+                const p = d.product || {};
+                const inv = d.inventory || {};
+                this.editInRowId = 1;
+                rows = [
+                    {
+                        _key: 1,
+                        productName: p.title || '',
+                        spec: inv.keyVals || inv.sn || '',
+                        unit: p.unit || '',
+                        quantity: d.num != null ? String(d.num) : '',
+                        productId:
+                            d.productId != null ? String(d.productId) : p.id != null ? String(p.id) : '',
+                        inventoryId:
+                            d.inventoryId != null
+                                ? String(d.inventoryId)
+                                : inv.id != null
+                                    ? String(inv.id)
+                                    : '',
+                        isEditing: false
+                    }
+                ];
+            }
+            this.editInProductList = rows;
+            let firstTime = '';
+            if (Array.isArray(data) && data.length) {
+                firstTime = (data[0].created_at || '').slice(0, 10);
+            } else if (data && data.created_at) {
+                firstTime = (data.created_at || '').slice(0, 10);
+            }
+            this.editInForm.inTime = firstTime || this.getTodayStr();
+        },
         handleInEdit(row) {
+            const id = row.id != null ? String(row.id) : '';
+            if (!id) {
+                this.$message.warning('缺少记录id');
+                return;
+            }
             this.editInDrawerTitle = '编辑入库';
             this.editInRecordId = row.id;
-            this.editInForm.inTime = row.inDate || this.getTodayStr();
-            this.editInProductList = [
-                { productName: '单层牙齿盘', spec: '98,A1,10mm', unit: '盒', quantity: 10, isEditing: false },
-                { productName: '单层牙齿盘', spec: '98,A1,10mm', unit: '盒', quantity: 10, isEditing: false }
-            ];
-            this.editInDrawerVisible = true;
+            const loading = this.$loading({ lock: true, text: '加载中...', spinner: 'el-icon-loading' });
+            this.fetchLogDetail(id)
+                .then(res => {
+                    loading.close();
+                    if (res && res.code === 200 && res.data != null) {
+                        this.applyEditInFromDetail(res.data);
+                        this.editInDrawerVisible = true;
+                    } else {
+                        this.$message.error((res && res.msg) || '获取入库单失败');
+                    }
+                })
+                .catch(() => {
+                    loading.close();
+                    this.$message.error('获取入库单失败');
+                });
         },
         getTodayStr() {
             const d = new Date();
@@ -433,24 +783,167 @@ export default {
             this.editInRecordId = null;
             this.editInForm.inTime = '';
             this.editInProductList = [];
+            this.editInRowId = 0;
         },
         confirmEditIn() {
-            // TODO: 提交编辑入库接口
-            this.$message.success('保存成功');
-            this.editInDrawerVisible = false;
-            this.editInRecordId = null;
-            this.editInForm.inTime = '';
-            this.editInProductList = [];
-            this.loadInList();
+            const recordId = this.editInRecordId != null ? String(this.editInRecordId) : '';
+            if (!recordId) {
+                this.$message.warning('缺少编辑记录id');
+                return;
+            }
+            if (!this.editInProductList.length) {
+                this.$message.warning('请添加产品');
+                return;
+            }
+            if (this.editInProductList.some(r => r.isEditing)) {
+                this.$message.warning('请先保存正在编辑的行');
+                return;
+            }
+            const kuInfos = [];
+            for (let i = 0; i < this.editInProductList.length; i++) {
+                const r = this.editInProductList[i];
+                const q = String(r.quantity || '').trim();
+                const num = Number(q);
+                if (isNaN(num) || num <= 0 || !Number.isInteger(num)) {
+                    this.$message.warning('请为每行填写有效的正整数入库数量');
+                    return;
+                }
+                if (!r.inventoryId || !r.productId) {
+                    this.$message.warning('明细缺少产品或规格信息，请通过「添加产品」选择');
+                    return;
+                }
+                kuInfos.push({
+                    id: String(r.inventoryId),
+                    productId: String(r.productId),
+                    num: String(num)
+                });
+            }
+            this.$api({
+                url: ADD_IN_API,
+                method: 'post',
+                data: {
+                    kuInfos: JSON.stringify(kuInfos),
+                    id: recordId
+                }
+            })
+                .then(res => {
+                    if (res && res.code === 200) {
+                        this.$message.success('保存成功');
+                        this.editInDrawerVisible = false;
+                        this.editInRecordId = null;
+                        this.editInForm.inTime = '';
+                        this.editInProductList = [];
+                        this.editInRowId = 0;
+                        this.loadInList();
+                    } else {
+                        this.$message.error((res && res.msg) || '保存失败');
+                    }
+                })
+                .catch(() => {
+                    this.$message.error('保存失败');
+                });
         },
-        addEditInProduct() {
-            this.editInProductList.push({
-                productName: '',
-                spec: '',
-                unit: '盒',
-                quantity: '',
-                isEditing: true
+        openEditAddProductDialog() {
+            this.editProductDialogVisible = true;
+            this.$nextTick(() => {
+                this.searchEditProduct();
             });
+        },
+        closeEditProductDialog() {
+            this.editProductQuery.keyword = '';
+            this.editProductQuery.pageNum = 1;
+            this.editProductSelected = [];
+            this.$nextTick(() => {
+                this.$refs.editProductTable && this.$refs.editProductTable.clearSelection();
+            });
+        },
+        searchEditProduct() {
+            const params = {
+                limit: String(this.editProductQuery.pageSize),
+                page: String(this.editProductQuery.pageNum),
+                keyword: this.editProductQuery.keyword || '',
+                cateId: ''
+            };
+            this.$api({
+                url: PRODUCT_LIST_API,
+                method: 'post',
+                data: params
+            })
+                .then(res => {
+                    if (res && res.code === 200 && res.data) {
+                        const list = Array.isArray(res.data.list) ? res.data.list : [];
+                        this.editProductList = list.map(it => ({
+                            id: it.id != null ? String(it.id) : '',
+                            title: it.title || '',
+                            productNo: it.productNo || '',
+                            spec: it.keyVals || '',
+                            unit: it.unit || '',
+                            cateTitle: it.cateTitle || '',
+                            inventoryId: it.inventoryId != null ? String(it.inventoryId) : '',
+                            quantity: ''
+                        }));
+                    } else {
+                        this.editProductList = [];
+                    }
+                })
+                .catch(() => {
+                    this.editProductList = [];
+                });
+        },
+        resetEditProductQuery() {
+            this.$refs.editProductQueryForm && this.$refs.editProductQueryForm.resetFields();
+            this.editProductQuery.pageNum = 1;
+            this.searchEditProduct();
+        },
+        handleEditProductSelectionChange(selection) {
+            this.editProductSelected = selection || [];
+        },
+        confirmEditAddProduct() {
+            const sel = this.editProductSelected || [];
+            if (!sel.length) {
+                this.$message.warning('请先勾选要添加的产品');
+                return;
+            }
+            for (let i = 0; i < sel.length; i++) {
+                const p = sel[i];
+                const q = String(p.quantity || '').trim();
+                if (!q) {
+                    this.$message.warning('请为勾选的产品填写本次入库数量');
+                    return;
+                }
+                const num = Number(q);
+                if (isNaN(num) || num <= 0 || !Number.isInteger(num)) {
+                    this.$message.warning('入库数量须为正整数');
+                    return;
+                }
+                if (!p.inventoryId) {
+                    this.$message.warning('所选产品缺少规格/库存记录，请确认产品已维护规格');
+                    return;
+                }
+            }
+            sel.forEach(p => {
+                const num = Number(String(p.quantity).trim());
+                const existing = this.editInProductList.find(
+                    r => r.productId === p.id && r.inventoryId === p.inventoryId
+                );
+                if (existing) {
+                    existing.quantity = String((Number(existing.quantity) || 0) + num);
+                } else {
+                    this.editInRowId += 1;
+                    this.editInProductList.push({
+                        _key: this.editInRowId,
+                        productName: p.title,
+                        spec: p.spec,
+                        unit: p.unit || '',
+                        quantity: String(num),
+                        productId: p.id,
+                        inventoryId: p.inventoryId,
+                        isEditing: false
+                    });
+                }
+            });
+            this.editProductDialogVisible = false;
+            this.$message.success('添加成功');
         },
         saveEditInProduct(index) {
             const row = this.editInProductList[index];
@@ -466,9 +959,48 @@ export default {
         deleteEditInProduct(index) {
             this.editInProductList.splice(index, 1);
         },
-        // 出库记录
+        // 出库记录 type=2
         loadOutList() {
-            // TODO: 调用出库记录接口
+            if (!this.inventoryId) {
+                this.outTableData = [];
+                this.outTotal = 0;
+                return;
+            }
+            this.$api({
+                url: LOG_LIST_API,
+                method: 'post',
+                data: {
+                    page: String(this.outQueryParams.pageNum),
+                    limit: String(this.outQueryParams.pageSize),
+                    type: '2',
+                    inventoryId: this.inventoryId
+                }
+            })
+                .then(res => {
+                    if (res && res.code === 200 && res.data) {
+                        const raw = Array.isArray(res.data.list) ? res.data.list : [];
+                        const list = raw.map(it => ({
+                            id: it.id,
+                            kuNo: it.kuNo || '',
+                            outQuantity: it.num != null ? String(it.num) : '',
+                            outDate: it.created_at || '',
+                            orderNo: it.kuNo || '',
+                            customerName: ''
+                        }));
+                        const kw = (this.outQueryParams.orderNo || '').trim();
+                        this.outTableData = kw
+                            ? list.filter(r => (r.kuNo || '').indexOf(kw) !== -1)
+                            : list;
+                        this.outTotal = res.data.count != null ? res.data.count : raw.length;
+                    } else {
+                        this.outTableData = [];
+                        this.outTotal = 0;
+                    }
+                })
+                .catch(() => {
+                    this.outTableData = [];
+                    this.outTotal = 0;
+                });
         },
         handleOutQuery() {
             this.outQueryParams.pageNum = 1;
@@ -488,17 +1020,23 @@ export default {
             this.loadOutList();
         },
         handleOutDetail(row) {
-            // TODO: 可根据 row.id 请求出库单详情接口，这里用示例数据（与列表行数据一致）
-            this.outDetailInfo = {
-                orderNo: row.orderNo || '2026001',
-                outTime: row.outDate || '2026-01-05',
-                customerName: row.customerName || '浙江求实医疗科技有限公司'
-            };
-            this.outDetailGoodsList = [
-                { productName: '单层牙齿盘', spec: '98,A1,10mm', unit: '盒', quantity: 10 },
-                { productName: '单层牙齿盘', spec: '98,A1,10mm', unit: '盒', quantity: 10 }
-            ];
-            this.outDetailDrawerVisible = true;
+            const id = row.id != null ? String(row.id) : '';
+            if (!id) {
+                this.$message.warning('缺少变动记录id');
+                return;
+            }
+            this.fetchLogDetail(id)
+                .then(res => {
+                    if (res && res.code === 200 && res.data != null) {
+                        this.applyLogDetailToOutDrawer(res.data);
+                        this.outDetailDrawerVisible = true;
+                    } else {
+                        this.$message.error((res && res.msg) || '获取详情失败');
+                    }
+                })
+                .catch(() => {
+                    this.$message.error('获取详情失败');
+                });
         },
         closeOutDetailDrawer(done) {
             if (typeof done === 'function') {
@@ -863,5 +1401,9 @@ export default {
             font-weight: 500;
         }
     }
+}
+
+.dialog-search {
+    margin-bottom: 12px;
 }
 </style>

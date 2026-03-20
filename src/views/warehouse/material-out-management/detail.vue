@@ -32,23 +32,68 @@
 </template>
 
 <script>
+const DETAIL_API = '/getMaterialOutboundOrder';
+
 export default {
   name: 'WarehouseMaterialOutManagementDetail',
   data() {
     return {
       detailInfo: {
-        outNo: '2026001',
-        outTime: '2026-01-05',
-        outName: '出库单名称',
-        remark: '出库单备注信息出库单备注信息出库单备注信息'
+        outNo: '',
+        outTime: '',
+        outName: '',
+        remark: ''
       },
-      detailMaterials: Array.from({ length: 10 }, () => ({
-        materialName: '原料名称1',
-        spec: '98,A1,10mm',
-        unit: '盒',
-        quantity: 10
-      }))
+      detailMaterials: []
     };
+  },
+  created() {
+    this.loadDetail();
+  },
+  methods: {
+    loadDetail() {
+      const id = this.$route.query.id != null ? String(this.$route.query.id) : '';
+      if (!id) {
+        this.$message.warning('缺少出库单 id');
+        return;
+      }
+      this.$api({
+        url: DETAIL_API,
+        method: 'post',
+        data: { id }
+      })
+        .then(res => {
+          if (res && res.code === 200 && res.data) {
+            const d = res.data;
+            this.detailInfo = {
+              outNo: d.outboundNo || '',
+              outTime: d.created_at || '',
+              outName: d.title || '',
+              remark: d.cont || ''
+            };
+            let products = d.productJson;
+            if (typeof products === 'string') {
+              try {
+                products = JSON.parse(products);
+              } catch (e) {
+                products = [];
+              }
+            }
+            if (!Array.isArray(products)) products = [];
+            this.detailMaterials = products.map(p => ({
+              materialName: p.title || '',
+              spec: p.keyVals || '',
+              unit: p.unit || '',
+              quantity: p.num != null ? p.num : ''
+            }));
+          } else {
+            this.$message.error((res && res.msg) || '获取详情失败');
+          }
+        })
+        .catch(() => {
+          this.$message.error('获取详情失败');
+        });
+    }
   }
 };
 </script>

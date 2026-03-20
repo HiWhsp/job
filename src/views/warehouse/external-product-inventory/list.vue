@@ -22,10 +22,7 @@
     <div class="table-view">
       <div class="table-util-bar">
         <div class="table-title">外购产品库存</div>
-        <div class="table-acts">
-          <!-- <el-button type="primary" size="small" @click="handleAddIn">新增入库</el-button> -->
-          <!-- <el-button size="small" @click="handleExport">导出</el-button> -->
-        </div>
+        <div class="table-acts" />
       </div>
       <div class="table-box">
         <el-table
@@ -42,7 +39,6 @@
             </template>
           </el-table-column>
           <el-table-column prop="spec" label="规格" min-width="120" show-overflow-tooltip />
-          <el-table-column prop="categoryName" label="所属分类" min-width="100" show-overflow-tooltip />
           <el-table-column prop="unit" label="单位" min-width="80" show-overflow-tooltip />
           <el-table-column prop="stockQuantity" label="库存数量" min-width="100" align="center" show-overflow-tooltip />
           <el-table-column label="操作" width="180" align="center" fixed="right">
@@ -70,54 +66,21 @@
 </template>
 
 <script>
+const LIST_API = '/getForeignProductKuCunList';
+
 export default {
-  name: 'ProductInventoryList',
+  name: 'ExternalProductInventoryList',
 
   data() {
     return {
       queryParams: {
         keyword: '',
-        categoryId: '',
         pageNum: 1,
         pageSize: 20
       },
-      total: 295,
+      total: 0,
       tableHeight: 0,
-      tableData: [
-        {
-          id: 1,
-          code: '4578786954',
-          name: '单层牙齿盘',
-          spec: '98,A1,10mm',
-          categoryName: '树脂盘',
-          unit: '盒',
-          stockQuantity: 200,
-          warnQuantity: 10,
-          isWarn: false
-        },
-        {
-          id: 2,
-          code: '4578786955',
-          name: '示例产品B',
-          spec: '—',
-          categoryName: '树脂盘',
-          unit: '个',
-          stockQuantity: 200,
-          warnQuantity: 10,
-          isWarn: false
-        },
-        {
-          id: 3,
-          code: '4578786956',
-          name: '示例产品C',
-          spec: '—',
-          categoryName: '硅橡胶',
-          unit: '盒',
-          stockQuantity: 5,
-          warnQuantity: 10,
-          isWarn: true
-        }
-      ]
+      tableData: []
     };
   },
 
@@ -146,32 +109,57 @@ export default {
       return rowIndex % 2 === 1 ? 'row-even' : '';
     },
     loadList() {
-      // TODO: 调用接口获取产品库存列表
-      // this.total = res.total;
-      // this.tableData = res.list;
+      this.$api({
+        url: LIST_API,
+        method: 'post',
+        data: {
+          page: String(this.queryParams.pageNum),
+          limit: String(this.queryParams.pageSize),
+          keyword: this.queryParams.keyword || ''
+        }
+      })
+        .then(res => {
+          if (res && res.code === 200 && res.data) {
+            const list = Array.isArray(res.data.list) ? res.data.list : [];
+            this.tableData = list.map(it => {
+              const fp = it.foreign_product || {};
+              return {
+                id: it.id,
+                foreignProductId: it.foreignProductId,
+                code: fp.productNo || '',
+                name: fp.title || '',
+                spec: fp.keyVals || '',
+                unit: fp.unit || '',
+                stockQuantity: it.num != null ? it.num : ''
+              };
+            });
+            this.total = res.data.count != null ? res.data.count : list.length;
+          } else {
+            this.tableData = [];
+            this.total = 0;
+            if (res && res.msg) this.$message.error(res.msg);
+          }
+        })
+        .catch(() => {
+          this.tableData = [];
+          this.total = 0;
+        });
     },
     handleQuery() {
       this.queryParams.pageNum = 1;
       this.loadList();
     },
     resetQuery() {
-      this.$refs.queryForm.resetFields();
+      this.queryParams.keyword = '';
       this.queryParams.pageNum = 1;
+      this.$refs.queryForm && this.$refs.queryForm.resetFields();
       this.loadList();
     },
     handleViewDetail(row) {
       this.$router.push({
         path: '/warehouse/external-product-inventory/detail',
-        query: { id: row.id }
+        query: { id: row.id != null ? String(row.id) : '' }
       });
-    },
-    handleAddIn() {
-      // TODO: 新增入库
-      this.$message.info('新增入库');
-    },
-    handleExport() {
-      // TODO: 导出
-      this.$message.info('导出');
     },
     handleSizeChange(val) {
       this.queryParams.pageSize = val;
@@ -287,14 +275,6 @@ export default {
   &:hover {
     text-decoration: underline;
   }
-}
-
-.normal-status {
-  color: #303133;
-}
-
-.warn-status {
-  color: #f56c6c;
 }
 
 .row-acts {

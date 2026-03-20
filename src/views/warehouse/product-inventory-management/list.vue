@@ -91,6 +91,159 @@
       </div>
     </div>
 
+    <!-- 新增入库：从右向左抽屉 -->
+    <el-drawer
+      title="新增入库"
+      :visible.sync="addInDrawerVisible"
+      direction="rtl"
+      size="800px"
+      :append-to-body="true"
+      :close-on-click-modal="false"
+      @closed="onAddInDrawerClosed"
+      custom-class="add-in-stock-drawer"
+    >
+      <div class="add-in-drawer-body">
+        <div class="add-in-form-head">
+          <el-form label-width="90px" class="add-in-form">
+            <el-form-item label="入库时间：">
+              <el-date-picker
+                v-model="addInForm.inTime"
+                type="date"
+                placeholder="默认今天"
+                value-format="yyyy-MM-dd"
+                style="width: 100%"
+              />
+            </el-form-item>
+          </el-form>
+          <el-button type="primary" class="add-product-btn" @click="openAddProductDialog">添加产品</el-button>
+        </div>
+        <div class="add-in-table-wrap">
+          <el-table
+            :data="addInRows"
+            border
+            header-cell-class-name="table-header-cell"
+            :row-class-name="tableRowClassName"
+          >
+            <el-table-column label="序号" width="70" align="center">
+              <template slot-scope="{ $index }">{{ String($index + 1).padStart(3, '0') }}</template>
+            </el-table-column>
+            <el-table-column label="产品名称" min-width="140">
+              <template slot-scope="{ row }">
+                <el-input
+                  v-if="row.isEditing"
+                  v-model="row.productName"
+                  placeholder="搜索选择"
+                  size="small"
+                  style="width: 100%"
+                />
+                <span v-else>{{ row.productName }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="规格" min-width="120">
+              <template slot-scope="{ row }">
+                <el-input
+                  v-if="row.isEditing"
+                  v-model="row.spec"
+                  placeholder="搜索选择"
+                  size="small"
+                  style="width: 100%"
+                />
+                <span v-else>{{ row.spec }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="单位" width="80" align="center">
+              <template slot-scope="{ row }">
+                <el-input v-if="row.isEditing" v-model="row.unit" size="small" placeholder="单位" />
+                <span v-else>{{ row.unit }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="本次入库数量" width="120" align="center">
+              <template slot-scope="{ row }">
+                <el-input
+                  v-if="row.isEditing"
+                  v-model="row.quantity"
+                  placeholder="请输入"
+                  size="small"
+                  style="width: 100%"
+                />
+                <span v-else>{{ row.quantity }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="操作" width="140" align="center" fixed="right">
+              <template slot-scope="{ row, $index }">
+                <span class="row-acts">
+                  <template v-if="row.isEditing">
+                    <span class="row-act" @click="saveAddInRow($index)">保存</span>
+                  </template>
+                  <template v-else>
+                    <span class="row-act" @click="editAddInRow($index)">编辑</span>
+                    <span class="row-act" @click="removeAddInRow($index)">删除</span>
+                  </template>
+                </span>
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
+        <div class="add-in-drawer-footer">
+          <el-button type="primary" @click="submitAddIn">确定</el-button>
+          <el-button @click="addInDrawerVisible = false">取消</el-button>
+        </div>
+      </div>
+    </el-drawer>
+
+    <!-- 添加产品弹框（与设备采购等产品选择一致） -->
+    <el-dialog
+      title="添加产品"
+      :visible.sync="addProductDialogVisible"
+      width="820px"
+      custom-class="add-product-dialog"
+      :close-on-click-modal="false"
+      append-to-body
+      @close="closeAddProductDialog"
+    >
+      <div class="dialog-search">
+        <el-form :model="addProductQuery" ref="addProductQueryForm" inline label-width="80px">
+          <el-form-item label="关键词" prop="keyword">
+            <el-input
+              v-model="addProductQuery.keyword"
+              placeholder="产品名称/产品编码"
+              clearable
+              style="width: 220px"
+            />
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="searchAddProduct">搜索</el-button>
+            <el-button @click="resetAddProductQuery">重置</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
+      <div class="dialog-table-wrap">
+        <el-table
+          ref="addProductTable"
+          :data="addProductList"
+          max-height="380"
+          header-cell-class-name="table-header-cell"
+          @selection-change="handleAddProductSelectionChange"
+        >
+          <el-table-column type="selection" width="50" align="center" />
+          <el-table-column prop="productNo" label="产品编码" min-width="120" show-overflow-tooltip />
+          <el-table-column prop="title" label="产品名称" min-width="140" show-overflow-tooltip />
+          <el-table-column prop="spec" label="规格" min-width="140" show-overflow-tooltip />
+          <el-table-column prop="cateTitle" label="所属分类" min-width="120" show-overflow-tooltip />
+          <el-table-column label="本次入库数量" width="120" align="center">
+            <template slot-scope="{ row }">
+              <el-input v-model="row.quantity" placeholder="请输入" size="small" style="width: 90px" />
+            </template>
+          </el-table-column>
+          <el-table-column prop="unit" label="单位" width="80" align="center" />
+        </el-table>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="addProductDialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="confirmAddProduct">确定</el-button>
+      </span>
+    </el-dialog>
+
     <!-- 设置库存预警数量弹框 -->
     <el-dialog
       title="设置库存预警数量"
@@ -121,6 +274,8 @@
 const LIST_API = '/getProductKuCunList';
 const CATE_API = '/getProductCateList';
 const SET_WARN_API = '/setPrYuJing';
+const ADD_IN_API = '/addProductKuCunRu';
+const PRODUCT_LIST_API = '/getProductList';
 
 export default {
   name: 'ProductInventoryList',
@@ -141,7 +296,23 @@ export default {
       warnForm: {
         warnQuantity: ''
       },
-      tableData: []
+      tableData: [],
+      // 新增入库抽屉
+      addInDrawerVisible: false,
+      addInForm: {
+        inTime: ''
+      },
+      addInRows: [],
+      addInRowId: 0,
+      // 添加产品弹框
+      addProductDialogVisible: false,
+      addProductQuery: {
+        keyword: '',
+        pageNum: 1,
+        pageSize: 50
+      },
+      addProductList: [],
+      addProductSelected: []
     };
   },
 
@@ -303,9 +474,199 @@ export default {
           this.$message.error('设置失败');
         });
     },
+    getTodayStr() {
+      const d = new Date();
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${y}-${m}-${day}`;
+    },
     handleAddIn() {
-      // TODO: 新增入库
-      this.$message.info('新增入库');
+      this.addInForm.inTime = this.getTodayStr();
+      this.addInRows = [];
+      this.addInDrawerVisible = true;
+    },
+    onAddInDrawerClosed() {
+      this.addInRows = [];
+      this.addInForm.inTime = '';
+    },
+    openAddProductDialog() {
+      this.addProductDialogVisible = true;
+      this.$nextTick(() => {
+        this.searchAddProduct();
+      });
+    },
+    closeAddProductDialog() {
+      this.addProductQuery.keyword = '';
+      this.addProductQuery.pageNum = 1;
+      this.addProductSelected = [];
+      this.$nextTick(() => {
+        this.$refs.addProductTable && this.$refs.addProductTable.clearSelection();
+      });
+    },
+    searchAddProduct() {
+      const params = {
+        limit: String(this.addProductQuery.pageSize),
+        page: String(this.addProductQuery.pageNum),
+        keyword: this.addProductQuery.keyword || '',
+        cateId: ''
+      };
+      this.$api({
+        url: PRODUCT_LIST_API,
+        method: 'post',
+        data: params
+      })
+        .then(res => {
+          if (res && res.code === 200 && res.data) {
+            const list = Array.isArray(res.data.list) ? res.data.list : [];
+            this.addProductList = list.map(it => ({
+              id: it.id != null ? String(it.id) : '',
+              title: it.title || '',
+              productNo: it.productNo || '',
+              spec: it.keyVals || '',
+              unit: it.unit || '',
+              cateTitle: it.cateTitle || '',
+              inventoryId: it.inventoryId != null ? String(it.inventoryId) : '',
+              quantity: ''
+            }));
+          } else {
+            this.addProductList = [];
+          }
+        })
+        .catch(() => {
+          this.addProductList = [];
+        });
+    },
+    resetAddProductQuery() {
+      this.$refs.addProductQueryForm && this.$refs.addProductQueryForm.resetFields();
+      this.addProductQuery.pageNum = 1;
+      this.searchAddProduct();
+    },
+    handleAddProductSelectionChange(selection) {
+      this.addProductSelected = selection || [];
+    },
+    confirmAddProduct() {
+      const sel = this.addProductSelected || [];
+      if (!sel.length) {
+        this.$message.warning('请先勾选要添加的产品');
+        return;
+      }
+      for (let i = 0; i < sel.length; i++) {
+        const p = sel[i];
+        const q = String(p.quantity || '').trim();
+        if (!q) {
+          this.$message.warning('请为勾选的产品填写本次入库数量');
+          return;
+        }
+        const num = Number(q);
+        if (isNaN(num) || num <= 0 || !Number.isInteger(num)) {
+          this.$message.warning('入库数量须为正整数');
+          return;
+        }
+        if (!p.inventoryId) {
+          this.$message.warning('所选产品缺少规格/库存记录，请确认产品已维护规格');
+          return;
+        }
+      }
+      sel.forEach(p => {
+        const num = Number(String(p.quantity).trim());
+        const existing = this.addInRows.find(
+          r => r.productId === p.id && r.inventoryId === p.inventoryId
+        );
+        if (existing) {
+          existing.quantity = String((Number(existing.quantity) || 0) + num);
+        } else {
+          this.addInRowId += 1;
+          this.addInRows.push({
+            _key: this.addInRowId,
+            productName: p.title,
+            spec: p.spec,
+            unit: p.unit || '',
+            quantity: String(num),
+            productId: p.id,
+            inventoryId: p.inventoryId,
+            isEditing: false
+          });
+        }
+      });
+      this.addProductDialogVisible = false;
+      this.$message.success('添加成功');
+    },
+    editAddInRow(index) {
+      const hasEditing = this.addInRows.some(r => r.isEditing);
+      if (hasEditing) {
+        this.$message.warning('请先保存当前编辑行');
+        return;
+      }
+      this.addInRows[index].isEditing = true;
+    },
+    saveAddInRow(index) {
+      const row = this.addInRows[index];
+      const q = String(row.quantity || '').trim();
+      if (!q) {
+        this.$message.warning('请输入本次入库数量');
+        return;
+      }
+      const num = Number(q);
+      if (isNaN(num) || num <= 0 || !Number.isInteger(num)) {
+        this.$message.warning('入库数量须为正整数');
+        return;
+      }
+      row.quantity = String(num);
+      row.isEditing = false;
+    },
+    removeAddInRow(index) {
+      this.addInRows.splice(index, 1);
+    },
+    submitAddIn() {
+      if (!this.addInRows.length) {
+        this.$message.warning('请添加产品');
+        return;
+      }
+      if (this.addInRows.some(r => r.isEditing)) {
+        this.$message.warning('请先保存正在编辑的行');
+        return;
+      }
+      const kuInfos = [];
+      for (let i = 0; i < this.addInRows.length; i++) {
+        const r = this.addInRows[i];
+        const q = String(r.quantity || '').trim();
+        const num = Number(q);
+        if (isNaN(num) || num <= 0 || !Number.isInteger(num)) {
+          this.$message.warning('请为每行填写有效的正整数入库数量');
+          return;
+        }
+        if (!r.inventoryId || !r.productId) {
+          this.$message.warning('明细缺少产品或规格信息');
+          return;
+        }
+        kuInfos.push({
+          id: String(r.inventoryId),
+          productId: String(r.productId),
+          num: String(num)
+        });
+      }
+      this.$api({
+        url: ADD_IN_API,
+        method: 'post',
+        data: {
+          kuInfos: JSON.stringify(kuInfos)
+        }
+      })
+        .then(res => {
+          if (res && res.code === 200) {
+            this.$message.success('入库成功');
+            this.addInDrawerVisible = false;
+            this.addInRows = [];
+            this.addInForm.inTime = '';
+            this.loadList();
+          } else {
+            this.$message.error((res && res.msg) || '入库失败');
+          }
+        })
+        .catch(() => {
+          this.$message.error('入库失败');
+        });
     },
     handleExport() {
       // TODO: 导出
@@ -471,5 +832,66 @@ export default {
 
 ::v-deep .el-dialog__footer {
   text-align: center;
+}
+
+.add-in-drawer-body {
+  padding: 0 20px 20px;
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 120px);
+}
+
+.add-in-form-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+
+  .add-in-form {
+    flex: 1;
+    margin-bottom: 0;
+  }
+
+  .add-product-btn {
+    flex-shrink: 0;
+    margin-top: 4px;
+    background: linear-gradient(90deg, #157de9 0%, #3697fd 100%) !important;
+    border: none;
+  }
+}
+
+.add-in-table-wrap {
+  flex: 1;
+  overflow: auto;
+}
+
+.add-in-drawer-footer {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid #edf0f6;
+  text-align: right;
+
+  .el-button--primary {
+    background: linear-gradient(90deg, #157de9 0%, #3697fd 100%) !important;
+    border: none;
+  }
+}
+
+::v-deep .add-in-stock-drawer {
+  .el-drawer__header {
+    margin-bottom: 0;
+    padding: 20px 20px 10px;
+    font-weight: bold;
+    font-size: 16px;
+  }
+
+  .el-drawer__body {
+    padding-top: 0;
+  }
+}
+
+.dialog-search {
+  margin-bottom: 12px;
 }
 </style>

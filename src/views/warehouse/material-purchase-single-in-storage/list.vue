@@ -47,23 +47,21 @@
               {{ String((queryParams.pageNum - 1) * queryParams.pageSize + scope.$index + 1).padStart(3, '0') }}
             </template>
           </el-table-column>
-          <el-table-column prop="inNo" label="入库单号" min-width="120" show-overflow-tooltip />
+          <el-table-column prop="ruKuNo" label="入库单号" min-width="140" show-overflow-tooltip />
           <el-table-column prop="purchaseNo" label="对应采购单号" min-width="140" show-overflow-tooltip />
           <el-table-column prop="purchaseName" label="采购单名称" min-width="140" show-overflow-tooltip />
           <el-table-column prop="orderAmount" label="订单金额" width="120" align="center" />
           <el-table-column label="状态" width="100" align="center">
             <template slot-scope="{ row }">
-              <span :class="row.status === 'stored' ? 'tag tag-success' : 'tag tag-gray'">
-                {{ row.status === 'stored' ? '已入库' : '待审核' }}
-              </span>
+              <span :class="listStatusTagClass(row.orderStatus)">{{ row.statusText }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="submitTime" label="提交时间" width="120" align="center" />
-          <el-table-column label="操作" width="180" align="center" fixed="right">
+          <el-table-column prop="submitTime" label="提交时间" width="170" align="center" />
+          <el-table-column label="操作" width="200" align="center" fixed="right">
             <template slot-scope="{ row }">
               <span class="row-acts">
                 <span class="row-act" @click="handleViewDetail(row)">查看详情</span>
-                <span v-if="row.status !== 'stored'" class="row-act" @click="handleQcIn(row)">质检入库</span>
+                <span v-if="Number(row.orderStatus) === 5" class="row-act" @click="handleQcIn(row)">质检入库</span>
               </span>
             </template>
           </el-table-column>
@@ -85,6 +83,16 @@
 </template>
 
 <script>
+const LIST_API = '/getPurchaseMaterialOrderList';
+
+/** 原料采购单入库：materialType 1=原料，2=外购包装 */
+const MATERIAL_TYPE_RAW = '1';
+
+const TAB_ORDER_STATUS = {
+  pending: '5',
+  stored: '6'
+};
+
 export default {
   name: 'WarehouseMaterialPurchaseSingleInStorageList',
   data() {
@@ -96,40 +104,30 @@ export default {
         pageNum: 1,
         pageSize: 20
       },
-      total: 295,
+      total: 0,
       tableHeight: 0,
-      rawData: [
-        {
-          id: 1,
-          inNo: '4521414',
-          purchaseNo: '4521414',
-          purchaseName: '采购单名称',
-          orderAmount: '5000.00',
-          status: 'pending',
-          submitTime: '2026-01-05'
-        },
-        {
-          id: 2,
-          inNo: '4521414',
-          purchaseNo: '4521414',
-          purchaseName: '采购单名称',
-          orderAmount: '5000.00',
-          status: 'stored',
-          submitTime: '2026-01-05'
-        }
-      ]
+      tableData: []
     };
-  },
-  computed: {
-    tableData() {
-      return this.rawData.filter(i => (this.activeTab === 'stored' ? i.status === 'stored' : i.status !== 'stored'));
-    }
   },
   mounted() {
     this.setView();
     this.loadList();
   },
   methods: {
+    currentOrderStatus() {
+      return TAB_ORDER_STATUS[this.activeTab] || '5';
+    },
+    listStatusText(orderStatus) {
+      const s = Number(orderStatus);
+      if (s === 5) return '待入库';
+      if (s === 6) return '已入库';
+      return '—';
+    },
+    listStatusTagClass(orderStatus) {
+      const s = Number(orderStatus);
+      if (s === 6) return 'tag tag-success';
+      return 'tag tag-gray';
+    },
     setView() {
       this.$nextTick(() => {
         const refTable = this.$refs.tableRef;
@@ -148,7 +146,47 @@ export default {
       return rowIndex % 2 === 1 ? 'row-even' : '';
     },
     loadList() {
-      // TODO: 调用原料采购单入库列表接口
+      const dr = this.queryParams.dateRange;
+      const start_time = Array.isArray(dr) && dr[0] ? dr[0] : '';
+      const end_time = Array.isArray(dr) && dr[1] ? dr[1] : '';
+      this.$api({
+        url: LIST_API,
+        method: 'post',
+        data: {
+          page: String(this.queryParams.pageNum),
+          limit: String(this.queryParams.pageSize),
+          keyword: this.queryParams.keyword || '',
+          start_time,
+          end_time,
+          isPay: '',
+          orderStatus: this.currentOrderStatus(),
+          materialType: MATERIAL_TYPE_RAW
+        }
+      })
+        .then(res => {
+          if (res && res.code === 200 && res.data) {
+            const list = Array.isArray(res.data.list) ? res.data.list : [];
+            this.tableData = list.map(it => ({
+              id: it.id,
+              orderStatus: it.orderStatus,
+              statusText: this.listStatusText(it.orderStatus),
+              ruKuNo: it.ruKuNo || '—',
+              purchaseNo: it.purchaseNo || '',
+              purchaseName: it.title || '',
+              orderAmount: it.price != null ? it.price : '',
+              submitTime: it.created_at || ''
+            }));
+            this.total = res.data.count != null ? res.data.count : list.length;
+          } else {
+            this.tableData = [];
+            this.total = 0;
+            if (res && res.msg) this.$message.error(res.msg);
+          }
+        })
+        .catch(() => {
+          this.tableData = [];
+          this.total = 0;
+        });
     },
     handleTabClick() {
       this.queryParams.pageNum = 1;
@@ -159,8 +197,10 @@ export default {
       this.loadList();
     },
     resetQuery() {
-      this.$refs.queryForm.resetFields();
+      this.queryParams.keyword = '';
+      this.queryParams.dateRange = null;
       this.queryParams.pageNum = 1;
+      this.$refs.queryForm && this.$refs.queryForm.resetFields();
       this.loadList();
     },
     handleSizeChange(val) {
@@ -174,13 +214,13 @@ export default {
     handleViewDetail(row) {
       this.$router.push({
         path: '/warehouse/material-purchase-single-in-storage/detail',
-        query: { id: row.id, status: row.status }
+        query: { id: row.id != null ? String(row.id) : '' }
       });
     },
     handleQcIn(row) {
       this.$router.push({
         path: '/warehouse/material-purchase-single-in-storage/detail',
-        query: { id: row.id, status: row.status, focusQc: 1 }
+        query: { id: row.id != null ? String(row.id) : '', focusQc: '1' }
       });
     }
   }

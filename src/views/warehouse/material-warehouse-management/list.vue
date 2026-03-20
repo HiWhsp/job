@@ -6,12 +6,12 @@
         <el-form-item label="关键词">
           <el-input
             v-model="queryParams.keyword"
-            placeholder="产品名称/产品编码"
+            placeholder="原料名称/原料编码"
             clearable
             style="width: 260px"
           />
         </el-form-item>
-        <el-form-item label="产品分类">
+        <el-form-item label="原料分类">
           <el-select
             v-model="queryParams.categoryId"
             placeholder="请选择"
@@ -56,7 +56,7 @@
             </template>
           </el-table-column>
           <el-table-column prop="spec" label="规格" min-width="120" show-overflow-tooltip />
-          <el-table-column prop="spec" label="批次" min-width="120" show-overflow-tooltip />
+          <el-table-column prop="batchNo" label="批次" min-width="120" show-overflow-tooltip />
           <el-table-column prop="categoryName" label="所属分类" min-width="100" show-overflow-tooltip />
           <el-table-column prop="unit" label="单位" min-width="80" show-overflow-tooltip />
           <el-table-column prop="stockQuantity" label="库存数量" min-width="100" align="center" show-overflow-tooltip />
@@ -110,7 +110,7 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="handleWarnSubmit">提交</el-button>
+        <el-button type="primary" :loading="warnSubmitLoading" @click="handleWarnSubmit">提交</el-button>
         <el-button @click="warnDialogVisible = false">取消</el-button>
       </span>
     </el-dialog>
@@ -120,6 +120,7 @@
 <script>
 const LIST_API = '/getMaterialKuCunList';
 const CATE_API = '/getMaterialCateList';
+const SET_WARN_API = '/setMaYuJing';
 
 export default {
   name: 'MaterialWarehouseManagementList',
@@ -140,6 +141,7 @@ export default {
       warnForm: {
         warnQuantity: ''
       },
+      warnSubmitLoading: false,
       tableData: []
     };
   },
@@ -215,13 +217,14 @@ export default {
             this.tableData = list.map(it => {
               const material = it && (it.material || it.product) ? (it.material || it.product) : {};
               const inventory = it && it.inventory ? it.inventory : {};
-              const stockQuantity = Number(it && it.num != null ? it.num : 0);
-              const warnQuantity = Number(it && it.yjNum != null ? it.yjNum : 0);
+              const stockQuantity = it.num != null ? it.num : '';
+              const warnQuantity = it.yjNum != null ? it.yjNum : '';
               return {
                 ...it,
                 code: material.materialNo || material.productNo || '',
                 name: material.title || '',
-                spec: material.batchNo || inventory.keyVals || inventory.sn || '',
+                spec: inventory.keyVals || '',
+                batchNo: inventory.batchNo || '',
                 categoryName: it.cateTitle || '',
                 unit: material.unit || '',
                 stockQuantity,
@@ -245,14 +248,16 @@ export default {
       this.loadList();
     },
     resetQuery() {
-      this.$refs.queryForm.resetFields();
+      this.$refs.queryForm && this.$refs.queryForm.resetFields();
+      this.queryParams.keyword = '';
+      this.queryParams.categoryId = '';
       this.queryParams.pageNum = 1;
       this.loadList();
     },
     handleViewDetail(row) {
       this.$router.push({
         path: '/warehouse/material-warehouse-management/detail',
-        query: { id: row.id }
+        query: { id: row.id != null ? String(row.id) : '' }
       });
     },
     handleSetWarn(row) {
@@ -266,6 +271,10 @@ export default {
       this.$refs.warnForm && this.$refs.warnForm.resetFields();
     },
     handleWarnSubmit() {
+      if (!this.currentWarnRow || this.currentWarnRow.id == null) {
+        this.$message.warning('数据异常');
+        return;
+      }
       const val = this.warnForm.warnQuantity;
       if (val === '' || val === undefined || val === null) {
         this.$message.warning('请输入库存预警数量');
@@ -276,13 +285,29 @@ export default {
         this.$message.warning('请输入有效的非负整数');
         return;
       }
-      // TODO: 调用接口保存库存预警数量 this.currentWarnRow.id, num
-      this.$message.success('设置成功');
-      if (this.currentWarnRow) {
-        this.currentWarnRow.warnQuantity = num;
-        this.currentWarnRow.isWarn = this.currentWarnRow.stockQuantity != null && this.currentWarnRow.stockQuantity < num;
-      }
-      this.warnDialogVisible = false;
+      this.warnSubmitLoading = true;
+      this.$api({
+        url: SET_WARN_API,
+        method: 'post',
+        data: {
+          id: String(this.currentWarnRow.id),
+          yjNum: String(num)
+        }
+      })
+        .then(res => {
+          this.warnSubmitLoading = false;
+          if (res && res.code === 200) {
+            this.$message.success('设置成功');
+            this.warnDialogVisible = false;
+            this.loadList();
+          } else {
+            this.$message.error((res && res.msg) || '设置失败');
+          }
+        })
+        .catch(() => {
+          this.warnSubmitLoading = false;
+          this.$message.error('设置失败');
+        });
     },
     handleAddIn() {
       // TODO: 新增入库

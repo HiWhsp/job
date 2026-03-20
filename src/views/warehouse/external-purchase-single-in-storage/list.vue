@@ -1,6 +1,5 @@
 <template>
   <div class="view-wrap external-purchase-in-storage-page">
-    <!-- 搜索/筛选区域 -->
     <div class="search-section">
       <el-form :model="queryParams" ref="queryForm" inline class="search-form" label-width="80px">
         <el-form-item label="关键词" prop="keyword">
@@ -49,27 +48,21 @@
               {{ String((queryParams.pageNum - 1) * queryParams.pageSize + scope.$index + 1).padStart(3, '0') }}
             </template>
           </el-table-column>
-          <el-table-column prop="inNo" label="入库单号" min-width="120" show-overflow-tooltip />
+          <el-table-column prop="ruKuNo" label="入库单号" min-width="140" show-overflow-tooltip />
           <el-table-column prop="purchaseNo" label="对应采购单号" min-width="140" show-overflow-tooltip />
           <el-table-column prop="purchaseName" label="采购单名称" min-width="140" show-overflow-tooltip />
           <el-table-column prop="orderAmount" label="订单金额" width="120" align="center" />
-          <el-table-column label="状态" width="100" align="center">
+          <el-table-column label="状态" width="110" align="center">
             <template slot-scope="{ row }">
-              <span :class="row.status === 'stored' ? 'tag tag-success' : 'tag tag-gray'">
-                {{ row.status === 'stored' ? '已入库' : '待审核' }}
-              </span>
+              <span :class="statusTagClass(row.orderStatus)">{{ row.statusText }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="submitTime" label="提交时间" width="120" align="center" />
-          <el-table-column label="操作" width="180" align="center" fixed="right">
+          <el-table-column prop="submitTime" label="提交时间" width="170" align="center" />
+          <el-table-column label="操作" width="200" align="left">
             <template slot-scope="{ row }">
               <span class="row-acts">
                 <span class="row-act" @click="handleViewDetail(row)">查看详情</span>
-                <span
-                  v-if="row.status !== 'stored'"
-                  class="row-act"
-                  @click="handleQcIn(row)"
-                >质检入库</span>
+                <span v-if="Number(row.orderStatus) === 5" class="row-act" @click="handleQcIn(row)">质检入库</span>
               </span>
             </template>
           </el-table-column>
@@ -91,6 +84,15 @@
 </template>
 
 <script>
+const LIST_API = '/getPurchaseForeignProductOrderList';
+
+/** tab -> 接口 status：待入库5、已入库6、审核未通过-1 */
+const TAB_STATUS = {
+  pending: '5',
+  stored: '6',
+  auditFailed: '-1'
+};
+
 export default {
   name: 'ExternalPurchaseSingleInStorageList',
   data() {
@@ -102,49 +104,32 @@ export default {
         pageNum: 1,
         pageSize: 20
       },
-      total: 295,
+      total: 0,
       tableHeight: 0,
-      rawData: [
-        {
-          id: 1,
-          inNo: '4521414',
-          purchaseNo: '4521414',
-          purchaseName: '采购单名称',
-          orderAmount: '5000.00',
-          status: 'pending',
-          submitTime: '2026-01-05'
-        },
-        {
-          id: 2,
-          inNo: '4521414',
-          purchaseNo: '4521414',
-          purchaseName: '采购单名称',
-          orderAmount: '5000.00',
-          status: 'pending',
-          submitTime: '2026-01-05'
-        },
-        {
-          id: 3,
-          inNo: '4521414',
-          purchaseNo: '4521414',
-          purchaseName: '采购单名称',
-          orderAmount: '5000.00',
-          status: 'stored',
-          submitTime: '2026-01-05'
-        }
-      ],
+      tableData: []
     };
-  },
-  computed: {
-    tableData() {
-      return this.rawData.filter(i => (this.activeTab === 'stored' ? i.status === 'stored' : i.status !== 'stored'));
-    }
   },
   mounted() {
     this.setView();
     this.loadList();
   },
   methods: {
+    currentStatusParam() {
+      return TAB_STATUS[this.activeTab] || '5';
+    },
+    statusText(orderStatus) {
+      const s = Number(orderStatus);
+      if (s === 5) return '待入库';
+      if (s === 6) return '已入库';
+      if (s === -1) return '审核未通过';
+      return '—';
+    },
+    statusTagClass(orderStatus) {
+      const s = Number(orderStatus);
+      if (s === 6) return 'tag tag-success';
+      if (s === -1) return 'tag tag-danger';
+      return 'tag tag-gray';
+    },
     setView() {
       this.$nextTick(() => {
         const refTable = this.$refs.tableRef;
@@ -163,7 +148,47 @@ export default {
       return rowIndex % 2 === 1 ? 'row-even' : '';
     },
     loadList() {
-      // TODO: 调用采购单入库列表接口
+      const dr = this.queryParams.dateRange;
+      const start_time = dr && dr[0] ? dr[0] : '';
+      const end_time = dr && dr[1] ? dr[1] : '';
+      this.$api({
+        url: LIST_API,
+        method: 'post',
+        data: {
+          page: String(this.queryParams.pageNum),
+          limit: String(this.queryParams.pageSize),
+          keyword: this.queryParams.keyword || '',
+          start_time,
+          end_time,
+          /** 付款状态：99未付 1已付；空表示不限（若后端必填可改为固定值） */
+          isPay: '',
+          status: this.currentStatusParam()
+        }
+      })
+        .then(res => {
+          if (res && res.code === 200 && res.data) {
+            const list = Array.isArray(res.data.list) ? res.data.list : [];
+            this.tableData = list.map(it => ({
+              id: it.id,
+              orderStatus: it.orderStatus,
+              statusText: this.statusText(it.orderStatus),
+              ruKuNo: it.ruKuNo || '—',
+              purchaseNo: it.purchaseNo || '',
+              purchaseName: it.title || '',
+              orderAmount: it.price != null ? it.price : '',
+              submitTime: it.created_at || ''
+            }));
+            this.total = res.data.count != null ? res.data.count : list.length;
+          } else {
+            this.tableData = [];
+            this.total = 0;
+            if (res && res.msg) this.$message.error(res.msg);
+          }
+        })
+        .catch(() => {
+          this.tableData = [];
+          this.total = 0;
+        });
     },
     handleTabClick() {
       this.queryParams.pageNum = 1;
@@ -174,7 +199,9 @@ export default {
       this.loadList();
     },
     resetQuery() {
-      this.$refs.queryForm.resetFields();
+      this.$refs.queryForm && this.$refs.queryForm.resetFields();
+      this.queryParams.keyword = '';
+      this.queryParams.dateRange = null;
       this.queryParams.pageNum = 1;
       this.loadList();
     },
@@ -189,13 +216,13 @@ export default {
     handleViewDetail(row) {
       this.$router.push({
         path: '/warehouse/external-purchase-single-in-storage/detail',
-        query: { id: row.id, status: row.status }
+        query: { id: row.id != null ? String(row.id) : '' }
       });
     },
     handleQcIn(row) {
       this.$router.push({
         path: '/warehouse/external-purchase-single-in-storage/detail',
-        query: { id: row.id, status: row.status, focusQc: 1 }
+        query: { id: row.id != null ? String(row.id) : '', focusQc: '1' }
       });
     }
   }
@@ -293,11 +320,15 @@ export default {
   background: #dff6df;
   color: #2aa84a;
 }
+.tag-danger {
+  background: #fde2e2;
+  color: #f56c6c;
+}
 
 .row-acts {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: start;
   flex-wrap: wrap;
   .row-act {
     color: #3377fe;
@@ -324,6 +355,4 @@ export default {
   display: flex;
   justify-content: flex-end;
 }
-
-/* 详情样式移至 detail.vue */
 </style>

@@ -11,7 +11,7 @@
             <div class="info-grid">
                 <div class="info-row">
                     <div class="info-item">
-                        <span class="info-label">原料编码</span>
+                        <span class="info-label">包装编码</span>
                         <span class="info-value">{{ productInfo.code }}</span>
                     </div>
                     <div class="info-item">
@@ -26,7 +26,7 @@
                 <div class="info-row">
                     <div class="info-item">
                         <span class="info-label">客户名称</span>
-                        <span class="info-value">{{ productInfo.spec }}</span>
+                        <span class="info-value">{{ productInfo.customerName }}</span>
                     </div>
                     <div class="info-item">
                         <span class="info-label">单位</span>
@@ -68,7 +68,11 @@
                                 show-overflow-tooltip />
                             <el-table-column prop="inDate" label="入库日期" min-width="120" align="center"
                                 show-overflow-tooltip />
-                            <el-table-column prop="quantityBefore" label="对应入库单号" min-width="120" align="center"
+                            <el-table-column prop="quantityBefore" label="变动前数量" min-width="110" align="center"
+                                show-overflow-tooltip />
+                            <el-table-column prop="quantityAfter" label="变动后数量" min-width="110" align="center"
+                                show-overflow-tooltip />
+                            <el-table-column prop="kuNo" label="单号" min-width="140" align="center"
                                 show-overflow-tooltip />
                             <el-table-column label="操作" width="160" align="center" fixed="right">
                                 <template slot-scope="{ row }">
@@ -110,7 +114,11 @@
                                 show-overflow-tooltip />
                             <el-table-column prop="outDate" label="出库日期" min-width="120" align="center"
                                 show-overflow-tooltip />
-                            <el-table-column prop="orderNo" label="对应出库单号" min-width="140" align="center"
+                            <el-table-column prop="quantityBefore" label="变动前数量" min-width="110" align="center"
+                                show-overflow-tooltip />
+                            <el-table-column prop="quantityAfter" label="变动后数量" min-width="110" align="center"
+                                show-overflow-tooltip />
+                            <el-table-column prop="kuNo" label="单号" min-width="140" align="center"
                                 show-overflow-tooltip />
                             <el-table-column label="操作" width="120" align="center" fixed="right">
                                 <template slot-scope="{ row }">
@@ -132,8 +140,8 @@
         </div>
 
         <!-- 入库详情抽屉：从右向左打开，宽度 800px -->
-        <el-drawer title="入库详情" :visible.sync="inDetailDrawerVisible" direction="rtl" size="800px"
-            :before-close="closeInDetailDrawer">
+        <el-drawer title="入库详情" :visible.sync="inDetailDrawerVisible" direction="rtl" size="800px" append-to-body
+            :close-on-click-modal="false" @closed="onInDetailDrawerClosed">
             <div class="in-detail-drawer">
                 <div class="in-detail-info">
                     <div class="in-detail-info-item">
@@ -148,21 +156,21 @@
                 <div class="in-detail-table-wrap">
                     <el-table :data="inDetailGoodsList" border header-cell-class-name="table-header-cell">
                         <el-table-column type="index" label="序号" width="60" align="center" />
-                        <el-table-column prop="materialName" label="包装名称" min-width="120" show-overflow-tooltip />
+                        <el-table-column prop="packName" label="包装名称" min-width="120" show-overflow-tooltip />
                         <el-table-column prop="unit" label="单位" width="80" align="center" />
                         <el-table-column prop="quantity" label="本次入库数量" width="120" align="center" />
                     </el-table>
                 </div>
                 <div class="in-detail-footer">
-                    <el-button type="primary" @click="confirmInDetail">确定</el-button>
-                    <el-button @click="closeInDetailDrawer">取消</el-button>
+                    <el-button type="primary" @click="inDetailDrawerVisible = false">确定</el-button>
+                    <el-button @click="inDetailDrawerVisible = false">取消</el-button>
                 </div>
             </div>
         </el-drawer>
 
         <!-- 出库详情抽屉：从右向左打开，宽度 800px -->
-        <el-drawer title="出库详情" :visible.sync="outDetailDrawerVisible" direction="rtl" size="800px"
-            :before-close="closeOutDetailDrawer">
+        <el-drawer title="出库详情" :visible.sync="outDetailDrawerVisible" direction="rtl" size="800px" append-to-body
+            :close-on-click-modal="false" @closed="onOutDetailDrawerClosed">
             <div class="in-detail-drawer">
                 <div class="out-detail-info">
                     <div class="wrap">
@@ -189,15 +197,15 @@
                 <div class="in-detail-table-wrap">
                     <el-table :data="outDetailGoodsList" border header-cell-class-name="table-header-cell">
                         <el-table-column type="index" label="序号" width="60" align="center" />
-                        <el-table-column prop="productName" label="包装名称" min-width="120" show-overflow-tooltip />
+                        <el-table-column prop="packName" label="包装名称" min-width="120" show-overflow-tooltip />
                         <!-- <el-table-column prop="spec" label="规格" min-width="120" show-overflow-tooltip /> -->
                         <el-table-column prop="unit" label="单位" width="80" align="center" />
                         <el-table-column prop="quantity" label="本次出库数量" width="120" align="center" />
                     </el-table>
                 </div>
                 <div class="in-detail-footer">
-                    <el-button type="primary" @click="confirmOutDetail">确定</el-button>
-                    <el-button @click="closeOutDetailDrawer">取消</el-button>
+                    <el-button type="primary" @click="outDetailDrawerVisible = false">确定</el-button>
+                    <el-button @click="outDetailDrawerVisible = false">取消</el-button>
                 </div>
             </div>
         </el-drawer>
@@ -271,20 +279,25 @@
 </template>
 
 <script>
+const DETAIL_API = '/getForeignPackKuCun';
+const LOG_LIST_API = '/getForeignPackKuCunLogList';
+const LOG_DETAIL_API = '/getForeignPackKuCunLog';
+
 export default {
-    name: 'ProductInventoryDetail',
+    name: 'ExternalPackageFromCustomerDetail',
 
     data() {
         return {
-            productId: '',
+            kuCunId: '',
+            /** 出入库记录列表用 */
+            foreignPackId: '',
             productInfo: {
-                code: '4578786954',
-                name: '单层牙齿盘',
-                categoryName: '树脂盘',
-                spec: '98,A1,10mm',
-                unit: '盒',
-                stockQuantity: 200,
-                warnQuantity: 10
+                code: '',
+                name: '',
+                categoryName: '',
+                customerName: '',
+                unit: '',
+                stockQuantity: ''
             },
             activeTab: 'in',
             inQueryParams: {
@@ -292,24 +305,15 @@ export default {
                 pageNum: 1,
                 pageSize: 20
             },
-            inTotal: 4,
-            inTableData: [
-                { id: 1, inQuantity: 200, inDate: '2026-01-01', quantityBefore: 0, quantityAfter: 200 },
-                { id: 2, inQuantity: 200, inDate: '2026-01-01', quantityBefore: 200, quantityAfter: 400 },
-                { id: 3, inQuantity: 200, inDate: '2026-01-01', quantityBefore: 400, quantityAfter: 600 },
-                { id: 4, inQuantity: 200, inDate: '2026-01-01', quantityBefore: 600, quantityAfter: 800 }
-            ],
+            inTotal: 0,
+            inTableData: [],
             outQueryParams: {
                 orderNo: '',
                 pageNum: 1,
                 pageSize: 20
             },
-            outTotal: 3,
-            outTableData: [
-                { id: 1, outQuantity: 200, outDate: '2026-01-01', orderNo: '4578786954', customerName: '浙江求实医疗科技有限公司' },
-                { id: 2, outQuantity: 200, outDate: '2026-01-01', orderNo: '4578786954', customerName: '浙江求实医疗科技有限公司' },
-                { id: 3, outQuantity: 200, outDate: '2026-01-01', orderNo: '4578786954', customerName: '浙江求实医疗科技有限公司' }
-            ],
+            outTotal: 0,
+            outTableData: [],
             inDetailDrawerVisible: false,
             inDetailInfo: {
                 orderNo: '',
@@ -319,8 +323,7 @@ export default {
             outDetailDrawerVisible: false,
             outDetailInfo: {
                 orderNo: '',
-                outTime: '',
-                customerName: ''
+                outTime: ''
             },
             outDetailGoodsList: [],
             editInDrawerVisible: false,
@@ -334,17 +337,54 @@ export default {
     },
 
     created() {
-        this.productId = this.$route.query.id || '';
+        this.kuCunId = this.$route.query.id || '';
         this.loadProductInfo();
-    },
-
-    mounted() {
-        this.loadInList();
     },
 
     methods: {
         loadProductInfo() {
-            // TODO: 根据 this.productId 请求产品详情，赋值 productInfo
+            const id = this.kuCunId;
+            if (!id) {
+                this.$message.warning('缺少库存记录id');
+                return;
+            }
+            this.$api({
+                url: DETAIL_API,
+                method: 'post',
+                data: { id: String(id) }
+            })
+                .then(res => {
+                    if (res && res.code === 200 && res.data) {
+                        const d = res.data;
+                        const fp = d.foreign_pack || {};
+                        this.foreignPackId =
+                            d.foreignPackId != null
+                                ? String(d.foreignPackId)
+                                : fp.id != null
+                                    ? String(fp.id)
+                                    : '';
+                        const pt = d.productTitle;
+                        const ct = d.customerTitle;
+                        this.productInfo = {
+                            code: fp.packNo || '',
+                            name: fp.title || '',
+                            categoryName: pt != null && String(pt) !== '' ? String(pt) : '—',
+                            customerName: ct != null && String(ct) !== '' ? String(ct) : '—',
+                            unit: fp.unit || '',
+                            stockQuantity: d.num != null ? String(d.num) : '0'
+                        };
+                        if (this.activeTab === 'in') {
+                            this.loadInList();
+                        } else {
+                            this.loadOutList();
+                        }
+                    } else {
+                        this.$message.error((res && res.msg) || '获取详情失败');
+                    }
+                })
+                .catch(() => {
+                    this.$message.error('获取详情失败');
+                });
         },
         handleTabClick(tab) {
             if (tab.name === 'in') {
@@ -356,17 +396,58 @@ export default {
         tableRowClassName({ rowIndex }) {
             return rowIndex % 2 === 1 ? 'row-even' : '';
         },
-        // 入库记录
+        mapLogRow(it) {
+            return {
+                id: it.id,
+                kuNo: it.kuNo || '',
+                inQuantity: it.num != null ? String(it.num) : '',
+                inDate: it.created_at || '',
+                outQuantity: it.num != null ? String(it.num) : '',
+                outDate: it.created_at || '',
+                quantityBefore: it.yNum != null ? String(it.yNum) : '',
+                quantityAfter: it.xNum != null ? String(it.xNum) : ''
+            };
+        },
         loadInList() {
-            // TODO: 调用入库记录接口
+            if (!this.foreignPackId) {
+                this.inTableData = [];
+                this.inTotal = 0;
+                return;
+            }
+            this.$api({
+                url: LOG_LIST_API,
+                method: 'post',
+                data: {
+                    page: String(this.inQueryParams.pageNum),
+                    limit: String(this.inQueryParams.pageSize),
+                    keyword: this.inQueryParams.orderNo || '',
+                    type: '1',
+                    foreignPackId: this.foreignPackId
+                }
+            })
+                .then(res => {
+                    if (res && res.code === 200 && res.data) {
+                        const raw = Array.isArray(res.data.list) ? res.data.list : [];
+                        this.inTableData = raw.map(it => this.mapLogRow(it));
+                        this.inTotal = res.data.count != null ? res.data.count : raw.length;
+                    } else {
+                        this.inTableData = [];
+                        this.inTotal = 0;
+                    }
+                })
+                .catch(() => {
+                    this.inTableData = [];
+                    this.inTotal = 0;
+                });
         },
         handleInQuery() {
             this.inQueryParams.pageNum = 1;
             this.loadInList();
         },
         resetInQuery() {
-            this.$refs.inQueryForm && this.$refs.inQueryForm.resetFields();
+            this.inQueryParams.orderNo = '';
             this.inQueryParams.pageNum = 1;
+            this.$refs.inQueryForm && this.$refs.inQueryForm.resetFields();
             this.loadInList();
         },
         handleInSizeChange(val) {
@@ -377,29 +458,77 @@ export default {
             this.inQueryParams.pageNum = val;
             this.loadInList();
         },
-        handleInDetail(row) {
-            // TODO: 可根据 row.id 请求入库单详情接口，这里用示例数据
-            this.inDetailInfo = {
-                orderNo: '2026001',
-                inTime: '2026-01-05'
-            };
-            this.inDetailGoodsList = Array.from({ length: 10 }, () => ({
-                productName: '单层牙齿盘',
-                spec: '98,A1,10mm',
-                unit: '盒',
-                quantity: 10
-            }));
-            this.inDetailDrawerVisible = true;
+        fetchLogDetail(id) {
+            return this.$api({
+                url: LOG_DETAIL_API,
+                method: 'post',
+                data: { id: String(id) }
+            });
         },
-        closeInDetailDrawer(done) {
-            if (typeof done === 'function') {
-                done();
-            } else {
-                this.inDetailDrawerVisible = false;
+        /** 变动详情：data 可为多条包装明细数组 */
+        normalizeForeignPackLogDetail(data) {
+            if (Array.isArray(data)) {
+                if (!data.length) {
+                    return { header: {}, goods: [] };
+                }
+                const first = data[0];
+                const header = {
+                    kuNo: first.kuNo || '',
+                    time: first.created_at || ''
+                };
+                const goods = data.map(it => {
+                    const fp = it.foreign_pack || {};
+                    return {
+                        packName: fp.title || '',
+                        unit: fp.unit || '',
+                        quantity: it.num != null ? String(it.num) : ''
+                    };
+                });
+                return { header, goods };
             }
+            const d = data && typeof data === 'object' ? data : {};
+            const fp = d.foreign_pack || {};
+            return {
+                header: {
+                    kuNo: d.kuNo || '',
+                    time: d.created_at || ''
+                },
+                goods: [
+                    {
+                        packName: fp.title || '',
+                        unit: fp.unit || '',
+                        quantity: d.num != null ? String(d.num) : ''
+                    }
+                ]
+            };
         },
-        confirmInDetail() {
-            this.inDetailDrawerVisible = false;
+        handleInDetail(row) {
+            const id = row.id != null ? String(row.id) : '';
+            if (!id) {
+                this.$message.warning('缺少记录id');
+                return;
+            }
+            this.fetchLogDetail(id)
+                .then(res => {
+                    if (res && res.code === 200 && res.data != null) {
+                        const { header, goods } = this.normalizeForeignPackLogDetail(res.data);
+                        this.inDetailInfo = {
+                            orderNo: header.kuNo || '',
+                            inTime: header.time || ''
+                        };
+                        this.inDetailGoodsList = goods.length ? goods : [];
+                        this.inDetailDrawerVisible = true;
+                    } else {
+                        this.$message.error((res && res.msg) || '获取详情失败');
+                    }
+                })
+                .catch(() => {
+                    this.$message.error('获取详情失败');
+                });
+        },
+        onInDetailDrawerClosed() {
+            this.inDetailGoodsList = [];
+            this.inDetailInfo = { orderNo: '', inTime: '' };
         },
         handleInEdit(row) {
             this.editInDrawerTitle = '编辑入库';
@@ -413,7 +542,13 @@ export default {
         },
         getTodayStr() {
             const d = new Date();
-            return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+            return (
+                d.getFullYear() +
+                '-' +
+                String(d.getMonth() + 1).padStart(2, '0') +
+                '-' +
+                String(d.getDate()).padStart(2, '0')
+            );
         },
         closeEditInDrawer(done) {
             if (typeof done === 'function') {
@@ -426,7 +561,6 @@ export default {
             this.editInProductList = [];
         },
         confirmEditIn() {
-            // TODO: 提交编辑入库接口
             this.$message.success('保存成功');
             this.editInDrawerVisible = false;
             this.editInRecordId = null;
@@ -457,17 +591,46 @@ export default {
         deleteEditInProduct(index) {
             this.editInProductList.splice(index, 1);
         },
-        // 出库记录
         loadOutList() {
-            // TODO: 调用出库记录接口
+            if (!this.foreignPackId) {
+                this.outTableData = [];
+                this.outTotal = 0;
+                return;
+            }
+            this.$api({
+                url: LOG_LIST_API,
+                method: 'post',
+                data: {
+                    page: String(this.outQueryParams.pageNum),
+                    limit: String(this.outQueryParams.pageSize),
+                    keyword: this.outQueryParams.orderNo || '',
+                    type: '2',
+                    foreignPackId: this.foreignPackId
+                }
+            })
+                .then(res => {
+                    if (res && res.code === 200 && res.data) {
+                        const raw = Array.isArray(res.data.list) ? res.data.list : [];
+                        this.outTableData = raw.map(it => this.mapLogRow(it));
+                        this.outTotal = res.data.count != null ? res.data.count : raw.length;
+                    } else {
+                        this.outTableData = [];
+                        this.outTotal = 0;
+                    }
+                })
+                .catch(() => {
+                    this.outTableData = [];
+                    this.outTotal = 0;
+                });
         },
         handleOutQuery() {
             this.outQueryParams.pageNum = 1;
             this.loadOutList();
         },
         resetOutQuery() {
-            this.$refs.outQueryForm && this.$refs.outQueryForm.resetFields();
+            this.outQueryParams.orderNo = '';
             this.outQueryParams.pageNum = 1;
+            this.$refs.outQueryForm && this.$refs.outQueryForm.resetFields();
             this.loadOutList();
         },
         handleOutSizeChange(val) {
@@ -479,27 +642,32 @@ export default {
             this.loadOutList();
         },
         handleOutDetail(row) {
-            // TODO: 可根据 row.id 请求出库单详情接口，这里用示例数据（与列表行数据一致）
-            this.outDetailInfo = {
-                orderNo: row.orderNo || '2026001',
-                outTime: row.outDate || '2026-01-05',
-                customerName: row.customerName || '浙江求实医疗科技有限公司'
-            };
-            this.outDetailGoodsList = [
-                { productName: '单层牙齿盘', spec: '98,A1,10mm', unit: '盒', quantity: 10 },
-                { productName: '单层牙齿盘', spec: '98,A1,10mm', unit: '盒', quantity: 10 }
-            ];
-            this.outDetailDrawerVisible = true;
-        },
-        closeOutDetailDrawer(done) {
-            if (typeof done === 'function') {
-                done();
-            } else {
-                this.outDetailDrawerVisible = false;
+            const id = row.id != null ? String(row.id) : '';
+            if (!id) {
+                this.$message.warning('缺少记录id');
+                return;
             }
+            this.fetchLogDetail(id)
+                .then(res => {
+                    if (res && res.code === 200 && res.data != null) {
+                        const { header, goods } = this.normalizeForeignPackLogDetail(res.data);
+                        this.outDetailInfo = {
+                            orderNo: header.kuNo || '',
+                            outTime: header.time || ''
+                        };
+                        this.outDetailGoodsList = goods.length ? goods : [];
+                        this.outDetailDrawerVisible = true;
+                    } else {
+                        this.$message.error((res && res.msg) || '获取详情失败');
+                    }
+                })
+                .catch(() => {
+                    this.$message.error('获取详情失败');
+                });
         },
-        confirmOutDetail() {
-            this.outDetailDrawerVisible = false;
+        onOutDetailDrawerClosed() {
+            this.outDetailGoodsList = [];
+            this.outDetailInfo = { orderNo: '', outTime: '' };
         }
     }
 };

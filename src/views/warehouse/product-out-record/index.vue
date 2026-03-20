@@ -3,6 +3,12 @@
     <!-- 搜索/筛选区域 -->
     <div class="search-section">
       <el-form :model="queryParams" ref="queryForm" inline class="search-form" label-width="80px">
+        <el-form-item label="状态" prop="status">
+          <el-select v-model="queryParams.status" placeholder="请选择" style="width: 140px">
+            <el-option label="申请单" value="1" />
+            <el-option label="已完成" value="2" />
+          </el-select>
+        </el-form-item>
         <el-form-item label="关键词" prop="keyword">
           <el-input v-model="queryParams.keyword" placeholder="出库单号/订单编号/客户名称" clearable style="width: 260px" />
         </el-form-item>
@@ -54,8 +60,8 @@
     </div>
 
     <!-- 出库详情抽屉：从右到左打开，800px -->
-    <el-drawer title="出库详情" :visible.sync="detailDrawerVisible" direction="rtl" size="800px"
-      :before-close="closeDetailDrawer">
+    <el-drawer title="出库详情" :visible.sync="detailDrawerVisible" direction="rtl" size="800px" append-to-body
+      :close-on-click-modal="false" @closed="onDetailDrawerClosed">
       <div class="detail-drawer">
         <div class="detail-base-info">
           <div class="info-line">
@@ -65,7 +71,13 @@
             </div>
             <div class="info-item">
               <span class="label">出库时间：</span>
-              <span class="value">{{ detailInfo.outTime }}</span>
+              <span class="value">{{ detailInfo.outTime || '—' }}</span>
+            </div>
+          </div>
+          <div v-if="detailInfo.applyTime" class="info-line">
+            <div class="info-item">
+              <span class="label">申请时间：</span>
+              <span class="value">{{ detailInfo.applyTime }}</span>
             </div>
           </div>
           <div class="info-line">
@@ -80,7 +92,7 @@
           </div>
           <div class="info-line">
             <div class="info-item">
-              <span class="label">属地</span>
+              <span class="label">属地：</span>
               <span class="value">{{ detailInfo.region }}</span>
             </div>
 
@@ -154,10 +166,10 @@
           <div class="section-title"><span class="section-bar"></span><span>出库质检单</span></div>
           <div class="ship-info">
             <div class="ship-item">
-              <span class="label">出库质检单：</span>
+              <span class="label">质检图片：</span>
               <div class="ship-photos">
-                <template v-if="detailInfo.shipPhotoUrls && detailInfo.shipPhotoUrls.length">
-                  <div v-for="(url, idx) in detailInfo.shipPhotoUrls" :key="idx" class="ship-photo-box">
+                <template v-if="detailInfo.qualityImageUrls && detailInfo.qualityImageUrls.length">
+                  <div v-for="(url, idx) in detailInfo.qualityImageUrls" :key="'qc-' + idx" class="ship-photo-box">
                     <img :src="url" alt="" />
                   </div>
                 </template>
@@ -179,30 +191,30 @@
 </template>
 
 <script>
+/** 与产品出库申请页一致：列表、详情接口相同 */
+const LIST_API = '/getStaffOutboundOrderList';
+const DETAIL_API = '/getStaffOutboundOrder';
+
 export default {
   name: 'WarehouseProductOutRecord',
   data() {
     return {
       queryParams: {
+        /** 出库记录默认查已完成 */
+        status: '2',
         keyword: '',
         dateRange: null,
         pageNum: 1,
         pageSize: 20
       },
-      total: 295,
+      total: 0,
       tableHeight: 0,
-      tableData: Array.from({ length: 10 }, () => ({
-        outNo: '4521414',
-        customerName: '浙江求实医疗科技有限公司',
-        region: '国内',
-        receiveAddress: '浙江省嘉兴市嘉善县天凝镇天凝大道666号',
-        orderNo: '2026001-999',
-        outTime: '2026-01-05'
-      })),
+      tableData: [],
       detailDrawerVisible: false,
       detailInfo: {
         outNo: '',
         outTime: '',
+        applyTime: '',
         orderNo: '',
         region: '',
         customerName: '',
@@ -210,7 +222,8 @@ export default {
         receiver: '',
         receiverPhone: '',
         logisticsNo: '',
-        shipPhotoUrls: []
+        shipPhotoUrls: [],
+        qualityImageUrls: []
       },
       detailProducts: [],
       detailOutsourcedProducts: []
@@ -246,8 +259,11 @@ export default {
       this.loadList();
     },
     resetQuery() {
-      this.$refs.queryForm.resetFields();
+      this.queryParams.status = '2';
+      this.queryParams.keyword = '';
+      this.queryParams.dateRange = null;
       this.queryParams.pageNum = 1;
+      this.$refs.queryForm && this.$refs.queryForm.resetFields();
       this.loadList();
     },
     handleSizeChange(val) {
@@ -262,37 +278,104 @@ export default {
       // TODO: 导出
       this.$message.info('导出');
     },
-    handleViewDetail(row) {
-      // TODO: 可根据 row.id 请求出库详情，这里用示例数据
-      this.detailInfo = {
-        outNo: '2026001',
-        outTime: row.outTime || '2026-01-05',
-        orderNo: row.orderNo || '2026001-999',
-        region: row.region || '国内',
-        customerName: row.customerName || '浙江求实医疗科技有限公司',
-        receiveAddress: row.receiveAddress || '浙江省嘉兴市嘉善县天凝镇天凝大道666号',
-        receiver: '郭菲菲',
-        receiverPhone: '15931263178',
-        logisticsNo: '789456456465465',
-        shipPhotoUrls: []
-      };
-      this.detailProducts = Array.from({ length: 5 }, () => ({
-        productName: '单层牙齿盘',
-        spec: '98,A1,10mm',
-        unit: '盒',
-        quantity: 10
-      }));
-      this.detailOutsourcedProducts = Array.from({ length: 5 }, () => ({
-        productName: '单层牙齿盘',
-        spec: '98,A1,10mm',
-        unit: '盒',
-        quantity: 10
-      }));
-      this.detailDrawerVisible = true;
+    /** 详情里图片：数组或英文逗号分隔字符串 */
+    normalizeMediaList(val) {
+      if (val == null || val === '') return [];
+      if (Array.isArray(val)) return val.filter(Boolean);
+      if (typeof val === 'string') {
+        return val
+          .split(',')
+          .map(s => s.trim())
+          .filter(Boolean);
+      }
+      return [];
     },
-    closeDetailDrawer(done) {
-      if (typeof done === 'function') done();
-      else this.detailDrawerVisible = false;
+    mapProductRows(list) {
+      if (!Array.isArray(list)) return [];
+      return list.map(it => {
+        const p = it.product || {};
+        const inv = it.inventory || {};
+        return {
+          productName: p.title || '',
+          spec: inv.keyVals || inv.sn || '',
+          unit: p.unit || '',
+          quantity: it.num != null ? String(it.num) : ''
+        };
+      });
+    },
+    mapForeignProductRows(list) {
+      if (!Array.isArray(list)) return [];
+      return list.map(it => {
+        const fp = it.foreign_product || {};
+        return {
+          productName: fp.title || '外购产品',
+          spec: fp.keyVals || '',
+          unit: fp.unit || '',
+          quantity: it.num != null ? String(it.num) : ''
+        };
+      });
+    },
+    handleViewDetail(row) {
+      const id = row.id != null ? String(row.id) : '';
+      if (!id) {
+        this.$message.warning('缺少出库单id');
+        return;
+      }
+      const loading = this.$loading({ lock: true, text: '加载中...', spinner: 'el-icon-loading' });
+      this.$api({
+        url: DETAIL_API,
+        method: 'post',
+        data: { id }
+      })
+        .then(res => {
+          loading.close();
+          if (res && res.code === 200 && res.data) {
+            const d = res.data;
+            const addr = d.customerAddress || {};
+            const outTimeRaw = d.sendTime || d.updated_at || d.created_at || '';
+            this.detailInfo = {
+              outNo: d.orderNo || '',
+              outTime: outTimeRaw ? String(outTimeRaw).slice(0, 19) : '',
+              applyTime: d.created_at ? String(d.created_at).slice(0, 19) : '',
+              orderNo: d.staffOrderNo || '',
+              region: d.customerTerritory || '',
+              customerName: d.customerTitle || '',
+              receiveAddress: addr.address || '',
+              receiver: addr.name || '',
+              receiverPhone: addr.phone || '',
+              logisticsNo: d.sendNo != null && d.sendNo !== '' ? String(d.sendNo) : '',
+              shipPhotoUrls: this.normalizeMediaList(d.sendImages),
+              qualityImageUrls: this.normalizeMediaList(d.qualityImages)
+            };
+            this.detailProducts = this.mapProductRows(d.productJson);
+            this.detailOutsourcedProducts = this.mapForeignProductRows(d.foreignProductJson);
+            this.detailDrawerVisible = true;
+          } else {
+            this.$message.error((res && res.msg) || '获取详情失败');
+          }
+        })
+        .catch(() => {
+          loading.close();
+          this.$message.error('获取详情失败');
+        });
+    },
+    onDetailDrawerClosed() {
+      this.detailProducts = [];
+      this.detailOutsourcedProducts = [];
+      this.detailInfo = {
+        outNo: '',
+        outTime: '',
+        applyTime: '',
+        orderNo: '',
+        region: '',
+        customerName: '',
+        receiveAddress: '',
+        receiver: '',
+        receiverPhone: '',
+        logisticsNo: '',
+        shipPhotoUrls: [],
+        qualityImageUrls: []
+      };
     }
   }
 };
