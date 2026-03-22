@@ -1073,7 +1073,7 @@ export default {
       gap: 10px;
 
       .field-label {
-        font-size: 16px;
+        font-size: 20px;
         color: #1e262e;
         font-weight: 400;
         line-height: 1.4;
@@ -1084,6 +1084,10 @@ export default {
           color: #ff0000;
           margin-left: 4px;
         }
+      }
+
+      /deep/ .el-input__inner {
+        font-size: 20px;
       }
 
       &.textarea-field {
@@ -1106,16 +1110,9 @@ export default {
         .el-input,
         .el-textarea {
           width: 100%;
-          .el-input__inner,
-          .el-textarea__inner {
-            border: 1px solid #d4d4d4;
-            border-radius: 6px;
-            font-size: 16px;
-            color: #1e262e;
-            height: 48px;
-            line-height: 48px;
-            background: #fbfbfb;
-            padding: 0 16px;
+          /deep/ .el-input__inner,
+          /deep/ .el-textarea__inner {
+            font-size: 20px;
 
             &::placeholder {
               color: #999;
@@ -1159,7 +1156,7 @@ export default {
         }
 
         .el-upload__tip {
-          font-size: 12px;
+          font-size: 20px;
           color: #999;
           margin-top: 8px;
           text-align: left;
@@ -1167,7 +1164,7 @@ export default {
 
         .el-button--small {
           padding: 8px 20px;
-          font-size: 14px;
+          font-size: 20px;
           border-radius: 4px;
         }
 
@@ -1193,8 +1190,8 @@ export default {
             margin-right: 40px;
             margin-bottom: 0;
 
-            .el-radio__label {
-              font-size: 16px;
+            /deep/ .el-radio__label {
+              font-size: 20px;
               color: #1e262e;
               padding-left: 8px;
             }
@@ -1226,7 +1223,7 @@ export default {
     color: #ffffff;
     border: none;
     border-radius: 6px;
-    font-size: 16px;
+    font-size: 20px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;

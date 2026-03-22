@@ -269,11 +269,11 @@ export default {
 
 .form-label {
   display: block;
-  font-size: 16px;
+  font-size: 20px;
   color: #1f1f1f;
   margin-right: 15px;
   font-weight: 400;
-  width: 120px;
+  width: 170px;
   text-align: right;
 
   .required {
@@ -288,7 +288,7 @@ export default {
   padding: 0 15px;
   border: 1px solid #ddd;
   border-radius: 4px;
-  font-size: 14px;
+  font-size: 20px;
   color: #1f1f1f;
   box-sizing: border-box;
 
@@ -308,7 +308,7 @@ export default {
   background: #ec6a2b;
   border-radius: 6px 6px 6px 6px;
 
-  font-size: 20px;
+  font-size: 22px;
   color: #ffffff;
 
   &:hover {
@@ -339,7 +339,7 @@ export default {
 .new-user-text {
   text-align: center;
   color: #1f1f1f;
-  font-size: 16px;
+  font-size: 24px;
   margin: 20px 0 40px 0;
 }
 

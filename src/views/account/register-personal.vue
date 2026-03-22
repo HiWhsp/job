@@ -270,7 +270,7 @@ export default {
   padding: 0 12px;
   border: 1px solid #ddd;
   border-radius: 4px;
-  font-size: 14px;
+  font-size: 20px;
   color: #1e262e;
   box-sizing: border-box;
   background: #f5f5f5;
@@ -341,6 +341,7 @@ export default {
 
   .form-input {
     width: 100%;
+    font-size: 20px;
   }
 
   .submit-btn {

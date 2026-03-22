@@ -563,6 +563,7 @@ page {
 
         display: flex;
         align-items: center;
+        font-size: 20px;
 
         .title-1 {
           width: 100px;

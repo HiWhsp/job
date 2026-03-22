@@ -192,7 +192,7 @@ export default {
         }
 
         .desc {
-          font-size: 14px;
+          font-size: 18px;
           font-family: Poppins, Poppins;
           font-weight: 500;
           color: #5e5e5e;
@@ -345,6 +345,7 @@ export default {
 
   .beian {
     text-align: center;
+    font-size: 14px;
   }
 
   a {

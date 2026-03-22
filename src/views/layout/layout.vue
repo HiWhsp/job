@@ -378,29 +378,29 @@ button {
 
   // 输入框
   body .el-input__inner {
-    font-size: 14px;
+    font-size: 20px;
     text-align: left;
   }
 
   body .el-input__inner::-webkit-input-placeholder {
-    font-size: 14px;
+    font-size: 20px;
   }
 
   body .el-textarea__inner::-webkit-input-placeholder {
-    font-size: 14px;
+    font-size: 20px;
   }
 
   body .el-textarea__inner {
-    font-size: 14px;
+    font-size: 20px;
   }
 
   .el-upload__tip {
-    font-size: 14px !important;
+    font-size: 20px !important;
   }
 
   // 下拉选
   .el-select-dropdown__empty {
-    font-size: 12px;
+    font-size: 20px;
     height: 32px;
     line-height: 32px;
   }
@@ -413,7 +413,7 @@ button {
     line-height: 32px !important;
     height: 32px !important;
     padding-left: 10px !important;
-    font-size: 14px !important;
+    font-size: 20px !important;
   }
 
   .el-input__suffix {
@@ -445,7 +445,7 @@ button {
   }
 
   .el-checkbox__label {
-    font-size: 14px !important;
+    font-size: 20px !important;
   }
 
   // 空列表
@@ -458,7 +458,7 @@ button {
   }
 
   .el-empty__description p {
-    font-size: 14px !important;
+    font-size: 20px !important;
   }
 
   // 分页
@@ -470,7 +470,7 @@ button {
 
   .el-pagination button,
   .el-pagination span:not([class*="suffix"]) {
-    font-size: 12px !important;
+    font-size: 20px !important;
   }
 
   .el-pagination.is-background .btn-next,
@@ -479,7 +479,7 @@ button {
     width: 24px;
     height: 24px;
     line-height: 24px;
-    font-size: 12px !important;
+    font-size: 20px !important;
   }
 
   // 提示框
@@ -489,11 +489,11 @@ button {
   }
 
   .el-icon-error:before {
-    font-size: 14px !important;
+    font-size: 20px !important;
   }
 
   .el-message__content {
-    font-size: 14px !important;
+    font-size: 20px !important;
   }
 
   .el-loading-spinner i {
@@ -501,7 +501,7 @@ button {
   }
 
   .el-loading-text {
-    font-size: 14px !important;
+    font-size: 20px !important;
     margin-top: 10px !important;
   }
 

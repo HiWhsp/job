@@ -2379,7 +2379,7 @@ export default {
                   align-items: center;
                   flex-wrap: wrap;
                   gap: 10px;
-                  font-size: 18px;
+                  font-size: 20px;
                   color: #242424;
                   font-family: Poppins, Poppins;
 
@@ -3050,7 +3050,7 @@ export default {
         // text-overflow: ellipsis;
         overflow: hidden;
         font-weight: 400;
-        font-size: 16px;
+        font-size: 20px;
         color: #1f1f1f;
       }
 

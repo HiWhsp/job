@@ -2118,7 +2118,7 @@ export default {
       padding: 0 12px;
       border: 1px solid #ddd;
       border-radius: 4px;
-      font-size: 14px;
+      font-size: 20px;
       color: #1f1f1f;
       box-sizing: border-box;
 

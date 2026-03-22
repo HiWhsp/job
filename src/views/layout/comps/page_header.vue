@@ -476,6 +476,7 @@ export default {
             height: 28px;
             margin-right: 8px;
           }
+          font-size: 18px;
         }
 
         .u-line {

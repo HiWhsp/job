@@ -626,6 +626,7 @@ export default {
 
         .form-input {
           flex: 1;
+          font-size: 20px;
 
           .el-input,
           .el-textarea {
@@ -634,6 +635,7 @@ export default {
 
           /deep/ .el-input__inner {
             height: 50px;
+            font-size: 20px;
           }
 
           .el-textarea__inner {

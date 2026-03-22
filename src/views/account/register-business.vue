@@ -782,7 +782,7 @@ export default {
   padding: 0 12px;
   border: 1px solid #ddd;
   border-radius: 4px;
-  font-size: 14px;
+  font-size: 20px;
   color: #1e262e;
   box-sizing: border-box;
 
@@ -936,14 +936,14 @@ export default {
   width: 100%;
   font-family: Poppins, Poppins;
   font-weight: 400;
-  font-size: 14px;
+  font-size: 20px;
   color: #1f1f1f;
 }
 
 /deep/ .el-input {
   .el-input__inner {
     height: 40px;
-    font-size: 14px;
+    font-size: 20px;
     color: #1e262e;
     border: 1px solid #ddd;
     border-radius: 4px;
