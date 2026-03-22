@@ -468,16 +468,52 @@ export default {
       });
       return result;
     },
+    /** 在分类树中查找节点 id 的完整路径（级联回显子分类必须用 [父id, 子id, ...]） */
+    findPathInTree(nodes, targetId, path = []) {
+      if (targetId == null || targetId === '') return [];
+      if (!Array.isArray(nodes)) return [];
+      for (const node of nodes) {
+        const p = [...path, node.id];
+        if (node.id == targetId) return p;
+        const childs = node.child || node.childs;
+        if (Array.isArray(childs) && childs.length) {
+          const found = this.findPathInTree(childs, targetId, p);
+          if (found.length) return found;
+        }
+      }
+      return [];
+    },
     loadDetail() {
       if (!this.editId) return;
-      this.$api({ url: '/getProductInfo', method: 'post', data: { id: this.editId } })
+      const loadProductInfo = () => {
+        this.$api({ url: '/getProductInfo', method: 'post', data: { id: this.editId } })
+          .then(res => {
+            if (res && res.code === 200 && res.data) this.fillFormFromDetail(res.data);
+          })
+          .catch(() => this.$message.error('获取产品详情失败'));
+      };
+      const tree = this.vuex_product_cate_list;
+      if (Array.isArray(tree) && tree.length) {
+        loadProductInfo();
+        return;
+      }
+      this.$api({ url: '/getProductCateList', method: 'post', data: {} })
         .then(res => {
-          if (res && res.code === 200 && res.data) this.fillFormFromDetail(res.data);
+          if (res && res.code === 200 && res.data) {
+            this.$store.commit('set_vuex_product_cate_list', res.data);
+          }
+          loadProductInfo();
         })
-        .catch(() => this.$message.error('获取产品详情失败'));
+        .catch(() => loadProductInfo());
     },
     fillFormFromDetail(data) {
-      const ids = data.cateId != null ? [data.cateId] : (Array.isArray(data.categoryIds) ? data.categoryIds : []);
+      const rawCateId = data.cateId;
+      const catePath = this.findPathInTree(this.vuex_product_cate_list || [], rawCateId);
+      const ids = catePath.length
+        ? catePath
+        : (rawCateId != null && rawCateId !== ''
+          ? [rawCateId]
+          : (Array.isArray(data.categoryIds) ? data.categoryIds : []));
       if (data.id != null && data.id !== '') this.productId = String(data.id);
       this.form = {
         title: data.title ?? '',

@@ -2,11 +2,11 @@
   <div class="view-wrap product-add-page">
     <div class="form-card">
       <div class="page-title">{{ editId ? '编辑原料' : '新增原料' }}</div>
-      <el-form ref="formRef" :model="form" label-width="140px" class="product-form">
+      <el-form ref="formRef" :model="form" :rules="formRules" label-width="140px" class="product-form">
         <el-form-item label="原料名称" prop="name">
           <el-input v-model="form.name" placeholder="请输入" clearable />
         </el-form-item>
-        <el-form-item label="所属分类" prop="categoryId">
+        <el-form-item label="所属分类" prop="categoryIds">
           <el-cascader
             v-model="form.categoryIds"
             :options="internalMaterialCateCascaderOptions"
@@ -44,7 +44,7 @@
         <el-form-item label="储存条件" prop="expiry">
           <el-input v-model="form.expiry" placeholder="请输入" clearable />
         </el-form-item>
-        <el-form-item label="产品详情" prop="detail">
+        <el-form-item label="产品详情" prop="content">
           <quill-editor
             v-model="form.content"
             class="quill-editor-wrap"
@@ -162,6 +162,11 @@
                   <el-input v-model="row.code" placeholder="请输入编码" size="small" clearable />
                 </template>
               </el-table-column>
+              <el-table-column label="批次" min-width="180">
+                <template slot-scope="{ row }">
+                  <el-input v-model="row.batchNo" placeholder="请输入批次" size="small" clearable />
+                </template>
+              </el-table-column>
               <el-table-column label="库存" min-width="160">
                 <template slot-scope="{ row }">
                   <el-input v-model="row.stock" placeholder="库存" size="small" clearable />
@@ -182,6 +187,17 @@
 
 <script>
 import { mapState } from "vuex";
+
+/** 富文本是否视为空（去标签与空白后无有效字符） */
+function isQuillEmpty(html) {
+  if (!html || typeof html !== "string") return true;
+  const text = html
+    .replace(/<[^>]+>/g, "")
+    .replace(/&nbsp;/gi, " ")
+    .replace(/\s+/g, "")
+    .trim();
+  return !text;
+}
 
 export default {
   name: "InternalMaterialAdd",
@@ -244,7 +260,52 @@ export default {
         expiry: "",
         unit: "",
         detail: "",
+        content: "",
         materialType: "1" // 1 原料，2 外购包装
+      },
+      formRules: {
+        name: [{ required: true, message: "请输入原料名称", trigger: "blur" }],
+        categoryIds: [
+          {
+            required: true,
+            validator: (rule, value, callback) => {
+              if (!value || !Array.isArray(value) || value.length === 0) {
+                callback(new Error("请选择所属分类"));
+              } else {
+                callback();
+              }
+            },
+            trigger: "change"
+          }
+        ],
+        productCategoryIds: [
+          {
+            required: true,
+            validator: (rule, value, callback) => {
+              if (!value || !Array.isArray(value) || value.length === 0) {
+                callback(new Error("请选择用于产品大类"));
+              } else {
+                callback();
+              }
+            },
+            trigger: "change"
+          }
+        ],
+        unit: [{ required: true, message: "请输入单位", trigger: "blur" }],
+        expiry: [{ required: true, message: "请输入储存条件", trigger: "blur" }],
+        content: [
+          {
+            required: true,
+            validator: (rule, value, callback) => {
+              if (isQuillEmpty(value)) {
+                callback(new Error("请填写产品详情"));
+              } else {
+                callback();
+              }
+            },
+            trigger: "blur"
+          }
+        ]
       },
       quillOptions: {
         theme: 'snow',
@@ -660,6 +721,26 @@ export default {
     handleSubmit() {
       this.$refs.formRef.validate(valid => {
         if (!valid) return;
+        // 提交前根据规格组刷新规格列表，并校验规格与每行编码、库存
+        this.buildSpecList();
+        const list = this.specList || [];
+        if (!list.length) {
+          this.$message.warning("请配置产品规格并生成至少一条规格列表");
+          return;
+        }
+        for (let i = 0; i < list.length; i++) {
+          const row = list[i];
+          const code = row.code != null ? String(row.code).trim() : "";
+          const stock = row.stock;
+          if (!code) {
+            this.$message.warning(`规格列表第 ${i + 1} 行请填写编码`);
+            return;
+          }
+          if (stock === "" || stock === null || stock === undefined) {
+            this.$message.warning(`规格列表第 ${i + 1} 行请填写库存`);
+            return;
+          }
+        }
         // 所属分类使用级联最后一级 id 作为 categoryId
         const ids = this.form.categoryIds || [];
         const categoryId = ids.length ? String(ids[ids.length - 1]) : this.form.categoryId;

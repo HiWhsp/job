@@ -7,7 +7,7 @@
           <el-form-item label="关键词">
             <el-input
               v-model="queryParams.keyword"
-              placeholder="包装名称"
+              placeholder="产品名称/编码"
               clearable
               style="width: 260px"
             />
@@ -99,8 +99,12 @@
       </div>
     </div>
 
-    <!-- 查看详情 Drawer -->
-    <detail-drawer :visible.sync="detailDrawerVisible" :detail-row="detailRow" />
+    <!-- 查看详情：外购产品专用，拉取 getForeignProduct -->
+    <external-product-detail-drawer
+      :visible.sync="detailDrawerVisible"
+      :product-id="detailProductId"
+      :row-summary="detailRowSummary"
+    />
 
     <!-- 删除确认弹框 -->
     <delete-dialog
@@ -113,14 +117,14 @@
 </template>
     
 <script>
-import DetailDrawer from "../components/detail-drawer.vue";
+import ExternalProductDetailDrawer from "./components/external-product-detail-drawer.vue";
 import DeleteDialog from "../components/delete-dialog.vue";
 
 export default {
   name: "ExternalProductList",
 
   components: {
-    DetailDrawer,
+    ExternalProductDetailDrawer,
     DeleteDialog
   },
   data() {
@@ -134,7 +138,8 @@ export default {
       tableHeight: 0,
       tableData: [],
       detailDrawerVisible: false,
-      detailRow: null,
+      detailProductId: null,
+      detailRowSummary: null,
       deleteDialogVisible: false,
       rowToDelete: null
     };
@@ -203,7 +208,8 @@ export default {
       this.loadList();
     },
     handleView(row) {
-      this.detailRow = row;
+      this.detailProductId = row && row.id != null ? row.id : null;
+      this.detailRowSummary = row || null;
       this.detailDrawerVisible = true;
     },
     handleEdit(row) {

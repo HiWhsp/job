@@ -182,8 +182,8 @@
             <el-table-column label="库存状态" width="90" align="center">
               <template slot-scope="{ row }">
                 <span
-                  :class="{ 'stock-out': row.stockStatus === '缺货' }"
-                >{{ row.stockStatus || '—' }}</span>
+                  :class="{ 'stock-out': row.stockQty && row.stockQty == 0 }"
+                >{{ row.stockQty && row.stockQty == 0 ? '缺货' : '有货' }}</span>
               </template>
             </el-table-column>
             <el-table-column label="操作" width="80" align="center" fixed="right">
@@ -273,7 +273,7 @@
             <el-table-column label="库存状态" width="90" align="center">
               <template slot-scope="{ row }">
                 <span
-                  :class="{ 'stock-out': row.stockStatus === '缺货' }"
+                  :class="{ 'stock-out': row.stockStatus && row.stockStatus == '缺货' }"
                 >{{ row.stockStatus || '—' }}</span>
               </template>
             </el-table-column>

@@ -63,9 +63,10 @@
           <el-table-column prop="cateTitle" label="所属分类" min-width="100" show-overflow-tooltip />
           <el-table-column prop="unit" label="单位" min-width="80" show-overflow-tooltip />
           <el-table-column prop="updated_at" label="更新时间" min-width="110" show-overflow-tooltip />
-          <el-table-column label="操作" width="180" align="center" fixed="right">
+          <el-table-column label="操作" width="240" align="center" fixed="right">
             <template slot-scope="{ row }">
               <span class="row-acts">
+                <span class="row-act" @click="handleView(row)">查看详情</span>
                 <span class="row-act" @click="handleEdit(row)">编辑</span>
                 <span class="row-act row-act-danger" @click="handleDelete(row)">删除</span>
               </span>
@@ -85,14 +86,22 @@
         </div>
       </div>
     </div>
+
+    <!-- 产品详情：右侧抽屉（与产品指导价格等页一致，自右向左展开） -->
+    <product-detail-drawer :visible.sync="detailDrawerVisible" :product-id="detailProductId" />
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex';
+import ProductDetailDrawer from './components/product-detail-drawer.vue';
 
 export default {
   name: 'ProductList',
+
+  components: {
+    ProductDetailDrawer
+  },
 
   computed: {
     ...mapState(['vuex_product_cate_list']),
@@ -118,6 +127,8 @@ export default {
 
   data() {
     return {
+      detailDrawerVisible: false,
+      detailProductId: null,
       queryParams: {
         keyword: '',
         categoryIds: [], // 级联选中的路径 [一级id, 二级id, ...]，请求时取最后一项作为 categoryId
@@ -203,7 +214,9 @@ export default {
       this.loadList();
     },
     resetQuery() {
-      this.$refs.queryForm.resetFields();
+      this.$refs['queryForm'].resetFields();
+      this.queryParams.keyword = '';
+      this.queryParams.categoryIds = [];
       this.queryParams.pageNum = 1;
       this.loadList();
     },
@@ -222,8 +235,13 @@ export default {
       }
     },
     handleView(row) {
-      // TODO: 查看产品详情（弹框或跳转）
-      this.$message.info('查看：' + (row.title || row.name));
+      const id = row && row.id;
+      if (id == null || id === '') {
+        this.$message.warning('缺少产品 id');
+        return;
+      }
+      this.detailProductId = id;
+      this.detailDrawerVisible = true;
     },
     handleEdit(row) {
       // TODO: 编辑产品，如 this.$router.push('/manager/product-edit?id=' + row.id)

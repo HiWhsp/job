@@ -70,8 +70,12 @@
       </div>
     </div>
 
-    <!-- 查看详情 Drawer -->
-    <detail-drawer :visible.sync="detailDrawerVisible" :detail-row="detailRow" />
+    <!-- 查看详情：原料专用抽屉，拉取 getMaterialInfo 展示富文本与规格库存 -->
+    <material-detail-drawer
+      :visible.sync="detailDrawerVisible"
+      :material-id="detailMaterialId"
+      :row-summary="detailRowSummary"
+    />
 
     <!-- 删除确认弹框 -->
     <delete-dialog
@@ -85,14 +89,14 @@
 
 <script>
 import { mapState } from "vuex";
-import DetailDrawer from "../components/detail-drawer.vue";
+import MaterialDetailDrawer from "./components/material-detail-drawer.vue";
 import DeleteDialog from "../components/delete-dialog.vue";
 
 export default {
   name: "InternalMaterialList",
 
   components: {
-    DetailDrawer,
+    MaterialDetailDrawer,
     DeleteDialog
   },
   data() {
@@ -107,7 +111,8 @@ export default {
       tableHeight: 0,
       tableData: [],
       detailDrawerVisible: false,
-      detailRow: null,
+      detailMaterialId: null,
+      detailRowSummary: null,
       deleteDialogVisible: false,
       rowToDelete: null
     };
@@ -216,7 +221,8 @@ export default {
       }
     },
     handleView(row) {
-      this.detailRow = row;
+      this.detailMaterialId = row && row.id != null ? row.id : null;
+      this.detailRowSummary = row || null;
       this.detailDrawerVisible = true;
     },
     handleEdit(row) {

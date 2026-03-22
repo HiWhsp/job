@@ -146,10 +146,20 @@
           <el-table-column prop="introducer" label="客户引入人" min-width="100" show-overflow-tooltip />
           <el-table-column prop="manager" label="客户负责人" min-width="100" show-overflow-tooltip />
           <el-table-column prop="other" label="其他" min-width="120" show-overflow-tooltip />
-          <el-table-column label="操作" width="220" align="center" fixed="right">
+          <el-table-column prop="status" label="审核状态" width="100" align="center">
+            <template slot-scope="{ row }">
+              <el-tag v-if="row.status == '1'" type="info" size="small">待审核</el-tag>
+              <el-tag v-else-if="row.status == '2'" type="danger" size="small">审核未通过</el-tag>
+              <el-tag v-else-if="row.status == '-1'" type="success" size="small">已审核</el-tag>
+              <span v-else>—</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="updateTime" label="更新时间" width="180" align="center" />
+          <el-table-column label="操作" width="260" align="left" fixed="right">
             <template slot-scope="{ row }">
               <span class="row-acts">
                 <span class="row-act" @click="handleView(row)">查看详情</span>
+                <span class="row-act" v-if="row.status == '1'" @click="handleAudit(row)">审核</span>
                 <span class="row-act" @click="handleEdit(row)">编辑</span>
                 <span class="row-act" @click="handleDelete(row)">删除</span>
               </span>
@@ -173,6 +183,9 @@
     <!-- 删除确认弹框 -->
     <delete-dialog :visible.sync="deleteDialogVisible" @confirm="handleDeleteConfirm" />
 
+    <!-- 审核弹框（与 manager 客户审核一致） -->
+    <audit-dialog :visible.sync="auditDialogVisible" @confirm="handleAuditConfirm" />
+
     <!-- 查看详情 Drawer（从右往左展开） -->
     <detail-drawer :visible.sync="detailDrawerVisible" :detail-row="detailRow" :show-audit-section="true" />
   </div>
@@ -182,13 +195,15 @@
 import { mapState } from "vuex";
 import DeleteDialog from "./components/delete-dialog.vue";
 import DetailDrawer from "./components/detail-drawer.vue";
+import AuditDialog from "@/views/manager/components/audit-dialog.vue";
 
 export default {
   name: "SalesCustomer",
 
   components: {
     DeleteDialog,
-    DetailDrawer
+    DetailDrawer,
+    AuditDialog
   },
 
   computed: {
@@ -213,16 +228,18 @@ export default {
       },
       total: 0,
       tableHeight: 0,
-      auditTab: "delivery",
+      auditTab: "pending",
       auditTabs: [
-        { label: "待审核", value: "delivery" },
-        { label: "已审核", value: "delivered" },
+        { label: "待审核", value: "pending" },
+        { label: "已审核", value: "audited" },
         { label: "审核未通过", value: "rejected" }
       ],
       tableData: [],
       selectedRows: [],
       deleteDialogVisible: false,
       rowToDelete: null,
+      auditDialogVisible: false,
+      rowToAudit: null,
       detailDrawerVisible: false,
       detailRow: null
     };
@@ -281,10 +298,17 @@ export default {
         receiverPhone: addressObj.phone ?? "",
         introducer: otherObj.introducer ?? "",
         manager: otherObj.superintendent ?? "",
-        other: otherObj.other ?? ""
+        other: otherObj.other ?? "",
+        updateTime: item.updated_at || item.updateTime || ""
       };
     },
     loadList() {
+      // 与列表「审核状态」列一致：1待审核，2审核未通过，-1已审核
+      const statusMap = {
+        pending: "1",
+        audited: "2",
+        rejected: "-1"
+      };
       const params = {
         page: String(this.queryParams.pageNum),
         limit: String(this.queryParams.pageSize),
@@ -293,7 +317,7 @@ export default {
         region: this.queryParams.region || "",
         attributeA: this.queryParams.attributeA || "",
         attributeB: this.queryParams.attributeB || "",
-        status: this.auditTab || ""
+        status: statusMap[this.auditTab] || ""
       };
       this.$api({
         url: "/getCustomerList",
@@ -344,13 +368,18 @@ export default {
         return {};
       }
     },
-    /** 将详情接口返回映射为详情抽屉展示（与 manager 一致：territory 文案、paymentJson/addressJson/otherJson 解析） */
+    /** 将详情接口返回映射为详情抽屉展示（与 manager 审核详情一致：含审核 log） */
     mapDetailApiToDrawer(data) {
       const payment = this._parseJsonField(data.paymentJson);
       const address = this._parseJsonField(data.addressJson);
       const other = this._parseJsonField(data.otherJson);
       const territoryText =
         data.territory === 1 ? "国内" : data.territory === 2 ? "国外" : (data.territory ?? "");
+      const statusNum = data.status;
+      let auditStatus = "";
+      if (statusNum === 1) auditStatus = "pending";
+      else if (statusNum === 2) auditStatus = "rejected";
+      else if (statusNum === -1) auditStatus = "audited";
       return {
         ...data,
         territory: territoryText,
@@ -363,7 +392,9 @@ export default {
         receiverPhone: address.phone ?? "",
         introducer: other.introducer ?? "",
         manager: other.superintendent ?? "",
-        other: other.other ?? ""
+        other: other.other ?? "",
+        auditStatus,
+        updateTime: data.updated_at || data.updateTime || ""
       };
     },
     /** 将 manager 详情格式转为本页详情抽屉所用字段（code/name/attrA/contactPerson 等） */
@@ -415,6 +446,38 @@ export default {
     handleDelete(row) {
       this.rowToDelete = row;
       this.deleteDialogVisible = true;
+    },
+    handleAudit(row) {
+      this.rowToAudit = row;
+      this.auditDialogVisible = true;
+    },
+    handleAuditConfirm({ auditStatus, auditRemark }) {
+      if (!this.rowToAudit) return;
+      const id = this.rowToAudit.id;
+      if (id == null || id === "") {
+        this.$message.warning("缺少客户 id");
+        return;
+      }
+      // 与 manager 客户审核一致：status 2通过 -1驳回，reCont 审核原因
+      const status = auditStatus === "approve" ? "2" : "-1";
+      this.$api({
+        url: "/reviewCustomer",
+        method: "post",
+        data: {
+          id: String(id),
+          status,
+          reCont: auditRemark || ""
+        }
+      })
+        .then(() => {
+          this.$message.success(auditStatus === "approve" ? "审核已通过" : "已驳回");
+          this.rowToAudit = null;
+          this.auditDialogVisible = false;
+          this.loadList();
+        })
+        .catch(err => {
+          this.$message.error((err && err.msg) ? err.msg : "审核失败");
+        });
     },
     handleDeleteConfirm() {
       if (!this.rowToDelete) return;
@@ -604,7 +667,7 @@ export default {
 .row-acts {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: start;
   flex-wrap: wrap;
 
   .row-act {

@@ -1,7 +1,11 @@
 <template>
   <el-drawer title="查看详情" :visible.sync="drawerVisible" direction="rtl" size="800px"
     custom-class="customer-detail-drawer" @close="handleClose">
-    <div class="detail-drawer-body" v-if="detailRow">
+    <div class="detail-drawer-body">
+      <div v-if="!detailRow" class="detail-loading-wrap">
+        <span>加载中...</span>
+      </div>
+      <template v-else>
       <!-- 基础信息 -->
       <div class="detail-section">
         <div class="detail-section-title">基础信息</div>
@@ -152,27 +156,23 @@
         </div>
       </div>
 
-      <!-- 审核（仅审核页查看详情时展示） -->
+      <!-- 审核记录（与 manager 一致：接口返回的 log 数组） -->
       <div v-if="showAuditSection" class="detail-section">
         <div class="detail-section-title">审核</div>
         <div class="detail-section-content">
-          <div class="audit-table">
+          <div class="audit-table" v-if="auditLogList.length">
             <div class="audit-table-header">
               <span class="audit-th">审核时间</span>
               <span class="audit-th">审核状态</span>
               <span class="audit-th">审核备注</span>
             </div>
-            <div class="audit-table-body">
-              <span class="audit-td">{{ detailRow.auditTime || '—' }}</span>
-              <span class="audit-td">
-                <el-tag v-if="detailRow.auditStatus === 'pending'" type="info" size="small">待审核</el-tag>
-                <el-tag v-else-if="detailRow.auditStatus === 'rejected'" type="danger" size="small">审核未通过</el-tag>
-                <el-tag v-else-if="detailRow.auditStatus === 'audited'" type="success" size="small">已审核</el-tag>
-                <span v-else>—</span>
-              </span>
-              <span class="audit-td">{{ detailRow.auditRemark || '—' }}</span>
+            <div class="audit-table-body" v-for="(item, index) in auditLogList" :key="item.id || index">
+              <span class="audit-td">{{ item.created_at || '—' }}</span>
+              <span class="audit-td">{{ item.cont || '—' }}</span>
+              <span class="audit-td">{{ item.reCont || '—' }}</span>
             </div>
           </div>
+          <div v-else class="audit-empty">暂无审核记录</div>
         </div>
       </div>
 
@@ -181,6 +181,7 @@
         <el-button type="primary" @click="handleConfirm">确定</el-button>
         <el-button @click="handleClose">取消</el-button>
       </div>
+      </template>
     </div>
   </el-drawer>
 </template>
@@ -213,6 +214,11 @@ export default {
       set(val) {
         this.$emit('update:visible', val);
       }
+    },
+    /** 接口返回的审核记录 log 数组（与 manager/detail-drawer 一致） */
+    auditLogList() {
+      const log = this.detailRow && this.detailRow.log;
+      return Array.isArray(log) ? log : [];
     }
   },
 
@@ -247,6 +253,13 @@ export default {
 
 .detail-drawer-body {
   padding: 24px 28px 24px;
+}
+
+.detail-loading-wrap {
+  padding: 40px 0;
+  text-align: center;
+  color: #909399;
+  font-size: 14px;
 }
 
 .detail-section {
@@ -310,11 +323,23 @@ export default {
   grid-template-columns: 180px 120px 1fr;
   font-size: 14px;
   color: #303133;
+  border-bottom: 1px solid #ebeef5;
+
+  &:last-child {
+    border-bottom: none;
+  }
 }
 
 .audit-td {
   padding: 12px 16px;
   word-break: break-all;
+}
+
+.audit-empty {
+  padding: 16px;
+  color: #909399;
+  font-size: 14px;
+  text-align: center;
 }
 
 .detail-row {

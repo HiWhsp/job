@@ -183,9 +183,27 @@ export default {
         type: "warning"
       })
         .then(() => {
-          // TODO: 调用删除接口
-          this.$message.success("删除成功");
-          this.loadList();
+          const id = row && row.id;
+          if (id == null || id === "") {
+            this.$message.warning("缺少分类 id");
+            return;
+          }
+          this.$api({
+            url: "/delProductCate",
+            method: "post",
+            data: { ids: String(id) }
+          })
+            .then(res => {
+              if (res && res.code === 200) {
+                this.$message.success("删除成功");
+                this.loadList();
+              } else {
+                this.$message.error((res && res.msg) || "删除失败");
+              }
+            })
+            .catch(err => {
+              this.$message.error((err && err.msg) ? err.msg : "删除失败");
+            });
         })
         .catch(() => {});
     },

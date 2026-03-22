@@ -170,7 +170,7 @@ export default {
         cateld
       };
       this.$api({
-        url: '/getProductList',
+        url: '/getProductInventoryList',
         method: 'post',
         data: params
       })
@@ -186,11 +186,11 @@ export default {
               spec: row.keyVals || row.spec || '',
               category: row.cateTitle || row.category || '',
               unit: row.unit || '盒',
-              guidePrice: row.guidePrice != null ? String(row.guidePrice) : (row.price != null ? String(row.price) : ''),
+              guidePrice: row.price1 != null ? String(row.price1) : (row.price1 != null ? String(row.price1) : ''),
               quantity: null,
               actualPrice: '',
-              stockQty: row.stockQty != null ? row.stockQty : 0,
-              stockStatus: row.stockStatus || '—'
+              stockQty: row.kucun != null ? row.kucun : 0,
+              stockStatus: row.kucun && row.kucun == 0 ? '缺货' : '有货'
             }));
             this.total = res.data.total ?? res.data.count ?? this.tableData.length;
           } else {
@@ -256,7 +256,7 @@ export default {
           guideTotal,
           actualPrice: r.actualPrice || '',
           stockQty: r.stockQty != null ? r.stockQty : 0,
-          stockStatus: r.stockStatus || '—'
+          stockStatus: r.stockQty && r.stockQty == 0 ? '缺货' : '有货'
         };
       });
       if (!rows.length) {

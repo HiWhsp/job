@@ -106,8 +106,12 @@
       </div>
     </div>
 
-    <!-- 查看详情 Drawer -->
-    <detail-drawer :visible.sync="detailDrawerVisible" :detail-row="detailRow" />
+    <!-- 查看详情：外来包装专用，拉取 getForeignPack -->
+    <external-package-detail-drawer
+      :visible.sync="detailDrawerVisible"
+      :pack-id="detailPackId"
+      :row-summary="detailRowSummary"
+    />
 
     <!-- 删除确认弹框 -->
     <delete-dialog
@@ -120,14 +124,14 @@
 </template>
     
 <script>
-import DetailDrawer from "../components/detail-drawer.vue";
+import ExternalPackageDetailDrawer from "./components/external-package-detail-drawer.vue";
 import DeleteDialog from "../components/delete-dialog.vue";
 
 export default {
   name: "ExternalPackageList",
 
   components: {
-    DetailDrawer,
+    ExternalPackageDetailDrawer,
     DeleteDialog
   },
   data() {
@@ -141,7 +145,8 @@ export default {
       tableHeight: 0,
       tableData: [],
       detailDrawerVisible: false,
-      detailRow: null,
+      detailPackId: null,
+      detailRowSummary: null,
       deleteDialogVisible: false,
       rowToDelete: null
     };
@@ -210,7 +215,8 @@ export default {
       this.loadList();
     },
     handleView(row) {
-      this.detailRow = row;
+      this.detailPackId = row && row.id != null ? row.id : null;
+      this.detailRowSummary = row || null;
       this.detailDrawerVisible = true;
     },
     handleEdit(row) {

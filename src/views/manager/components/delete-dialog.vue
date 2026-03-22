@@ -35,7 +35,7 @@ export default {
     },
     tipText: {
       type: String,
-      default: "删除后将不能回复"
+      default: "删除后将不能恢复"
     }
   },
 

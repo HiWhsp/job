@@ -181,12 +181,16 @@ export default {
         type: "warning"
       })
         .then(() => {
-          const id = row && row.id != null ? String(row.id) : "";
-          if (!id) return;
-          this.$api({ url: "/delMaterialCate", method: "post", data: { id } })
-            .then(() => {
-              this.$message.success("删除成功");
-              this.loadList();
+          const ids = row && row.id != null ? String(row.id) : "";
+          if (!ids) return;
+          this.$api({ url: "/delMaterialCate", method: "post", data: { ids } })
+            .then(res => {
+              if (res && res.code === 200) {
+                this.$message.success("删除成功");
+                this.loadList();
+              } else {
+                this.$message.error((res && res.msg) || "删除失败");
+              }
             })
             .catch(err => {
               this.$message.error((err && err.msg) ? err.msg : "删除失败");
