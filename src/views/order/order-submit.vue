@@ -399,7 +399,7 @@
 
             <!-- 价格明细 -->
             <div class="price-breakdown">
-              <div class="price-item">
+              <div class="price-item total">
                 <span class="price-label">Subtotal: {{ total_product_number }} items</span>
                 <span class="price-value">{{ vuex_huobi }}{{ pay_info.goodsPrice || 0 }}</span>
               </div>
@@ -415,9 +415,18 @@
                 <span class="price-label">Other Discounts</span>
                 <span class="price-value">-20%</span>
               </div>
+              <div class="price-item" v-if="Coupon_checked">
+                <span class="price-label">Other discounts</span>
+                <span class="price-value">-20%</span>
+              </div>
               <div class="price-item total">
                 <span class="price-label">Total Amount</span>
                 <span class="price-value">{{ vuex_huobi }}{{ pay_info.orderPrice || 0 }}</span>
+              </div>
+
+              <div class="checkbox-group">
+                <el-checkbox v-model="Coupon_checked"></el-checkbox>
+                <span>Accept the order to be shipped within 30 days, get further 20% off.</span>
               </div>
 
               <div class="submit">
@@ -585,6 +594,7 @@ export default {
       //
       //
       //
+      Coupon_checked: false, //是否接受折扣
 
       order_id: "", //是否已经创建过订单
       showCoupon: true, //
@@ -2286,6 +2296,7 @@ export default {
       align-items: center;
       gap: 10px;
       cursor: pointer;
+      font-size: 20px;
 
       input[type="radio"] {
         cursor: pointer;
@@ -2714,25 +2725,52 @@ export default {
         font-size: 14px;
 
         .price-label {
+          font-size: 20px;
           color: #666;
         }
 
         .price-value {
-          color: #1f1f1f;
-          font-weight: 500;
+          color: #1E262E;
+          font-size: 20px;
         }
 
         &.total {
-          margin-top: 15px;
-          padding-top: 15px;
-          border-top: 1px solid #f0f0f0;
+          margin-top: 10px;
 
-          .price-label,
           .price-value {
-            font-size: 18px;
-            font-weight: bold;
-            color: #ff6600;
+            font-size: 24px;
+            font-weight: 600;
+            color: #EC6A2B;
           }
+        }
+      }
+
+      .checkbox-group {
+        margin-top: 42px;
+        font-size: 20px;
+        color: #1E262E;
+        display: flex;
+
+        /deep/ .el-checkbox {
+          margin-top: 5px;
+          .el-checkbox__inner {
+            border: 1px solid #EC6A2B !important;
+          }
+        }
+
+        /deep/ .is-checked {
+          .el-checkbox__inner {
+            background: #EC6A2B !important;
+          }
+        }
+
+        span {
+          margin-left: 10px;
+          display: inline-block;
+          text-align: left;
+          font-size: 20px;
+          color: #1E262E;
+          line-height: 28px;
         }
       }
 
@@ -3414,14 +3452,16 @@ export default {
 
     .btn {
       min-width: 124px;
-      height: 32px;
+      height: 52px;
       background: #ffffff;
       border-radius: 2px 2px 2px 2px;
       border: 1px solid #00306B;
       font-family: Poppins, Poppins;
       font-weight: 400;
-      font-size: 14px;
-      color: #00306B;
+      font-size: 20px;
+      color: #fff;
+      padding: 0 20px;
+      background: #00306B;
     }
   }
 }
