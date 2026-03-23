@@ -193,7 +193,7 @@ export default {
     loadStatistics() {
       const [s_time = "", e_time = ""] = this.queryParams.dateRange || [];
       const ids = this.productQuery.categoryIds || [];
-      const cateld = ids.length ? String(ids[ids.length - 1]) : "";
+      const cateId = ids.length ? String(ids[ids.length - 1]) : "";
       const customerld = this.customerQuery.customerId ? String(this.customerQuery.customerId) : "";
       this.$api({
         url: "/getStatistics",
@@ -202,7 +202,7 @@ export default {
           s_time: s_time || "",
           e_time: e_time || "",
           customerld: customerld,
-          cateld: cateld
+          cateId: cateId
         }
       })
         .then(res => {

@@ -306,8 +306,8 @@ export default {
       // 与列表「审核状态」列一致：1待审核，2审核未通过，-1已审核
       const statusMap = {
         pending: "1",
-        audited: "2",
-        rejected: "-1"
+        audited: "-1",
+        rejected: "2"
       };
       const params = {
         page: String(this.queryParams.pageNum),

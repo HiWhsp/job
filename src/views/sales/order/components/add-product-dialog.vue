@@ -7,7 +7,7 @@
     :close-on-click-modal="false"
     @close="handleClose"
   >
-    <!-- 搜索与筛选（与产品管理 list 一致：keyword、cateld） -->
+    <!-- 搜索与筛选（与产品管理 list 一致：keyword、cateId） -->
     <div class="dialog-search">
       <el-form :model="query" inline class="search-form" label-width="80px">
         <el-form-item label="关键词">
@@ -159,15 +159,15 @@ export default {
   },
 
   methods: {
-    /** 与产品管理 list 一致：POST /getProductList，page/limit/keyword/cateld（取 categoryIds 最后一项） */
+    /** 与产品管理 list 一致：POST /getProductList，page/limit/keyword/cateId（取 categoryIds 最后一项） */
     fetchList() {
       const ids = this.query.categoryIds || [];
-      const cateld = ids.length ? String(ids[ids.length - 1]) : '';
+      const cateId = ids.length ? String(ids[ids.length - 1]) : '';
       const params = {
         page: String(this.query.pageNum),
         limit: String(this.query.pageSize),
         keyword: (this.query.keyword || '').trim(),
-        cateld
+        cateId
       };
       this.$api({
         url: '/getProductInventoryList',

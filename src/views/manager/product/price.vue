@@ -55,10 +55,10 @@
           header-cell-class-name="table-header-cell"
           :row-class-name="tableRowClassName"
         >
-          <el-table-column prop="sn" label="产品编码" min-width="120" show-overflow-tooltip align="center" />
+          <el-table-column prop="sn" label="规格编码" min-width="120" show-overflow-tooltip align="center" />
           <el-table-column prop="title" label="产品名称" min-width="140" show-overflow-tooltip align="center">
             <template slot-scope="{ row }">
-              <span class="link-name" @click="handleViewProduct(row)">{{ row.title }}</span>
+              <span class="link-name" @click="handleView(row)">{{ row.title }}</span>
             </template>
           </el-table-column>
           <el-table-column prop="keyVals" label="规格" min-width="120" show-overflow-tooltip align="center" />
@@ -75,7 +75,7 @@
             </template>
           </el-table-column>
           <el-table-column prop="updated_at" label="更新时间" min-width="110" show-overflow-tooltip align="center" />
-          <el-table-column label="操作" width="340" align="center" fixed="right">
+          <el-table-column label="操作" width="420" align="center" fixed="right">
             <template slot-scope="{ row }">
               <span class="row-acts">
                 <span class="row-act" @click="handleEditAllSpec(row)">编辑所有规格价格</span>
@@ -98,8 +98,8 @@
       </div>
     </div>
 
-    <!-- 查看详情 Drawer（从右往左展开） -->
-    <detail-drawer :visible.sync="detailDrawerVisible" :detail-row="detailRow" />
+    <!-- 产品详情：右侧抽屉（与产品管理列表一致） -->
+    <product-detail-drawer :visible.sync="detailDrawerVisible" :product-id="detailProductId" />
 
     <!-- 编辑规格价格弹框 -->
     <edit-price-dialog
@@ -113,14 +113,14 @@
   
   <script>
 import { mapState } from "vuex";
-import DetailDrawer from "../components/detail-drawer.vue";
+import ProductDetailDrawer from "./components/product-detail-drawer.vue";
 import EditPriceDialog from "../components/edit-price-dialog.vue";
 
 export default {
   name: "ProductPrice",
 
   components: {
-    DetailDrawer,
+    ProductDetailDrawer,
     EditPriceDialog
   },
 
@@ -154,7 +154,8 @@ export default {
       tableHeight: 0,
       tableData: [],
       detailDrawerVisible: false,
-      detailRow: null,
+      /** 产品 SPU id，与 getProductInfo 一致；库存列表行优先取 productId */
+      detailProductId: null,
       editPriceVisible: false,
       editPriceProductRow: null,
       editPriceCurrentSpecOnly: false
@@ -189,12 +190,12 @@ export default {
     },
     loadList() {
       const ids = this.queryParams.categoryIds || [];
-      const cateld = ids.length ? String(ids[ids.length - 1]) : "";
+      const cateId = ids.length ? String(ids[ids.length - 1]) : "";
       const params = {
         page: String(this.queryParams.pageNum),
         limit: String(this.queryParams.pageSize),
         keyword: this.queryParams.keyword || "",
-        cateld
+        cateId
       };
       this.$api({
         url: "/getProductInventoryList",
@@ -239,8 +240,17 @@ export default {
         });
       }
     },
-    handleViewProduct(row) {
-      this.detailRow = row;
+    /** 与产品管理列表一致：右侧抽屉 + getProductInfo(productId) */
+    handleView(row) {
+      const id =
+        row && (row.productId != null && row.productId !== ""
+          ? row.productId
+          : row.id);
+      if (id == null || id === "") {
+        this.$message.warning("缺少产品 id");
+        return;
+      }
+      this.detailProductId = id;
       this.detailDrawerVisible = true;
     },
     handleEditAllSpec(row) {

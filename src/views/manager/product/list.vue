@@ -182,12 +182,12 @@ export default {
     },
     loadList() {
       const ids = this.queryParams.categoryIds || [];
-      const cateld = ids.length ? String(ids[ids.length - 1]) : '';
+      const cateId = ids.length ? String(ids[ids.length - 1]) : '';
       const params = {
         page: String(this.queryParams.pageNum),
         limit: String(this.queryParams.pageSize),
         keyword: this.queryParams.keyword || '',
-        cateld
+        cateId
       };
       this.$api({
         url: '/getProductList',
