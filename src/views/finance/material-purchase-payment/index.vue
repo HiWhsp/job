@@ -68,8 +68,8 @@
           <el-table-column prop="price" label="订单金额" min-width="110" align="right" />
           <el-table-column prop="orderStatus" label="状态" width="120" align="center">
             <template slot-scope="{ row }">
-              <el-tag :type="orderStatusTagType(row.orderStatus)" size="small" effect="light">
-                {{ orderStatusText(row.orderStatus) }}
+              <el-tag :type="payStatusTagType(row.isPay)" size="small" effect="light">
+                {{ payStatusText(row.isPay) }}
               </el-tag>
             </template>
           </el-table-column>
@@ -330,7 +330,8 @@ export default {
         keyword: this.queryParams.keyword || "",
         start_time: start_time || "",
         end_time: end_time || "",
-        isPay: String(this.queryParams.isPay || "")
+        isPay: String(this.queryParams.isPay || ""),
+        materialType: 1
       };
       this.$api({
         url: LIST_API,
@@ -480,6 +481,18 @@ export default {
       if (s === -1) return "danger";
       if (s === 6) return "success";
       if (s === 3) return "warning";
+      return "info";
+    },
+    payStatusText(v) {
+      const s = Number(v);
+      if (s === 0) return "未付款";
+      if (s === 1) return "已付款";
+      return "—";
+    },
+    payStatusTagType(v) {
+      const s = Number(v);
+      if (s === 0) return "info";
+      if (s === 1) return "success";
       return "info";
     },
     handleView(row) {

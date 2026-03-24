@@ -1,7 +1,7 @@
 <template>
   <div class="view-wrap order-add-page">
     <div class="form-card">
-      <div class="page-title">新增订单</div>
+      <div class="page-title">{{ editOrderId ? '编辑订单' : '新增订单' }}</div>
       <el-form ref="formRef" :model="form" :rules="rules" label-width="200px" class="order-form">
         <div class="form-section">
           <div class="section-content">
@@ -413,7 +413,9 @@ export default {
       addProductVisible: false,
       addExternalProductVisible: false,
       customerSelectVisible: false,
-      customerList: []
+      customerList: [],
+      /** 路由带 id 时为编辑模式，提交时传给接口 */
+      editOrderId: ""
     };
   },
 
@@ -445,7 +447,241 @@ export default {
     }
   },
 
+  mounted() {
+    const id = this.$route.query.id;
+    if (id) {
+      this.editOrderId = String(id);
+      this.loadOrderDetail(this.editOrderId);
+    }
+  },
+
+  watch: {
+    "$route.query.id"(id) {
+      if (id) {
+        this.editOrderId = String(id);
+        this.loadOrderDetail(this.editOrderId);
+      } else {
+        this.editOrderId = "";
+        this.resetOrderFormForNew();
+      }
+    }
+  },
+
   methods: {
+    resetOrderFormForNew() {
+      this.form = {
+        customerId: "",
+        customerName: "",
+        orderType: "",
+        priceType: "dealer",
+        needApprove: false,
+        payMethod: "",
+        isPaid: true,
+        payAmount: "0",
+        stockMeet: true,
+        acceptBatch: true,
+        packageSpec: "",
+        packageSpecOther: "",
+        contractImageList: [],
+        payVoucherImageList: []
+      };
+      this.productList = [];
+      this.productSelected = [];
+      this.externalProductList = [];
+      this.externalNewRow = null;
+      this.$nextTick(() => {
+        this.$refs.formRef && this.$refs.formRef.clearValidate();
+      });
+    },
+    /** 将逗号分隔或数组的图片地址转为 el-upload 的 file-list */
+    imageUrlsToFileList(val) {
+      let urls = [];
+      if (Array.isArray(val)) {
+        urls = val.map(s => String(s).trim()).filter(Boolean);
+      } else if (typeof val === "string" && val.trim()) {
+        urls = val.split(",").map(s => s.trim()).filter(Boolean);
+      }
+      return urls.map((url, i) => ({ name: `image-${i}`, url }));
+    },
+    /** 从 getStaffOrder 的 data 解析产品行（支持嵌套 product/inventory 或扁平字段） */
+    parseProductRowsFromDetail(d) {
+      let raw = d.productJson;
+      if (typeof raw === "string" && raw.trim()) {
+        try {
+          raw = JSON.parse(raw);
+        } catch (e) {
+          raw = [];
+        }
+      }
+      if (!Array.isArray(raw)) return [];
+      return raw.map(item => {
+        const p = item.product || {};
+        const inv = item.inventory || {};
+        const productId =
+          item.productId != null
+            ? item.productId
+            : p.id != null
+              ? p.id
+              : "";
+        const inventoryId =
+          item.inventoryId != null
+            ? item.inventoryId
+            : inv.id != null
+              ? inv.id
+              : "";
+        const qty = Number(item.num != null ? item.num : item.quantity) || 0;
+        const guidePrice =
+          item.yPrice != null ? item.yPrice : item.guidePrice != null ? item.guidePrice : "";
+        const actualPrice =
+          item.price != null && item.price !== ""
+            ? item.price
+            : item.actualPrice != null
+              ? item.actualPrice
+              : guidePrice;
+        let guideTotal = item.totalPrice;
+        if (guideTotal == null || guideTotal === "") {
+          const gp = parseFloat(guidePrice) || 0;
+          guideTotal = (gp * qty).toFixed(2);
+        }
+        const stockQty = item.stockQty != null ? item.stockQty : inv.kucun;
+        const stockNum = Number(stockQty);
+        return {
+          productId: String(productId),
+          inventoryId: String(inventoryId),
+          code: p.productNo || inv.sn || item.code || "",
+          name: p.title || item.name || "",
+          spec: inv.keyVals || item.spec || "",
+          category: item.category || p.cateTitle || "",
+          unit: p.unit || item.unit || "",
+          guidePrice,
+          quantity: qty,
+          guideTotal: String(guideTotal),
+          actualPrice:
+            actualPrice != null && actualPrice !== "" ? String(actualPrice) : "",
+          stockQty: stockQty != null ? stockQty : "",
+          stockStatus: stockNum === 0 ? "缺货" : "有货"
+        };
+      });
+    },
+    parseForeignRowsFromDetail(d) {
+      let raw = d.foreignProductJson;
+      if (typeof raw === "string" && raw.trim()) {
+        try {
+          raw = JSON.parse(raw);
+        } catch (e) {
+          raw = [];
+        }
+      }
+      if (!Array.isArray(raw)) return [];
+      return raw.map(item => {
+        const fp = item.foreign_product || {};
+        const price = item.price;
+        const num = Number(item.num) || 0;
+        let total = item.totalPrice;
+        if (total == null || total === "") {
+          const pr = parseFloat(price) || 0;
+          total = (pr * num).toFixed(2);
+        }
+        return {
+          productId: String(
+            item.productId != null
+              ? item.productId
+              : fp.id != null
+                ? fp.id
+                : fp.productId != null
+                  ? fp.productId
+                  : "2"
+          ),
+          name: fp.title || fp.name || fp.keyVals || item.name || "",
+          spec: fp.spec || fp.keyVals || item.spec || "",
+          price: String(price != null ? price : ""),
+          quantity: num,
+          total: String(total),
+          unit: fp.unit || item.unit || "",
+          stock: item.stock || "",
+          stockStatus: item.stockStatus || "—"
+        };
+      });
+    },
+    applyPackFromApi(packType, packStr) {
+      const pt = String(packType != null ? packType : "1");
+      const mapInv = {
+        "1": "color_box",
+        "2": "white_box",
+        "3": "none",
+        "4": "custom",
+        "5": "other"
+      };
+      this.form.packageSpec = mapInv[pt] || "color_box";
+      if (pt === "5") {
+        const ps = packStr != null ? String(packStr) : "";
+        this.form.packageSpecOther = ps === "5" ? "" : ps;
+      } else {
+        this.form.packageSpecOther = "";
+      }
+    },
+    fillFormFromOrderData(d) {
+      this.form.customerId =
+        d.customerId != null && d.customerId !== "" ? String(d.customerId) : "";
+      this.form.customerName =
+        d.customerTitle != null ? String(d.customerTitle) : "";
+      const ot = Number(d.orderType);
+      this.form.orderType = ot === 2 ? "sample" : "sales";
+      const pt = Number(d.priceType);
+      this.form.priceType = pt === 2 ? "terminal" : "dealer";
+      const ap = Number(d.isApproval);
+      this.form.needApprove = ap === 1;
+      const payT = Number(d.payType);
+      if (payT === 2) this.form.payMethod = "credit";
+      else if (payT === 3) this.form.payMethod = "installment";
+      else this.form.payMethod = "cash";
+      const ip = Number(d.isPay);
+      this.form.isPaid = ip === 1;
+      this.form.payAmount =
+        d.payPrice != null && d.payPrice !== "" ? String(d.payPrice) : "0";
+      const mk = Number(d.isManKuCun);
+      this.form.stockMeet = mk !== 2;
+      const mf = Number(d.isMoreFaHuo);
+      this.form.acceptBatch = mf !== 2;
+      this.applyPackFromApi(d.packType, d.packStr);
+      this.form.contractImageList = this.imageUrlsToFileList(d.contractImages);
+      this.form.payVoucherImageList = this.imageUrlsToFileList(d.payImage);
+      this.productList = this.parseProductRowsFromDetail(d);
+      this.externalProductList = this.parseForeignRowsFromDetail(d);
+      this.productSelected = [];
+      this.externalNewRow = null;
+      this.$nextTick(() => {
+        this.$refs.formRef && this.$refs.formRef.clearValidate();
+      });
+    },
+    loadOrderDetail(id) {
+      if (!id) return;
+      const loading = this.$loading({
+        lock: true,
+        fullscreen: true,
+        text: "加载订单详情...",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.35)"
+      });
+      this.$api({
+        url: "/getStaffOrder",
+        method: "post",
+        data: { id: String(id) }
+      })
+        .then(res => {
+          if (!res || res.code !== 200 || !res.data) {
+            this.$message.error((res && res.msg) || "获取订单详情失败");
+            return;
+          }
+          this.fillFormFromOrderData(res.data);
+        })
+        .catch(err => {
+          this.$message.error((err && err.msg) || "获取订单详情失败");
+        })
+        .finally(() => {
+          loading.close();
+        });
+    },
     formatSeq(index) {
       return String(index + 1).padStart(3, "0");
     },
@@ -650,6 +886,28 @@ export default {
         this.form.payVoucherImageList = fileList || [];
       }
     },
+    /** 订单类型 orderType：1销售订单 2样品订单 */
+    getOrderTypeApi() {
+      const map = { sales: "1", sample: "2" };
+      return map[this.form.orderType] || "";
+    },
+    /** 价格类型 priceType：1经销商 2终端指导价格 */
+    getPriceTypeApi() {
+      return this.form.priceType === "terminal" ? "2" : "1";
+    },
+    /** 是否需要审核 isApproval：1需要 2不需要 */
+    getIsApprovalApi() {
+      return this.form.needApprove ? "1" : "2";
+    },
+    /** 支付方式 payType：1现结 2账期 3分期付款 */
+    getPayTypeApi() {
+      const map = { cash: "1", credit: "2", installment: "3" };
+      return map[this.form.payMethod] || "";
+    },
+    /** 是否已付款 isPay：0未付款 1已付款 */
+    getIsPayApi() {
+      return this.form.isPaid ? "1" : "0";
+    },
     /** 包装类型 -> 接口 packType：1标准彩盒 2标准白盒 3无包装 4客户定制包装 5其他 */
     getPackTypeValue() {
       const map = {
@@ -715,8 +973,23 @@ export default {
     handleSubmit() {
       this.$refs.formRef.validate(valid => {
         if (!valid) return;
+        const customerId = String(this.form.customerId || "").trim();
+        if (!customerId) {
+          this.$message.warning("请选择客户（点击「新增客户」在列表中选择）");
+          return;
+        }
         if (!(this.productList && this.productList.length)) {
           this.$message.warning("请至少添加一条产品信息");
+          return;
+        }
+        const orderType = this.getOrderTypeApi();
+        const payType = this.getPayTypeApi();
+        if (!orderType) {
+          this.$message.warning("请选择订单类型");
+          return;
+        }
+        if (!payType) {
+          this.$message.warning("请选择支付方式");
           return;
         }
         const packType = this.getPackTypeValue();
@@ -726,20 +999,29 @@ export default {
         const productJson = this.buildProductJson();
         const foreignProductJson = this.buildForeignProductJson();
 
+        // 与接口文档一致：全部为 string；空图片用空格占位，避免 request 里删掉空字符串导致缺字段
         const data = {
-          customerId: String(this.form.customerId).trim(),
+          customerId,
+          orderType,
+          priceType: this.getPriceTypeApi(),
+          isApproval: this.getIsApprovalApi(),
+          payType,
+          isPay: this.getIsPayApi(),
           payPrice: String(
             this.form.payAmount != null ? this.form.payAmount : "0"
           ),
           isManKuCun: this.form.stockMeet ? "1" : "2",
           isMoreFaHuo: this.form.acceptBatch ? "1" : "2",
           packType,
-          packStr,
-          contractImages: contractImages || "",
-          payImage: payImage || "",
+          packStr: packStr || packType,
+          contractImages: contractImages || " ",
+          payImage: payImage || " ",
           productJson,
           foreignProductJson
         };
+        if (this.editOrderId) {
+          data.id = String(this.editOrderId);
+        }
 
         this.$api({
           url: "/addStaffOrder",
@@ -748,7 +1030,7 @@ export default {
         })
           .then(res => {
             if (res && res.code === 200) {
-              this.$message.success("提交成功");
+              this.$message.success(this.editOrderId ? "保存成功" : "提交成功");
               this.$router.push("/sales/order/list");
             } else {
               this.$message.error((res && res.msg) || "提交失败");

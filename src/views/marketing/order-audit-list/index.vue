@@ -53,7 +53,7 @@
         </div>
         <div class="table-acts">
           <el-button type="primary" size="small" @click="handleExport">导出</el-button>
-          <el-button type="primary" size="small" @click="handleAdd">新增订单</el-button>
+          <!-- <el-button type="primary" size="small" @click="handleAdd">新增订单</el-button> -->
         </div>
       </div>
       <div class="table-box">
@@ -82,7 +82,7 @@
           <el-table-column prop="orderStatusTitle" label="订单状态" width="120" align="center">
             <template slot-scope="{ row }">
               <el-tag v-if="row.orderStatus != null" :type="orderStatusTagType(row.orderStatus)" size="small">
-                {{ row.orderStatusTitle || row.orderStatus || '-' }}
+                {{ orderStatusText(row.orderStatus) }}
               </el-tag>
               <span v-else>—</span>
             </template>
@@ -104,8 +104,7 @@
             <template slot-scope="{ row }">
               <span class="row-acts">
                 <span class="row-act" @click="handleView(row)">查看详情</span>
-                <span class="row-act" v-if="row.orderStatus == 1"
-                  @click="handleAudit(row)">审核</span>
+                <span class="row-act" v-if="[1, -1].includes(row.orderStatus)" @click="handleAudit(row)">审核</span>
               </span>
             </template>
           </el-table-column>
@@ -119,13 +118,8 @@
     </div>
 
     <!-- 是否继续 弹框 -->
-    <el-dialog
-      title="审核"
-      :visible.sync="auditDialogVisible"
-      width="480px"
-      :close-on-click-modal="false"
-      @close="closeAuditDialog"
-    >
+    <el-dialog title="审核" :visible.sync="auditDialogVisible" width="480px" :close-on-click-modal="false"
+      @close="closeAuditDialog">
       <el-form label-width="100px">
         <el-form-item label="审核状态:" style="text-align: left;">
           <el-radio-group v-model="auditContinueChoice">
@@ -134,13 +128,7 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="审核备注:">
-          <el-input
-            v-model="auditRemark"
-            placeholder="请输入"
-            clearable
-            maxlength="500"
-            show-word-limit
-          />
+          <el-input v-model="auditRemark" placeholder="请输入" clearable maxlength="500" show-word-limit />
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -179,14 +167,13 @@ export default {
         { label: '待审核', value: '1' },
       ],
       orderStatusOptions: [
-        { label: '待营销总监审核', value: '1' },
-        { label: '待总经理审核', value: '2' },
-        { label: '缺货审核', value: '3' },
+        { label: '待审核', value: '1' },
         { label: '待发货', value: '4' },
-        { label: '缺货', value: '5' },
-        { label: '暂停', value: '6' },
         { label: '已发货', value: '7' },
-        { label: '驳回', value: '-1' }
+        { label: '审核未通过', value: '-1' },
+        { label: '缺货审核', value: '3' },
+        { label: '已取消', value: '-2' },
+        { label: '暂停', value: '6' }
       ],
       orderTypeOptions: [
         { label: '销售订单', value: '1' },
@@ -237,7 +224,7 @@ export default {
         page: String(this.queryParams.pageNum),
         limit: String(this.queryParams.pageSize),
         keyword: this.queryParams.keyword || '',
-        orderStatus: this.queryParams.orderStatus || '',
+        orderStatus: this.queryParams.orderStatus || this.auditTab || '',
         orderType: this.queryParams.orderType || '',
         payType: this.queryParams.payType || '',
         payStatus: this.queryParams.payStatus || ''
@@ -297,10 +284,20 @@ export default {
     orderStatusTagType(status) {
       const s = Number(status);
       if (s === 7) return 'success';
-      if (s === 4) return 'success';
-      if (s === 5 || s === -1) return 'danger';
-      if (s === 6) return 'warning';
+      if (s === 4) return 'warning';
+      if (s === -1 || s === -2 || s === 6) return 'danger';
       return 'info';
+    },
+    orderStatusText(status) {
+      const s = Number(status);
+      if (s === 1 || s === 2) return '待审核';
+      if (s === 4) return '待发货';
+      if (s === 7) return '已发货';
+      if (s === -1) return '审核未通过';
+      if (s === 3) return '缺货';
+      if (s === -2) return '取消';
+      if (s === 6) return '暂停';
+      return '-';
     },
     payStatusText(status) {
       const s = Number(status);

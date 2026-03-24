@@ -70,7 +70,7 @@
                     <el-table-column prop="customerTitle" label="客户名称" min-width="180" show-overflow-tooltip>
                         <template slot-scope="{ row }">
                             <span class="link-name" @click="handleView(row)">{{ row.customerTitle || row.customerName
-                            }}</span>
+                                }}</span>
                         </template>
                     </el-table-column>
                     <el-table-column prop="customerTerritory" label="属地" min-width="80" show-overflow-tooltip />
@@ -197,9 +197,9 @@ export default {
                     { pattern: /^\d+(\.\d{1,2})?$/, message: "请输入有效金额（最多两位小数）", trigger: "blur" }
                 ]
             },
-            statusTab: "",
+            statusTab: "1,2",
             statusTabs: [
-                { label: "待审核", value: "" },
+                { label: "待审核", value: "1,2" },
                 // { label: "待发货", value: "4" },
                 // { label: "已发货", value: "7" },
                 // { label: "审核未通过", value: "-1" },
@@ -207,14 +207,13 @@ export default {
                 // { label: "已取消", value: "6" }
             ],
             orderStatusOptions: [
-                { label: "待营销总监审核", value: "1" },
-                { label: "待总经理审核", value: "2" },
-                { label: "缺货审核", value: "3" },
-                { label: "待发货", value: "4" },
-                { label: "缺货", value: "5" },
-                { label: "暂停", value: "6" },
-                { label: "已发货", value: "7" },
-                { label: "驳回", value: "-1" }
+                { label: '待审核', value: '1,2' },
+                { label: '待发货', value: '4' },
+                { label: '已发货', value: '7' },
+                { label: '审核未通过', value: '-1' },
+                { label: '缺货审核', value: '3' },
+                { label: '已取消', value: '-2' },
+                { label: '暂停', value: '6' }
             ],
             orderTypeOptions: [
                 { label: "销售订单", value: "1" },
@@ -279,7 +278,7 @@ export default {
                 page: String(this.queryParams.pageNum),
                 limit: String(this.queryParams.pageSize),
                 keyword: this.queryParams.keyword || "",
-                orderStatus: this.queryParams.orderStatus || "",
+                orderStatus: this.queryParams.orderStatus || this.statusTab || "",
                 orderType: this.queryParams.orderType || "",
                 payType: this.queryParams.payType || "",
                 payStatus: this.queryParams.payStatus || "",

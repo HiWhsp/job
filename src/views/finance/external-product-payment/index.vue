@@ -57,20 +57,20 @@
           <el-table-column type="index" label="序号" width="70" align="center">
             <template slot-scope="scope">{{ (queryParams.pageNum - 1) * queryParams.pageSize + scope.$index + 1 }}</template>
           </el-table-column>
-          <el-table-column prop="requestNo" label="外购请购单单号" min-width="140" show-overflow-tooltip />
-          <el-table-column prop="purchaseName" label="采购单名称" min-width="120" show-overflow-tooltip />
-          <el-table-column prop="orderNo" label="所属订单号" min-width="120" show-overflow-tooltip />
-          <el-table-column prop="customerName" label="客户名称" min-width="180" show-overflow-tooltip />
+          <el-table-column prop="requestNo" label="外购请购单单号" align="center" show-overflow-tooltip />
+          <el-table-column prop="purchaseName" label="采购单名称" align="center" show-overflow-tooltip />
+          <el-table-column prop="orderNo" label="所属订单号" align="center" show-overflow-tooltip />
+          <el-table-column prop="customerName" label="客户名称" align="center" show-overflow-tooltip />
           <el-table-column prop="orderTime" label="订单时间" width="120" align="center" />
-          <el-table-column prop="purchaseAmount" label="采购金额" min-width="110" align="right" />
+          <el-table-column prop="purchaseAmount" label="采购金额" align="center" />
           <el-table-column prop="status" label="状态" width="100" align="center">
             <template slot-scope="{ row }">
-              <el-tag v-if="row.status === '待付款'" type="warning" size="small">待付款</el-tag>
+              <el-tag v-if="row.status === '待付款'" type="info" size="small">待付款</el-tag>
               <el-tag v-else-if="row.status === '已付款'" type="success" size="small">已付款</el-tag>
               <span v-else>—</span>
             </template>
           </el-table-column>
-          <el-table-column prop="submitTime" label="提交时间" width="120" align="center" />
+          <el-table-column prop="submitTime" label="提交时间" align="center" />
           <el-table-column label="操作" width="180" align="center" fixed="right">
             <template slot-scope="{ row }">
               <span class="row-acts">
@@ -490,7 +490,7 @@ export default {
       return String(isPay) === "1" ? "已付款" : "待付款";
     },
     payTagType(isPay) {
-      return String(isPay) === "1" ? "success" : "warning";
+      return String(isPay) === "1" ? "success" : "info";
     },
     handlePay(row) {
       this.rowToPay = row;

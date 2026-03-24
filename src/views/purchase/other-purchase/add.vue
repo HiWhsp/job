@@ -200,7 +200,7 @@ import { UPLOAD_ROOT } from "@/config/env.js";
 
 const ADD_API = "/addPurchaseOtherOrder";
 const DETAIL_API = "/getPurchaseOtherOrder";
-const PRODUCT_LIST_API = "/getProductList";
+const PRODUCT_LIST_API = "/getForeignProductList";
 
 export default {
   name: "OtherPurchaseAdd",
@@ -394,7 +394,7 @@ export default {
               spec: it.keyVals || "",
               unit: it.unit || "",
               cateTitle: it.cateTitle || "",
-              inventoryId: it.inventoryId != null ? String(it.inventoryId) : "",
+              inventoryId: it.id != null ? String(it.id) : "",
               unitPrice: "",
               quantity: ""
             }));

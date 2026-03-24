@@ -13,7 +13,7 @@
             />
           </el-form-item>
           <el-form-item label="回款状态" prop="orderStatus">
-            <el-select v-model="queryParams.orderStatus" placeholder="请选择" clearable style="width: 140px">
+            <el-select v-model="statusTab" placeholder="请选择" clearable style="width: 140px">
               <el-option label="待审核" value="1" />
               <el-option label="已回款" value="2" />
               <el-option label="驳回" value="-1" />
@@ -68,9 +68,7 @@
           <el-table-column prop="created_at" label="订单时间" align="center" />
           <el-table-column label="回款凭证" align="center">
             <template slot-scope="{ row }">
-              <div v-if="row.payImage" class="voucher-thumb" @click="handlePreviewVoucher(row)">
-                <img :src="row.payImage" alt="凭证" class="voucher-img" />
-              </div>
+              <el-image v-if="row.payImage" :src="row.payImage" alt="凭证" class="voucher-img" :preview-src-list="[row.payImage]" />
               <span v-else class="voucher-placeholder">—</span>
             </template>
           </el-table-column>
@@ -289,7 +287,7 @@ export default {
         page: String(this.queryParams.pageNum),
         limit: String(this.queryParams.pageSize),
         keyword: this.queryParams.keyword || "",
-        orderStatus: this.queryParams.orderStatus || ""
+        orderStatus: this.queryParams.orderStatus || this.statusTab || ""
       };
       this.$api({
         url: LIST_API,
@@ -312,6 +310,7 @@ export default {
         });
     },
     handleQuery() {
+      this.queryParams.orderStatus = this.statusTab;
       this.queryParams.pageNum = 1;
       this.loadList();
     },
@@ -382,10 +381,41 @@ export default {
     },
     submitAudit() {
       if (!this.rowToAudit) return;
-      // TODO: 调用审核回款接口（后端未提供），参数一般为：id + status(1/-1) + cont
-      this.$message.success("审核提交成功（待接审核接口）");
-      this.closeAuditDialog();
-      this.loadList();
+      const id =
+        this.rowToAudit.id != null ? String(this.rowToAudit.id) : "";
+      if (!id) {
+        this.$message.warning("缺少回款单 id");
+        return;
+      }
+      const status =
+        this.auditForm.approval === "reject" ? "-1" : "1";
+      const loading = this.$loading({
+        lock: true,
+        fullscreen: true,
+        text: "提交审核中...",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.35)"
+      });
+      this.$api({
+        url: "/reviewStaffOrderPay",
+        method: "post",
+        data: { id, status }
+      })
+        .then((res) => {
+          if (res && res.code === 200) {
+            this.$message.success("审核提交成功");
+            this.closeAuditDialog();
+            this.loadList();
+          } else {
+            this.$message.error((res && res.msg) || "审核提交失败");
+          }
+        })
+        .catch((err) => {
+          this.$message.error((err && err.msg) || "审核提交失败");
+        })
+        .finally(() => {
+          loading.close();
+        });
     },
     handlePreviewVoucher(row) {
       if (row && row.payImage) this.$message.info("点击图片可预览");

@@ -62,7 +62,7 @@
           <el-table-column prop="purchaseAmount" label="金额" align="center" />
           <el-table-column prop="status" label="状态" align="center">
             <template slot-scope="{ row }">
-              <el-tag v-if="row.status === '待付款'" type="warning" size="small">待付款</el-tag>
+              <el-tag v-if="row.status === '待付款'" type="info" size="small">待付款</el-tag>
               <el-tag v-else-if="row.status === '已付款'" type="success" size="small">已付款</el-tag>
               <span v-else>—</span>
             </template>
@@ -535,7 +535,7 @@ export default {
       return String(isPay) === "1" ? "已付款" : "待付款";
     },
     payTagType(isPay) {
-      return String(isPay) === "1" ? "success" : "warning";
+      return String(isPay) === "1" ? "success" : "info";
     }
   }
 };

@@ -104,7 +104,7 @@
                 :type="orderStatusTagType(row.orderStatus)"
                 size="small"
               >
-                {{ row.orderStatusTitle || row.orderStatus || '-' }}
+                {{ orderStatusText(row.orderStatus) }}
               </el-tag>
               <span v-else>—</span>
             </template>
@@ -130,10 +130,12 @@
             <template slot-scope="{ row }">
               <span class="row-acts">
                 <span class="row-act" @click="handleView(row)">查看详情</span>
-                <span class="row-act" @click="handleSubmitPayment(row)">提交回款</span>
-                <span class="row-act" v-if="row.orderStatusTitle && row.orderStatusTitle.includes('审核')" @click="handleAudit(row)">审核</span>
-                <span class="row-act" v-if="row.orderStatus == 4" @click="handleDelivery(row)">发货</span>
-                <span class="row-act" @click="handleAudit(row)">继续</span>
+                <span class="row-act" @click="handleSubmitPayment(row)" v-if="[1, 2, -1, 4].includes(row.orderStatus)">提交回款</span>
+                <span class="row-act" v-if="[1, 2, -1, 6].includes(row.orderStatus)" @click="handleEdit(row)">编辑</span>
+                <span class="row-act" v-if="[1, 2, -1, -2].includes(row.orderStatus)" @click="handleDelete(row)">删除</span>
+                <span class="row-act" v-if="[3].includes(row.orderStatus)" @click="handleContinue(row, 'continue')">是否继续</span>
+                <span class="row-act" v-if="[6].includes(row.orderStatus)" @click="handleAudit(row)">继续</span>
+                
               </span>
             </template>
           </el-table-column>
@@ -273,24 +275,23 @@ export default {
           { pattern: /^\d+(\.\d{1,2})?$/, message: '请输入有效金额（最多两位小数）', trigger: 'blur' }
         ]
       },
-      auditTab: '1',
+      auditTab: '1,2',
       auditTabs: [
-        { label: '待审核', value: '1' },
+        { label: '待审核', value: '1,2' },
         { label: '待发货', value: '4' },
         { label: '已发货', value: '7' },
         { label: '审核未通过', value: '-1' },
         { label: '缺货审核', value: '3' },
-        { label: '已取消', value: '6' }
+        { label: '已取消', value: '-2' }
       ],
       orderStatusOptions: [
-        { label: '待营销总监审核', value: '1' },
-        { label: '待总经理审核', value: '2' },
-        { label: '缺货审核', value: '3' },
+        { label: '待审核', value: '1,2' },
         { label: '待发货', value: '4' },
-        { label: '缺货', value: '5' },
-        { label: '暂停', value: '6' },
         { label: '已发货', value: '7' },
-        { label: '驳回', value: '-1' }
+        { label: '审核未通过', value: '-1' },
+        { label: '缺货审核', value: '3' },
+        { label: '已取消', value: '-2' },
+        { label: '暂停', value: '6' }
       ],
       orderTypeOptions: [
         { label: '销售订单', value: '1' },
@@ -329,6 +330,7 @@ export default {
   },
 
   mounted() {
+    this.queryParams.orderStatus = this.auditTab;
     this.setView();
     this.loadList();
   },
@@ -354,7 +356,6 @@ export default {
     tableRowClassName({ rowIndex }) {
       return rowIndex % 2 === 1 ? 'row-even' : '';
     },
-    // POST getStaffOrderList，返回 data: { count, list }，list 项含 orderNo/customerTitle/customerAddress/orderPrice/orderStatusTitle 等
     loadList() {
       const params = {
         page: String(this.queryParams.pageNum),
@@ -417,13 +418,31 @@ export default {
       }
       this.$router.push({ path: '/sales/order/detail', query: { id } });
     },
+    handleEdit(row) {
+      const id = row && row.id != null ? String(row.id) : '';
+      if (!id) {
+        this.$message.warning('缺少订单id');
+        return;
+      }
+      this.$router.push({ path: '/sales/order/add', query: { id } });
+    },
     orderStatusTagType(status) {
       const s = Number(status);
       if (s === 7) return 'success';
-      if (s === 4) return 'success';
-      if (s === 5 || s === -1) return 'danger';
-      if (s === 6) return 'warning';
+      if (s === 4) return 'warning';
+      if (s === -1 || s === -2 || s === 6) return 'danger';
       return 'info';
+    },
+    orderStatusText(status) {
+      const s = Number(status);
+      if (s === 1 || s === 2) return '待审核';
+      if (s === 4) return '待发货';
+      if (s === 7) return '已发货';
+      if (s === -1) return '审核未通过';
+      if (s === 3) return '缺货';
+      if (s === -2) return '取消';
+      if (s === 6) return '暂停';
+      return '-';
     },
     payStatusText(status) {
       const s = Number(status);

@@ -1,6 +1,6 @@
 <template>
-  <div class="view-wrap detail-purchase-page">
-    <h1 class="page-title">采购单详情</h1>
+  <div class="view-wrap requisition-detail-page">
+    <h1 class="page-title">订单详情</h1>
 
     <!-- 订单基础信息 -->
     <div class="section-block">
@@ -11,60 +11,64 @@
       <div class="info-grid">
         <div class="info-col">
           <div class="info-item">
-            <span class="info-label">采购单号:</span>
-            <span class="info-value">{{ detail.purchaseNo }}</span>
+            <span class="info-label">外购请购单单号:</span>
+            <span class="info-value">{{ detail.requisitionNo }}</span>
           </div>
           <div class="info-item">
-            <span class="info-label">采购单名称:</span>
-            <span class="info-value">{{ detail.purchaseName }}</span>
+            <span class="info-label">下单时间:</span>
+            <span class="info-value">{{ detail.orderTime }}</span>
           </div>
           <div class="info-item">
-            <span class="info-label">采购合同:</span>
-            <span class="info-value">
-              <a v-if="detail.contractFile" href="javascript:;" class="link" @click="handleViewContract">{{ detail.contractFile }}</a>
-              <span v-else>--</span>
-            </span>
+            <span class="info-label">采购金额:</span>
+            <span class="info-value">{{ detail.purchaseAmount }}</span>
           </div>
         </div>
         <div class="info-col">
           <div class="info-item">
-            <span class="info-label">提交时间:</span>
-            <span class="info-value">{{ detail.submitTime }}</span>
+            <span class="info-label">所属订单号:</span>
+            <span class="info-value">{{ detail.orderNo }}</span>
           </div>
           <div class="info-item">
             <span class="info-label">订单状态:</span>
-            <span class="info-value">{{ detail.status }}</span>
+            <span class="info-value">
+              <el-tag v-if="detail.status === '待审核'" type="info" size="small" effect="plain">待审核</el-tag>
+              <el-tag
+                v-else-if="detail.status === '审核通过'"
+                type="success"
+                size="small"
+                effect="plain"
+              >审核通过</el-tag>
+              <span v-else>{{ detail.status }}</span>
+            </span>
           </div>
           <div class="info-item">
-            <span class="info-label">订单金额:</span>
-            <span class="info-value">{{ detail.orderAmount }}</span>
-          </div>
-          <div class="info-item">
-            <span class="info-label">审核备注:</span>
-            <span class="info-value">{{ detail.auditRemark || '--' }}</span>
+            <span class="info-label">预计到货期:</span>
+            <span class="info-value">{{ detail.arrivalDate }}</span>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- 原料信息 -->
+    <!-- 外购产品信息 -->
     <div class="section-block">
       <div class="section-title-bar">
         <span class="title-line" />
-        <h2 class="section-title">原料信息</h2>
+        <h2 class="section-title">外购产品信息</h2>
       </div>
       <div class="table-box">
         <el-table
-          :data="materialList"
+          :data="productList"
           header-cell-class-name="table-header-cell"
           :row-class-name="tableRowClassName"
         >
-          <el-table-column prop="materialCode" label="原料编码" min-width="120" show-overflow-tooltip />
-          <el-table-column prop="materialName" label="原料名称" min-width="120" show-overflow-tooltip />
-          <el-table-column prop="spec" label="规格" min-width="100" show-overflow-tooltip />
-          <el-table-column prop="quantity" label="数量" width="100" align="center" />
-          <el-table-column prop="category" label="所属分类" min-width="100" show-overflow-tooltip />
-          <el-table-column prop="productCategory" label="用于产品大类" min-width="140" show-overflow-tooltip />
+          <el-table-column type="index" label="序号" width="70" align="center">
+            <template slot-scope="scope">{{ String(scope.$index + 1).padStart(3, '0') }}</template>
+          </el-table-column>
+          <el-table-column prop="productName" label="产品名称" min-width="120" show-overflow-tooltip />
+          <el-table-column prop="spec" label="规格" min-width="120" show-overflow-tooltip />
+          <el-table-column prop="unitPrice" label="单价" min-width="110" align="right" />
+          <el-table-column prop="quantity" label="数量" width="90" align="center" />
+          <el-table-column prop="totalPrice" label="总价" min-width="110" align="right" />
           <el-table-column prop="unit" label="单位" width="80" align="center" />
         </el-table>
       </div>
@@ -86,11 +90,21 @@
           <el-table-column prop="approvalTime" label="审核时间" min-width="160" />
           <el-table-column prop="approvalStatus" label="审核状态" width="120" align="center">
             <template slot-scope="{ row }">
-              <el-tag v-if="row.approvalStatus === '审核通过'" type="success" size="small" effect="plain">审核通过</el-tag>
+              <el-tag
+                v-if="row.approvalStatus === '审核通过'"
+                type="success"
+                size="small"
+                effect="plain"
+              >审核通过</el-tag>
               <span v-else>{{ row.approvalStatus }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="approvalRemark" label="审核备注" min-width="120" show-overflow-tooltip />
+          <el-table-column
+            prop="approvalRemark"
+            label="审核备注"
+            min-width="120"
+            show-overflow-tooltip
+          />
         </el-table>
       </div>
     </div>
@@ -107,9 +121,9 @@
           header-cell-class-name="table-header-cell"
           :row-class-name="tableRowClassName"
         >
-          <el-table-column prop="amount" label="付款金额"  align="left" />
-          <el-table-column prop="paymentTime" label="付款时间" />
-          <el-table-column label="付款凭证" >
+          <el-table-column prop="amount" label="付款金额" width="120" align="left" />
+          <el-table-column prop="paymentTime" label="付款时间" width="160" />
+          <el-table-column label="付款凭证" align="center">
             <template slot-scope="{ row }">
               <a v-if="row.voucherUrl" href="javascript:;" class="link" @click="handleViewVoucher(row)">查看</a>
               <span v-else class="voucher-placeholder">—</span>
@@ -143,12 +157,6 @@
         </el-table>
       </div>
     </div>
-
-    <!-- 底部操作 -->
-    <div class="footer-actions">
-      <el-button type="primary" @click="handleConfirm">确定</el-button>
-      <el-button @click="handleCancel">取消</el-button>
-    </div>
   </div>
 </template>
 
@@ -156,19 +164,18 @@
 const DETAIL_API = "/getPurchaseMaterialOrder";
 
 export default {
-  name: "MaterialPurchaseDetail",
+  name: "ExternalPackageRequisitionDetail",
   data() {
     return {
       detail: {
-        purchaseNo: "",
-        purchaseName: "",
-        contractFile: "",
-        submitTime: "",
+        requisitionNo: "",
+        orderNo: "",
+        orderTime: "",
+        purchaseAmount: "",
         status: "",
-        orderAmount: "",
-        auditRemark: ""
+        arrivalDate: ""
       },
-      materialList: [],
+      productList: [],
       approvalList: [],
       paymentList: [],
       inboundList: []
@@ -204,27 +211,36 @@ export default {
         6: "已完成",
         [-1]: "审核未通过"
       };
-      return map[s] != null ? map[s] : (v != null ? String(v) : "--");
+      return map[s] != null ? map[s] : (v != null ? String(v) : "—");
     },
     loadDetail(id) {
-      this.$api({
-        url: DETAIL_API,
-        method: "post",
-        data: { id }
-      })
+      this.$api({ url: DETAIL_API, method: "post", data: { id } })
         .then(res => {
           if (!res || res.code !== 200 || !res.data) {
             this.$message.error("获取采购单详情失败");
             return;
           }
           const d = res.data;
-
-          this.detail.purchaseNo = d.purchaseNo || "";
-          this.detail.purchaseName = d.title || "";
-          this.detail.contractFile = d.pdfUrl || "";
-          this.detail.submitTime = d.created_at || "";
+          this.detail.requisitionNo = d.purchaseNo || "";
+          this.detail.orderNo = d.staffOrderNo || "";
+          this.detail.orderTime = d.staffOrderTime || "";
+          this.detail.purchaseAmount = d.price || "";
           this.detail.status = this._orderStatusText(d.orderStatus);
-          this.detail.orderAmount = d.price || "";
+          this.detail.arrivalDate = d.expectedTime || "";
+
+          const products = Array.isArray(d.productJson) ? d.productJson : (this._parseJson(d.productJson) || []);
+          const rows = Array.isArray(products) ? products : [];
+          this.productList = rows.map(it => {
+            const info = it && it.info ? it.info : {};
+            return {
+              productName: info.title || it.title || "",
+              spec: info.keyVals || it.spec || "",
+              unitPrice: it && (it.price != null ? it.price : (it.onePrice != null ? it.onePrice : "")),
+              quantity: it && (it.num != null ? it.num : (it.allNum != null ? it.allNum : "")),
+              totalPrice: it && it.totalPrice != null ? it.totalPrice : "",
+              unit: info.unit || it.unit || ""
+            };
+          });
 
           const reviewArr = Array.isArray(d.reviewJson) ? d.reviewJson : (this._parseJson(d.reviewJson) || []);
           const reviews = Array.isArray(reviewArr) ? reviewArr : [];
@@ -234,8 +250,6 @@ export default {
             approvalStatus: it && (it.statusTxt || it.status) ? (it.statusTxt || it.status) : "",
             approvalRemark: it && it.cont ? it.cont : ""
           }));
-          const lastRemark = reviews.length ? (reviews[reviews.length - 1].cont || "") : "";
-          this.detail.auditRemark = lastRemark;
 
           const payObj = this._parseJson(d.payJson) || {};
           this.paymentList = payObj && (payObj.created_at || payObj.price || payObj.image) ? [{
@@ -252,29 +266,10 @@ export default {
             reportUrl: ruKuObj.image || "",
             qcRemark: ruKuObj.cont || ""
           }] : [];
-
-          const productArr = Array.isArray(d.productJson) ? d.productJson : (this._parseJson(d.productJson) || []);
-          const products = Array.isArray(productArr) ? productArr : [];
-          this.materialList = products.map(it => {
-            const info = it && it.info ? it.info : {};
-            return {
-              materialCode: info.sn || "",
-              materialName: info.title || "",
-              spec: info.keyVals || "",
-              quantity: it && it.num != null ? it.num : "",
-              category: info.productCateTitle || "",
-              productCategory: info.productCateTitle || info.productCateTitle || "",
-              unit: info.unit || ""
-            };
-          });
         })
         .catch(() => {
           this.$message.error("获取采购单详情失败");
         });
-    },
-    handleViewContract() {
-      // TODO: 下载或预览采购合同
-      window.open(this.detail.contractFile, '_blank');
     },
     handleViewVoucher(row) {
       // TODO: 查看付款凭证
@@ -283,19 +278,13 @@ export default {
     handleViewReport(row) {
       // TODO: 查看质检报告
       window.open(row.reportUrl, '_blank');
-    },
-    handleConfirm() {
-      this.$router.push({ name: "material-purchase-list" });
-    },
-    handleCancel() {
-      this.$router.push({ name: "material-purchase-list" });
     }
   }
 };
 </script>
 
 <style lang="less" scoped>
-.detail-purchase-page {
+.requisition-detail-page {
   background: #fff;
   border-radius: 8px;
   border: 1px solid #e6e6e6;
@@ -318,56 +307,50 @@ export default {
 .section-title-bar {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
   margin-bottom: 16px;
   padding-bottom: 12px;
-  border-bottom: 1px solid #E6E6E6;
+  border-bottom: 1px solid #e6e6e6;
   .title-line {
     width: 8px;
     height: 21px;
-    background: #2373C8;
+    background: #2373c8;
     border-radius: 2px;
     margin-right: 8px;
   }
   .section-title {
     font-size: 16px;
     font-weight: bold;
-    color: #2373C8;
+    color: #2373c8;
     margin: 0;
   }
 }
 
 .info-grid {
   display: flex;
-  gap: 80px 120px;
+  flex-direction: column;
+  gap: 23px;
   flex-wrap: wrap;
   padding: 16px 0;
 }
 
 .info-col {
   display: flex;
-  flex-direction: column;
   gap: 12px;
 }
 
 .info-item {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   font-size: 14px;
+  flex: 1;
   .info-label {
     color: #606266;
-    min-width: 90px;
-    flex-shrink: 0;
+    width: 120px;
+    text-align: left;
   }
   .info-value {
     color: #303133;
-  }
-  .link {
-    color: #3377fe;
-    cursor: pointer;
-    &:hover {
-      text-decoration: underline;
-    }
+    text-align: left;
   }
 }
 
@@ -386,6 +369,16 @@ export default {
       background: #f5f7fa !important;
     }
   }
+  ::v-deep .el-tag--info.el-tag--plain {
+    background-color: #f4f4f5;
+    border-color: #e9e9eb;
+    color: #909399;
+  }
+  ::v-deep .el-tag--success.el-tag--plain {
+    background-color: #f0f9eb;
+    border-color: #e1f3d8;
+    color: #67c23a;
+  }
   .link {
     color: #3377fe;
     cursor: pointer;
@@ -395,30 +388,6 @@ export default {
   }
   .voucher-placeholder {
     color: #c0c4cc;
-  }
-}
-
-/* 审核状态-通过：浅绿 */
-.table-box ::v-deep .el-tag--success.el-tag--plain {
-  background-color: #f0f9eb;
-  border-color: #e1f3d8;
-  color: #67c23a;
-}
-
-.footer-actions {
-  display: flex;
-  gap: 12px;
-  padding-top: 24px;
-  border-top: 1px solid #ebeef5;
-  margin-top: 8px;
-  .el-button--primary {
-    background: linear-gradient(90deg, #157de9 0%, #3697fd 100%) !important;
-    border: none;
-  }
-  .el-button:not(.el-button--primary) {
-    background: #fff;
-    border-color: #dcdfe6;
-    color: #606266;
   }
 }
 </style>

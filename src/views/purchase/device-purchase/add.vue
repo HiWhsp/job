@@ -149,7 +149,7 @@ import { UPLOAD_ROOT } from "@/config/env.js";
 
 const ADD_API = "/addPurchaseEquipmentOrder";
 const DETAIL_API = "/getPurchaseEquipmentOrder";
-const PRODUCT_LIST_API = "/getProductList";
+const PRODUCT_LIST_API = "/getForeignProductList";
 
 export default {
   name: "DevicePurchaseAdd",
@@ -344,7 +344,7 @@ export default {
               spec: it.keyVals || "",
               unit: it.unit || "",
               cateTitle: it.cateTitle || "",
-              inventoryId: it.inventoryId != null ? String(it.inventoryId) : "",
+              inventoryId: it.id != null ? String(it.id) : "",
               unitPrice: "",
               quantity: ""
             }));

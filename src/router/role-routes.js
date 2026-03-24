@@ -1024,7 +1024,7 @@ const purchaseRoutes = [
           import("@/views/purchase/external-package-purchase/index.vue"),
         redirect: "/purchase/external-package-purchase/list",
         meta: {
-          title: "外采包装",
+          title: "外采包装采购",
           requireAuth: true,
           hidden: true,
         },
@@ -1222,6 +1222,29 @@ const productionVicePresidentRoutes = [
           ),
         meta: {
           title: "外采产品采购详情",
+          requireAuth: true,
+          hidden: false,
+        },
+      },
+      // 外采包装
+      {
+        path: "external-package-purchase",
+        name: "external-package-purchase",
+        component: () =>
+          import("@/views/production-vice-president/external-package-purchase/index.vue"),
+        meta: {
+          title: "外采包装",
+          requireAuth: true,
+          hidden: true,
+        },
+      },
+      {
+        path: "external-package-purchase/detail",
+        name: "production-vice-president-external-package-purchase-detail",
+        component: () =>
+          import("@/views/production-vice-president/external-package-purchase/detail.vue"),
+        meta: {
+          title: "外采包装采购详情",
           requireAuth: true,
           hidden: false,
         },

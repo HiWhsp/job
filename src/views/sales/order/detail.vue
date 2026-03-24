@@ -396,16 +396,10 @@ export default {
       const v = this.detail.orderStatus;
       const s = typeof v === "number" || (typeof v === "string" && /^-?\d+$/.test(v)) ? Number(v) : null;
       // 数字状态（与 manager 一致）
-      if (s != null) {
-        if (s === 5 || s === -1) return "danger";
-        if (s === 7) return "success";
-        if (s === 6) return "warning";
-        return "info";
-      }
-      // 文本状态（兼容旧 mock）
-      if (v === "待发货" || v === "部分发货") return "warning";
-      if (v === "已发货") return "success";
-      return "info";
+      if (s === 7) return 'success';
+      if (s === 4) return 'warning';
+      if (s === -1 || s === -2 || s === 6) return 'danger';
+      return 'info';
     },
     paymentStatusTagType() {
       const v = this.detail.payStatus != null ? this.detail.payStatus : this.detail.paymentStatus;
@@ -511,12 +505,12 @@ export default {
                   code: p.productNo || inv.sn || "",
                   name: p.title || "",
                   spec: inv.keyVals || "",
-                  category: "",
+                  category: p.cateTitle || "",
                   unit: p.unit || "",
                   guidePrice: item.yPrice,
                   quantity: item.num,
                   totalPrice: item.totalPrice,
-                  stockQty: "",
+                  stockQty: inv.kucun || "",
                   stockStatus: Number(d.orderStatus) === 5 ? "缺货" : "有货"
                 };
               })
@@ -691,21 +685,17 @@ export default {
       if (packStr) return packStr;
       return type != null ? String(type) : "—";
     },
-    // 1待营销总监审核, 2待总经理审核, 3缺货审核, 4待发货, 5缺货, 6暂停, 7已发货, -1驳回
-    orderStatusText(v) {
-      const s = Number(v);
-      const map = {
-        1: "待营销总监审核",
-        2: "待总经理审核",
-        3: "缺货审核",
-        4: "待发货",
-        5: "缺货",
-        6: "暂停",
-        7: "已发货",
-        [-1]: "驳回"
-      };
-      if (!Number.isNaN(s) && map[s] != null) return map[s];
-      return v != null ? String(v) : "—";
+    
+    orderStatusText(status) {
+      const s = Number(status);
+      if (s === 1 || s === 2) return '待审核';
+      if (s === 4) return '待发货';
+      if (s === 7) return '已发货';
+      if (s === -1) return '审核未通过';
+      if (s === 3) return '缺货';
+      if (s === -2) return '取消';
+      if (s === 6) return '暂停';
+      return '-';
     },
     // 1未回款, 2部分回款, 3全部回款
     payStatusText(status) {
@@ -847,7 +837,7 @@ export default {
 
 .thumb-image {
   width: 120px;
-  height: 80px;
+  height: 120px;
   border-radius: 4px;
   border: 1px solid #ebeef5;
   background: #f5f7fa;

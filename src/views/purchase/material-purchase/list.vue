@@ -152,14 +152,14 @@ export default {
       },
       total: 0,
       tableHeight: 0,
-      statusTab: "pending",
+      statusTab: "1,2",
       statusTabs: [
-        { label: "待审核", value: "pending" },
-        { label: "待付款", value: "pending_payment" },
-        { label: "待采购", value: "to_purchase" },
-        { label: "质检入库中", value: "qc_ing" },
-        { label: "已完成", value: "completed" },
-        { label: "审核未通过", value: "rejected" }
+        { label: "待审核", value: "1,2" },
+        { label: "待付款", value: "3" },
+        { label: "待采购", value: "4" },
+        { label: "质检入库中", value: "5" },
+        { label: "已完成", value: "6" },
+        { label: "审核未通过", value: "-1" }
       ],
       tableData: [],
       // 上传合同弹框
@@ -210,9 +210,9 @@ export default {
     orderStatusText(v) {
       const s = Number(v);
       const map = {
-        1: "生产副总审核",
-        2: "总经理审核",
-        3: "待财务付款",
+        1: "待审核",
+        2: "待审核",
+        3: "财务付款中",
         4: "待采购",
         5: "质检入库",
         6: "已完成",
@@ -222,23 +222,20 @@ export default {
     },
     orderStatusTagType(v) {
       const s = Number(v);
-      if (s === -1) return "danger";
-      if (s === 6) return "success";
-      if (s === 3) return "warning";
-      return "info";
+      if (s === 1 || s === 2) return "info";
+      if (s === -1) return "warning";
+      return "success";
     },
     loadList() {
       const [start_time = "", end_time = ""] = this.queryParams.dateRange || [];
       const params = {
         limit: String(this.queryParams.pageSize),
         page: String(this.queryParams.pageNum),
-        orderStatus: String(this._orderStatusByTab(this.statusTab)),
+        orderStatus: String(this.statusTab),
         keyword: this.queryParams.keyword || "",
         start_time: start_time || "",
         end_time: end_time || "",
-        // 后端要求必传：原料=1，外购包装=2（库管入库时不需要传）
         materialType: "1",
-        // 采购端该页不以付款状态为筛选项，按接口要求占位传空
         isPay: ""
       };
       this.$api({
