@@ -325,7 +325,7 @@ export default {
       this.auditContinueChoice = 'pause';
       this.auditRemark = '';
     },
-    /** 审核：POST reviewStaffOrder，参数 id、status（1通过, -1驳回）、cont（备注） */
+    /** 审核：POST reviewStaffOrder，参数 id、status（1通过, -1驳回）、cont（必填）；token 由 request 自动带 */
     submitAuditChoice() {
       if (!this.rowToAudit) return;
       const id = this.rowToAudit.id != null ? String(this.rowToAudit.id) : '';
@@ -334,13 +334,18 @@ export default {
         return;
       }
 
+      const pass = this.auditContinueChoice === 'continue';
+      const remark = (this.auditRemark || '').trim();
+      const cont =
+        remark || (pass ? '同意' : '驳回');
+
       this.$api({
         url: '/reviewStaffOrder',
         method: 'post',
         data: {
           id,
-          status: this.auditContinueChoice === 'continue' ? '1' : '-1',
-          cont: (this.auditRemark || '').trim()
+          status: pass ? '1' : '-1',
+          cont
         }
       })
         .then(res => {

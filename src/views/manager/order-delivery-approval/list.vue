@@ -8,7 +8,7 @@
             <el-input v-model="queryParams.keyword" placeholder="订单编号/客户名称" clearable style="width: 260px" />
           </el-form-item>
           <el-form-item label="订单状态">
-            <el-select v-model="queryParams.orderStatus" placeholder="请选择" clearable style="width: 140px">
+            <el-select v-model="auditTab" placeholder="请选择" clearable style="width: 140px">
               <el-option
                 v-for="item in orderStatusOptions"
                 :key="item.value"
@@ -105,7 +105,7 @@
                 :type="orderStatusTagType(row.orderStatus)"
                 size="small"
               >
-                {{ row.orderStatusTitle || '-' }}
+                {{ orderStatusText(row.orderStatus) || '-' }}
               </el-tag>
               <span v-else>—</span>
             </template>
@@ -131,10 +131,9 @@
             <template slot-scope="{ row }">
               <span class="row-acts">
                 <span class="row-act" @click="handleView(row)">查看详情</span>
-                <span class="row-act" v-if="row.orderStatusTitle.includes('审核')" @click="handleAudit(row)">审核</span>
-                <span class="row-act" v-if="row.orderStatus == 4" @click="handleDelivery(row)">发货</span>
-                <span class="row-act" v-if="row.orderStatus >= 4 && row.orderStatus != 4" @click="handleAudit(row)">打印电子订单</span>
-
+                <span class="row-act" v-if="row.orderStatus == 3" @click="handleDelivery(row)">审批</span>
+                <span class="row-act" v-if="row.orderStatus == 4" @click="handleOutboundShip(row)">发货</span>
+                <!-- <span class="row-act" v-if="row.orderStatus == 4 || row.orderStatus == 7" @click="handleAudit(row)">打印电子订单</span> -->
               </span>
             </template>
           </el-table-column>
@@ -159,7 +158,7 @@
     >
       <el-form
         :model="deliveryForm"
-        label-width="100px"
+        label-width="110px"
         label-position="right"
       >
         <el-form-item label="审批：">
@@ -220,21 +219,21 @@ export default {
         approveType: 'batch', // batch: 审批发货 -> status=1, lack: 库存不足 -> status=-1
         estimateTime: ''
       },
-      auditTab: '',
+      auditTab: '3',
       auditTabs: [
-        { label: '发货审批', value: '' },
+        { label: '发货审批', value: '3' },
         { label: '待发货', value: '4' },
         { label: '已发货', value: '7' }
       ],
       orderStatusOptions: [
-        { label: '待营销总监审核', value: '1' },
-        { label: '待总经理审核', value: '2' },
-        { label: '缺货审核', value: '3' },
+        // { label: '待营销总监审核', value: '1' },
+        // { label: '待总经理审核', value: '2' },
+        { label: '发货审批', value: '3' },
         { label: '待发货', value: '4' },
-        { label: '缺货', value: '5' },
-        { label: '暂停', value: '6' },
+        // { label: '缺货', value: '5' },
+        // { label: '暂停', value: '6' },
         { label: '已发货', value: '7' },
-        { label: '驳回', value: '-1' }
+        // { label: '驳回', value: '-1' }
       ],
       orderTypeOptions: [
         { label: '销售订单', value: '1' },
@@ -285,7 +284,7 @@ export default {
         page: String(this.queryParams.pageNum),
         limit: String(this.queryParams.pageSize),
         keyword: this.queryParams.keyword || '',
-        orderStatus: this.queryParams.orderStatus || '',
+        orderStatus: this.auditTab || '',
         orderType: this.queryParams.orderType || '',
         payType: this.queryParams.payType || '',
         payStatus: this.queryParams.payStatus || ''
@@ -349,7 +348,7 @@ export default {
       this.rowToAudit = row;
       this.auditDialogVisible = true;
     },
-    /** 列表发货：打开与详情页一致的审批发货弹框 */
+    /** 发货审批（缺货审核等）：打开弹框提交 qhReviewStaffOrder */
     handleDelivery(row) {
       this.rowToDelivery = row;
       this.deliveryForm = {
@@ -357,6 +356,97 @@ export default {
         estimateTime: ''
       };
       this.deliveryDialogVisible = true;
+    },
+    /** 列表/详情里 productJson、foreignProductJson 可能是数组，也可能是 JSON 字符串（甚至再包一层字符串） */
+    normalizeOrderLineArray(val) {
+      if (Array.isArray(val)) return val;
+      if (typeof val === 'string' && val.trim()) {
+        try {
+          let a = JSON.parse(val);
+          if (typeof a === 'string' && a.trim().startsWith('[')) {
+            try {
+              a = JSON.parse(a);
+            } catch (_) {
+              return [];
+            }
+          }
+          return Array.isArray(a) ? a : [];
+        } catch (e) {
+          return [];
+        }
+      }
+      return [];
+    },
+    /** 出库行 id：优先 id，列表常见仅有 inventoryId */
+    outboundLineId(it) {
+      if (!it) return '';
+      const raw =
+        it.id != null && String(it.id).trim() !== ''
+          ? it.id
+          : it.inventoryId != null && String(it.inventoryId).trim() !== ''
+            ? it.inventoryId
+            : '';
+      return raw != null ? String(raw).trim() : '';
+    },
+    buildOutboundIdsPayload(arr) {
+      return this.normalizeOrderLineArray(arr)
+        .map((it) => {
+          const id = this.outboundLineId(it);
+          return id ? { id } : null;
+        })
+        .filter(Boolean);
+    },
+    /** 待发货：用列表行上的 productJson / foreignProductJson 直接申请出库，不再请求详情 */
+    handleOutboundShip(row) {
+      if (!row) return;
+      const staffOrderId = row.id != null ? String(row.id) : '';
+      if (!staffOrderId) {
+        this.$message.warning('缺少订单 id');
+        return;
+      }
+      const productJsonSrc =
+        row.productJson != null ? row.productJson : row.product_json;
+      const foreignJsonSrc =
+        row.foreignProductJson != null
+          ? row.foreignProductJson
+          : row.foreign_product_json;
+      const productPayload = this.buildOutboundIdsPayload(productJsonSrc);
+      const productRows = this.normalizeOrderLineArray(productJsonSrc);
+      if (!productPayload.length && productRows.length > 0) {
+        this.$message.warning('订单产品明细缺少可出库行 id，无法申请出库');
+        return;
+      }
+      const foreignPayload = this.buildOutboundIdsPayload(foreignJsonSrc);
+      const loading = this.$loading({
+        lock: true,
+        fullscreen: true,
+        text: '申请出库中...',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.35)'
+      });
+      this.$api({
+        url: '/addStaffOutboundOrder',
+        method: 'post',
+        data: {
+          staffOrderId,
+          productJson: JSON.stringify(productPayload),
+          foreignProductJson: JSON.stringify(foreignPayload)
+        }
+      })
+        .then((res) => {
+          if (res && res.code === 200) {
+            this.$message.success('申请出库成功');
+            this.loadList();
+          } else {
+            this.$message.error((res && res.msg) || '申请出库失败');
+          }
+        })
+        .catch((err) => {
+          this.$message.error((err && err.msg) ? err.msg : '申请出库失败');
+        })
+        .finally(() => {
+          loading.close();
+        });
     },
     /** 提交审批发货：调用缺货审核接口 qhReviewStaffOrder，id + status(1发货/-1缺货) + estimateTime */
     submitDelivery() {
@@ -396,12 +486,43 @@ export default {
           this.$message.error((err && err.msg) ? err.msg : '提交失败');
         });
     },
+    /** 发货前审批：POST reviewStaffOrder，id、status(1通过/-1驳回)、cont（必填）；token 由 request 自动带 */
     handleAuditConfirm({ auditStatus, auditRemark }) {
       if (!this.rowToAudit) return;
-      // TODO: 调用审核接口，传入 this.rowToAudit.id, auditStatus, auditRemark
-      this.$message.success(auditStatus === 'approve' ? '审核已通过' : '已拒绝');
-      this.rowToAudit = null;
-      this.loadList();
+      const remark = (auditRemark || '').trim();
+      if (auditStatus !== 'approve' && !remark) {
+        this.$message.warning('审核未通过时请填写审核备注');
+        return;
+      }
+      const id = this.rowToAudit.id != null ? String(this.rowToAudit.id) : '';
+      if (!id) {
+        this.$message.warning('缺少订单id');
+        return;
+      }
+      const status = auditStatus === 'approve' ? '1' : '-1';
+      // 接口要求 cont 必填；空串会被 request 删掉，通过且无备注时用占位文案
+      const cont = remark || (auditStatus === 'approve' ? '同意' : ' ');
+      this.$api({
+        url: '/reviewStaffOrder',
+        method: 'post',
+        data: {
+          id,
+          status,
+          cont
+        }
+      })
+        .then((res) => {
+          if (res && res.code === 200) {
+            this.$message.success(auditStatus === 'approve' ? '审核已通过' : '已拒绝');
+            this.rowToAudit = null;
+            this.loadList();
+          } else {
+            this.$message.error((res && res.msg) || '审核失败');
+          }
+        })
+        .catch((err) => {
+          this.$message.error((err && err.msg) ? err.msg : '审核失败');
+        });
     },
     handleEdit(row) {
       // TODO: 编辑
@@ -429,9 +550,7 @@ export default {
     orderStatusTagType(status) {
       const s = Number(status);
       if (s === 7) return 'success';
-      if (s === 4) return 'success';
-      if (s === 5 || s === -1) return 'danger';
-      if (s === 6) return 'warning';
+      if (s === 4) return 'warning';
       return 'info';
     },
     payStatusText(status) {
@@ -447,6 +566,13 @@ export default {
       if (s === 2) return 'warning';
       if (s === 3) return 'success';
       return 'info';
+    },
+    orderStatusText(status) {
+      const s = Number(status);
+      if (s === 3) return '待审批';
+      if (s === 4) return '待发货';
+      if (s === 7) return '已发货';
+      return '';
     }
   }
 };

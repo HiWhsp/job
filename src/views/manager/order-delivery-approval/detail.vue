@@ -247,43 +247,9 @@
 
 
     <div class="form-footer">
-      <el-button type="primary" @click="openDeliveryDialog" v-if="detail.orderStatus == 4">发货</el-button>
+      <el-button type="primary" v-if="detail.orderStatus == 4" @click="submitOutboundShip">发货</el-button>
       <el-button @click="handleCancel">取消</el-button>
     </div>
-
-    <!-- 审批发货弹框 -->
-    <el-dialog
-      title="审批发货"
-      :visible.sync="deliveryDialogVisible"
-      width="520px"
-      :close-on-click-modal="false"
-    >
-      <el-form
-        :model="deliveryForm"
-        label-width="100px"
-        label-position="right"
-      >
-        <el-form-item label="审批：">
-          <el-radio-group v-model="deliveryForm.approveType">
-            <el-radio label="batch">审批发货</el-radio>
-            <el-radio label="lack">库存不足</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="预计发货时间：">
-          <el-date-picker
-            v-model="deliveryForm.estimateTime"
-            type="date"
-            placeholder="请设置"
-            value-format="yyyy-MM-dd"
-          />
-        </el-form-item>
-      </el-form>
-
-      <div slot="footer" class="dialog-footer" style="text-align: center;">
-        <el-button type="primary" @click="submitDelivery">提交</el-button>
-        <el-button @click="deliveryDialogVisible = false">取消</el-button>
-      </div>
-    </el-dialog>
   </div>
 </template>
 
@@ -342,12 +308,9 @@ export default {
         // 外购产品信息列表
         externalProductList: []
       },
-      // 审批发货弹框
-      deliveryDialogVisible: false,
-      deliveryForm: {
-        approveType: 'batch', // batch: 审批发货 -> status=1, lack: 库存不足 -> status=-1
-        estimateTime: ''
-      }
+      /** 订单原始 productJson / foreignProductJson，用于申请出库 id 列表 */
+      _productJsonRaw: [],
+      _foreignProductJsonRaw: []
     };
   },
 
@@ -499,8 +462,10 @@ export default {
           const data = res.data;
 
           const customerAddress = data.customerAddress || {};
-          const productList = Array.isArray(data.productJson) ? data.productJson : [];
-          const foreignList = Array.isArray(data.foreignProductJson) ? data.foreignProductJson : [];
+          const productList = this.normalizeOrderLineArray(data.productJson);
+          const foreignList = this.normalizeOrderLineArray(data.foreignProductJson);
+          this._productJsonRaw = productList;
+          this._foreignProductJsonRaw = foreignList;
           const orderStatusTitle = data.orderStatusTitle || this.orderStatusText(data.orderStatus);
 
           this.detail = {
@@ -612,38 +577,87 @@ export default {
         return {};
       }
     },
-    openDeliveryDialog() {
-      this.deliveryDialogVisible = true;
+    /** productJson、foreignProductJson 可能是数组或 JSON 字符串（甚至再包一层字符串） */
+    normalizeOrderLineArray(val) {
+      if (Array.isArray(val)) return val;
+      if (typeof val === 'string' && val.trim()) {
+        try {
+          let a = JSON.parse(val);
+          if (typeof a === 'string' && a.trim().startsWith('[')) {
+            try {
+              a = JSON.parse(a);
+            } catch (_) {
+              return [];
+            }
+          }
+          return Array.isArray(a) ? a : [];
+        } catch (e) {
+          return [];
+        }
+      }
+      return [];
     },
-    submitDelivery() {
-      if (!this.deliveryForm.approveType) {
-        this.$message.error('请选择审批结果');
+    outboundLineId(it) {
+      if (!it) return '';
+      const raw =
+        it.id != null && String(it.id).trim() !== ''
+          ? it.id
+          : it.inventoryId != null && String(it.inventoryId).trim() !== ''
+            ? it.inventoryId
+            : '';
+      return raw != null ? String(raw).trim() : '';
+    },
+    buildOutboundIdsPayload(arr) {
+      return this.normalizeOrderLineArray(arr)
+        .map((it) => {
+          const id = this.outboundLineId(it);
+          return id ? { id } : null;
+        })
+        .filter(Boolean);
+    },
+    /** 待发货：直接申请出库 POST addStaffOutboundOrder（不走弹框） */
+    submitOutboundShip() {
+      if (Number(this.detail.orderStatus) !== 4) return;
+      const staffOrderId = String(this.orderId || '').trim();
+      if (!staffOrderId) {
+        this.$message.warning('缺少订单 id');
         return;
       }
-      if (!this.deliveryForm.estimateTime) {
-        this.$message.error('请选择预计发货时间');
+      const productPayload = this.buildOutboundIdsPayload(this._productJsonRaw);
+      if (!productPayload.length && (this.detail.productList || []).length > 0) {
+        this.$message.warning('订单产品明细缺少可出库行 id，无法申请出库');
         return;
       }
-      const id = this.orderId;
-      const status = this.deliveryForm.approveType === 'lack' ? '-1' : '1'; // 1发货, -1缺货
-      const estimateTime = this.deliveryForm.estimateTime || '';
-
+      const foreignPayload = this.buildOutboundIdsPayload(this._foreignProductJsonRaw);
+      const loading = this.$loading({
+        lock: true,
+        fullscreen: true,
+        text: '申请出库中...',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.35)'
+      });
       this.$api({
-        url: '/qhReviewStaffOrder',
+        url: '/addStaffOutboundOrder',
         method: 'post',
-        data: { id, status, estimateTime }
+        data: {
+          staffOrderId,
+          productJson: JSON.stringify(productPayload),
+          foreignProductJson: JSON.stringify(foreignPayload)
+        }
       })
         .then((res) => {
           if (res && res.code === 200) {
-            this.$message.success('提交成功');
-            this.deliveryDialogVisible = false;
+            this.$message.success('申请出库成功');
             this.loadDetail();
           } else {
-            this.$message.error((res && res.msg) || '提交失败');
+            this.$message.error((res && res.msg) || '申请出库失败');
           }
         })
         .catch((err) => {
-          this.$message.error((err && err.msg) ? err.msg : '提交失败');
+          this.$message.error((err && err.msg) ? err.msg : '申请出库失败');
+        })
+        .finally(() => {
+          loading.close();
         });
     },
     handleCancel() {
@@ -769,19 +783,4 @@ export default {
   }
 }
 
-:deep(.el-dialog__header) {
-  height: 60px;
-  padding: 0 24px 0;
-  background: #F7F7F7;
-  text-align: left;
-  .el-dialog__title {
-    line-height: 60px;
-    font-size: 18px;
-    font-weight: 500;
-    color: #333333;
-  }
-}
-:deep(.el-dialog__body){
-  padding: 30px 80px;
-}
 </style>
