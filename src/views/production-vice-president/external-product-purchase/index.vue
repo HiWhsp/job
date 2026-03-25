@@ -19,10 +19,9 @@
               style="width: 180px"
             >
               <el-option label="待审核" value="1" />
-              <el-option label="总经理审核" value="2" />
               <el-option label="待财务付款" value="3" />
               <el-option label="待采购" value="4" />
-              <el-option label="质检入库" value="5" />
+              <el-option label="质检入库中" value="5" />
               <el-option label="已完成" value="6" />
               <el-option label="审核未通过" value="-1" />
             </el-select>

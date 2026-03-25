@@ -9,8 +9,12 @@
           </el-form-item>
           <el-form-item label="状态" prop="status">
             <el-select v-model="queryParams.status" placeholder="请选择" clearable style="width: 180px">
-              <el-option label="待生成采购单" value="4" />
-              <el-option label="已生成采购单" value="5" />
+              <el-option label="待审核" value="1" />
+              <el-option label="待财务付款" value="3" />
+              <el-option label="待采购" value="4" />
+              <el-option label="质检入库中" value="5" />
+              <el-option label="已完成" value="6" />
+              <el-option label="审核未通过" value="-1" />
             </el-select>
           </el-form-item>
           <el-form-item label="时间筛选" prop="dateRange">
@@ -27,7 +31,7 @@
     </div>
 
     <!-- 列表标题 -->
-    <div class="list-title">外采包装订单</div>
+    <div class="list-title">外采包装采购单</div>
 
     <!-- 表格 -->
     <div class="table-view">
@@ -39,28 +43,26 @@
               {{ String((queryParams.pageNum - 1) * queryParams.pageSize + scope.$index + 1).padStart(3, '0') }}
             </template>
           </el-table-column>
-          <el-table-column prop="orderNo" label="外采包装采购单单号" show-overflow-tooltip />
-          <el-table-column prop="packageSpec" label="包装规格" show-overflow-tooltip />
-          <el-table-column prop="packageSpec" label="数量" show-overflow-tooltip />
-          <el-table-column prop="packageSpec" label="金额" show-overflow-tooltip />
-          <el-table-column prop="packageSpec" label="所属订单号" show-overflow-tooltip />
-          <el-table-column prop="customerName" label="客户名称" show-overflow-tooltip />
-          <el-table-column prop="orderTime" label="订单时间" show-overflow-tooltip />
-          <el-table-column prop="packageSpec" label="订单金额" show-overflow-tooltip />
+          <el-table-column prop="purchaseNo" label="外采包装采购单单号" width="200" show-overflow-tooltip />
+          <el-table-column prop="title" label="包装规格" show-overflow-tooltip />
+          <el-table-column prop="allNum" label="数量" show-overflow-tooltip />
+          <el-table-column prop="onePrice" label="金额" show-overflow-tooltip />
+          <el-table-column prop="staffOrderNo" label="所属订单号" show-overflow-tooltip />
+          <el-table-column prop="customerTitle" label="客户名称" show-overflow-tooltip />
+          <el-table-column prop="staffOrderTime" label="订单时间" show-overflow-tooltip />
+          <el-table-column prop="price" label="订单金额" show-overflow-tooltip />
           <el-table-column prop="status" label="状态" align="center">
             <template slot-scope="{ row }">
-              <el-tag v-if="String(row.orderStatus) === '4'" type="info" size="small" effect="plain">待生成采购单</el-tag>
-              <el-tag v-else-if="String(row.orderStatus) === '5'" type="success" size="small"
-                effect="plain">已生成采购单</el-tag>
-              <span v-else>—</span>
+              <el-tag :type="getTagType(row.orderStatus)" size="small" effect="plain">{{ row.status }}</el-tag>
+              <!-- <span v-else>—</span> -->
             </template>
           </el-table-column>
-          <el-table-column prop="submitTime" label="提交时间" align="center" />
-          <el-table-column label="操作" min-width="180" align="center" fixed="right">
+          <el-table-column prop="updated_at" label="提交时间" align="center" width="180" />
+          <el-table-column label="操作" align="left">
             <template slot-scope="{ row }">
               <span class="row-acts">
                 <span class="row-act" @click="handleView(row)">查看详情</span>
-                <span v-if="String(row.orderStatus) === '4'" class="row-act" @click="handleGenerate(row)">生成采购单</span>
+                <span v-if="row.orderStatus == 1" class="row-act" @click="handleAudit(row)">立即审核</span>
               </span>
             </template>
           </el-table-column>
@@ -73,28 +75,23 @@
       </div>
     </div>
 
-    <!-- 生成采购单弹框 -->
-    <el-dialog title="生成采购单" :visible.sync="generateOrderDialogVisible" width="480px" :close-on-click-modal="false"
-      @close="closeGenerateOrderDialog">
-      <el-form ref="generateOrderForm" :model="generateOrderForm" :rules="generateOrderRules" label-width="100px"
-        class="generate-order-form">
-        <el-form-item label="采购数量:" prop="quantity">
-          <el-input v-model="generateOrderForm.quantity" placeholder="请输入" clearable />
+    <!-- 审核弹框 -->
+    <el-dialog title="审核" :visible.sync="auditDialogVisible" width="520px" :close-on-click-modal="false"
+      @close="closeAuditDialog">
+      <el-form ref="auditForm" :model="auditForm" label-width="100px" class="audit-form">
+        <el-form-item label="审核:">
+          <el-radio-group v-model="auditForm.result">
+            <el-radio label="pass">通过</el-radio>
+            <el-radio label="reject">未通过</el-radio>
+          </el-radio-group>
         </el-form-item>
-        <el-form-item label="采购单价:" prop="unitPrice">
-          <el-input v-model="generateOrderForm.unitPrice" placeholder="请输入" clearable />
-        </el-form-item>
-        <el-form-item label="采购总金额:">
-          <span class="total-amount">{{ totalAmountDisplay }}</span>
-        </el-form-item>
-        <el-form-item label="预计到货期:" prop="arrivalDate">
-          <el-date-picker v-model="generateOrderForm.arrivalDate" type="date" placeholder="请输入" clearable
-            value-format="yyyy-MM-dd" style="width: 100%" />
+        <el-form-item label="审核备注:">
+          <el-input v-model="auditForm.remark" placeholder="请输入" clearable maxlength="200" show-word-limit />
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitGenerateOrder">提交</el-button>
-        <el-button @click="generateOrderDialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="submitAudit">提交</el-button>
+        <el-button @click="auditDialogVisible = false">取消</el-button>
       </span>
     </el-dialog>
   </div>
@@ -102,7 +99,7 @@
 
 <script>
 const LIST_API = "/getPurchaseMaterialOrderList";
-const ADD_API = "/addPurchaseMaterialPackOrder";
+const REVIEW_API = "/reviewPurchaseMaterialOrder";
 
 export default {
   name: "ExternalPackageRequisitionList",
@@ -118,6 +115,13 @@ export default {
       total: 0,
       tableHeight: 0,
       tableData: [],
+      // 审核弹框
+      auditDialogVisible: false,
+      auditRow: null,
+      auditForm: {
+        result: "reject",
+        remark: ""
+      },
       generateOrderDialogVisible: false,
       generateOrderRow: null,
       generateOrderForm: {
@@ -138,6 +142,13 @@ export default {
       const price = Number(this.generateOrderForm.unitPrice);
       if (isNaN(qty) || isNaN(price) || qty < 0 || price < 0) return "0.00";
       return (qty * price).toFixed(2);
+    },
+    getTagType() {
+      return (status) => {
+        if (status == 1) return "info";
+        if (status == -1) return "danger";
+        else return "success";
+      }
     }
   },
   mounted() {
@@ -162,14 +173,25 @@ export default {
     tableRowClassName({ rowIndex }) {
       return rowIndex % 2 === 1 ? "row-even" : "";
     },
+    _orderStatusText(v) {
+      const s = Number(v);
+      const map = {
+        1: "待审核",
+        2: "待审核",
+        3: "待财务付款",
+        4: "待采购",
+        5: "质检入库中",
+        6: "已完成",
+        [-1]: "审核未通过"
+      };
+      return map[s] != null ? map[s] : (v != null ? String(v) : "—");
+    },
     loadList() {
       const [start_time = "", end_time = ""] = this.queryParams.dateRange || [];
       const params = {
         limit: String(this.queryParams.pageSize),
         page: String(this.queryParams.pageNum),
-        // status 为采购流程状态：4 可创建/生成采购单，5 已生成采购单
-        orderStatus: "",
-        status: this.queryParams.status ? String(this.queryParams.status) : "",
+        orderStatus: this.queryParams.status ? String(this.queryParams.status) : "",
         keyword: this.queryParams.keyword || "",
         start_time: start_time || "",
         end_time: end_time || "",
@@ -187,13 +209,7 @@ export default {
             const list = Array.isArray(res.data.list) ? res.data.list : [];
             this.tableData = list.map(it => ({
               ...it,
-              orderNo: it.staffOrderNo || "",
-              packageSpec: it.title || "",
-              customerName: it.customerTitle || "",
-              orderTime: it.staffOrderTime || "",
-              // 兼容旧字段
-              status: String(it.orderStatus) === "5" ? "已生成采购单" : "待生成采购单",
-              submitTime: it.created_at || ""
+              status: this._orderStatusText(it.orderStatus),
             }));
             this.total = res.data.count ?? list.length;
           } else {
@@ -217,68 +233,54 @@ export default {
     },
     handleView(row) {
       this.$router.push({
-        path: "/purchase/external-package-purchase/detail",
+        path: "/production-vice-president/external-package-purchase/detail",
         query: { id: row.id }
       });
     },
-    handleGenerate(row) {
-      this.generateOrderRow = row;
-      this.generateOrderForm.quantity = "";
-      this.generateOrderForm.unitPrice = "";
-      this.generateOrderForm.arrivalDate = "";
-      this.generateOrderDialogVisible = true;
+    handleAudit(row) {
+      this.auditRow = row;
+      this.auditForm.result = "reject";
+      this.auditForm.remark = "";
+      this.auditDialogVisible = true;
     },
-    closeGenerateOrderDialog() {
-      this.generateOrderRow = null;
-      this.generateOrderForm.quantity = "";
-      this.generateOrderForm.unitPrice = "";
-      this.generateOrderForm.arrivalDate = "";
-      this.$refs.generateOrderForm && this.$refs.generateOrderForm.resetFields();
+    closeAuditDialog() {
+      this.auditRow = null;
+      this.auditForm.result = "reject";
+      this.auditForm.remark = "";
     },
-    submitGenerateOrder() {
-      this.$refs.generateOrderForm.validate(valid => {
-        if (!valid) return;
-        if (!this.generateOrderRow) return;
-        const row = this.generateOrderRow;
-        const id = row && row.id != null ? String(row.id) : "";
-        const staffOrderId = row && row.staffOrderId != null ? String(row.staffOrderId) : "";
-        if (!staffOrderId) {
-          this.$message.warning("缺少业务订单id");
-          return;
+    submitAudit() {
+      if (this.auditForm.result === "reject" && !this.auditForm.remark.trim()) {
+        this.$message.warning("审核未通过时请填写审核备注");
+        return;
+      }
+      const id = this.auditRow && this.auditRow.id != null ? String(this.auditRow.id) : "";
+      if (!id) {
+        this.$message.warning("缺少采购单id");
+        return;
+      }
+      const status = this.auditForm.result === "pass" ? "1" : "-1";
+      this.$api({
+        url: REVIEW_API,
+        method: "post",
+        data: {
+          id,
+          status,
+          cont: this.auditForm.remark || ""
         }
-        const num = String(this.generateOrderForm.quantity || "");
-        const unitPrice = Number(this.generateOrderForm.unitPrice) || 0;
-        const expectedTime = String(this.generateOrderForm.arrivalDate || "");
-        const price = (Number(this.generateOrderForm.quantity) || 0) * unitPrice;
-        const title = (row && (row.title || row.packageSpec)) ? String(row.title || row.packageSpec) : "外购包装采购单";
-        const productJson = row && row.productJson != null ? (typeof row.productJson === "string" ? row.productJson : JSON.stringify(row.productJson)) : "[]";
-
-        const data = {
-          staffOrderId,
-          num,
-          expectedTime,
-          price: String(price.toFixed(2)),
-          title,
-          productJson
-        };
-        // 文档标注 id 为编辑时传，这里兼容传入
-        if (id) data.id = id;
-
-        this.$api({ url: ADD_API, method: "post", data })
-          .then(res => {
-            if (res && res.code === 200) {
-              this.$message.success("提交成功");
-              this.generateOrderDialogVisible = false;
-              this.closeGenerateOrderDialog();
-              this.loadList();
-            } else {
-              this.$message.error((res && res.msg) || "提交失败");
-            }
-          })
-          .catch(() => {
-            this.$message.error("提交失败");
-          });
-      });
+      })
+        .then(res => {
+          if (res && res.code === 200) {
+            this.$message.success("审核成功");
+            this.auditDialogVisible = false;
+            this.closeAuditDialog();
+            this.loadList();
+          } else {
+            this.$message.error((res && res.msg) || "审核失败");
+          }
+        })
+        .catch(() => {
+          this.$message.error("审核失败");
+        });
     },
     handleSizeChange(val) {
       this.queryParams.pageSize = val;
@@ -391,7 +393,7 @@ export default {
 .row-acts {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: start;
   flex-wrap: wrap;
   gap: 0 12px;
 
@@ -413,8 +415,8 @@ export default {
   justify-content: flex-end;
 }
 
-/* 生成采购单弹框 */
-.generate-order-form {
+
+.audit-form {
   ::v-deep .el-form-item__label {
     color: #303133;
     font-size: 14px;
@@ -422,18 +424,20 @@ export default {
 
   ::v-deep .el-input__inner {
     border-radius: 4px;
-    border-color: #dcdfe6;
   }
 
-  .total-amount {
+  ::v-deep .el-radio-group {
+    height: 38px;
     width: 100%;
-    display: inline-block;
-    font-size: 16px;
-    color: #333;
-    font-weight: bold;
-    text-align: left;
+    display: flex;
+    align-items: center;
+  }
+
+  ::v-deep .el-radio {
+    margin-right: 12px;
   }
 }
+
 
 ::v-deep .el-dialog__footer {
   text-align: right;

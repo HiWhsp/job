@@ -4,44 +4,44 @@
 
     <div class="section-title"><span class="section-bar" /><span>订单基础信息</span></div>
     <div class="base-info-grid">
-      <div class="grid-item">
-        <span class="label">采购单号：</span>
-        <span class="value">{{ detailInfo.purchaseNo }}</span>
-      </div>
-      <div class="grid-item">
-        <span class="label">采购单名称：</span>
-        <span class="value">{{ detailInfo.title }}</span>
-      </div>
-      <div class="grid-item">
-        <span class="label">下单时间：</span>
-        <span class="value">{{ detailInfo.submitTime }}</span>
-      </div>
-      <div class="grid-item">
-        <span class="label">订单金额：</span>
-        <span class="value">{{ detailInfo.orderAmount }}</span>
-      </div>
-      <div class="grid-item">
-        <span class="label">所属订单号：</span>
-        <span class="value">{{ detailInfo.staffOrderNo }}</span>
-      </div>
-      <div class="grid-item">
-        <span class="label">客户：</span>
-        <span class="value">{{ detailInfo.customerTitle }}</span>
-      </div>
-      <div class="grid-item">
-        <span class="label">预计到货：</span>
-        <span class="value">{{ detailInfo.expectedTime || '—' }}</span>
-      </div>
-      <div class="grid-item">
-        <span class="label">总数量：</span>
-        <span class="value">{{ detailInfo.allNum != null && detailInfo.allNum !== '' ? detailInfo.allNum : '—' }}</span>
-      </div>
-      <div class="grid-item">
-        <span class="label">订单状态：</span>
-        <span :class="orderStatusTagClass">{{ orderStatusText }}</span>
-      </div>
+      <el-row :gutter="20">
+        <el-col :span="8">
+          <div class="grid-item">
+            <span class="label">采购单号：</span>
+            <span class="value">{{ detailInfo.purchaseNo }}</span>
+          </div>
+        </el-col>
+        <el-col :span="8">
+          <div class="grid-item">
+            <span class="label">提交时间：</span>
+            <span class="value">{{ detailInfo.submitTime }}</span>
+          </div>
+        </el-col>
+        <el-col :span="8">
+          <div class="grid-item">
+            <span class="label">订单金额：</span>
+            <span class="value">{{ detailInfo.orderAmount }}</span>
+          </div>
+        </el-col>
+      </el-row>
+
+      <el-row :gutter="20">
+        <el-col :span="8">
+          <div class="grid-item">
+            <span class="label">采购单名称：</span>
+            <span class="value">{{ detailInfo.title }}</span>
+          </div>
+        </el-col>
+        <el-col :span="8">
+          <div class="grid-item">
+            <span class="label">订单状态：</span>
+            <span :class="orderStatusTagClass">{{ orderStatusText }}</span>
+          </div>
+        </el-col>
+      </el-row>
+
       <div v-if="detailInfo.pdfUrl" class="grid-item grid-item--full">
-        <span class="label">附件：</span>
+        <span class="label">采购合同：</span>
         <a class="file-link" :href="detailInfo.pdfUrl" target="_blank" rel="noopener">查看</a>
       </div>
     </div>
@@ -49,41 +49,35 @@
     <div class="section-title"><span class="section-bar" /><span>原料信息</span></div>
     <div class="table-box">
       <el-table :data="detailMaterials" header-cell-class-name="table-header-cell" :row-class-name="tableRowClassName">
-        <el-table-column prop="code" label="原料编码" min-width="120" show-overflow-tooltip />
-        <el-table-column prop="name" label="原料名称" min-width="140" show-overflow-tooltip />
-        <el-table-column prop="spec" label="规格" min-width="120" show-overflow-tooltip />
-        <el-table-column prop="purchaseQty" label="采购数量" width="100" align="center" />
-        <el-table-column prop="price" label="单价" width="100" align="center" />
-        <el-table-column label="本次入库数量" width="140" align="center">
+        <el-table-column prop="code" label="原料编码" align="center" show-overflow-tooltip />
+        <el-table-column prop="name" label="原料名称" align="center" show-overflow-tooltip />
+        <el-table-column prop="spec" label="规格" align="center" show-overflow-tooltip />
+        <el-table-column prop="purchaseQty" label="采购数量" align="center" />
+        <el-table-column label="入库数量" align="center">
           <template slot-scope="{ row }">
-            <el-input
-              v-if="canEditRkNum"
-              v-model="row.rkNumInput"
-              size="small"
-              placeholder="请输入"
-              style="width: 100px"
-            />
+            <el-input v-if="canEditRkNum" v-model="row.rkNumInput" size="small" placeholder="请输入"
+              style="width: 100px" />
             <span v-else>{{ row.rkNumDisplay }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="categoryName" label="所属分类" min-width="100" show-overflow-tooltip />
-        <el-table-column prop="unit" label="单位" width="80" align="center" />
+        <el-table-column prop="categoryName" label="所属分类" show-overflow-tooltip />
+        <el-table-column prop="unit" label="单位" align="center" />
       </el-table>
     </div>
 
     <div class="section-title"><span class="section-bar" /><span>审核记录</span></div>
     <div class="table-box">
       <el-table :data="auditList" header-cell-class-name="table-header-cell">
-        <el-table-column prop="auditor" label="审核人" min-width="120" />
-        <el-table-column prop="auditTime" label="审核时间" min-width="160" />
-        <el-table-column label="审核状态" width="120" align="center">
+        <el-table-column prop="auditor" label="审核人" align="center" />
+        <el-table-column prop="auditTime" label="审核时间" align="center" />
+        <el-table-column label="审核状态" align="center">
           <template slot-scope="{ row }">
             <span :class="row.auditStatus === 'pass' ? 'tag tag-success' : 'tag tag-gray'">
               {{ row.statusTxt || '—' }}
             </span>
           </template>
         </el-table-column>
-        <el-table-column prop="auditRemark" label="备注" min-width="140" show-overflow-tooltip />
+        <el-table-column prop="auditRemark" label="备注" show-overflow-tooltip />
       </el-table>
     </div>
 
@@ -91,18 +85,9 @@
       <div class="section-title"><span class="section-bar" /><span>质检入库</span></div>
       <div class="qc-row">
         <span class="qc-label">入库质检单：</span>
-        <el-upload
-          class="qc-upload"
-          list-type="picture-card"
-          :action="uploadAction"
-          name="file"
-          :file-list="qcFileList"
-          accept="image/*"
-          :limit="1"
-          :on-success="handleQcUploadSuccess"
-          :on-remove="handleQcUploadRemove"
-          :http-request="handleQcUploadRequest"
-        >
+        <el-upload class="qc-upload" list-type="picture-card" :action="uploadAction" name="file" :file-list="qcFileList"
+          accept="image/*" :limit="1" :on-success="handleQcUploadSuccess" :on-remove="handleQcUploadRemove"
+          :http-request="handleQcUploadRequest">
           <div class="upload-box">
             <i class="el-icon-plus" />
             <span class="upload-plus-text">添加照片</span>
@@ -124,13 +109,8 @@
           <el-table-column prop="inTime" label="入库时间" min-width="170" show-overflow-tooltip />
           <el-table-column label="质检照片" min-width="120" align="center">
             <template slot-scope="{ row }">
-              <el-image
-                v-if="row.image"
-                class="stored-thumb"
-                :src="row.image"
-                fit="cover"
-                :preview-src-list="[row.image]"
-              />
+              <el-image v-if="row.image" class="stored-thumb" :src="row.image" fit="cover"
+                :preview-src-list="[row.image]" />
               <span v-else>—</span>
             </template>
           </el-table-column>
@@ -260,7 +240,7 @@ export default {
       const inventoryId = line.inventoryId != null ? line.inventoryId : (inventory && inventory.id);
       const rk = line.rkNum != null ? String(line.rkNum) : '';
       const num = line.num != null ? String(line.num) : '';
-      const code = material.materialNo || info.materialNo || info.productNo || line.materialNo || '';
+      const code = info.sn || '';
       const name = material.title || info.title || line.title || '';
       const spec = (inventory && inventory.keyVals) || info.keyVals || line.keyVals || '';
       const unit = material.unit || info.unit || line.unit || '';
@@ -274,7 +254,7 @@ export default {
         unit,
         purchaseQty: num,
         price: line.price != null ? line.price : '',
-        categoryName: line.cateTitle || info.cateTitle || material.cateTitle || '',
+        categoryName: info.productCateTitle || '',
         rkNumDisplay: rk,
         rkNumInput: Number(this.orderStatus) === 5 ? num : rk
       };
@@ -483,9 +463,9 @@ export default {
 }
 
 .base-info-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 10px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px 24px;
   padding: 6px 0 8px;
 
   .grid-item {
@@ -572,10 +552,12 @@ export default {
     width: 120px;
     height: 120px;
   }
+
   ::v-deep .el-upload-list__item {
     width: 120px;
     height: 120px;
   }
+
   .upload-plus-text {
     line-height: 20px;
   }

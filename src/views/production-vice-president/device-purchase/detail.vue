@@ -31,14 +31,7 @@
           <div class="info-item">
             <span class="info-label">订单状态:</span>
             <span class="info-value">
-              <el-tag v-if="detail.status === '待审核'" type="info" size="small" effect="plain">待审核</el-tag>
-              <el-tag
-                v-else-if="detail.status === '审核通过'"
-                type="success"
-                size="small"
-                effect="plain"
-              >审核通过</el-tag>
-              <span v-else>{{ detail.status }}</span>
+              <span>{{ detail.status }}</span>
             </span>
           </div>
           <div class="info-item"></div>
@@ -208,11 +201,11 @@ export default {
     _orderStatusText(v) {
       const s = Number(v);
       const map = {
-        1: "生产副总审核",
-        2: "总经理审核",
+        1: "待审核",
+        2: "待审核",
         3: "待财务付款",
         4: "待采购",
-        5: "质检入库",
+        5: "质检入库中",
         6: "已完成",
         [-1]: "审核未通过"
       };

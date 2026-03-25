@@ -19,10 +19,9 @@
               style="width: 180px"
             >
               <el-option label="待审核" value="1" />
-              <el-option label="总经理审核" value="2" />
               <el-option label="待财务付款" value="3" />
               <el-option label="待采购" value="4" />
-              <el-option label="质检入库" value="5" />
+              <el-option label="质检入库中" value="5" />
               <el-option label="已完成" value="6" />
               <el-option label="审核未通过" value="-1" />
             </el-select>
@@ -68,13 +67,7 @@
           <el-table-column prop="amount" label="金额" align="center" />
           <el-table-column prop="status" label="状态" align="center">
             <template slot-scope="{ row }">
-              <el-tag v-if="row.status === '待审核'" type="info" size="small" effect="plain">待审核</el-tag>
-              <el-tag v-else-if="row.status === '审核未通过'" type="danger" size="small" effect="plain">审核未通过</el-tag>
-              <el-tag v-else-if="row.status === '待采购'" type="success" size="small" effect="plain">待采购</el-tag>
-              <el-tag v-else-if="row.status === '采购完成'" type="success" size="small" effect="plain">采购完成</el-tag>
-              <el-tag v-else-if="row.status === '质检中'" type="success" size="small" effect="plain">质检中</el-tag>
-              <el-tag v-else-if="row.status === '已完成'" type="success" size="small" effect="plain">已完成</el-tag>
-              <span v-else>—</span>
+              <el-tag :type="getTagType(row.orderStatus)" size="small" effect="plain">{{ row.status }}</el-tag>
             </template>
           </el-table-column>
           <el-table-column prop="submitTime" label="提交时间" align="center" />
@@ -82,7 +75,7 @@
             <template slot-scope="{ row }">
               <span class="row-acts">
                 <span class="row-act" @click="handleView(row)">查看详情</span>
-                <span v-if="row.status === '待审核' || row.status === '审核未通过'" class="row-act" @click="handleAudit(row)">立即审核</span>
+                <span v-if="row.orderStatus == 1 || row.orderStatus == -1" class="row-act" @click="handleAudit(row)">立即审核</span>
               </span>
             </template>
           </el-table-column>
@@ -159,6 +152,15 @@ export default {
         remark: ""
       }
     };
+  },
+  computed: {
+    getTagType() {
+      return (orderStatus) => {
+        if (orderStatus == 1) return "info";
+        if (orderStatus == -1) return "danger";
+        else return "success";
+      }
+    }
   },
   mounted() {
     this.setView();

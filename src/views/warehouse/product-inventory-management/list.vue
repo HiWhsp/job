@@ -275,7 +275,7 @@ const LIST_API = '/getProductKuCunList';
 const CATE_API = '/getProductCateList';
 const SET_WARN_API = '/setPrYuJing';
 const ADD_IN_API = '/addProductKuCunRu';
-const PRODUCT_LIST_API = '/getProductList';
+const PRODUCT_LIST_API = '/getProductInventoryList';
 
 export default {
   name: 'ProductInventoryList',
@@ -520,13 +520,13 @@ export default {
           if (res && res.code === 200 && res.data) {
             const list = Array.isArray(res.data.list) ? res.data.list : [];
             this.addProductList = list.map(it => ({
-              id: it.id != null ? String(it.id) : '',
+              id: it.productId != null ? String(it.productId) : '',
               title: it.title || '',
               productNo: it.productNo || '',
               spec: it.keyVals || '',
               unit: it.unit || '',
               cateTitle: it.cateTitle || '',
-              inventoryId: it.inventoryId != null ? String(it.inventoryId) : '',
+              inventoryId: it.id != null ? String(it.id) : '',
               quantity: ''
             }));
           } else {

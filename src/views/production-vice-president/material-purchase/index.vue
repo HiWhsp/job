@@ -60,14 +60,8 @@
           <el-table-column prop="orderAmount" label="订单金额" align="center" />
           <el-table-column prop="status" label="状态" align="center">
             <template slot-scope="{ row }">
-              <el-tag v-if="row.status === '待审核'" type="info" size="small" effect="plain">待审核</el-tag>
-              <el-tag v-else-if="row.status === '审核未通过'" type="danger" size="small" effect="plain">审核未通过</el-tag>
-              <el-tag v-else-if="row.status === '待采购'" type="info" size="small" effect="plain">待采购</el-tag>
-              <el-tag v-else-if="row.status === '待财务付款'" type="info" size="small" effect="plain">待财务付款</el-tag>
-              <el-tag v-else-if="row.status === '采购完成'" type="success" size="small" effect="plain">采购完成</el-tag>
-              <el-tag v-else-if="row.status === '质检入库中'" type="success" size="small" effect="plain">质检入库中</el-tag>
-              <el-tag v-else-if="row.status === '已完成'" type="success" size="small" effect="plain">已完成</el-tag>
-              <span v-else>—</span>
+              <el-tag :type="getTagType(row.orderStatus)" size="small" effect="plain">{{ row.status }}</el-tag>
+              <!-- <span v-else>—</span> -->
             </template>
           </el-table-column>
           <el-table-column prop="submitTime" label="提交时间" align="center" />
@@ -161,6 +155,15 @@ export default {
       }
     };
   },
+  computed: {
+    getTagType() {
+      return (orderStatus) => {
+        if (orderStatus == 1) return "info";
+        if (orderStatus == -1) return "danger";
+        else return "success";
+      }
+    }
+  },
   mounted() {
     this.setView();
     this.loadList();
@@ -186,18 +189,6 @@ export default {
     tableRowClassName({ rowIndex }) {
       return rowIndex % 2 === 1 ? "row-even" : "";
     },
-    _orderStatusByTab(tab) {
-      // 兼容旧值：如果传进来还是英文，做一次兜底映射
-      const map = {
-        pending: 1,
-        to_purchase: 4,
-        purchase_done: 4,
-        qc_ing: 5,
-        completed: 6,
-        rejected: -1
-      };
-      return map[tab] != null ? map[tab] : (tab != null && tab !== "" ? String(tab) : "");
-    },
     _orderStatusText(v) {
       const s = Number(v);
       const map = {
@@ -221,7 +212,7 @@ export default {
         end_time: end_time || "",
         // 生产副总端：原料采购/外购包装采购，接口同原料采购列表；不按付款状态筛选
         isPay: "",
-        orderStatus: this._orderStatusByTab(this.statusTab),
+        orderStatus: this.statusTab,
         // 兼容后端可能需要 materialType，不传表示全部
         materialType: ""
       };
