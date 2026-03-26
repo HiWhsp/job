@@ -3,6 +3,9 @@
     <div class="form-card">
       <div class="page-title">{{ editId ? '编辑原料' : '新增原料' }}</div>
       <el-form ref="formRef" :model="form" :rules="formRules" label-width="140px" class="product-form">
+        <el-form-item label="原料编码" prop="materialNo">
+          <el-input v-model="form.materialNo" placeholder="请输入" clearable />
+        </el-form-item>
         <el-form-item label="原料名称" prop="name">
           <el-input v-model="form.name" placeholder="请输入" clearable />
         </el-form-item>
@@ -254,6 +257,7 @@ export default {
       /** 规格树（来自 getMaterialInfo / setMaterialKey），用于接口增删规格 */
       skus: [],
       form: {
+        materialNo: "",
         name: "",
         code: "",
         categoryId: "",
@@ -269,6 +273,7 @@ export default {
         materialType: "1" // 1 原料，2 外购包装
       },
       formRules: {
+        materialNo: [{ required: true, message: "请输入原料编码", trigger: "blur" }],
         name: [{ required: true, message: "请输入原料名称", trigger: "blur" }],
         categoryIds: [
           {
@@ -801,7 +806,7 @@ export default {
           unit: this.form.unit || "",
           content: this.form.content || "",
           inventorys: JSON.stringify(this.buildInventorys()),
-          materialNo: this.form.code || "",
+          materialNo: this.form.materialNo || "",
           materialType: this.form.materialType || "1"
         };
         this.$api({

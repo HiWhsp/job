@@ -163,7 +163,7 @@
 </template>
 
 <script>
-const DETAIL_API = "/getPurchaseForeignProductOrder";
+const DETAIL_API = "/getStaffOrder";
 const CUSTOMER_API = "/getCustomer";
 const ADD_API = "/addForeignProductOrder";
 

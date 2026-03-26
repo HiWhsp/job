@@ -957,7 +957,7 @@ const purchaseRoutes = [
             meta: {
               title: "外采产品请购单",
               requireAuth: true,
-              hidden: false,
+              hidden: true,
             },
           },
           // 外购采购单列表
@@ -971,7 +971,7 @@ const purchaseRoutes = [
             meta: {
               title: "外购采购单列表",
               requireAuth: true,
-              hidden: false,
+              hidden: true,
             },
           },
           // 详情
@@ -1037,7 +1037,7 @@ const purchaseRoutes = [
             meta: {
               title: "外采包装订单",
               requireAuth: true,
-              hidden: false,
+              hidden: true,
             },
           },
           // 详情
@@ -1049,7 +1049,7 @@ const purchaseRoutes = [
             meta: {
               title: "外购包装详情",
               requireAuth: true,
-              hidden: false,
+              hidden: true,
             },
           },
           // 采购单
@@ -1676,7 +1676,7 @@ const roleRouteMap = {
   // 测试用
   // 9: warehouseManagerRoutes, // 管理员
   // '9': warehouseManagerRoutes, // 管理员
-  
+
 
   // 正式用 需要解除注释
   9: managerRoutes, // 管理员

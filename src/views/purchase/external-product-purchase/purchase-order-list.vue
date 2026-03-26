@@ -13,18 +13,18 @@
             />
           </el-form-item>
           <el-form-item label="状态" prop="status">
-            <el-select
-              v-model="queryParams.status"
-              placeholder="请选择"
-              clearable
-              style="width: 180px"
-            >
-              <el-option label="待审核" value="pending" />
-              <el-option label="审核未通过" value="rejected" />
-              <el-option label="待采购" value="to_purchase" />
-              <el-option label="采购完成" value="purchased" />
-              <el-option label="质检入库中" value="qc_ing" />
-              <el-option label="已完成" value="completed" />
+            <el-select v-model="queryParams.status" placeholder="全部" clearable style="width: 180px">
+              <el-option label="待审核" value="1,2" />
+              <el-option label="待采购" value="4" />
+              <el-option label="质检入库" value="5" />
+              <el-option label="已完成" value="6" />
+              <el-option label="审核未通过" value="-1" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="付款状态" prop="isPay">
+            <el-select v-model="queryParams.isPay" placeholder="全部" clearable style="width: 140px">
+              <el-option label="未付款" value="99" />
+              <el-option label="已付款" value="1" />
             </el-select>
           </el-form-item>
           <el-form-item label="时间筛选" prop="dateRange">
@@ -61,33 +61,49 @@
           :row-class-name="tableRowClassName"
         >
           <el-table-column type="index" label="序号" width="70" align="center">
-            <template slot-scope="scope">
-              {{ String((queryParams.pageNum - 1) * queryParams.pageSize + scope.$index + 1).padStart(3, '0') }}
-            </template>
+            <template
+              slot-scope="scope"
+            >{{ String((queryParams.pageNum - 1) * queryParams.pageSize + scope.$index + 1).padStart(3, '0') }}</template>
           </el-table-column>
-          <el-table-column prop="requisitionNo" label="外购请购单单号" min-width="140" show-overflow-tooltip />
-          <el-table-column prop="purchaseName" label="采购单名称" min-width="120" show-overflow-tooltip />
-          <el-table-column prop="orderNo" label="所属订单号" min-width="120" show-overflow-tooltip />
-          <el-table-column prop="customerName" label="客户名称" min-width="200" show-overflow-tooltip />
-          <el-table-column prop="orderTime" label="订单时间" width="120" align="center" />
-          <el-table-column prop="purchaseAmount" label="采购金额" min-width="110" align="right" />
-          <el-table-column prop="status" label="状态" width="120" align="center">
+          <el-table-column label="外购请购单单号" min-width="140" show-overflow-tooltip>
+            <template slot-scope="{ row }">{{ rowDisplay(row, 'purchaseNo') }}</template>
+          </el-table-column>
+          <el-table-column label="采购单名称" width="160" show-overflow-tooltip>
+            <template slot-scope="{ row }">{{ rowDisplay(row, 'title') }}</template>
+          </el-table-column>
+          <el-table-column label="所属订单号" min-width="120" show-overflow-tooltip>
+            <template slot-scope="{ row }">{{ rowDisplay(row, 'staffOrderNo') }}</template>
+          </el-table-column>
+          <el-table-column label="客户名称" width="120" show-overflow-tooltip>
+            <template slot-scope="{ row }">{{ rowDisplay(row, 'customerTitle') }}</template>
+          </el-table-column>
+          <el-table-column label="订单时间" width="120" align="center">
+            <template slot-scope="{ row }">{{ rowDisplay(row, 'staffOrderTime') }}</template>
+          </el-table-column>
+          <el-table-column label="采购金额" min-width="110" align="right">
+            <template slot-scope="{ row }">{{ rowDisplay(row, 'onePrice') }}</template>
+          </el-table-column>
+          <el-table-column label="状态" width="140" align="center">
             <template slot-scope="{ row }">
-              <el-tag v-if="row.status === '待审核'" type="info" size="small" effect="plain">待审核</el-tag>
-              <el-tag v-else-if="row.status === '审核未通过'" type="danger" size="small" effect="plain">审核未通过</el-tag>
-              <el-tag v-else-if="row.status === '待采购'" type="success" size="small" effect="plain">待采购</el-tag>
-              <el-tag v-else-if="row.status === '采购完成'" type="success" size="small" effect="plain">采购完成</el-tag>
-              <el-tag v-else-if="row.status === '质检入库中'" type="success" size="small" effect="plain">质检入库中</el-tag>
-              <el-tag v-else-if="row.status === '已完成'" type="success" size="small" effect="plain">已完成</el-tag>
-              <span v-else>—</span>
+              <el-tag
+                :type="purchaseOrderStatusTagType(row.orderStatus)"
+                size="small"
+                effect="plain"
+              >{{ purchaseOrderStatusLabel(row.orderStatus) }}</el-tag>
             </template>
           </el-table-column>
-          <el-table-column prop="submitTime" label="提交时间" width="120" align="center" />
+          <el-table-column label="提交时间" width="160" align="center">
+            <template slot-scope="{ row }">{{ rowDisplay(row, 'updated_at') }}</template>
+          </el-table-column>
           <el-table-column label="操作" min-width="180" align="center" fixed="right">
             <template slot-scope="{ row }">
               <span class="row-acts">
                 <span class="row-act" @click="handleView(row)">查看详情</span>
-                <span v-if="row.status === '待采购'" class="row-act" @click="handleComplete(row)">采购完成</span>
+                <span
+                  v-if="isStatusPendingPurchase(row.status)"
+                  class="row-act"
+                  @click="handleComplete(row)"
+                >采购完成</span>
               </span>
             </template>
           </el-table-column>
@@ -109,6 +125,18 @@
 </template>
 
 <script>
+const LIST_API = "/getPurchaseForeignProductOrderList";
+
+/** 接口 status 与文案（与文档一致） */
+const STATUS_LABEL_MAP = {
+  1: "待审核",
+  2: "待审核",
+  4: "待采购",
+  5: "质检入库",
+  6: "已完成",
+  "-1": "审核未通过"
+};
+
 export default {
   name: "ExternalProductPurchaseOrderList",
   data() {
@@ -116,21 +144,14 @@ export default {
       queryParams: {
         keyword: "",
         status: "",
+        isPay: "",
         dateRange: null,
         pageNum: 1,
         pageSize: 20
       },
       total: 0,
       tableHeight: 0,
-      tableData: [
-        { id: 1, requisitionNo: "4521414", purchaseName: "采购单名称", orderNo: "78456456", customerName: "浙江求实医疗科技有限公司", orderTime: "2026-01-05", purchaseAmount: "5000.00", status: "待审核", submitTime: "2026-01-05" },
-        { id: 2, requisitionNo: "4521414", purchaseName: "采购单名称", orderNo: "78456456", customerName: "浙江求实医疗科技有限公司", orderTime: "2026-01-05", purchaseAmount: "5000.00", status: "待审核", submitTime: "2026-01-05" },
-        { id: 3, requisitionNo: "4521414", purchaseName: "采购单名称", orderNo: "4521414", customerName: "浙江求实医疗科技有限公司", orderTime: "2026-01-05", purchaseAmount: "5000.00", status: "审核未通过", submitTime: "2026-01-05" },
-        { id: 4, requisitionNo: "4521414", purchaseName: "采购单名称", orderNo: "4521414", customerName: "浙江求实医疗科技有限公司", orderTime: "2026-01-05", purchaseAmount: "5000.00", status: "待采购", submitTime: "2026-01-05" },
-        { id: 5, requisitionNo: "4521414", purchaseName: "采购单名称", orderNo: "4521414", customerName: "浙江求实医疗科技有限公司", orderTime: "2026-01-05", purchaseAmount: "5000.00", status: "采购完成", submitTime: "2026-01-05" },
-        { id: 6, requisitionNo: "4521414", purchaseName: "采购单名称", orderNo: "4521414", customerName: "浙江求实医疗科技有限公司", orderTime: "2026-01-05", purchaseAmount: "5000.00", status: "质检入库中", submitTime: "2026-01-05" },
-        { id: 7, requisitionNo: "4521414", purchaseName: "采购单名称", orderNo: "4521414", customerName: "浙江求实医疗科技有限公司", orderTime: "2026-01-05", purchaseAmount: "5000.00", status: "已完成", submitTime: "2026-01-05" }
-      ]
+      tableData: []
     };
   },
   mounted() {
@@ -144,7 +165,10 @@ export default {
         if (!refTable) return;
         const tableEl = refTable.$el || refTable;
         const tableOffsetTop = tableEl.offsetTop + 85;
-        this.tableHeight = Math.max(window.innerHeight - tableOffsetTop - 80, 200);
+        this.tableHeight = Math.max(
+          window.innerHeight - tableOffsetTop - 80,
+          200
+        );
         const that = this;
         window.onresize = function() {
           const top = tableEl.offsetTop + 84 + 80;
@@ -155,9 +179,64 @@ export default {
     tableRowClassName({ rowIndex }) {
       return rowIndex % 2 === 1 ? "row-even" : "";
     },
+    /** 列表行字段兼容多种后端命名 */
+    rowDisplay(row, primary, fallbacks = []) {
+      if (!row) return "—";
+      const keys = [primary, ...fallbacks];
+      for (let i = 0; i < keys.length; i++) {
+        const v = row[keys[i]];
+        if (v !== undefined && v !== null && v !== "") return v;
+      }
+      return "—";
+    },
+    purchaseOrderStatusLabel(code) {
+      if (code === undefined || code === null || code === "") return "—";
+      const k = String(code);
+      return (
+        STATUS_LABEL_MAP[k] || STATUS_LABEL_MAP[Number(code)] || String(code)
+      );
+    },
+    purchaseOrderStatusTagType(code) {
+      const n = Number(code);
+      if (n === -1) return "danger";
+      if (n === 1 || n === 2) return "info";
+      return "success";
+    },
+    isStatusPendingPurchase(code) {
+      return String(code) === "4" || Number(code) === 4;
+    },
     loadList() {
-      // TODO: 调用外购产品采购单列表接口
-      this.total = this.tableData.length;
+      const qp = this.queryParams;
+      const dr = qp.dateRange;
+      const params = {
+        page: String(qp.pageNum),
+        limit: String(qp.pageSize),
+        keyword: qp.keyword || "",
+        orderStatus:
+          qp.status !== "" && qp.status != null ? String(qp.status) : "",
+        start_time: dr && dr[0] ? dr[0] : "",
+        end_time: dr && dr[1] ? dr[1] : "",
+        isPay: qp.isPay !== "" && qp.isPay != null ? String(qp.isPay) : ""
+      };
+      this.$api({
+        url: LIST_API,
+        method: "post",
+        data: params
+      })
+        .then(res => {
+          if (res && res.data) {
+            const list = Array.isArray(res.data.list) ? res.data.list : [];
+            this.tableData = list;
+            this.total = res.data.count != null ? res.data.count : list.length;
+          } else {
+            this.tableData = [];
+            this.total = 0;
+          }
+        })
+        .catch(() => {
+          this.tableData = [];
+          this.total = 0;
+        });
     },
     handleQuery() {
       this.queryParams.pageNum = 1;
@@ -166,6 +245,10 @@ export default {
     resetQuery() {
       this.$refs.queryForm.resetFields();
       this.queryParams.pageNum = 1;
+      this.queryParams.keyword = "";
+      this.queryParams.status = "";
+      this.queryParams.isPay = "";
+      this.queryParams.dateRange = null;
       this.loadList();
     },
     handleView(row) {
@@ -179,11 +262,13 @@ export default {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
-      }).then(() => {
-        // TODO: 调用采购完成接口
-        this.$message.success("操作成功");
-        this.loadList();
-      }).catch(() => {});
+      })
+        .then(() => {
+          // TODO: 调用采购完成接口
+          this.$message.success("操作成功");
+          this.loadList();
+        })
+        .catch(() => {});
     },
     handleSizeChange(val) {
       this.queryParams.pageSize = val;

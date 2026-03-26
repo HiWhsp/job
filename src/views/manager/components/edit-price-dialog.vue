@@ -89,9 +89,7 @@ export default {
         return;
       }
       // currentSpecOnly: 1 单独规格（用当前行的库存 id）；否则 2 全部规格（用商品 id）
-      const id = this.currentSpecOnly
-        ? (this.productRow.id != null ? String(this.productRow.id) : "")
-        : (this.productRow.productId != null ? String(this.productRow.productId) : "");
+      const id = this.productRow.id != null ? String(this.productRow.id) : "";
       const type = this.currentSpecOnly ? "1" : "2";
       if (!id) {
         this.specList = [];

@@ -262,8 +262,8 @@ export default {
               materialName: info.title || "",
               spec: info.keyVals || "",
               quantity: it && it.num != null ? it.num : "",
-              category: info.productCateTitle || "",
-              productCategory: info.productCateTitle || info.productCateTitle || "",
+              category: info.materialCateTitle || "",
+              productCategory: info.productCateTitle || "",
               unit: info.unit || ""
             };
           });
