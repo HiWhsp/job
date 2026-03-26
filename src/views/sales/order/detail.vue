@@ -63,6 +63,10 @@
             <span class="field-label">包装规格：</span>
             <span class="field-value">{{ packTypeText(detail.packType, detail.packStr || detail.packageSpec) }}</span>
           </el-col>
+          <el-col :span="8" class="field-item">
+            <span class="field-label">价格类型：</span>
+            <span class="field-value">{{ priceTypeText(detail.priceType) }}</span>
+          </el-col>
         </el-row>
 
         <el-row :gutter="24" class="field-row">
@@ -237,7 +241,7 @@
           <el-table-column prop="spec" label="规格" min-width="140" />
           <el-table-column prop="unitPrice" label="单价" min-width="100" />
           <el-table-column prop="quantity" label="数量" min-width="80" />
-          <el-table-column prop="arrivalQty" label="到货数量" min-width="100" />
+          <!-- <el-table-column prop="arrivalQty" label="到货数量" min-width="100" />
           <el-table-column label="是否缺货" min-width="100">
             <template slot-scope="scope">
               <span :class="[
@@ -247,7 +251,7 @@
                 {{ scope.row.isShortage ? '缺货' : '有货' }}
               </span>
             </template>
-          </el-table-column>
+          </el-table-column> -->
           <el-table-column prop="totalPrice" label="总价" min-width="120" />
           <el-table-column prop="unit" label="单位" width="80" />
         </el-table>
@@ -352,6 +356,7 @@ export default {
         isMoreFaHuo: null,
         packType: null,
         packStr: "",
+        priceType: null,
         orderStatus: null,
         payStatus: null,
         paymentStatus: null,
@@ -587,6 +592,7 @@ export default {
             isMoreFaHuo: d.isMoreFaHuo,
             packType: d.packType,
             packStr: d.packStr,
+            priceType: d.priceType,
             orderStatus: d.orderStatus,
             payStatus: d.payStatus,
             paymentStatus: d.paymentStatus,
@@ -684,6 +690,12 @@ export default {
       if (s === 5) return packStr ? `其他(${packStr})` : "其他";
       if (packStr) return packStr;
       return type != null ? String(type) : "—";
+    },
+    priceTypeText(v) {
+      const s = Number(v);
+      if (s === 1) return "经销商指导价格";
+      if (s === 2) return "终端指导价格";
+      return v != null ? String(v) : "—";
     },
     
     orderStatusText(status) {

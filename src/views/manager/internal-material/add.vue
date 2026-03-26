@@ -112,41 +112,46 @@
                 </div>
               </div>
 
-              <!-- 新增规格行 -->
-              <div class="spec-setting-row spec-setting-row-new">
+              <!-- 未提交规格草稿：名称回车确认本行（不强制先有规格值）；+新增规格行 仅追加空行 -->
+              <div
+                v-for="(draft, dIndex) in specDraftRows"
+                :key="'spec-draft-' + dIndex"
+                class="spec-setting-row spec-setting-row-new"
+              >
                 <div class="spec-col spec-col-name">
                   <el-input
-                    v-model="currentSpecName"
-                    placeholder="规格名称"
+                    v-model="draft.name"
+                    placeholder="回车添加"
                     size="small"
                     class="spec-input-inline"
                     maxlength="20"
+                    @keyup.enter.native="confirmAddSpecRow(dIndex)"
                   />
                 </div>
                 <div class="spec-col spec-col-values">
                   <div class="spec-tags-wrap">
                     <el-tag
-                      v-for="(v, idx) in currentSpecValues"
-                      :key="'new-val-' + idx"
+                      v-for="(v, idx) in draft.values"
+                      :key="'draft-' + dIndex + '-val-' + idx"
                       closable
                       type="primary"
                       size="small"
                       class="spec-tag"
-                      @close="removeCurrentValue(idx)"
+                      @close="removeDraftSpecValue(dIndex, idx)"
                     >{{ v }}</el-tag>
                     <el-input
-                      v-model="currentSpecValueInput"
+                      v-model="draft.valueInput"
                       placeholder="回车添加"
                       size="small"
                       class="spec-input-inline"
                       maxlength="30"
-                      @keyup.enter.native="addSpecValue"
+                      @keyup.enter.native="addDraftSpecValue(dIndex)"
                     />
                   </div>
                 </div>
               </div>
             </div>
-            <el-button type="primary" size="small" class="btn-add-spec" @click="confirmAddSpec">+新增</el-button>
+            <el-button type="primary" size="small" class="btn-add-spec" @click="addSpecDraftRow">+新增</el-button>
           </div>
 
           <div class="spec-list-block">
@@ -325,10 +330,8 @@ export default {
       },
       // 产品规格：已确认的规格组 [{ id?, name, values, valueIds?, valueInput }]
       specGroups: [],
-      // 新增规格名称 / 规格值（底部“新增”行）
-      currentSpecName: "",
-      currentSpecValueInput: "",
-      currentSpecValues: [],
+      /** 未提交规格草稿，每项 { name, values, valueInput } */
+      specDraftRows: [{ name: '', values: [], valueInput: '' }],
       // 规格列表（笛卡尔积生成），每项 { specValue, code, stock, id?, keyIds? }
       specList: []
     };
@@ -436,13 +439,34 @@ export default {
         };
       });
     },
-    addSpecValue() {
-      const val = (this.currentSpecValueInput || "").trim();
+    addSpecDraftRow() {
+      this.specDraftRows.push({ name: '', values: [], valueInput: '' });
+    },
+    addDraftSpecValue(dIndex) {
+      const draft = this.specDraftRows[dIndex];
+      if (!draft) return;
+      const val = (draft.valueInput || '').trim();
       if (!val) return;
-      if (this.currentSpecValues.indexOf(val) === -1) {
-        this.currentSpecValues.push(val);
+      if (!draft.values) this.$set(draft, 'values', []);
+      if (draft.values.indexOf(val) === -1) {
+        draft.values.push(val);
       }
-      this.currentSpecValueInput = "";
+      draft.valueInput = '';
+    },
+    removeDraftSpecValue(dIndex, idx) {
+      const draft = this.specDraftRows[dIndex];
+      if (!draft || !draft.values) return;
+      draft.values.splice(idx, 1);
+    },
+    /** 规格名称提交成功后移除对应草稿行，并保证至少保留一行空草稿 */
+    finishDraftRow(dIndex) {
+      if (dIndex == null || dIndex < 0) return;
+      if (this.specDraftRows[dIndex]) {
+        this.specDraftRows.splice(dIndex, 1);
+      }
+      if (!this.specDraftRows.length) {
+        this.specDraftRows.push({ name: '', values: [], valueInput: '' });
+      }
     },
     // 为已有规格组添加规格值（有 materialId 且 group.id 时调 setMaterialKey）
     addValueForGroup(gIndex) {
@@ -529,9 +553,6 @@ export default {
         })
         .catch(() => {});
     },
-    removeCurrentValue(idx) {
-      this.currentSpecValues.splice(idx, 1);
-    },
     /** 删除规格组内一个规格值：有 valueIds 时调 delMaterialKey 并刷新 */
     removeGroupValue(gIndex, vIndex) {
       const group = this.specGroups[gIndex];
@@ -553,66 +574,63 @@ export default {
         this.buildSpecList();
       }
     },
-    confirmAddSpec() {
-      const name = (this.currentSpecName || "").trim();
+    confirmAddSpecRow(dIndex) {
+      const draft = this.specDraftRows[dIndex];
+      if (!draft) return;
+      const name = (draft.name || '').trim();
       if (!name) {
-        this.$message.warning("请输入规格名称");
+        this.$message.warning('请输入规格名称');
         return;
       }
-      if (!this.currentSpecValues.length) {
-        this.$message.warning("请至少添加一个规格值");
-        return;
-      }
-      const values = [...this.currentSpecValues];
+      const values = [...(draft.values || [])];
       const existIndex = this.specGroups.findIndex(g => g.name === name);
       if (existIndex > -1) {
-        this.$message.warning("已存在同名规格，请更换规格名称");
+        this.$message.warning('已存在同名规格，请更换规格名称');
         return;
       }
-      const mid = this.materialId || this.editId || "0";
-      this.withFullLoading("正在添加规格...", () =>
+      const mid = this.materialId || this.editId || '0';
+      this.withFullLoading('正在添加规格...', () =>
         this.$api({
-          url: "/setMaterialKey",
-          method: "post",
-          data: { materialId: mid, parentId: "0", title: name }
+          url: '/setMaterialKey',
+          method: 'post',
+          data: { materialId: mid, parentId: '0', title: name }
         }).then(res => {
           if (!res || !res.data) {
-            this.specGroups.push({ name, values, valueInput: "" });
-            this.currentSpecName = "";
-            this.currentSpecValues = [];
-            this.currentSpecValueInput = "";
+            this.specGroups.push({
+              name,
+              values,
+              valueInput: '',
+              valueIds: []
+            });
+            this.finishDraftRow(dIndex);
             this.buildSpecList();
             return;
           }
           if (res.data.materialId) this.materialId = String(res.data.materialId);
           const skus = res.data.skus || [];
-          const parent = skus.find(s => (s.title || "") === name && (s.parentId === 0 || !s.parentId));
-          const parentId = parent ? String(parent.id) : "";
+          const parent = skus.find(s => (s.title || '') === name && (s.parentId === 0 || !s.parentId));
+          const parentId = parent ? String(parent.id) : '';
           if (!parentId) {
             this.skus = skus;
             this.syncSpecGroupsFromSkus();
-            this.currentSpecName = "";
-            this.currentSpecValues = [];
-            this.currentSpecValueInput = "";
+            this.finishDraftRow(dIndex);
             this.buildSpecList();
             return;
           }
           let lastSkus = skus;
           return new Promise((resolve, reject) => {
-            const addNext = (i) => {
+            const addNext = i => {
               if (i >= values.length) {
                 this.skus = lastSkus;
                 this.syncSpecGroupsFromSkus();
-                this.currentSpecName = "";
-                this.currentSpecValues = [];
-                this.currentSpecValueInput = "";
+                this.finishDraftRow(dIndex);
                 this.buildSpecList();
                 resolve();
                 return;
               }
               this.$api({
-                url: "/setMaterialKey",
-                method: "post",
+                url: '/setMaterialKey',
+                method: 'post',
                 data: { materialId: this.materialId || this.editId, parentId, title: values[i] }
               })
                 .then(r => {
@@ -620,12 +638,10 @@ export default {
                   addNext(i + 1);
                 })
                 .catch(() => {
-                  this.$message.error("添加规格值失败");
+                  this.$message.error('添加规格值失败');
                   this.skus = lastSkus;
                   this.syncSpecGroupsFromSkus();
-                  this.currentSpecName = "";
-                  this.currentSpecValues = [];
-                  this.currentSpecValueInput = "";
+                  this.finishDraftRow(dIndex);
                   this.buildSpecList();
                   reject();
                 });
@@ -634,21 +650,31 @@ export default {
           });
         })
       ).catch(() => {
-        this.specGroups.push({ name, values, valueInput: "" });
-        this.currentSpecName = "";
-        this.currentSpecValues = [];
-        this.currentSpecValueInput = "";
+        this.specGroups.push({
+          name,
+          values,
+          valueInput: '',
+          valueIds: []
+        });
+        this.finishDraftRow(dIndex);
         this.buildSpecList();
       });
     },
-    // 根据 specGroups 笛卡尔积生成规格列表；有 valueIds 时计算 keyIds，并尽量保留原有编码/库存
+    // 根据 specGroups 笛卡尔积生成规格列表；尚无规格值的组不参与，避免 1×0=0 整表清空
     buildSpecList() {
       if (!this.specGroups.length) {
         this.specList = [];
         return;
       }
+      const activeGroups = this.specGroups.filter(
+        g => Array.isArray(g.values) && g.values.length > 0
+      );
+      if (!activeGroups.length) {
+        this.specList = [];
+        return;
+      }
       const combos = this.cartesian(
-        this.specGroups.map(g =>
+        activeGroups.map(g =>
           (g.values || []).map((v, i) => ({
             name: g.name,
             value: v,
@@ -684,7 +710,8 @@ export default {
           code: existing && existing.code != null ? existing.code : "",
           stock: existing && existing.stock != null ? existing.stock : "",
           id: existing && existing.id != null ? existing.id : undefined,
-          keyIds: keyIds || (existing && existing.keyIds != null ? String(existing.keyIds) : "")
+          keyIds: keyIds || (existing && existing.keyIds != null ? String(existing.keyIds) : ""),
+          batchNo: existing && existing.batchNo != null ? existing.batchNo : ""
         };
       });
       this.specList = newList;
@@ -718,6 +745,23 @@ export default {
         batchNo: String(row.batchNo ?? "")
       }));
     },
+    /** 已填库存不能为数值 0 */
+    validateSpecListStockNotZero() {
+      const list = this.specList || [];
+      for (let i = 0; i < list.length; i++) {
+        const row = list[i];
+        const s = row.stock != null ? String(row.stock).trim() : '';
+        if (s === '') continue;
+        const n = Number(s);
+        if (Number.isFinite(n) && n === 0) {
+          this.$message.warning(
+            `规格列表第 ${i + 1} 行（规格值：${row.specValue || '—'}）库存不能为 0`
+          );
+          return false;
+        }
+      }
+      return true;
+    },
     handleSubmit() {
       this.$refs.formRef.validate(valid => {
         if (!valid) return;
@@ -728,6 +772,7 @@ export default {
           this.$message.warning("请配置产品规格并生成至少一条规格列表");
           return;
         }
+        if (!this.validateSpecListStockNotZero()) return;
         for (let i = 0; i < list.length; i++) {
           const row = list[i];
           const code = row.code != null ? String(row.code).trim() : "";

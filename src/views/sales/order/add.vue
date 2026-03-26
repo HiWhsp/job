@@ -8,12 +8,7 @@
             <!-- 客户名称 -->
             <el-form-item label="客户名称:" prop="customerName" required>
               <div class="customer-name-row">
-                <el-input
-                  v-model="form.customerName"
-                  placeholder="请输入查询"
-                  clearable
-                  class="input-with-btn"
-                />
+                <el-input v-model="form.customerName" placeholder="请输入查询" clearable class="input-with-btn" />
                 <el-button type="primary" @click="handleAddCustomer">新增客户</el-button>
               </div>
             </el-form-item>
@@ -83,12 +78,7 @@
             <!-- 包装规格 -->
             <el-form-item label="包装规格:" prop="packageSpec">
               <div class="package-spec-wrap">
-                <el-select
-                  v-model="form.packageSpec"
-                  placeholder="请选择"
-                  clearable
-                  @change="onPackageSpecChange"
-                >
+                <el-select v-model="form.packageSpec" placeholder="请选择" clearable @change="onPackageSpecChange">
                   <el-option label="标准彩盒" value="color_box" />
                   <el-option label="标准白盒" value="white_box" />
                   <el-option label="无包装" value="none" />
@@ -103,16 +93,11 @@
 
             <!-- 合同图片 -->
             <el-form-item label="合同图片:" prop="contractImages" class="form-item--upload">
-              <el-upload
-                class="upload-image-card"
-                list-type="picture-card"
-                :action="uploadAction"
-                name="file"
+              <el-upload class="upload-image-card" list-type="picture-card" :action="uploadAction" name="file"
                 :file-list="form.contractImageList"
                 :on-success="(res, file, list) => handleUploadSuccess('contract', res, file, list)"
                 :on-remove="(file, list) => handleUploadRemove('contract', file, list)"
-                :http-request="(opt) => handleUploadRequest(opt, 'contract')"
-              >
+                :http-request="(opt) => handleUploadRequest(opt, 'contract')">
                 <i class="el-icon-plus" />
                 <span class="upload-text">添加图片</span>
               </el-upload>
@@ -120,16 +105,11 @@
 
             <!-- 付款凭证 -->
             <el-form-item label="付款凭证:" prop="payVoucherImages" class="form-item--upload">
-              <el-upload
-                class="upload-image-card"
-                list-type="picture-card"
-                :action="uploadAction"
-                name="file"
+              <el-upload class="upload-image-card" list-type="picture-card" :action="uploadAction" name="file"
                 :file-list="form.payVoucherImageList"
                 :on-success="(res, file, list) => handleUploadSuccess('payVoucher', res, file, list)"
                 :on-remove="(file, list) => handleUploadRemove('payVoucher', file, list)"
-                :http-request="(opt) => handleUploadRequest(opt, 'payVoucher')"
-              >
+                :http-request="(opt) => handleUploadRequest(opt, 'payVoucher')">
                 <i class="el-icon-plus" />
                 <span class="upload-text">添加图片</span>
               </el-upload>
@@ -146,12 +126,8 @@
               <el-button type="primary" size="small" @click="handleAddProduct">添加产品</el-button>
             </div>
           </div>
-          <el-table
-            ref="productTable"
-            :data="productList"
-            class="data-table"
-            @selection-change="onProductSelectionChange"
-          >
+          <el-table ref="productTable" :data="productList" class="data-table"
+            @selection-change="onProductSelectionChange">
             <el-table-column type="selection" width="48" align="center" />
             <el-table-column prop="code" label="产品编码" min-width="120" />
             <el-table-column prop="name" label="产品名称" min-width="120" />
@@ -161,11 +137,7 @@
             <el-table-column prop="guidePrice" label="指导价格" width="100" align="right" />
             <el-table-column label="数量" width="100" align="center">
               <template slot-scope="{ row }">
-                <el-input
-                  v-model.number="row.quantity"
-                  size="small"
-                  @input="calcProductGuideTotal(row)"
-                />
+                <el-input v-model.number="row.quantity" size="small" @input="calcProductGuideTotal(row)" />
               </template>
             </el-table-column>
             <el-table-column label="指导总价" width="110" align="right">
@@ -181,19 +153,13 @@
             <el-table-column prop="stockQty" label="库存数量" width="90" align="center" />
             <el-table-column label="库存状态" width="90" align="center">
               <template slot-scope="{ row }">
-                <span
-                  :class="{ 'stock-out': row.stockQty && row.stockQty == 0 }"
-                >{{ row.stockQty && row.stockQty == 0 ? '缺货' : '有货' }}</span>
+                <span :class="{ 'stock-out': row.stockQty && row.stockQty == 0 }">{{ row.stockQty && row.stockQty == 0 ?
+                  '缺货' : '有货' }}</span>
               </template>
             </el-table-column>
             <el-table-column label="操作" width="80" align="center" fixed="right">
               <template slot-scope="{ $index }">
-                <el-button
-                  type="text"
-                  size="small"
-                  class="link-btn"
-                  @click="handleRemoveProduct($index)"
-                >删除</el-button>
+                <el-button type="text" size="small" class="link-btn" @click="handleRemoveProduct($index)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -209,97 +175,65 @@
               <el-button type="primary" size="small" @click="handleAddExternalProduct">添加外购产品</el-button>
             </div>
           </div>
-          <el-table
-            ref="externalTable"
-            :data="externalTableData"
-            class="data-table"
-            :row-class-name="externalRowClassName"
-          >
-            <el-table-column
-              type="selection"
-              width="48"
-              align="center"
-              :selectable="(row) => !row.isNew"
-            />
+          <el-table ref="externalTable" :data="externalTableData" class="data-table"
+            :row-class-name="externalRowClassName">
+            <el-table-column type="selection" width="48" align="center" :selectable="(row) => !row.isNew" />
             <el-table-column label="序号" width="70" align="center">
               <template slot-scope="{ $index }">{{ formatSeq($index) }}</template>
             </el-table-column>
-            <el-table-column label="产品名称" min-width="120">
+            <el-table-column label="产品名称" width="220">
               <template slot-scope="{ row }">
                 <el-input v-if="row.isNew" v-model="row.name" placeholder="输入选择" size="small" />
                 <span v-else>{{ row.name }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="规格" min-width="120">
+            <el-table-column label="规格" align="center">
               <template slot-scope="{ row }">
                 <el-input v-if="row.isNew" v-model="row.spec" placeholder="输入选择" size="small" />
                 <span v-else>{{ row.spec }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="单价" width="100" align="right">
+            <el-table-column label="单价" align="center">
               <template slot-scope="{ row }">
-                <el-input
-                  v-if="row.isNew"
-                  v-model.number="row.price"
-                  placeholder="请输入"
-                  size="small"
-                  @input="calcExternalRowTotal(row)"
-                />
+                <el-input v-if="row.isNew" v-model.number="row.price" placeholder="请输入" size="small"
+                  @input="calcExternalRowTotal(row)" />
                 <span v-else>{{ row.price }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="数量" width="90" align="center">
+            <el-table-column label="数量" align="center">
               <template slot-scope="{ row }">
-                <el-input
-                  v-if="row.isNew"
-                  v-model.number="row.quantity"
-                  placeholder="请输入"
-                  size="small"
-                  @input="calcExternalRowTotal(row)"
-                />
+                <el-input v-if="row.isNew" v-model.number="row.quantity" placeholder="请输入" size="small"
+                  @input="calcExternalRowTotal(row)" />
                 <span v-else>{{ row.quantity }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="总价" width="110" align="right">
+            <el-table-column label="总价" align="center">
               <template slot-scope="{ row }">{{ row.total != null ? row.total : '0.00' }}</template>
             </el-table-column>
-            <el-table-column label="单位" width="70" align="center">
+            <el-table-column label="单位" align="center">
               <template slot-scope="{ row }">
                 <el-input v-if="row.isNew" v-model="row.unit" placeholder="请输入" size="small" />
                 <span v-else>{{ row.unit }}</span>
               </template>
             </el-table-column>
-            <el-table-column prop="stock" label="库存" width="70" align="center" />
+            <!-- <el-table-column prop="stock" label="库存" width="70" align="center" />
             <el-table-column label="库存状态" width="90" align="center">
               <template slot-scope="{ row }">
                 <span
                   :class="{ 'stock-out': row.stockStatus && row.stockStatus == '缺货' }"
                 >{{ row.stockStatus || '—' }}</span>
               </template>
-            </el-table-column>
+            </el-table-column> -->
             <el-table-column label="操作" width="140" align="center" fixed="right">
               <template slot-scope="{ row, $index }">
                 <template v-if="row.isNew">
-                  <el-button
-                    type="text"
-                    size="small"
-                    class="link-btn"
-                    @click="handleSaveExternalRow"
-                  >保存</el-button>
+                  <el-button type="text" size="small" class="link-btn" @click="handleSaveExternalRow">保存</el-button>
                 </template>
                 <template v-else>
-                  <el-button
-                    type="text"
-                    size="small"
-                    class="link-btn"
-                    @click="handleEditExternalRow($index)"
-                  >编辑</el-button>
-                  <el-button
-                    type="text"
-                    size="small"
-                    class="link-btn"
-                    @click="handleRemoveExternalProduct($index)"
-                  >删除</el-button>
+                  <el-button type="text" size="small" class="link-btn"
+                    @click="handleEditExternalRow($index)">编辑</el-button>
+                  <el-button type="text" size="small" class="link-btn"
+                    @click="handleRemoveExternalProduct($index)">删除</el-button>
                 </template>
               </template>
             </el-table-column>
@@ -324,26 +258,13 @@
       <add-product-dialog :visible.sync="addProductVisible" @confirm="onAddProductConfirm" />
 
       <!-- 添加外购产品弹窗：getForeignProductList -->
-      <add-external-product-dialog
-        :visible.sync="addExternalProductVisible"
-        @confirm="onAddExternalProductConfirm"
-      />
+      <add-external-product-dialog :visible.sync="addExternalProductVisible" @confirm="onAddExternalProductConfirm" />
 
       <!-- 选择客户弹窗：getCustomerList 按 form.customerName 查询 -->
-      <el-dialog
-        title="选择客户"
-        :visible.sync="customerSelectVisible"
-        width="700px"
-        :close-on-click-modal="false"
-        @open="loadCustomerList"
-      >
-        <el-table
-          ref="customerTable"
-          :data="customerList"
-          highlight-current-row
-          max-height="360"
-          @current-change="onCustomerRowSelect"
-        >
+      <el-dialog title="选择客户" :visible.sync="customerSelectVisible" width="700px" :close-on-click-modal="false"
+        @open="loadCustomerList">
+        <el-table ref="customerTable" :data="customerList" highlight-current-row max-height="360"
+          @current-change="onCustomerRowSelect">
           <el-table-column type="index" label="序号" width="60" align="center" />
           <el-table-column prop="title" label="客户名称" show-overflow-tooltip />
           <el-table-column prop="customerNo" label="客户编码" show-overflow-tooltip />
@@ -428,7 +349,7 @@ export default {
     productTotal() {
       const sum = this.productList.reduce(
         (s, row) =>
-          s + (parseFloat(row.actualPrice) || parseFloat(row.guideTotal) || 0),
+          s + (parseFloat(row.actualPrice || 0) * parseFloat(row.quantity || 0)),
         0
       );
       return sum.toFixed(2);
@@ -702,6 +623,7 @@ export default {
       this.addProductVisible = true;
     },
     onAddProductConfirm(rows) {
+      console.log(rows);
       rows.forEach(r => {
         this.productList.push({
           productId: r.productId || r.code || "",
@@ -1141,6 +1063,7 @@ export default {
 
 .upload-image-card {
   display: flex;
+
   ::v-deep .el-upload--picture-card {
     width: 120px;
     height: 120px;
@@ -1163,6 +1086,7 @@ export default {
     height: 120px;
     border-radius: 4px;
   }
+
   ::v-deep .el-upload-list__item-thumbnail {
     object-fit: fill;
   }
@@ -1252,6 +1176,7 @@ export default {
   margin-top: 48px;
   padding-top: 24px;
   text-align: left;
+
   .el-button {
     min-width: 112px;
     height: 38px;

@@ -181,12 +181,12 @@ export default {
               id: row.id,
               productId: row.productId != null ? row.productId : row.id,
               inventoryId: row.inventoryId != null ? row.inventoryId : row.id,
-              code: row.productNo || row.code || '',
+              code: row.sn || row.productNo || '',
               name: row.title || row.name || '',
               spec: row.keyVals || row.spec || '',
               category: row.cateTitle || row.category || '',
-              unit: row.unit || '盒',
-              guidePrice: row.price1 != null ? String(row.price1) : (row.price1 != null ? String(row.price1) : ''),
+              unit: row.unit || '',
+              guidePrice: row.price2 != null ? String(row.price2) : (row.price2 != null ? String(row.price2) : ''),
               quantity: null,
               actualPrice: '',
               stockQty: row.kucun != null ? row.kucun : 0,
@@ -209,7 +209,7 @@ export default {
     },
     getGuideTotalDisplay(row) {
       const q = Number(row.quantity);
-      const p = parseFloat(row.guidePrice) || 0;
+      const p = parseFloat(row.actualPrice) || 0;
       if (q > 0) return (q * p).toFixed(2);
       return '—';
     },

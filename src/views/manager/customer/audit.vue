@@ -205,8 +205,8 @@ export default {
       const statusNum = data.status;
       let auditStatus = '';
       if (statusNum === 1) auditStatus = 'pending';
-      else if (statusNum === 2) auditStatus = 'audited';
-      else if (statusNum === -1) auditStatus = 'rejected';
+      else if (statusNum === -1) auditStatus = 'audited';
+      else if (statusNum === 2) auditStatus = 'rejected';
       return {
         ...data,
         territory: territoryText,
@@ -247,8 +247,8 @@ export default {
     loadList() {
       const statusMap = {
         pending: '1',
-        audited: '2',
-        rejected: '-1'
+        audited: '-1',
+        rejected: '2'
       };
       const params = {
         page: String(this.queryParams.pageNum),

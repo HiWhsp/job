@@ -132,8 +132,13 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitAuditChoice">提交</el-button>
-        <el-button @click="closeAuditDialog">取消</el-button>
+        <el-button
+          type="primary"
+          :loading="auditSubmitLoading"
+          :disabled="auditSubmitLoading"
+          @click="submitAuditChoice"
+        >提交</el-button>
+        <el-button :disabled="auditSubmitLoading" @click="closeAuditDialog">取消</el-button>
       </span>
     </el-dialog>
   </div>
@@ -159,6 +164,7 @@ export default {
       tableHeight: 0,
       tableData: [],
       auditDialogVisible: false,
+      auditSubmitLoading: false,
       rowToAudit: null,
       auditContinueChoice: 'pause',
       auditRemark: '',
@@ -320,6 +326,7 @@ export default {
     },
     /** 关闭是否继续弹框 */
     closeAuditDialog() {
+      this.auditSubmitLoading = false;
       this.auditDialogVisible = false;
       this.rowToAudit = null;
       this.auditContinueChoice = 'pause';
@@ -327,6 +334,7 @@ export default {
     },
     /** 审核：POST reviewStaffOrder，参数 id、status（1通过, -1驳回）、cont（必填）；token 由 request 自动带 */
     submitAuditChoice() {
+      if (this.auditSubmitLoading) return;
       if (!this.rowToAudit) return;
       const id = this.rowToAudit.id != null ? String(this.rowToAudit.id) : '';
       if (!id) {
@@ -339,6 +347,7 @@ export default {
       const cont =
         remark || (pass ? '同意' : '驳回');
 
+      this.auditSubmitLoading = true;
       this.$api({
         url: '/reviewStaffOrder',
         method: 'post',
@@ -359,6 +368,9 @@ export default {
         })
         .catch(err => {
           this.$message.error((err && err.msg) ? err.msg : '提交失败');
+        })
+        .finally(() => {
+          this.auditSubmitLoading = false;
         });
     },
     handleExport() {

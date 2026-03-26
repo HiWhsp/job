@@ -228,9 +228,9 @@ export default {
       },
       total: 0,
       tableHeight: 0,
-      auditTab: "pending",
+      auditTab: "audited",
       auditTabs: [
-        { label: "待审核", value: "pending" },
+        // { label: "待审核", value: "pending" },
         { label: "已审核", value: "audited" },
         { label: "审核未通过", value: "rejected" }
       ],

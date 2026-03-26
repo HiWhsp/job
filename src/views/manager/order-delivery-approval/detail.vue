@@ -505,7 +505,7 @@ export default {
                 guidePrice: it.yPrice || '',
                 quantity: it.num || '',
                 totalPrice: it.totalPrice || '',
-                stockQty: '',
+                stockQty: inventory.kucun || '',
                 stockStatus: orderStatusTitle || ''
               };
             }),

@@ -85,10 +85,10 @@
               size="small"
               class="spec-mini-table"
             >
-              <el-table-column prop="keyVals" label="规格值" min-width="160" show-overflow-tooltip />
-              <el-table-column prop="sn" label="编码" min-width="120" show-overflow-tooltip />
-              <el-table-column prop="batchNo" label="批次" min-width="120" show-overflow-tooltip />
-              <el-table-column prop="num" label="库存" width="100" align="right" />
+              <el-table-column prop="keyVals" label="规格值" align="center" show-overflow-tooltip />
+              <el-table-column prop="sn" label="编码" align="center" show-overflow-tooltip />
+              <el-table-column prop="batchNo" label="批次" align="center" show-overflow-tooltip />
+              <el-table-column prop="num" label="库存" align="center" show-overflow-tooltip />
             </el-table>
             <div v-else class="audit-empty">暂无规格数据</div>
           </div>

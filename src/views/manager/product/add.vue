@@ -90,23 +90,46 @@
                 </div>
               </div>
 
-              <!-- 新增规格行 -->
-              <div class="spec-setting-row spec-setting-row-new">
+              <!-- 未提交的规格草稿行：规格名称回车即提交本行（等同原确认添加逻辑，不强制先有规格值） -->
+              <div
+                v-for="(draft, dIndex) in specDraftRows"
+                :key="'spec-draft-' + dIndex"
+                class="spec-setting-row spec-setting-row-new"
+              >
                 <div class="spec-col spec-col-name">
-                  <el-input v-model="currentSpecName" placeholder="规格名称" size="small" class="spec-input-inline"
-                    maxlength="20" />
+                  <el-input
+                    v-model="draft.name"
+                    placeholder="回车添加"
+                    size="small"
+                    class="spec-input-inline"
+                    maxlength="20"
+                    @keyup.enter.native="confirmAddSpecRow(dIndex)"
+                  />
                 </div>
                 <div class="spec-col spec-col-values">
                   <div class="spec-tags-wrap">
-                    <el-tag v-for="(v, idx) in currentSpecValues" :key="'new-val-' + idx" closable type="primary"
-                      size="small" class="spec-tag" @close="removeCurrentValue(idx)">{{ v }}</el-tag>
-                    <el-input v-model="currentSpecValueInput" placeholder="回车添加" size="small" class="spec-input-inline"
-                      maxlength="30" @keyup.enter.native="addSpecValue" />
+                    <el-tag
+                      v-for="(v, idx) in draft.values"
+                      :key="'draft-' + dIndex + '-val-' + idx"
+                      closable
+                      type="primary"
+                      size="small"
+                      class="spec-tag"
+                      @close="removeDraftSpecValue(dIndex, idx)"
+                    >{{ v }}</el-tag>
+                    <el-input
+                      v-model="draft.valueInput"
+                      placeholder="回车添加"
+                      size="small"
+                      class="spec-input-inline"
+                      maxlength="30"
+                      @keyup.enter.native="addDraftSpecValue(dIndex)"
+                    />
                   </div>
                 </div>
               </div>
             </div>
-            <el-button type="primary" size="small" class="btn-add-spec" @click="confirmAddSpec">+新增</el-button>
+            <el-button type="primary" size="small" class="btn-add-spec" @click="addSpecDraftRow">+新增</el-button>
           </div>
 
           <div class="spec-list-block">
@@ -209,9 +232,8 @@ export default {
       productId: '', // 新增时由 setProductKey 返回，编辑时为商品 id
       skus: [], // 规格树，来自 setProductKey 或详情接口
       specGroups: [],
-      currentSpecName: "",
-      currentSpecValueInput: "",
-      currentSpecValues: [],
+      /** 未提交规格草稿，每项 { name, values, valueInput }；+新增规格行 仅追加空行 */
+      specDraftRows: [{ name: '', values: [], valueInput: '' }],
       specList: [] // 每项 { specValue, sn, num, id? }
     };
   },
@@ -242,13 +264,19 @@ export default {
         .then(fn)
         .finally(close);
     },
-    addSpecValue() {
-      const val = (this.currentSpecValueInput || "").trim();
+    addSpecDraftRow() {
+      this.specDraftRows.push({ name: '', values: [], valueInput: '' });
+    },
+    addDraftSpecValue(dIndex) {
+      const draft = this.specDraftRows[dIndex];
+      if (!draft) return;
+      const val = (draft.valueInput || '').trim();
       if (!val) return;
-      if (this.currentSpecValues.indexOf(val) === -1) {
-        this.currentSpecValues.push(val);
+      if (!draft.values) this.$set(draft, 'values', []);
+      if (draft.values.indexOf(val) === -1) {
+        draft.values.push(val);
       }
-      this.currentSpecValueInput = "";
+      draft.valueInput = '';
     },
     async addValueForGroup(gIndex) {
       const group = this.specGroups[gIndex];
@@ -377,24 +405,23 @@ export default {
       });
       if (!ok) return;
     },
-    removeCurrentValue(idx) {
-      console.log(idx);
-      this.currentSpecValues.splice(idx, 1);
+    removeDraftSpecValue(dIndex, idx) {
+      const draft = this.specDraftRows[dIndex];
+      if (!draft || !draft.values) return;
+      draft.values.splice(idx, 1);
     },
-    async confirmAddSpec() {
-      const name = (this.currentSpecName || "").trim();
+    async confirmAddSpecRow(dIndex) {
+      const draft = this.specDraftRows[dIndex];
+      if (!draft) return;
+      const name = (draft.name || '').trim();
       if (!name) {
-        this.$message.warning("请输入规格名称");
+        this.$message.warning('请输入规格名称');
         return;
       }
-      if (!this.currentSpecValues.length) {
-        this.$message.warning("请至少添加一个规格值");
-        return;
-      }
-      const values = [...this.currentSpecValues];
+      const values = [...(draft.values || [])];
       const existIndex = this.specGroups.findIndex(g => g.name === name);
       if (existIndex > -1) {
-        this.$message.warning("已存在同名规格，请更换规格名称");
+        this.$message.warning('已存在同名规格，请更换规格名称');
         return;
       }
       const productId = this.productId || '0';
@@ -426,20 +453,28 @@ export default {
         return false;
       });
       if (!ok) return;
-      this.specGroups.push({ name, values, valueInput: "" });
-      this.currentSpecName = "";
-      this.currentSpecValues = [];
-      this.currentSpecValueInput = "";
+      this.specGroups.push({ name, values, valueInput: '' });
+      this.specDraftRows.splice(dIndex, 1);
+      if (!this.specDraftRows.length) {
+        this.specDraftRows.push({ name: '', values: [], valueInput: '' });
+      }
       this.buildSpecList();
     },
-    // 根据 specGroups 笛卡尔积生成规格列表
+    // 根据 specGroups 笛卡尔积生成规格列表（尚无规格值的组不参与，避免 1×0=0 导致整表被清空）
     buildSpecList() {
       if (!this.specGroups.length) {
         this.specList = [];
         return;
       }
+      const activeGroups = this.specGroups.filter(
+        g => Array.isArray(g.values) && g.values.length > 0
+      );
+      if (!activeGroups.length) {
+        this.specList = [];
+        return;
+      }
       const combos = this.cartesian(
-        this.specGroups.map(g =>
+        activeGroups.map(g =>
           g.values.map(v => ({ name: g.name, value: v }))
         )
       );
@@ -622,6 +657,23 @@ export default {
         num: String(row.num ?? '')
       }));
     },
+    /** 提交前：规格列表每行「库存」不能为数值 0（与界面「规格值」行一一对应） */
+    validateSpecListBeforeSubmit() {
+      const rows = this.specList || [];
+      for (let i = 0; i < rows.length; i++) {
+        const row = rows[i];
+        const s = row.num != null ? String(row.num).trim() : '';
+        if (s === '') continue;
+        const n = Number(s);
+        if (Number.isFinite(n) && n === 0) {
+          this.$message.warning(
+            `规格列表第 ${i + 1} 行（规格值：${row.specValue || '—'}）不能为 0`
+          );
+          return false;
+        }
+      }
+      return true;
+    },
     handleSubmit() {
       this.$refs.formRef.validate(valid => {
         if (!valid) return;
@@ -629,6 +681,7 @@ export default {
           this.$message.warning('请先添加至少一组产品规格后再提交');
           return;
         }
+        if (!this.validateSpecListBeforeSubmit()) return;
         const ids = this.form.categoryIds || [];
         const cateId = ids.length ? String(ids[ids.length - 1]) : '';
         const params = {

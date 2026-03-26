@@ -57,9 +57,9 @@
         <el-form-item label="分类名称" prop="title">
           <el-input v-model="form.title" placeholder="请输入分类名称" />
         </el-form-item>
-        <el-form-item label="排序" prop="sort">
+        <!-- <el-form-item label="排序" prop="sort">
           <el-input-number v-model="form.sort" :min="0" :max="9999" controls-position="right" style="width: 100%" />
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
       <span slot="footer">
         <el-button @click="dialogVisible = false">取消</el-button>

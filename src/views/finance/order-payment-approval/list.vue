@@ -8,12 +8,12 @@
                         <el-input v-model="queryParams.keyword" placeholder="订单编号/客户名称" clearable
                             style="width: 260px" />
                     </el-form-item>
-                    <el-form-item label="订单状态" prop="orderStatus">
+                    <!-- <el-form-item label="订单状态" prop="orderStatus">
                         <el-select v-model="queryParams.orderStatus" placeholder="请选择" clearable style="width: 140px">
                             <el-option v-for="item in orderStatusOptions" :key="item.value" :label="item.label"
                                 :value="item.value" />
                         </el-select>
-                    </el-form-item>
+                    </el-form-item> -->
                     <el-form-item label="支付方式" prop="payType">
                         <el-select v-model="queryParams.payType" placeholder="请选择" clearable style="width: 140px">
                             <el-option v-for="item in payTypeOptions" :key="item.value" :label="item.label"
@@ -174,7 +174,7 @@ export default {
             uploadAction: UPLOAD_ROOT,
             queryParams: {
                 keyword: "",
-                orderStatus: "",
+                orderStatus: "4,7",
                 orderType: "",
                 payType: "",
                 payStatus: "",
@@ -197,9 +197,9 @@ export default {
                     { pattern: /^\d+(\.\d{1,2})?$/, message: "请输入有效金额（最多两位小数）", trigger: "blur" }
                 ]
             },
-            statusTab: "1,2",
+            statusTab: "4,7",
             statusTabs: [
-                { label: "待审核", value: "1,2" },
+                { label: "待审核", value: "4,7" },
                 // { label: "待发货", value: "4" },
                 // { label: "已发货", value: "7" },
                 // { label: "审核未通过", value: "-1" },
