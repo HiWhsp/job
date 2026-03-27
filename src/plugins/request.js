@@ -181,12 +181,12 @@ function apiUploadFile(option) {
 	let token = localStorage.getItem("token");
 	const formData = new FormData();
 	formData.append("file", data.file);
+	formData.append("token", token);
 	return axios_ins_upload({
 		url: reqUrl,
 		method: method || "post",
 		data: formData,
 		headers: {
-			"Authorization": "Bearer " + token,
 			"Content-Type": "multipart/form-data",
 		},
 		transformRequest: [],

@@ -89,18 +89,22 @@
 
     <!-- 产品详情：右侧抽屉（与产品指导价格等页一致，自右向左展开） -->
     <product-detail-drawer :visible.sync="detailDrawerVisible" :product-id="detailProductId" />
+
+    <import-modal ref="importModal" @confirm="handleImportConfirm" />
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex';
 import ProductDetailDrawer from './components/product-detail-drawer.vue';
+import ImportModal from '@/components/upload/import_file_modal.vue';
 
 export default {
   name: 'ProductList',
 
   components: {
-    ProductDetailDrawer
+    ProductDetailDrawer,
+    ImportModal
   },
 
   computed: {
@@ -279,8 +283,10 @@ export default {
       this.$router.push('/manager/product/add');
     },
     handleImport() {
-      // TODO: 批量导入
-      this.$message.info('批量导入');
+      this.$refs.importModal.init('产品导入', '/importProduct');
+    },
+    handleImportConfirm() {
+      this.loadList();
     },
     handleSizeChange(val) {
       this.queryParams.pageSize = val;

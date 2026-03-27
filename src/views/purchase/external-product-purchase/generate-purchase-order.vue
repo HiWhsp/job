@@ -79,7 +79,7 @@
           </div>
         </div>
         <div class="info-row">
-          <div class="info-item info-item-full">
+          <div class="info-item">
             <span class="info-label">收货地址:</span>
             <span class="info-value">{{ customer.shippingAddress }}</span>
           </div>
@@ -109,43 +109,15 @@
           @selection-change="handleProductSelectionChange"
         >
           <el-table-column type="selection" width="50" align="center" />
-          <el-table-column type="index" label="序号" width="70" align="center">
-            <template slot-scope="scope">
-              {{ String(scope.$index + 1).padStart(3, '0') }}
-            </template>
-          </el-table-column>
-          <el-table-column prop="productName" label="产品名称" min-width="120" show-overflow-tooltip />
-          <el-table-column prop="spec" label="规格" min-width="100" show-overflow-tooltip />
-          <el-table-column label="单价" min-width="100" align="center">
-            <template slot-scope="{ row }">
-              <el-input
-                v-model.number="row.unitPrice"
-                size="small"
-                style="width: 80px"
-                @input="calcRowTotal(row)"
-              />
-            </template>
-          </el-table-column>
-          <el-table-column label="数量" min-width="100" align="center">
-            <template slot-scope="{ row }">
-              <el-input
-                v-model.number="row.quantity"
-                size="small"
-                style="width: 80px"
-                @input="calcRowTotal(row)"
-              />
-            </template>
-          </el-table-column>
-          <el-table-column prop="totalPrice" label="总价" min-width="110" align="right">
-            <template slot-scope="{ row }">{{ formatMoney(row.totalPrice) }}</template>
-          </el-table-column>
-          <el-table-column prop="unit" label="单位" width="80" align="center" />
-          <el-table-column prop="stock" label="库存" width="80" align="center" />
-          <el-table-column prop="stockStatus" label="库存状态" width="90" align="center">
-            <template slot-scope="{ row }">
-              <span :class="{ 'stock-out': row.stockStatus === '缺货' }">{{ row.stockStatus }}</span>
-            </template>
-          </el-table-column>
+          <el-table-column prop="id" label="序号" width="70" align="center" />
+          <el-table-column prop="productName" label="产品名称" width="160" show-overflow-tooltip />
+          <el-table-column prop="spec" label="规格" align="center" show-overflow-tooltip />
+          <el-table-column prop="unitPrice" label="单价" align="center" />
+          <el-table-column prop="quantity" label="数量" align="center" />
+          <el-table-column prop="totalPrice" label="总价" align="center" />
+          <el-table-column prop="unit" label="单位" align="center" />
+          <el-table-column prop="stock" label="库存" align="center" />
+          <el-table-column prop="stockStatus" label="库存状态" align="center" />
         </el-table>
         <div class="purchase-total">
           <span class="total-label">采购金额:</span>
@@ -175,6 +147,7 @@ export default {
         purchaseName: "",
         id: ""
       },
+      edit: false,
       staffOrderId: "",
       customer: {
         customerNo: "",
@@ -204,6 +177,8 @@ export default {
   },
   created() {
     const id = this.$route.query.id;
+    const edit = this.$route.query.edit;
+    this.edit = edit;
     if (id) {
       this.form.id = String(id);
       this.loadDetail(String(id));
@@ -255,8 +230,8 @@ export default {
             contactPhone: data.phone ?? "",
             companyPhone: data.companyPhone ?? "",
             accountName: payment.account ?? "",
-            accountNo: payment.bankNo ?? "",
-            bank: payment.bankName ?? "",
+            accountNo: payment.code ?? "",
+            bank: payment.bank ?? "",
             shippingAddress: address.address ?? "",
             consignee: address.name ?? "",
             consigneePhone: address.phone ?? ""
@@ -274,19 +249,19 @@ export default {
           const d = res.data;
           // 基础信息：采购单名称
           this.form.purchaseName = d.title || "";
-          this.staffOrderId = d.staffOrderId != null ? String(d.staffOrderId) : "";
+          this.staffOrderId = d.id != null ? String(d.id) : "";
 
           // 客户信息：优先用客户详情接口（按 userId），同时保留 customerTitle 兜底
           this.customer.customerName = d.customerTitle || "";
-          if (d.userId != null && d.userId !== "") {
-            this.loadCustomerDetail(String(d.userId));
+          if (d.customerId != null && d.customerId !== "") {
+            this.loadCustomerDetail(String(d.customerId));
           }
 
           // 产品列表
-          const products = Array.isArray(d.productJson) ? d.productJson : (this._parseJson(d.productJson) || []);
+          const products = Array.isArray(d.foreignProductJson) ? d.foreignProductJson : (this._parseJson(d.foreignProductJson) || []);
           const rows = Array.isArray(products) ? products : [];
           this.productList = rows.map(it => {
-            const info = it && it.info ? it.info : {};
+            const info = it && it.foreign_product ? it.foreign_product : {};
             const unitPrice = it && it.price != null ? Number(it.price) : 0;
             const quantity = it && it.num != null ? Number(it.num) : 0;
             return {
@@ -296,9 +271,9 @@ export default {
               unitPrice,
               quantity,
               unit: info.unit || "",
-              stock: "",
-              stockStatus: "",
-              totalPrice: "0.00"
+              stock: info.kucun,
+              stockStatus: Number(info.kucun) > 0 ? "有货" : "缺货",
+              totalPrice: info.totalPrice
             };
           });
           this.productList.forEach(row => this.calcRowTotal(row));
@@ -329,7 +304,7 @@ export default {
         this.$message.warning("缺少业务员订单id");
         return;
       }
-      const rows = (this.selectedProducts && this.selectedProducts.length) ? this.selectedProducts : this.productList;
+      const rows = (this.selectedProducts && this.selectedProducts.length) ? this.selectedProducts : [];
       if (!rows || !rows.length) {
         this.$message.warning("请至少选择一条产品");
         return;
@@ -350,7 +325,7 @@ export default {
         productJson: JSON.stringify(items),
         staffOrderId: String(this.staffOrderId)
       };
-      if (this.form.id) data.id = String(this.form.id);
+      if (this.edit) data.id = String(this.form.id);
       this.$api({ url: ADD_API, method: "post", data })
         .then(res => {
           if (res && res.code === 200) {
@@ -441,7 +416,7 @@ export default {
 }
 .info-item {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   font-size: 14px;
   min-width: 200px;
   flex: 1;

@@ -31,18 +31,21 @@
           </el-col>
           <el-col :span="8" class="field-item">
             <span class="field-label">是否需要审批：</span>
-            <span class="field-value">{{ isApprovalText(detail.isApproval != null ? detail.isApproval : (detail.needApprove ? 1 : 2)) }}</span>
+            <span class="field-value">{{ isApprovalText(detail.isApproval != null ? detail.isApproval :
+              (detail.needApprove ? 1 : 2)) }}</span>
           </el-col>
           <el-col :span="8" class="field-item">
             <span class="field-label">支付方式：</span>
-            <span class="field-value">{{ payTypeText(detail.payType != null ? detail.payType : detail.payMethod) }}</span>
+            <span class="field-value">{{ payTypeText(detail.payType != null ? detail.payType : detail.payMethod)
+              }}</span>
           </el-col>
         </el-row>
 
         <el-row :gutter="24" class="field-row">
           <el-col :span="8" class="field-item">
             <span class="field-label">是否付款：</span>
-            <span class="field-value">{{ isPayText(detail.isPay != null ? detail.isPay : (detail.needMark ? 1 : 0)) }}</span>
+            <span class="field-value">{{ isPayText(detail.isPay != null ? detail.isPay : (detail.needMark ? 1 : 0))
+              }}</span>
           </el-col>
           <el-col :span="8" class="field-item">
             <span class="field-label">付款金额：</span>
@@ -50,14 +53,16 @@
           </el-col>
           <el-col :span="8" class="field-item">
             <span class="field-label">库存是否满足要求：</span>
-            <span class="field-value">{{ isManKuCunText(detail.isManKuCun != null ? detail.isManKuCun : (detail.batchDelivery ? 1 : 2)) }}</span>
+            <span class="field-value">{{ isManKuCunText(detail.isManKuCun != null ? detail.isManKuCun :
+              (detail.batchDelivery ? 1 : 2)) }}</span>
           </el-col>
         </el-row>
 
         <el-row :gutter="24" class="field-row">
           <el-col :span="8" class="field-item">
             <span class="field-label">是否接受分批发货：</span>
-            <span class="field-value">{{ isMoreFaHuoText(detail.isMoreFaHuo != null ? detail.isMoreFaHuo : detail.packageSpec) }}</span>
+            <span class="field-value">{{ isMoreFaHuoText(detail.isMoreFaHuo != null ? detail.isMoreFaHuo :
+              detail.packageSpec) }}</span>
           </el-col>
           <el-col :span="8" class="field-item">
             <span class="field-label">包装规格：</span>
@@ -88,13 +93,8 @@
           <el-col :span="24" class="field-item field-images">
             <span class="field-label">合同图片：</span>
             <div class="image-list">
-              <el-image
-                v-for="(img, index) in (detail.contractimages || detail.contractImages || [])"
-                :key="index"
-                :src="img"
-                fit="cover"
-                class="thumb-image"
-              />
+              <el-image v-for="(img, index) in (detail.contractimages || detail.contractImages || [])" :key="index"
+                :src="img" fit="cover" class="thumb-image" />
             </div>
           </el-col>
         </el-row>
@@ -103,13 +103,8 @@
           <el-col :span="24" class="field-item field-images">
             <span class="field-label">付款凭证：</span>
             <div class="image-list">
-              <el-image
-                v-for="(img, index) in (detail.payImage || detail.payImages || [])"
-                :key="index"
-                :src="img"
-                fit="cover"
-                class="thumb-image"
-              />
+              <el-image v-for="(img, index) in (detail.payImage || detail.payImages || [])" :key="index" :src="img"
+                fit="cover" class="thumb-image" />
             </div>
           </el-col>
         </el-row>
@@ -275,7 +270,8 @@
           <el-table-column prop="approvalTime" label="审核时间" min-width="160" />
           <el-table-column label="审核状态" min-width="120">
             <template slot-scope="{ row }">
-              <el-tag :type="row.approvalStatus === '审核通过' ? 'success' : 'info'" size="small">{{ row.approvalStatus }}</el-tag>
+              <el-tag :type="row.approvalStatus === '审核通过' ? 'success' : 'info'" size="small">{{ row.approvalStatus
+                }}</el-tag>
             </template>
           </el-table-column>
           <el-table-column prop="approvalRemark" label="审核备注" min-width="140" show-overflow-tooltip />
@@ -294,7 +290,8 @@
           <el-table-column prop="approvalTime" label="审核时间" min-width="160" />
           <el-table-column label="审核状态" min-width="120">
             <template slot-scope="{ row }">
-              <el-tag :type="row.approvalStatus === '缺货' ? 'danger' : 'success'" size="small">{{ row.approvalStatus }}</el-tag>
+              <el-tag :type="row.approvalStatus === '缺货' ? 'danger' : 'success'" size="small">{{ row.approvalStatus
+                }}</el-tag>
             </template>
           </el-table-column>
           <el-table-column prop="deliveryTime" label="发货时间" min-width="120" />
@@ -315,13 +312,8 @@
             <template slot-scope="{ row }">
               <div class="image-list delivery-photos">
                 <template v-if="(row.deliveryPhotos || []).length">
-                  <el-image
-                    v-for="(img, idx) in row.deliveryPhotos"
-                    :key="idx"
-                    :src="img"
-                    fit="cover"
-                    class="thumb-image"
-                  />
+                  <el-image v-for="(img, idx) in row.deliveryPhotos" :key="idx" :src="img" fit="cover"
+                    class="thumb-image" />
                 </template>
                 <span v-else class="no-photos">—</span>
               </div>
@@ -504,64 +496,64 @@ export default {
 
           const productList = Array.isArray(d.productJson)
             ? d.productJson.map(item => {
-                const p = item.product || {};
-                const inv = item.inventory || {};
-                return {
-                  code: p.productNo || inv.sn || "",
-                  name: p.title || "",
-                  spec: inv.keyVals || "",
-                  category: p.cateTitle || "",
-                  unit: p.unit || "",
-                  guidePrice: item.yPrice,
-                  quantity: item.num,
-                  totalPrice: item.totalPrice,
-                  stockQty: inv.kucun || "",
-                  stockStatus: Number(d.orderStatus) === 5 ? "缺货" : "有货"
-                };
-              })
+              const p = item.product || {};
+              const inv = item.inventory || {};
+              return {
+                code: p.productNo || inv.sn || "",
+                name: p.title || "",
+                spec: inv.keyVals || "",
+                category: p.cateTitle || "",
+                unit: p.unit || "",
+                guidePrice: item.yPrice,
+                quantity: item.num,
+                totalPrice: item.totalPrice,
+                stockQty: inv.kucun || "",
+                stockStatus: Number(d.orderStatus) === 5 ? "缺货" : "有货"
+              };
+            })
             : [];
 
           const externalProductList = Array.isArray(d.foreignProductJson)
             ? d.foreignProductJson.map(item => {
-                const fp = item.foreign_product || {};
-                return {
-                  name: fp.keyVals || "",
-                  spec: fp.keyVals || "",
-                  unitPrice: item.price,
-                  quantity: item.num,
-                  arrivalQty: "",
-                  isShortage: Number(d.orderStatus) === 5,
-                  totalPrice: item.totalPrice,
-                  unit: fp.unit || ""
-                };
-              })
+              const fp = item.foreign_product || {};
+              return {
+                name: fp.keyVals || "",
+                spec: fp.keyVals || "",
+                unitPrice: item.price,
+                quantity: item.num,
+                arrivalQty: "",
+                isShortage: Number(d.orderStatus) === 5,
+                totalPrice: item.totalPrice,
+                unit: fp.unit || ""
+              };
+            })
             : [];
 
           const supervisorApprovalList = Array.isArray(d.reviewJson)
             ? d.reviewJson.map(r => ({
-                approver: r.name || "",
-                approvalTime: r.created_at || "",
-                approvalStatus: r.statusTxt || "",
-                approvalRemark: r.cont || ""
-              }))
+              approver: r.name || "",
+              approvalTime: r.created_at || "",
+              approvalStatus: r.statusTxt || "",
+              approvalRemark: r.cont || ""
+            }))
             : [];
 
           const managerApprovalList = Array.isArray(d.reviewJson2)
             ? d.reviewJson2.map(r => ({
-                approver: r.name || "",
-                approvalTime: r.created_at || "",
-                approvalStatus: r.statusTxt || "",
-                deliveryTime: r.estimateTime || ""
-              }))
+              approver: r.name || "",
+              approvalTime: r.created_at || "",
+              approvalStatus: r.statusTxt || "",
+              deliveryTime: r.estimateTime || ""
+            }))
             : [];
 
           const deliveryList = Array.isArray(d.outboundJson)
             ? d.outboundJson.map(o => ({
-                deliveryNo: o.orderNo || "",
-                logisticsNo: o.sendNo || "",
-                deliveryPhotos: parseImages(o.sendImages),
-                deliveryTime: o.sendTime || ""
-              }))
+              deliveryNo: o.orderNo || "",
+              logisticsNo: o.sendNo || "",
+              deliveryPhotos: parseImages(o.sendImages),
+              deliveryTime: o.sendTime || ""
+            }))
             : [];
 
           const contractImages = parseImages(d.contractImages);
@@ -697,7 +689,7 @@ export default {
       if (s === 2) return "终端指导价格";
       return v != null ? String(v) : "—";
     },
-    
+
     orderStatusText(status) {
       const s = Number(status);
       if (s === 1 || s === 2) return '待审核';
@@ -789,6 +781,7 @@ export default {
   .field-row {
     margin-bottom: 15px;
   }
+
   .block-total {
     text-align: right;
     font-size: 16px;
@@ -890,6 +883,7 @@ export default {
   padding: 0 24px 0;
   background: #f7f7f7;
   text-align: left;
+
   .el-dialog__title {
     line-height: 60px;
     font-size: 18px;
@@ -897,6 +891,7 @@ export default {
     color: #333333;
   }
 }
+
 :deep(.el-dialog__body) {
   padding: 30px 80px;
 }

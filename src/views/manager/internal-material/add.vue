@@ -25,6 +25,12 @@
             show-all-levels
           />
         </el-form-item>
+        <el-form-item label="原料类型" prop="materialType">
+          <el-select v-model="form.materialType" placeholder="请选择原料类型">
+            <el-option label="原料" value="1" />
+            <el-option label="外购包装" value="2" />
+          </el-select>
+        </el-form-item>
         <el-form-item label="用于产品大类" prop="productCategoryIds">
           <el-cascader
             v-model="form.productCategoryIds"
@@ -301,6 +307,7 @@ export default {
             trigger: "change"
           }
         ],
+        materialType: [{ required: true, message: "请选择原料类型", trigger: "blur" }],
         unit: [{ required: true, message: "请输入单位", trigger: "blur" }],
         expiry: [{ required: true, message: "请输入储存条件", trigger: "blur" }],
         content: [
@@ -417,7 +424,7 @@ export default {
         unit: data.unit ?? "",
         detail: data.content ?? "",
         content: data.content ?? "",
-        materialType: this.form.materialType || "1"
+        materialType: String(data.materialType ?? "1")
       };
       this.syncSpecGroupsFromSkus();
       const inventorys = data.inventorys || [];

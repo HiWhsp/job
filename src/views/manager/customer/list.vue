@@ -165,6 +165,9 @@
 
     <!-- 查看详情 Drawer（从右往左展开） -->
     <detail-drawer :visible.sync="detailDrawerVisible" :detail-row="detailRow" />
+
+    <!-- 导入弹框 -->
+    <import-modal ref="importModal" @confirm="handleImportConfirm" />
   </div>
 </template>
 
@@ -172,13 +175,14 @@
 import { mapState } from "vuex";
 import DeleteDialog from "../components/delete-dialog.vue";
 import DetailDrawer from "../components/detail-drawer.vue";
-
+import ImportModal from "@/components/upload/import_file_modal.vue";
 export default {
   name: "Customer",
 
   components: {
     DeleteDialog,
-    DetailDrawer
+    DetailDrawer,
+    ImportModal
   },
   data() {
     return {
@@ -198,7 +202,8 @@ export default {
       deleteDialogVisible: false,
       rowToDelete: null,
       detailDrawerVisible: false,
-      detailRow: null
+      detailRow: null,
+      importModalVisible: false
     };
   },
 
@@ -399,8 +404,10 @@ export default {
       this.$router.push("/manager/customer/add");
     },
     handleImport() {
-      // TODO: 客户导入
-      this.$message.info("客户导入");
+      this.$refs.importModal.init("客户导入", "/importCustomer");
+    },
+    handleImportConfirm() {
+      this.loadList();
     },
     handleExport() {
       // TODO: 导出

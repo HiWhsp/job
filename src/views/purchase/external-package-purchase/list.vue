@@ -20,7 +20,7 @@
               style="width: 180px"
             >
               <el-option label="待生成采购单" value="4" />
-              <el-option label="已生成采购单" value="5" />
+              <el-option label="已生成采购单" value="7" />
             </el-select>
           </el-form-item>
           <el-form-item label="时间筛选" prop="dateRange">
@@ -56,11 +56,7 @@
           header-cell-class-name="table-header-cell"
           :row-class-name="tableRowClassName"
         >
-          <el-table-column type="index" label="序号" width="70" align="center">
-            <template slot-scope="scope">
-              {{ String((queryParams.pageNum - 1) * queryParams.pageSize + scope.$index + 1).padStart(3, '0') }}
-            </template>
-          </el-table-column>
+          <el-table-column prop="id" label="序号" width="70" align="center" />
           <el-table-column prop="orderNo" label="订单号" show-overflow-tooltip />
           <el-table-column prop="packageSpec" label="包装规格" show-overflow-tooltip />
           <el-table-column prop="customerName" label="客户名称" show-overflow-tooltip />
@@ -68,7 +64,7 @@
           <el-table-column prop="status" label="状态" align="center">
             <template slot-scope="{ row }">
               <el-tag v-if="String(row.orderStatus) === '4'" type="info" size="small" effect="plain">待生成采购单</el-tag>
-              <el-tag v-else-if="String(row.orderStatus) === '5'" type="success" size="small" effect="plain">已生成采购单</el-tag>
+              <el-tag v-else-if="String(row.orderStatus) === '7'" type="success" size="small" effect="plain">已生成采购单</el-tag>
               <span v-else>—</span>
             </template>
           </el-table-column>
@@ -134,7 +130,7 @@
 </template>
 
 <script>
-const LIST_API = "/getPurchaseMaterialOrderList";
+const LIST_API = "/getStaffOrderList";
 const ADD_API = "/addPurchaseMaterialPackOrder";
 
 export default {
@@ -200,15 +196,13 @@ export default {
       const params = {
         limit: String(this.queryParams.pageSize),
         page: String(this.queryParams.pageNum),
-        // status 为采购流程状态：4 可创建/生成采购单，5 已生成采购单
-        orderStatus: "",
-        status: this.queryParams.status ? String(this.queryParams.status) : "",
+        // status 为采购流程状态：4 可创建/生成采购单，7 已生成采购单
+        orderStatus: this.queryParams.status ? String(this.queryParams.status) : "4,7",
         keyword: this.queryParams.keyword || "",
         start_time: start_time || "",
         end_time: end_time || "",
         isPay: "",
-        // 外购包装固定传 2
-        materialType: "2"
+        packType: 4
       };
       this.$api({
         url: LIST_API,
@@ -220,10 +214,10 @@ export default {
             const list = Array.isArray(res.data.list) ? res.data.list : [];
             this.tableData = list.map(it => ({
               ...it,
-              orderNo: it.staffOrderNo || "",
+              orderNo: it.orderNo || "",
               packageSpec: it.title || "",
               customerName: it.customerTitle || "",
-              orderTime: it.staffOrderTime || "",
+              orderTime: it.created_at || "",
               // 兼容旧字段
               status: String(it.orderStatus) === "5" ? "已生成采购单" : "待生成采购单",
               submitTime: it.created_at || ""
@@ -291,8 +285,8 @@ export default {
           num,
           expectedTime,
           price: String(price.toFixed(2)),
-          title,
-          productJson
+          // title,
+          // productJson
         };
         // 文档标注 id 为编辑时传，这里兼容传入
         if (id) data.id = id;

@@ -513,11 +513,11 @@ export default {
               const fp = it.foreign_product || {};
               const isShortage = orderStatusTitle.includes('缺货');
               return {
-                name: fp.title || '外购产品',
+                name: fp.title || '',
                 spec: fp.keyVals || '',
                 unitPrice: it.price || '',
                 quantity: it.num || '',
-                arrivalQty: '',
+                arrivalQty: fp.kucun || '',
                 isShortage,
                 totalPrice: it.totalPrice || '',
                 unit: fp.unit || ''

@@ -113,19 +113,23 @@
       tip-text="删除后将无法恢复"
       @confirm="handleDeleteConfirm"
     />
+
+    <import-modal ref="importModal" @confirm="handleImportConfirm" />
   </div>
 </template>
     
 <script>
 import ExternalProductDetailDrawer from "./components/external-product-detail-drawer.vue";
 import DeleteDialog from "../components/delete-dialog.vue";
+import ImportModal from "@/components/upload/import_file_modal.vue";
 
 export default {
   name: "ExternalProductList",
 
   components: {
     ExternalProductDetailDrawer,
-    DeleteDialog
+    DeleteDialog,
+    ImportModal
   },
   data() {
     return {
@@ -243,8 +247,10 @@ export default {
       this.$router.push("/manager/external-product/add");
     },
     handleImport() {
-      // TODO: 批量导入
-      this.$message.info("批量导入");
+      this.$refs.importModal.init("外购产品导入", "/importForeignProduct");
+    },
+    handleImportConfirm() {
+      this.loadList();
     },
     handleSizeChange(val) {
       this.queryParams.pageSize = val;

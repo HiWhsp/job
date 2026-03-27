@@ -84,6 +84,8 @@
       tip-text="删除后将无法恢复"
       @confirm="handleDeleteConfirm"
     />
+
+    <import-modal ref="importModal" @confirm="handleImportConfirm" />
   </div>
 </template>
 
@@ -91,13 +93,15 @@
 import { mapState } from "vuex";
 import MaterialDetailDrawer from "./components/material-detail-drawer.vue";
 import DeleteDialog from "../components/delete-dialog.vue";
+import ImportModal from "@/components/upload/import_file_modal.vue";
 
 export default {
   name: "InternalMaterialList",
 
   components: {
     MaterialDetailDrawer,
-    DeleteDialog
+    DeleteDialog,
+    ImportModal
   },
   data() {
     return {
@@ -252,8 +256,10 @@ export default {
       this.$router.push('/manager/internal-material/add');
     },
     handleImport() {
-      // TODO: 批量导入
-      this.$message.info("批量导入");
+      this.$refs.importModal.init("原料导入", "/importMaterial");
+    },
+    handleImportConfirm() {
+      this.loadList();
     },
     handleSizeChange(val) {
       this.queryParams.pageSize = val;

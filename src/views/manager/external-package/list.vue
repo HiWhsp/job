@@ -120,19 +120,24 @@
       tip-text="删除后将无法恢复"
       @confirm="handleDeleteConfirm"
     />
+
+    <!-- 批量导入（与客户列表 import_file_modal 一致） -->
+    <import-modal ref="importModal" @confirm="handleImportConfirm" />
   </div>
 </template>
     
 <script>
 import ExternalPackageDetailDrawer from "./components/external-package-detail-drawer.vue";
 import DeleteDialog from "../components/delete-dialog.vue";
+import ImportModal from "@/components/upload/import_file_modal.vue";
 
 export default {
   name: "ExternalPackageList",
 
   components: {
     ExternalPackageDetailDrawer,
-    DeleteDialog
+    DeleteDialog,
+    ImportModal
   },
   data() {
     return {
@@ -251,8 +256,10 @@ export default {
       this.$router.push('/manager/external-package/add');
     },
     handleImport() {
-      // TODO: 批量导入
-      this.$message.info("批量导入");
+      this.$refs.importModal.init("客户外来包装导入", "/importForeignPack");
+    },
+    handleImportConfirm() {
+      this.loadList();
     },
     handleSizeChange(val) {
       this.queryParams.pageSize = val;
