@@ -252,10 +252,13 @@ export default {
 }
 
 .form-label {
+  width: 201px;
+  height: 28px;
+  font-family: Poppins, Poppins;
+  font-weight: 400;
   font-size: 20px;
   color: #1e262e;
-  font-weight: 400;
-  width: 200px;
+  line-height: 18px;
   text-align: right;
 
   .required {
@@ -268,21 +271,17 @@ export default {
   flex: 1;
   height: 40px;
   padding: 0 12px;
-  border: 1px solid #ddd;
+  border: 1px solid #DBDBDB;
   border-radius: 4px;
   font-size: 20px;
   color: #1e262e;
   box-sizing: border-box;
-  background: #f5f5f5;
+  background: #FBFBFB;
 
   &::placeholder {
     color: #999;
-  }
-
-  &:focus {
-    outline: none;
-    border-color: #999;
-    background: #ffffff;
+    font-size: 18px;
+    font-weight: 400 !important;
   }
 }
 
@@ -307,9 +306,11 @@ export default {
 // Login Link
 .login-link {
   text-align: center;
-  margin-top: 20px;
+  margin-top: 45px;
+  font-family: Poppins, Poppins;
+  font-weight: 600;
   font-size: 24px;
-  color: #1e262e;
+  color: #00306b;
   margin-left: 150px;
 
   span {

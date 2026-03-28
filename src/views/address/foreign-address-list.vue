@@ -110,7 +110,7 @@
         </div>
       </div>
       <span slot="footer" class="dialog-footer">
-        <el-button class="btn-2" @click="throttle_do_submit()" :loading="loading">Submit</el-button>
+        <el-button class="btn-2" @click="throttle_do_submit()" :loading="loading">SUMMIT</el-button>
         <!-- <button class="btn-ripple fit-text btn-2" @click="show_modal = false">取 消</button> -->
       </span>
     </el-dialog>
@@ -246,7 +246,6 @@ export default {
       }
     },
 
-
     init(row) {
       console.log("row", row);
       if (!row) {
@@ -265,7 +264,7 @@ export default {
       const res = await this.$api({
         url: "/service.php",
         method: "get",
-        data: { 
+        data: {
           action: "userAddress_detail",
           id: this.form.id
         }
@@ -511,8 +510,9 @@ export default {
         min-width: 200px;
         text-align: right;
         padding-right: 10px;
-        color: #1e262e;
+        color: #000;
         font-size: 20px;
+        font-weight: 400;
 
         &.required {
           &::before {
@@ -567,6 +567,14 @@ export default {
   font-size: 24px;
   color: #1e262e;
 
+  .el-dialog__title {
+    font-family: Poppins, Poppins;
+    font-weight: 600;
+    font-size: 24px;
+    color: #1e262e;
+    line-height: 34px;
+  }
+
   .el-dialog__close {
     font-size: 20px;
   }
@@ -592,6 +600,8 @@ export default {
     background: #fbfbfb;
     &:disabled {
       color: #999;
+      font-weight: 400;
+      font-size: 20px;
     }
   }
 }
@@ -609,11 +619,11 @@ export default {
     height: 32px;
     background: #ffffff;
     border-radius: 50px 50px 50px 50px;
-    border: 1px solid #00306B;
+    border: 1px solid #00306b;
     font-family: Poppins, Poppins;
     font-weight: 400;
     font-size: 14px;
-    color: #00306B;
+    color: #00306b;
   }
 
   .btn-2 {

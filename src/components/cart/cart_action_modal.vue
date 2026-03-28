@@ -14,10 +14,8 @@
         <div class="text-box-1">{{ tip }}</div>
       </div>
       <span slot="footer" class="dialog-footer">
-        <button class="btn btn-ripple btn-bg" @click="do_confirm()">
-          Confirm
-        </button>
-        <button class="btn btn-ripple" @click="show_modal = false">Cancel</button>
+        <button class="btn btn-ripple btn-bg" @click="do_confirm()">CONFIRM</button>
+        <button class="btn btn-ripple" @click="show_modal = false">CANCEL</button>
       </span>
     </el-dialog>
   </div>
@@ -34,11 +32,11 @@ export default {
     return {
       show_modal: false,
       tip: "",
-      tip_option: {},
+      tip_option: {}
     };
   },
   computed: {
-    ...mapState([""]),
+    ...mapState([""])
   },
   watch: {},
   methods: {
@@ -54,8 +52,8 @@ export default {
     do_confirm() {
       this.$emit("confirm", this.tip_option);
       this.show_modal = false;
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -86,22 +84,17 @@ export default {
   button {
     margin: 0 8px;
     width: 150px;
-    font-size: 18px;
-    height: 46px;
+    font-size: 20px;
+    font-weight: 600;
+    height: 52px;
     background: #00306B;
-    border-radius: 4px 4px 4px 4px;
+    border-radius: 6px 6px 6px 6px;
 
     color: #fff;
   }
 
   .btn-bg {
-    width: 150px;
-    height: 46px;
-    background: #EC6A2B;
-    border-radius: 4px 4px 4px 4px;
-    font-family: Poppins, Poppins;
-    font-weight: 400;
-    font-size: 18px;
+    background: #ec6a2b;
     color: #ffffff;
   }
 }
@@ -120,9 +113,10 @@ export default {
     .text-box-1 {
       margin-top: 18px;
       font-family: Poppins, Poppins;
-      font-weight: 400;
-      font-size: 16px;
-      color: #333333;
+      font-weight: 600;
+      font-size: 24px;
+      color: #1e262e;
+      line-height: 30px;
     }
 
     .text-box-2 {

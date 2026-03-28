@@ -16,7 +16,7 @@
           :class="{ 'item-text2': item.name == '客服电话' }"
           v-if="item.name != '手机版'"
         >
-          {{ shown_info[item.name] || item.name }}
+          {{ sidebarHoverText(item) }}
         </div>
 
         <div class="circle-box">
@@ -27,12 +27,12 @@
               class="icon"
             />
             <div
-              v-if="item.name === '购物车' && vuex_cart_number > 0"
+              v-if="item.name === 'cart' && vuex_cart_number > 0"
               class="badge"
             >
               {{ vuex_cart_number }}
             </div>
-            <div v-else-if="item.badge && item.name !== '购物车'" class="badge">
+            <div v-else-if="item.badge && item.name !== 'cart'" class="badge">
               {{ item.badge }}
             </div>
           </div>
@@ -56,9 +56,6 @@ import { mapState } from "vuex";
 
 export default {
   name: "FloatingSidebar",
-  computed: {
-    ...mapState(["vuex_config", "vuex_cart_number"]),
-  },
   data() {
     return {
       sidebarItems: [
@@ -96,14 +93,29 @@ export default {
     };
   },
   computed: {
-    shown_info() {
-      let map = {
-        客服电话: this.vuex_config.comPhone || "400-000-0000",
-      };
-      return map;
+    ...mapState([
+      "vuex_config",
+      "vuex_cart_number",
+      "vuex_huobi",
+      "vuex_cart_total"
+    ]),
+    /** 购物车全部商品行小计之和（与 cart 页每行 TOTAL 累加一致，非仅文案） */
+    cartTotalFormatted() {
+      const huobi = (this.vuex_huobi || "").trim();
+      const total = this.vuex_cart_total || "0.00";
+      return huobi ? `$${total}` : String(total);
     },
+    shown_info() {
+      return {
+        客服电话: this.vuex_config.comPhone || "400-000-0000"
+      };
+    }
   },
   methods: {
+    sidebarHoverText(item) {
+      if (item.name === "cart") return this.cartTotalFormatted;
+      return this.shown_info[item.name] || item.name;
+    },
     handleMouseEnter(item, index) {
       item.isHovered = true;
     },
@@ -225,6 +237,8 @@ export default {
           transform: scale(1) !important;
           opacity: 1;
           padding: 0 36px 0 20px;
+          color: #EC6A2B;
+
           // padding: 0 36px 0 20px;
         }
 

@@ -56,8 +56,8 @@
           </div>
           <!-- prop="sales_site" -->
           <el-form-item v-for="(item,index) in area_select_list" :key="index">
-            <div style="display: flex;margin-bottom: 20px;">
-              0{{ index+1 }}&nbsp;&nbsp;
+            <div style="display: flex;margin-bottom: 20px; ">
+              <span class="sanji-index">0{{ index+1 }}</span>
               <area_select
                 ref="area_select"
                 @change="(e)=>{
@@ -69,7 +69,7 @@
               </div>
             </div>
           </el-form-item>
-          <div class="btns_end" @click="handle_add">+&nbsp;&nbsp;Add Region</div>
+          <div class="btns_end" @click="handle_add">+ ADD REGION</div>
           <div class="form_text">
             <div>Up to three regions could be added</div>
           </div>
@@ -96,7 +96,7 @@
               alt
             />
           </el-form-item>
-        </div> -->
+        </div>-->
 
         <!-- 银行卡信息 -->
         <div class="form-section">
@@ -473,7 +473,7 @@ export default {
     background: #ffffff;
     font-size: 20px;
     font-family: Poppins, Poppins;
-    font-weight: bold;
+    font-weight: 600;
     color: #1e262e;
   }
 
@@ -516,7 +516,7 @@ export default {
     font-family: Poppins, Poppins;
   }
   .form-label-text-right {
-    width: 200px;
+    width: 210px;
     display: inline-block;
   }
 
@@ -612,7 +612,7 @@ export default {
         background: #fbfbfb;
 
         &:focus {
-          border-color: #00306B;
+          border-color: #00306b;
         }
       }
     }
@@ -636,7 +636,7 @@ export default {
           line-height: 40px;
 
           &:focus {
-            border-color: #00306B;
+            border-color: #00306b;
           }
         }
       }
@@ -654,12 +654,12 @@ export default {
         }
 
         .el-radio__input.is-checked .el-radio__inner {
-          background-color: #00306B;
-          border-color: #00306B;
+          background-color: #00306b;
+          border-color: #00306b;
         }
 
         .el-radio__input.is-checked + .el-radio__label {
-          color: #00306B;
+          color: #00306b;
         }
       }
     }
@@ -674,14 +674,11 @@ export default {
         white-space: pre-wrap;
         line-height: 24px;
         padding-left: 20px;
+        font-weight: 400;
 
         .agreement-link {
           color: #ec6a2b;
-          text-decoration: none;
-
-          &:hover {
-            text-decoration: underline;
-          }
+          text-decoration: underline;
         }
       }
 
@@ -804,5 +801,34 @@ export default {
   color: #6b46a3;
   margin-left: 30px;
   cursor: pointer;
+}
+.sanji-index {
+  font-family: Poppins, Poppins;
+  font-weight: 400;
+  font-size: 20px;
+  color: #1f1f1f;
+  line-height: 32px;
+  margin-top: 5px;
+}
+.sanji-wrap {
+  margin-left: 14px;
+  /deep/.sanji-box {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    .el-select {
+      margin-right: 0;
+    }
+    .el-input__inner {
+      width: 608px;
+      height: 56px;
+
+      font-family: Poppins, Poppins;
+      font-weight: 400;
+      font-size: 20px;
+      color: #999999;
+      line-height: 18px;
+    }
+  }
 }
 </style>

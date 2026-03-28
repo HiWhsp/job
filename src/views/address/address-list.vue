@@ -32,7 +32,7 @@
                 <div class="k">Phone Number:</div>
                 <div class="v">{{ item.phone }}</div>
               </div>
-              <div class="kv" v-if="item.email">
+              <div class="kv">
                 <div class="k">Email:</div>
                 <div class="v">{{ item.email }}</div>
               </div>
@@ -45,11 +45,11 @@
                   class="btn-default"
                   disabled
                 >DEFAULT ADDRESS</button>
-                <span
+                <!-- <span
                   v-else
                   class="action-link set-default"
                   @click="do_address_set_default(item.id)"
-                >Set as default</span>
+                >Set as default</span>-->
               </div>
               <div class="actions-right">
                 <span class="action-link edit" @click="do_address_edit(item)">Edit</span>
@@ -272,12 +272,12 @@ export default {
   gap: 18px;
   line-height: 24px;
   font-size: 12px;
-  color: #1E262E;
+  color: #1e262e;
 
   .k {
     width: 180px;
     text-align: right;
-    color: #5E5E5E;
+    color: #5e5e5e;
     font-size: 20px;
     margin-bottom: 16px;
   }
@@ -308,7 +308,8 @@ export default {
 .action-link {
   font-size: 20px;
   cursor: pointer;
-  color: #1f1f1f;
+  color: #1E262E;
+  font-weight: 400;
 
   &:hover {
     text-decoration: underline;
@@ -321,13 +322,13 @@ export default {
 
 .btn-default {
   height: 52px;
-  padding:  14px;
+  padding: 14px;
   border-radius: 3px;
   border: none;
   background: #00306b;
   color: #fff;
   font-size: 20px;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .set-default {

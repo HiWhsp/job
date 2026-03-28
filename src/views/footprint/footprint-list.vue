@@ -7,10 +7,8 @@
     <div class="page-ctx">
       <div class="fav-box">
         <div class="fav-titles flex">
-          <div class="fav-check flex" @click="do_toggle_all()" :class="{ checked: checkedAll }">
-            <img src="@img/common/check0.png" alt class="img-check check-0" />
-            <img src="@img/common/check1.png" alt class="img-check check-1" />
-            <span>ALL</span>
+          <div class="fav-check flex">
+            <el-checkbox v-model="checkedAll" @change="do_toggle_all()">ALL</el-checkbox>
           </div>
           <div class="fav-delete" @click="do_delete_checked()">Delete Selected</div>
         </div>
@@ -18,15 +16,7 @@
         <div class="fav-data-box" v-if="count">
           <div class="fav-list">
             <div class="fav-item" v-for="(item, index) in product_list" :key="index">
-              <div
-                class="fav-check"
-                @click.stop="do_toggle_item(item)"
-                :class="{ checked: item.checked }"
-              >
-                <img src="@img/common/check0.png" alt class="img-check check-0" />
-                <img src="@img/common/check1.png" alt class="img-check check-1" />
-              </div>
-
+              <el-checkbox v-model="item.checked"></el-checkbox>
               <div class="goods-img scale-box" @click="to_product(item)">
                 <img class="scale-img" :src="item.thumb" alt />
                 <!-- <el-image :src="item.thumb">
@@ -35,22 +25,22 @@
                   </div>
                 </el-image>-->
               </div>
+              <div class="goods-info">
+                <div class="goods-title">
+                  <div class="text-1" @click="to_product(item)">{{ item.title }}</div>
+                </div>
 
-              <div class="goods-title">
-                <div class="text-1" @click="to_product(item)">{{ item.title }}</div>
-                <div class="text-2">{{ item.keyVals }}</div>
-              </div>
+                <div class="goods-price">{{ vuex_huobi }} {{ item.priceSale }}/pack</div>
 
-              <div class="goods-price">{{ vuex_huobi }} {{ item.priceSale }}/pack</div>
-
-              <div class="goods-actions flex-center">
-                <!-- <button class="btn btn-detail btn-ripple" @click="addCart(item)">
+                <div class="goods-actions">
+                  <!-- <button class="btn btn-detail btn-ripple" @click="addCart(item)">
                   加入购物车
-                </button>-->
-                <button class="btn btn-detail btn-ripple" @click="addCart(item)">Add To Cart</button>
-                <button class="btn btn-cancel" @click.stop="do_fav_cancel_item(item)">
-                  <img src="@img/other/shopcart-goods-delete.png" alt="">
-                </button>
+                  </button>-->
+                  <button class="btn btn-detail btn-ripple" @click="addCart(item)">ADD TO CART</button>
+                  <button class="btn btn-cancel" @click.stop="do_fav_cancel_item(item)">
+                    <img src="@img/other/shopcart-goods-delete.png" alt />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -147,7 +137,7 @@ export default {
     },
 
     do_toggle_all() {
-      this.checkedAll = !this.checkedAll;
+      this.checkedAll = this.checkedAll;
       this.product_list.forEach(v => (v.checked = this.checkedAll));
     },
 
@@ -291,14 +281,32 @@ export default {
       font-size: 20px;
       color: #1f1f1f;
 
-      &.checked {
-        color: #00306B;
-      }
-
-      img {
+      .el-checkbox {
+        margin-right: 32px;
         width: 28px;
         height: 28px;
-        margin-right: 8px;
+        background: #ffffff;
+        border-radius: 6px 6px 6px 6px;
+        /deep/ .el-checkbox__inner {
+          width: 28px;
+          height: 28px;
+          background: #ffffff;
+          border-radius: 6px 6px 6px 6px;
+          border: 1px solid #707070;
+          &:after {
+            width: 7px;
+            left: 10px;
+            height: 17px;
+          }
+        }
+
+        /deep/ .el-checkbox__label {
+          font-family: Poppins, Poppins;
+          font-weight: 600;
+          font-size: 20px;
+          color: #1e262e;
+          line-height: 28px;
+        }
       }
     }
 
@@ -318,8 +326,28 @@ export default {
   .fav-item {
     display: flex;
     align-items: center;
-    padding: 24px;
+    padding: 24px 0 24px 19px;
     border-bottom: 1px solid #e5e5e5;
+
+    .el-checkbox {
+      margin-right: 32px;
+      width: 28px;
+      height: 28px;
+      background: #ffffff;
+      border-radius: 6px 6px 6px 6px;
+      /deep/ .el-checkbox__inner {
+        width: 28px;
+        height: 28px;
+        background: #ffffff;
+        border-radius: 6px 6px 6px 6px;
+        border: 1px solid #707070;
+        &:after {
+          width: 7px;
+          left: 10px;
+          height: 17px;
+        }
+      }
+    }
 
     &:last-child {
       border-bottom: none;
@@ -328,11 +356,6 @@ export default {
     .fav-check {
       width: 52px;
       text-align: left;
-
-      img {
-        width: 28px;
-        height: 28px;
-      }
     }
 
     .goods-img {
@@ -353,18 +376,24 @@ export default {
       }
     }
 
-    .goods-title {
+    .goods-info {
       flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .goods-title {
+      width: 328px;
       text-align: left;
       padding-left: 15px;
 
       .text-1 {
         cursor: pointer;
-        margin-bottom: 15px;
         font-family: Poppins, Poppins;
-        // font-weight: bold;
-        font-size: 14px;
-        color: #1f1f1f;
+        font-weight: 400;
+        font-size: 24px;
+        color: #1e262e;
+        line-height: 30px;
       }
 
       .text-2 {
@@ -376,14 +405,19 @@ export default {
     }
 
     .goods-price {
+      height: 28px;
       font-family: Poppins, Poppins;
-      font-weight: 400;
+      font-weight: 600;
       font-size: 20px;
       color: #1e262e;
+      line-height: 28px;
     }
 
     .goods-actions {
       min-width: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
 
       button {
         & + button {

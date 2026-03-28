@@ -5,7 +5,7 @@
     <div class="layout-box">
       <router-view></router-view>
     </div>
-    <page_footer/>
+    <page_footer />
   </div>
 </template>
 <script>
@@ -19,7 +19,7 @@ export default {
   components: {
     page_header,
     page_footer,
-    page_header_mobile,
+    page_header_mobile
     // page_aside,
     // page_kefu,
   },
@@ -30,7 +30,7 @@ export default {
     );
     return {
       //是否展示登录页面所需组件
-      is_show_login_comp: is_show_login_comp,
+      is_show_login_comp: is_show_login_comp
     };
   },
   computed: {},
@@ -42,7 +42,7 @@ export default {
       } else {
         this.is_show_login_comp = false;
       }
-    },
+    }
   },
   beforeCreate() {},
   created() {},
@@ -78,8 +78,8 @@ export default {
           document.documentElement.style.fontSize = fontSize + "px";
         }
       }
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -161,30 +161,33 @@ body {
 }
 
 .el-textarea__inner:focus {
-  border-color: #00306B!important;
+  border-color: #00306b !important;
 }
 
 .el-radio__input.is-checked .el-radio__inner {
-  background: #00306B!important;
-  border-color: #00306B!important;
+  background: #ec6a2b !important;
+  border-color: #ec6a2b !important;
 }
 
-.el-radio__input.is-checked + .el-radio__label {
-  color: #000 !important;
+.el-radio__input + .el-radio__label {
+  font-family: Poppins, Poppins;
+  font-weight: 400;
+  font-size: 20px;
+  color: #1e262e !important;
 }
 
 .el-checkbox__input.is-focus .el-checkbox__inner {
-  border-color: #00306B!important;
+  border-color: #00306b !important;
 }
 
 .el-checkbox__input.is-checked + .el-checkbox__label {
-  color: #00306B!important;
+  color: #00306b !important;
 }
 
 .el-checkbox__input.is-checked .el-checkbox__inner,
 .el-checkbox__input.is-indeterminate .el-checkbox__inner {
-  background: #00306B!important;
-  border-color: #00306B!important;
+  background: #00306b !important;
+  border-color: #00306b !important;
 }
 
 .pagination-box {
@@ -331,11 +334,11 @@ button {
 }
 
 .el-pagination.is-background .el-pager li:not(.disabled):hover {
-  color: #EC6A2B!important;
+  color: #ec6a2b !important;
 }
 
 .el-pagination.is-background .el-pager li:not(.disabled).active {
-  background-color: #EC6A2B!important;
+  background-color: #ec6a2b !important;
   color: #fff !important;
 }
 

@@ -250,7 +250,7 @@ export default {
       this.$router.push({
         path: "/product-cates",
         query: {
-          ids,
+          ids
         }
       });
       this.show_fenlei = false;
@@ -361,9 +361,12 @@ export default {
                 display: inline-block;
                 cursor: pointer;
                 font-size: 20px;
+                font-weight: 400;
+                font-family: Arial, Arial;
 
                 &:hover {
                   color: #ec6a2b;
+                  font-weight: 600;
                 }
               }
 
@@ -443,6 +446,11 @@ export default {
             color: #3b64fc;
             font-weight: bold;
           }
+
+          .router-link-exact-active {
+            font-weight: 600 !important;
+            color: #ec6a2b !important;
+          }
         }
       }
     }
@@ -454,6 +462,7 @@ export default {
     font-size: 20px;
     font-weight: bold;
     color: #ec6a2b;
+    font-family: Arial, Arial;
   }
 
   .sub-categories {
@@ -466,9 +475,10 @@ export default {
     .sub-category-item {
       cursor: pointer;
       font-size: 20px;
-      color: #1E262E;
+      color: #1e262e;
       transition: all 0.3s;
       white-space: nowrap;
+      font-family: Arial, Arial;
 
       &:hover {
         color: #ec6a2b;

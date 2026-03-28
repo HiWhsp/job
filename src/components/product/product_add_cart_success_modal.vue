@@ -1,7 +1,6 @@
 <template>
   <div class="modal-container">
     <el-dialog
-      :title="number + ' items added to cart'"
       width="568px"
       custom-class="cus-modal-wrap"
       :close-on-click-modal="true"
@@ -14,18 +13,15 @@
         </div>
         <div class="text-box-1">Successfully added to cart!</div>
         <div class="text-box-2">
-          There are <span class="number">{{ vuex_cart_number }}</span> items in
+          There are
+          <span class="number">{{ vuex_cart_number }}</span> items in
           the cart
         </div>
       </div>
       <span slot="footer" class="dialog-footer">
         <div class="btns flex-center">
-          <button class="btn btn-ripple btn-bg" @click="$router.push('/cart')">
-            VIEW MY CART
-          </button>
-          <button class="btn btn-ripple" @click="handle_xjgw">
-            Continue shopping
-          </button>
+          <button class="btn btn-ripple btn-bg" @click="$router.push('/cart')">VIEW MY CART</button>
+          <button class="btn btn-ripple" @click="handle_xjgw">CONTINUE SHOPPING</button>
         </div>
       </span>
     </el-dialog>
@@ -42,11 +38,11 @@ export default {
     return {
       show_modal: false,
       select_sku: {},
-      number: 1,
+      number: 1
     };
   },
   computed: {
-    ...mapState([""]),
+    ...mapState([""])
   },
   watch: {},
   methods: {
@@ -68,16 +64,14 @@ export default {
       this.show_modal = false;
 
       window.open("/product-cates", "__blank", "", false);
-    },
-  },
+    }
+  }
 };
 </script>
 
 <style scoped lang="less">
 /deep/ .el-dialog__header {
   padding: 16px 24px;
-  border-bottom: 1px solid #eee;
-  background: #f7f7f7;
 
   font-family: Poppins, Poppins;
   font-weight: 600;
@@ -103,10 +97,10 @@ export default {
     padding: 0;
     text-align: center;
 
-    .img-box {
+    .tip-box {
       img {
-        width: 150px;
-        height: 150px;
+        width: 50px;
+        height: 50px;
         object-fit: contain;
       }
     }
@@ -115,20 +109,21 @@ export default {
       margin-top: 18px;
       font-family: Poppins, Poppins;
       font-weight: bold;
-      font-size: 20px;
-      color: #1f1f1f;
+      font-size: 24px;
+      color: #1e262e;
+      line-height: 20px;
     }
 
     .text-box-2 {
       margin-top: 18px;
       font-family: Poppins, Poppins;
       font-weight: 400;
-      font-size: 16px;
-      color: #333;
+      font-size: 20px;
+      color: #5e5e5e;
+      line-height: 20px;
 
       .number {
-        font-weight: bold;
-        color: #00306B;
+        color: #EC6A2B;
       }
     }
   }
@@ -140,10 +135,10 @@ export default {
 
     padding: 0 25px;
     height: 52px;
-    background: #00306B;
+    background: #00306b;
     border-radius: 4px 4px 4px 4px;
     font-family: Poppins, Poppins;
-    font-weight: bold;
+    font-weight: 600;
     font-size: 20px;
     color: #fff;
   }
@@ -151,11 +146,11 @@ export default {
   .btn-bg {
     padding: 0 25px;
     height: 52px;
-    background: #EC6A2B;
+    background: #ec6a2b;
     border-radius: 4px 4px 4px 4px;
     font-family: Poppins, Poppins;
-    font-weight: bold;
-    font-size: 18px;
+    font-weight: 600;
+    font-size: 20px;
     color: #ffffff;
   }
 }

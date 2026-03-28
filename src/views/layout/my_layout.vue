@@ -94,12 +94,12 @@ export default {
           icon: require("@img/my/nav-5.png")
         },
         {
-          title: "After-sale service",
+          title: "After-Sale Service",
           route: "refund-list",
           icon: require("@img/my/nav-6.png")
         },
         {
-          title: "My address",
+          title: "My Address",
           route: "address-list",
           icon: require("@img/my/nav-7.png")
         },
@@ -122,13 +122,13 @@ export default {
           showCondition: user => user.userType == 2
         },
         {
-          title: "business information",
+          title: "Business Information",
           route: "business-information",
           icon: require("@img/my/nav-12.png"),
           showCondition: user => user.userType == 1
         },
         {
-          title: "Apply To Be The Commission-only Rep",
+          title: "Apply To Be The Commission-Only Rep",
           route: "part-time-sales",
           icon: require("@img/my/nav-9.png"),
           // showCondition: (user) => !(user.renzheng == 2 && user.userType == 2),
@@ -245,7 +245,7 @@ export default {
         font-size: 24px;
         color: #ffffff;
         img {
-          width: 22px;
+          width: 24px;
           margin-right: 10px;
         }
       }
@@ -294,8 +294,8 @@ export default {
               margin-right: 16px;
 
               img {
-                width: 22px;
-                height: 22px;
+                width: 24px;
+                height: 24px;
               }
             }
 

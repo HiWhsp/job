@@ -7,7 +7,7 @@
             <!-- 没登录 -->
             <div class="base-left flex">
               <div class="web-title">
-                <img src="@/assets/img/head/head-phone.png" alt="" />
+                <img src="@/assets/img/head/head-phone.png" alt />
                 <span class="phone-number">+4000-000-0000</span>
                 <span class="welcome-text">Hi, welcome to MEDOOO</span>
                 <span class="login-out" v-if="vuex_user.phone" @click="logout">Logout</span>
@@ -16,18 +16,20 @@
 
             <div class="base-right flex">
               <div class="u-act">
-                <img src="@/assets/img/head/CouponCenter.png" alt="" />
+                <img src="@/assets/img/head/CouponCenter.png" alt />
                 <router-link to="/coupon-center">Coupon Center</router-link>
               </div>
               <span class="u-line"></span>
               <div class="u-act">
-                <img src="@/assets/img/head/ContactUs.png" alt="" />
+                <img src="@/assets/img/head/ContactUs.png" alt />
                 <router-link to="/Contact">Contact Us</router-link>
               </div>
               <span class="u-line"></span>
               <div class="u-act">
-                <img src="@/assets/img/head/LoginOrRegister.png" alt="" />
-                <router-link to="/my-info">{{ vuex_user.phone ? vuex_user.phone : 'Login or Register' }}</router-link>
+                <img src="@/assets/img/head/LoginOrRegister.png" alt />
+                <router-link
+                  to="/my-info"
+                >{{ vuex_user.phone ? vuex_user.phone : 'Login or Register' }}</router-link>
               </div>
             </div>
           </div>
@@ -58,24 +60,36 @@
             <div class="btns flex-between">
               <router-link to="/part-time-sales" class="link">
                 <div class="btn-box">
-                  <img src="@img/head/43838.png" alt="" />
+                  <img src="@img/head/43838.png" alt />
                   <span class="text">Commission-only Reps</span>
                 </div>
               </router-link>
               <router-link to="/supplier-onboarding" class="link">
                 <div class="btn-box">
-                  <img src="@img/head/43837.png" alt="" />
+                  <img src="@img/head/43837.png" alt />
                   <span class="text">Become Supplier</span>
                 </div>
               </router-link>
-              <router-link to="/cart" class="link">
-                <div class="btn-box">
-                  <el-badge :value="vuex_cart_number" class="item" type="warning">
-                    <img src="@img/head/cart.png" alt="" />
-                  </el-badge>
-                  <span class="text cart-text">cart</span>
-                </div>
-              </router-link>
+              <div
+                class="header-cart-wrap"
+                @mouseenter="cartHover = true"
+                @mouseleave="cartHover = false"
+              >
+                <router-link to="/cart" class="link">
+                  <div class="btn-box">
+                    <el-badge
+                      :value="vuex_cart_number"
+                      :hidden="!Number(vuex_cart_number)"
+                      class="item"
+                      type="warning"
+                    >
+                      <img src="@img/head/cart.png" alt />
+                    </el-badge>
+                    <span class="text cart-text">Cart</span>
+                  </div>
+                </router-link>
+                <div v-show="cartHover" class="header-cart-total-popup">{{ cartTotalFormatted }}</div>
+              </div>
             </div>
           </div>
         </div>
@@ -96,7 +110,7 @@ import { mapState } from "vuex";
 export default {
   name: "HeaderIndex",
   components: {
-    page_nav,
+    page_nav
   },
   data() {
     return {
@@ -107,7 +121,7 @@ export default {
 
       list_lang: [
         { title: "中文", lang: "zh" },
-        { title: "English", lang: "en" },
+        { title: "English", lang: "en" }
       ],
 
       keyword: "",
@@ -129,15 +143,24 @@ export default {
         { title: "我的发票", route: "/invoice-list" },
         { title: "个人信息", route: "/my-info" },
         { title: "修改密码", route: "/change-password" },
-        { title: "退出登录", route: "/exit" },
+        { title: "退出登录", route: "/exit" }
       ],
       search_show: false,
       search_list: [],
+
+      /** 头部购物车悬停显示总价浮层 */
+      cartHover: false
     };
   },
 
   computed: {
-    ...mapState(["vuex_user"]),
+    ...mapState([
+      "vuex_user",
+      "vuex_config",
+      "vuex_cart_number",
+      "vuex_cart_total",
+      "vuex_huobi"
+    ]),
 
     keyword_list() {
       let arr = [];
@@ -148,6 +171,17 @@ export default {
       }
       return arr;
     },
+
+    /** 与 FloatingSidebar 一致：购物车全部行小计，千分位 */
+    cartTotalFormatted() {
+      const huobi = (this.vuex_huobi || "").trim();
+      const n = parseFloat(this.vuex_cart_total) || 0;
+      const fixed = n.toFixed(2);
+      const [intPart, dec] = fixed.split(".");
+      const intFmt = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      const amount = n % 1 === 0 ? intFmt : `${intFmt}.${dec}`;
+      return huobi ? `$${amount}` : amount;
+    }
   },
 
   watch: {
@@ -158,7 +192,7 @@ export default {
       }
       this.searchLock = true;
       this.keyword = to.query.keyword;
-    },
+    }
   },
 
   created() {
@@ -168,7 +202,7 @@ export default {
       this.$notify.info({
         title: "",
         message: "有您待审批的订单,请审批",
-        duration: 0,
+        duration: 0
       });
     }
   },
@@ -197,15 +231,15 @@ export default {
         this.$router.push({
           path: "stock-censor",
           query: {
-            value: 1,
-          },
+            value: 1
+          }
         });
       } else {
         this.$router.push({
           path: "stock-censor-my",
           query: {
-            value: 1,
-          },
+            value: 1
+          }
         });
       }
     },
@@ -278,15 +312,15 @@ export default {
     //搜索
     do_search() {
       let search_list = this.search_list;
-      const found = search_list.some((item) => item.title === this.keyword);
+      const found = search_list.some(item => item.title === this.keyword);
       if (!found) {
         if (search_list.length < 5) {
           search_list.unshift({
-            title: this.keyword,
+            title: this.keyword
           });
         } else {
           search_list.unshift({
-            title: this.keyword,
+            title: this.keyword
           });
           search_list.splice(5, 1);
         }
@@ -339,7 +373,7 @@ export default {
 
       let obj = {
         active: item.route == pagePath || item.title == this.$route.meta.root,
-        "nav-item-static": "/product-cates" == item.path,
+        "nav-item-static": "/product-cates" == item.path
       };
       return obj;
     },
@@ -359,7 +393,7 @@ export default {
       query.ms = new Date().getTime();
       this.$router.push({
         path: "/product-search",
-        query: query,
+        query: query
       });
     },
 
@@ -370,8 +404,8 @@ export default {
       // }
       this.$router.push("/index");
       alertSucc("退出成功");
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -400,7 +434,7 @@ export default {
     color: #000000;
 
     &:hover {
-      background: #00306B;
+      background: #00306b;
       color: #fff;
     }
   }
@@ -583,6 +617,36 @@ export default {
       margin-left: 40px;
       gap: 20px;
 
+      .link + .header-cart-wrap {
+        margin-left: 10px;
+      }
+
+      .header-cart-wrap {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .header-cart-total-popup {
+        position: absolute;
+        left: 50%;
+        top: 100%;
+        margin-top: 8px;
+        transform: translateX(-50%);
+        border-radius: 6px 6px 6px 6px;
+        z-index: 3000;
+        text-align: center;
+        width: 110px;
+        height: 34px;
+        line-height: 34px;
+        background: #ec6a2b;
+        font-family: Poppins, Poppins;
+        font-weight: 600;
+        font-size: 18px;
+        color: #ffffff;
+      }
+
       .link {
         background: #ffffff;
         transition: 0.3s;
@@ -606,13 +670,15 @@ export default {
 
         .text {
           font-family: Poppins, Poppins;
-          font-weight: 400;
+          font-weight: 600;
           font-size: 20px;
           color: #00306b;
         }
 
         .cart-text {
           color: #1e262e;
+          font-weight: 600;
+          font-size: 20px;
         }
       }
     }
@@ -620,7 +686,6 @@ export default {
 }
 
 .head-nav {
-  
 }
 
 .page-head {
@@ -694,7 +759,7 @@ export default {
           transform: translate(-50%);
           width: 0;
           height: 2px;
-          background: #00306B;
+          background: #00306b;
           transition: 0.3s;
         }
       }
@@ -708,7 +773,7 @@ export default {
       &.active {
         .nav-link {
           // font-weight: bold;
-          color: #00306B;
+          color: #00306b;
 
           &::after {
             // width: 36px;
@@ -783,7 +848,7 @@ export default {
         right: 0;
         width: 40px;
         height: 40px;
-        background: #00306B;
+        background: #00306b;
         border-radius: 0px 6px 6px 0px;
         font-weight: normal;
         font-size: 16px;
@@ -847,7 +912,7 @@ export default {
         font-size: 1.3rem;
 
         &:hover {
-          color: #00306B;
+          color: #00306b;
         }
       }
     }
@@ -948,7 +1013,7 @@ export default {
     color: #505050;
 
     &:hover {
-      color: #00306B;
+      color: #00306b;
     }
   }
 
@@ -959,7 +1024,7 @@ export default {
     color: #505050;
 
     &:hover {
-      color: #00306B;
+      color: #00306b;
     }
   }
 }

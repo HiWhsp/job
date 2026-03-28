@@ -213,9 +213,8 @@ export default {
         }
       }).then(res => {
         if (res.code == 200) {
-          const totalCount = (res.data && res.data.count) || 0;
-          if (this.$store && this.$store.commit) {
-            this.$store.commit("set_vuex_cart_number", totalCount);
+          if (this.$store && this.$store.dispatch) {
+            this.$store.dispatch("query_cart");
           }
           alertSucc("The product has been added to the cart.");
         }

@@ -42,10 +42,10 @@
 
         <!-- 服务类型 -->
         <div class="service-box">
-          <div class="service-title">Select service type</div>
+          <div class="service-title">SELECT SERVICE TYPE</div>
           <div class="service-list">
             <!-- 退换货类型(1-退款 2-退货退款) -->
-            <div class="service-item" @click="to_refund_submit('1')">
+            <div class="service-item" @click="to_refund_submit('1')" :class="{ 'active': type == '1' }">
               <div class="img-box">
                 <img src="@img/refund/refund-tuikuan.png" alt />
               </div>
@@ -55,7 +55,7 @@
                   goods but only to refund them</div>
               </div>
             </div>
-            <div class="service-item" @click="to_refund_submit('2')">
+            <div class="service-item" @click="to_refund_submit('2')" :class="{ 'active': type == '2' }">
               <div class="img-box">
                 <img src="@img/refund/refund-tuihuo.png" alt />
               </div>
@@ -317,6 +317,9 @@ export default {
     align-items: center;
 
     .service-item {
+      &.active {
+        border: 2px solid #EC6A2B;
+      }
       display: flex;
       width: 490px;
       height: 174px;

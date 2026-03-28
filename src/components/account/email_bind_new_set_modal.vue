@@ -24,7 +24,7 @@
           </div>
 
           <div class="input-box">
-            <div class="label">new Email :</div>
+            <div class="label">New Email :</div>
             <div class="input-item">
               <el-input type="text" v-model="newEmail" placeholder="Please enter" />
             </div>

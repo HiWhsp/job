@@ -1,6 +1,6 @@
 <template>
   <div class="page">
-    <div class="page-title">After-Sale Service</div>
+    <div class="page-title">AFTER-SALE SERVICE</div>
 
     <div class="page-ctx">
       <div class="tab-box">

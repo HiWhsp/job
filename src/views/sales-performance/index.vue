@@ -40,19 +40,19 @@
             <div class="transaction-time">{{ formatDateTime(item.orderTime) }}</div>
             <div class="transaction-content">
               <div class="transaction-row">
-                <span class="transaction-label">Customer Name:</span>
+                <span class="transaction-label">Customer Name：</span>
                 <span class="transaction-value">{{ item.nickname }}</span>
               </div>
               <div class="transaction-row">
-                <span class="transaction-label">Transaction Time:</span>
+                <span class="transaction-label">Transaction Time：</span>
                 <span class="transaction-value">{{ item.orderTime }}</span>
               </div>
               <div class="transaction-row">
-                <span class="transaction-label">Transaction Amount:</span>
+                <span class="transaction-label">Transaction Amount：</span>
                 <span class="transaction-value">US${{ formatPrice(item.orderPrice) }}</span>
               </div>
               <div class="transaction-row">
-                <span class="transaction-label">Commission Amount:</span>
+                <span class="transaction-label">Commission Amount：</span>
                 <span class="transaction-value">US${{ formatPrice(item.commissionPrice) }}</span>
               </div>
             </div>
@@ -320,7 +320,6 @@ export default {
   }
   .page_box {
     width: 100%;
-    height: 826px;
     background: #ffffff;
     border-radius: 0px 0px 0px 0px;
     margin-top: 12px;
@@ -422,16 +421,21 @@ export default {
           background: #ffffff;
           border: 1px solid #e5e5e5;
           border-radius: 4px;
-          padding: 20px 24px;
 
           .transaction-time {
-            font-size: 14px;
-            color: #666666;
-            margin-bottom: 16px;
-            font-weight: 400;
+            height: 65px;
+            line-height: 65px;
+            background: #f5f5f5;
+            padding: 0 19px;
+
+            font-family: Poppins, Poppins;
+            font-weight: 600;
+            font-size: 20px;
+            color: #333333;
           }
 
           .transaction-content {
+            padding: 35px;
             display: flex;
             flex-direction: column;
             gap: 12px;
@@ -439,19 +443,26 @@ export default {
             .transaction-row {
               display: flex;
               align-items: flex-start;
+              gap: 24px;
 
               .transaction-label {
-                font-size: 14px;
-                color: #999999;
-                min-width: 180px;
-                margin-right: 12px;
+                width: 240px;
+                height: 28px;
+                font-family: Poppins, Poppins;
+                font-weight: 400;
+                font-size: 20px;
+                color: #5e5e5e;
+                line-height: 28px;
+                text-align: right;
               }
 
               .transaction-value {
-                font-size: 14px;
-                color: #1f1f1f;
-                flex: 1;
-                word-break: break-all;
+                height: 28px;
+                font-family: Poppins, Poppins;
+                font-weight: 400;
+                font-size: 20px;
+                color: #1e262e;
+                line-height: 28px;
               }
             }
           }
@@ -477,7 +488,7 @@ export default {
         font-weight: 400;
         font-size: 20px;
         color: #666666;
-        width: 190px;
+        width: 200px;
         text-align: right;
         line-height: 56px;
         margin-right: 15px;

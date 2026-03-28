@@ -8,7 +8,7 @@
     <div class="page-ctx">
       <div class="jindu-info ">
         <div class="jindu-inner">
-          <div class="jindu-title">{{ status_info.title }}</div>
+          <div class="jindu-title">{{ status_info.title.toUpperCase() }}</div> 
           <div class="jindu-desc">{{ status_info.desc }}</div>
         </div>
       </div>
@@ -120,9 +120,9 @@
 
       <div class="act-sec">
         <div class="btns flex">
-          <div v-if="info.ifCancel == 1" class="btn btn-ripple" @click="do_cancel_refund()">Cancel After-sale</div>
-          <div v-if="is_allow_buyer_submit_wuliu" class="btn btn-ripple btn-bg" @click="do_open_express()">Return to platform</div>
-          <div v-if="info.ifReceive" class="btn btn-ripple" @click="do_open_receive()">Confirm Receipt</div>
+          <div v-if="info.ifCancel == 1" class="btn btn-ripple" @click="do_cancel_refund()">CANCEL AFTER-SALE</div>
+          <div v-if="is_allow_buyer_submit_wuliu" class="btn btn-ripple btn-bg" @click="do_open_express()">RETURN TO PLATFORM</div>
+          <div v-if="info.ifReceive" class="btn btn-ripple" @click="do_open_receive()">CONFIRM RECEIPT</div>
         </div>
       </div>
     </div>
@@ -832,7 +832,7 @@ export default {
       height: 80px;
       background: #FFFFFF;
       border: 1px solid #EC6A2B;
-      font-size: 20px;
+      font-size: 24px;
       color: #EC6A2B;
       font-weight: 600;
       border-radius: 10px;
@@ -856,8 +856,8 @@ export default {
 
   .jindu-title {
     font-family: Poppins, Poppins;
-    font-weight: 400;
-    font-size: 19px;
+    font-weight: bold;
+    font-size: 28px;
     color: #FFFFFF;
   }
 
@@ -865,7 +865,7 @@ export default {
     margin-top: 10px;
     font-family: Poppins, Poppins;
     font-weight: 400;
-    font-size: 13px;
+    font-size: 20px;
     color: #FFFFFF;
   }
 }

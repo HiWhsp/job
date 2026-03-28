@@ -10,7 +10,7 @@
         class="modify-btn"
         v-if="isUploadDisabled"
         @click="isUploadDisabled = !isUploadDisabled"
-      >Change information</div>
+      >CHANGE INFORMATION</div>
       <!-- 表单页面 -->
       <el-form :model="form" :rules="rules" ref="partTimeSalesForm" label-width="0">
         <!-- 上传身份证 -->
@@ -571,7 +571,7 @@ export default {
     font-family: Poppins, Poppins;
   }
   .form-label-text-right {
-    width: 200px;
+    width: 210px;
     display: inline-block;
   }
 

@@ -356,7 +356,7 @@
                       :on-success="on_success_supplyPrice"
                       :file-list="supplyPrice"
                     >
-                      <el-button size="small" type="primary">Upload</el-button>
+                      <img src="@img/common/upload.png" alt />
                       <div
                         slot="tip"
                         class="el-upload__tip"
@@ -382,7 +382,7 @@
                       :on-success="on_success_salePrice"
                       :file-list="salePrice"
                     >
-                      <el-button size="small" type="primary">Upload</el-button>
+                      <img src="@img/common/upload.png" alt />
                       <div
                         slot="tip"
                         class="el-upload__tip"
@@ -600,7 +600,9 @@ export default {
       ) {
         show_up = true;
       } else {
-        this.$message.error("Uploaded files can only be word/excel/pdf format!");
+        this.$message.error(
+          "Uploaded files can only be word/excel/pdf format!"
+        );
       }
       return show_up;
     },
@@ -786,11 +788,11 @@ export default {
   min-height: 100vh;
 
   .main-title {
+    justify-content: center;
     padding: 20px 0;
-    text-align: center;
     background: transparent;
     font-family: Poppins, Poppins;
-    font-size: 24px;
+    font-size: 40px;
     font-weight: 600;
     border-bottom: none;
     margin-bottom: 40px;
@@ -865,7 +867,7 @@ export default {
     .retry-btn {
       width: 150px;
       height: 46px;
-      background: #00306B;
+      background: #00306b;
       color: #ffffff;
       border: none;
       border-radius: 4px;
@@ -942,7 +944,7 @@ export default {
         background: #fff;
 
         &:hover {
-          border-color: #00306B;
+          border-color: #00306b;
           background: #f7efff;
         }
 
@@ -1076,13 +1078,12 @@ export default {
         font-size: 20px;
         color: #1e262e;
         font-weight: 400;
-        line-height: 1.4;
-        flex-shrink: 0;
+        line-height: 18px;
         margin-bottom: 4px;
-        &::after {
+        &::before {
           content: "*";
           color: #ff0000;
-          margin-left: 4px;
+          margin-right: 4px;
         }
       }
 
@@ -1245,6 +1246,17 @@ export default {
       cursor: not-allowed;
       opacity: 0.6;
     }
+  }
+}
+
+.upload-demo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  img {
+    width: 115px;
+    height: 115px;
   }
 }
 </style>

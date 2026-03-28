@@ -17,8 +17,8 @@
 
               <div class="form-group">
                 <label class="form-label">
-                  Company
                   <span class="required">*</span>
+                  Company
                 </label>
                 <input
                   type="text"
@@ -30,8 +30,8 @@
 
               <div class="form-group">
                 <label class="form-label">
-                  First Name
                   <span class="required">*</span>
+                  First Name
                 </label>
                 <input
                   type="text"
@@ -43,8 +43,8 @@
 
               <div class="form-group">
                 <label class="form-label">
-                  Last Name
                   <span class="required">*</span>
+                  Last Name
                 </label>
                 <input
                   type="text"
@@ -56,8 +56,8 @@
 
               <div class="form-group">
                 <label class="form-label">
-                  Job Title
                   <span class="required">*</span>
+                  Job Title
                 </label>
                 <el-select v-model="form.job_title" placeholder="Please select">
                   <el-option value="CEO" label="CEO">CEO</el-option>
@@ -69,8 +69,8 @@
 
               <div class="form-group">
                 <label class="form-label">
-                  Phone
                   <span class="required">*</span>
+                  Phone
                 </label>
                 <input
                   type="text"
@@ -82,8 +82,8 @@
 
               <div class="form-group">
                 <label class="form-label">
-                  Company E-mail
                   <span class="required">*</span>
+                  Company E-mail
                 </label>
                 <input
                   type="email"
@@ -95,8 +95,8 @@
 
               <div class="form-group">
                 <label class="form-label">
-                  Business Number
                   <span class="required">*</span>
+                  Business Number
                 </label>
                 <input
                   type="text"
@@ -108,21 +108,31 @@
 
               <div class="form-group">
                 <label class="form-label">
-                  Business Type
                   <span class="required">*</span>
+                  Business Type
                 </label>
                 <el-select v-model="form.companyIndustry" placeholder="Please select">
-                  <el-option v-for="(item, index) in vuex_top_title" :key="index" :value="item.title" :label="item.title"></el-option>
+                  <el-option
+                    v-for="(item, index) in vuex_top_title"
+                    :key="index"
+                    :value="item.title"
+                    :label="item.title"
+                  ></el-option>
                 </el-select>
               </div>
 
               <div class="form-group">
                 <label class="form-label">
-                  Main Products
                   <span class="required">*</span>
+                  Main Products
                 </label>
                 <el-select v-model="form.companyType" placeholder="Please select">
-                  <el-option v-for="(item, index) in vuex_category_tree" :key="index" :value="item.title" :label="item.title"></el-option>
+                  <el-option
+                    v-for="(item, index) in vuex_category_tree"
+                    :key="index"
+                    :value="item.title"
+                    :label="item.title"
+                  ></el-option>
                 </el-select>
               </div>
 
@@ -158,8 +168,8 @@
 
               <div class="form-group">
                 <label class="form-label">
-                  Billing Address
                   <span class="required">*</span>
+                  Billing Address
                 </label>
                 <input
                   type="text"
@@ -171,8 +181,8 @@
 
               <div class="form-group">
                 <label class="form-label">
-                  City
                   <span class="required">*</span>
+                  City
                 </label>
                 <input
                   type="text"
@@ -184,18 +194,14 @@
 
               <div class="form-group">
                 <label class="form-label">
-                  State
                   <span class="required">*</span>
+                  State
                 </label>
                 <template v-if="!billingProvinceList.length">
                   <el-input clearable v-model="form.billing_state" placeholder="Please enter"></el-input>
                 </template>
                 <template v-else>
-                  <el-select
-                    filterable
-                    v-model="form.billing_state"
-                    placeholder="Please enter"
-                  >
+                  <el-select filterable v-model="form.billing_state" placeholder="Please enter">
                     <el-option
                       v-for="item in billingProvinceList"
                       :key="item.value"
@@ -208,8 +214,8 @@
 
               <div class="form-group">
                 <label class="form-label">
-                  Country
                   <span class="required">*</span>
+                  Country
                 </label>
                 <el-select
                   filterable
@@ -228,8 +234,8 @@
 
               <div class="form-group">
                 <label class="form-label">
-                  Zip Code
                   <span class="required">*</span>
+                  Zip Code
                 </label>
                 <input
                   type="text"
@@ -244,11 +250,21 @@
                 <label class="form-label">Is your shipping address same as your billing address?</label>
                 <div class="radio-group">
                   <label class="radio-label">
-                    <input type="radio" name="sameAddress" value="1" v-model="form.is_shipping_billing_same" />
+                    <input
+                      type="radio"
+                      name="sameAddress"
+                      value="1"
+                      v-model="form.is_shipping_billing_same"
+                    />
                     <span>YES</span>
                   </label>
                   <label class="radio-label">
-                    <input type="radio" name="sameAddress" value="0" v-model="form.is_shipping_billing_same" />
+                    <input
+                      type="radio"
+                      name="sameAddress"
+                      value="0"
+                      v-model="form.is_shipping_billing_same"
+                    />
                     <span>NO</span>
                   </label>
                 </div>
@@ -293,11 +309,7 @@
                     <el-input clearable v-model="form.province" placeholder="Please enter"></el-input>
                   </template>
                   <template v-else>
-                    <el-select
-                      filterable
-                      v-model="form.province"
-                      placeholder="Please enter"
-                    >
+                    <el-select filterable v-model="form.province" placeholder="Please enter">
                       <el-option
                         v-for="item in shippingProvinceList"
                         :key="item.value"
@@ -402,8 +414,8 @@
 
               <div class="form-group">
                 <label class="form-label">
-                  Email
                   <span class="required">*</span>
+                  Email
                 </label>
                 <input
                   type="email"
@@ -415,8 +427,8 @@
 
               <div class="form-group">
                 <label class="form-label">
-                  Password
                   <span class="required">*</span>
+                  Password
                 </label>
                 <input
                   type="password"
@@ -428,8 +440,8 @@
 
               <div class="form-group">
                 <label class="form-label">
-                  Confirm Password
                   <span class="required">*</span>
+                  Confirm Password
                 </label>
                 <input
                   type="password"
@@ -440,7 +452,7 @@
               </div>
 
               <div class="form-group terms-group">
-                <label class="checkbox-label">
+                <label class="checkbox-label terms-label">
                   <input type="checkbox" v-model="form.agreeTerms" />
                   <span>
                     By submitting this form, you agree to MEDOOO
@@ -460,7 +472,10 @@
               <button class="submit-btn" @click="do_submit()">SUBMIT</button>
 
               <div class="login-link">
-                <router-link to="/login">Existing Account, Go Login</router-link>
+                <span>
+                  Existing Account,
+                  <a href="#" @click.prevent="openTerms('/login')">Go Login</a>
+                </span>
               </div>
             </div>
           </div>
@@ -498,7 +513,7 @@ export default {
         billing_country: "",
         billing_zipcode: "",
         // Shipping Address
-        is_shipping_billing_same: '1',
+        is_shipping_billing_same: "1",
         address: null,
         city: null,
         province: null,
@@ -547,7 +562,7 @@ export default {
       );
     },
     openTerms(url) {
-      window.open(url, '_blank');
+      window.open(url, "_blank");
     },
     do_submit() {
       // 验证必填字段
@@ -607,7 +622,10 @@ export default {
         alertErr("Please enter Zip Code");
         return;
       }
-      if (this.form.is_shipping_billing_same && this.form.is_shipping_billing_same == 0) {
+      if (
+        this.form.is_shipping_billing_same &&
+        this.form.is_shipping_billing_same == 0
+      ) {
         if (!this.form.address) {
           alertErr("Please enter Shipping Address");
           return;
@@ -650,7 +668,10 @@ export default {
         return;
       }
       // 如果 shipping address 和 billing address 相同，将 billing address 的值复制到 shipping address
-      if (this.form.is_shipping_billing_same == '1' || this.form.is_shipping_billing_same == 1) {
+      if (
+        this.form.is_shipping_billing_same == "1" ||
+        this.form.is_shipping_billing_same == 1
+      ) {
         this.form.address = this.form.billing_address;
         this.form.city = this.form.billing_city;
         this.form.province = this.form.billing_state;
@@ -659,7 +680,11 @@ export default {
       }
       // 清除空值
       Object.keys(this.form).forEach(key => {
-        if (this.form[key] === null || this.form[key] === undefined || this.form[key] === '') {
+        if (
+          this.form[key] === null ||
+          this.form[key] === undefined ||
+          this.form[key] === ""
+        ) {
           delete this.form[key];
         }
       });
@@ -722,7 +747,7 @@ export default {
 // 页面标题
 .page-title {
   font-size: 40px;
-  font-weight: bold;
+  font-weight: 600;
   color: #1e262e;
   margin: 20px 0 30px;
   text-align: left;
@@ -745,7 +770,7 @@ export default {
 
 .section-title {
   font-size: 24px;
-  font-weight: bold;
+  font-weight: 600;
   color: #1e262e;
   margin: 0 0 20px 0;
   padding-bottom: 10px;
@@ -840,6 +865,9 @@ export default {
   }
 
   span {
+    font-size: 20px;
+    color: #1e262e;
+    font-weight: 600;
     user-select: none;
   }
 }
@@ -868,12 +896,11 @@ export default {
   }
 }
 
-.certification-label {
-  align-items: flex-start;
-
-  span {
-    line-height: 1.6;
-  }
+.terms-label {
+  font-size: 20px;
+  color: #1e262e;
+  font-weight: 600;
+  user-select: none;
 }
 
 // Shipping Question
@@ -918,16 +945,18 @@ export default {
 // Login Link
 .login-link {
   text-align: center;
-  margin-top: 20px;
+  margin-top: 34px;
+  span {
+    font-family: Poppins, Poppins;
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 18px;
+  }
 
   a {
-    color: #1e262e;
+    color: #00306b;
     font-size: 24px;
-    text-decoration: none;
-
-    &:hover {
-      text-decoration: underline;
-    }
+    text-decoration: underline;
   }
 }
 

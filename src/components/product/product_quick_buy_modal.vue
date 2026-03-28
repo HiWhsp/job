@@ -438,7 +438,9 @@ export default {
             num: totalCount,
             title: "商品已添加到购物车",
           });
-        if (totalCount) this.$store.commit("set_vuex_cart_number", totalCount);
+        if (totalCount && this.$store && this.$store.dispatch) {
+          this.$store.dispatch("query_cart");
+        }
         this.show_modal = false;
       });
     },

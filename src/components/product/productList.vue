@@ -250,9 +250,8 @@ export default {
         }
       }).then(res => {
         if (res.code == 200) {
-          const totalCount = (res.data && res.data.count) || 0;
-          if (this.$store && this.$store.commit) {
-            this.$store.commit("set_vuex_cart_number", totalCount);
+          if (this.$store && this.$store.dispatch) {
+            this.$store.dispatch("query_cart");
           }
           alertSucc("Added to cart");
         }
@@ -524,11 +523,13 @@ export default {
           color: #5e5e5e;
           font-size: 20px;
           text-decoration: line-through;
+          line-height: 40px;
         }
       }
 
       .title-box {
         height: 85px;
+        margin-top: 18px;
 
         .title {
           height: 80px;
@@ -539,7 +540,7 @@ export default {
           overflow: hidden;
           text-overflow: ellipsis;
           font-family: Poppins, Poppins;
-          font-weight: bold;
+          font-weight: 600;
           font-size: 20px;
           color: #1e262e;
           line-height: 26px;
@@ -556,10 +557,15 @@ export default {
           border: 1px solid #00306b;
           padding: 0 10px;
           font-family: Poppins, Poppins;
-          font-weight: 600;
           font-size: 22px;
           color: #00306b;
           line-height: 31px;
+          &:last-child {
+            font-weight: 600;
+          }
+          &:first-child {
+            font-weight: bold;
+          }
         }
       }
     }

@@ -13,13 +13,11 @@
       <!-- 商品列表 -->
       <div class="empty-wrap column-flex-center" v-if="!list_shopcart.length">
         <div class="empty-pic-box">
-          <img src="@img/cart/cart-empty.png" alt="" />
+          <img src="@img/cart/cart-empty.png" alt />
         </div>
         <div class="empty-text">Your cart is empty, go and purchase some items~</div>
         <div class="empty-btn">
-          <div class="btn flex-center btn-ripple" @click="toRoute('/')">
-            Go Shopping
-          </div>
+          <div class="btn flex-center btn-ripple" @click="toRoute('/')">GO SHOPPING</div>
         </div>
       </div>
 
@@ -29,28 +27,19 @@
             <!-- 标题 -->
             <div class="list-title">
               <div class="title-1"></div>
-              <div class="title-2" style="text-align: left; padding-left: 0px">
-                Product
-              </div>
+              <div class="title-2" style="text-align: left; padding-left: 0px">Product</div>
               <!-- <div class="title-3">规格</div> -->
-              <div class="title-4">price</div>
-              <div class="title-5">quantity</div>
+              <div class="title-4">Price</div>
+              <div class="title-5">Quantity</div>
               <div class="title-6">TOTAL</div>
               <div class="title-7"></div>
             </div>
 
             <!-- 商品列表 -->
-            <div
-              class="item"
-              v-for="(item, index) in list_shopcart"
-              :key="index"
-            >
+            <div class="item" v-for="(item, index) in list_shopcart" :key="index">
               <div class="item-detail flex">
                 <div class="box-select">
-                  <el-checkbox
-                    v-model="item.checked"
-                    @change="on_change_checked_item"
-                  ></el-checkbox>
+                  <el-checkbox v-model="item.checked" @change="on_change_checked_item"></el-checkbox>
                 </div>
 
                 <div class="box-image cover">
@@ -62,32 +51,21 @@
                   </el-image>
                 </div>
                 <div class="box-title">
-                  <div class="goods-title" @click="mix_to_product(item)">
-                    {{ item.title }}
-                  </div>
-                  <div class="sku-info">
-                    {{ item.keyVals }}
-                  </div>
+                  <div class="goods-title" @click="mix_to_product(item)">{{ item.title }}</div>
+                  <div class="sku-info">{{ item.keyVals }}</div>
                 </div>
                 <!-- <div class="box-sku">
                   {{ item.keyVals }}
-                </div> -->
-                <div class="box-unit-price">
-                  {{ vuex_huobi }} {{ item.priceSale }} / pack
-                </div>
+                </div>-->
+                <div class="box-unit-price">{{ vuex_huobi }} {{ item.priceSale }} / pack</div>
                 <div class="box-number">
                   <button @click="do_number_minus(item)">-</button>
-                  <input
-                    type="number"
-                    min="1"
-                    v-model="item.num"
-                    @blur="on_blur_input(item)"
-                  />
+                  <input type="number" min="1" v-model="item.num" @blur="on_blur_input(item)" />
                   <button @click="do_number_plus(item)">+</button>
                 </div>
-                <div class="box-subtotal">
-                  {{ vuex_huobi }} {{ (item.priceSale * item.num).toFixed(2) }}
-                </div>
+                <div
+                  class="box-subtotal"
+                >{{ vuex_huobi }} {{ (item.priceSale * item.num).toFixed(2) }}</div>
                 <div class="box-act">
                   <!-- <div class="goods-action-box" v-if="false">
                     <span class="goods-action" v-if="item.if_collect" @click="favouriteDelete(item)">
@@ -97,24 +75,21 @@
                     <span class="goods-action" v-else @click="favouriteAdd(item)">
                       <img src="@img/other/shopcart-goods-weishoucang.png" alt="" />
                       收藏</span>
-                  </div> -->
+                  </div>-->
                   <div class="goods-action-box">
                     <span
                       class="goods-action"
                       data-fn="do_cart_delete_row"
                       @click="do_cart_delete_row_tip(item.inventoryId)"
                     >
-                      <img src="@img/other/shopcart-goods-delete.png" alt="" />
+                      <img src="@img/other/shopcart-goods-delete.png" alt />
                     </span>
                   </div>
                 </div>
               </div>
             </div>
 
-            <el-empty
-              v-if="!list_shopcart.length"
-              description="购物车为空，快去选购商品吧～"
-            ></el-empty>
+            <el-empty v-if="!list_shopcart.length" description="购物车为空，快去选购商品吧～"></el-empty>
             <!-- <div class="empty" v-if="!list_shopcart.length">暂无数据...</div> -->
           </div>
         </div>
@@ -125,47 +100,38 @@
             <el-checkbox
               v-model="checked_all"
               @change="on_change_checked_all"
-              >{{ checked_all ? "Unselect All" : "Select All" }}</el-checkbox
-            >
+            >{{ checked_all ? "Unselect All" : "Select All" }}</el-checkbox>
           </div>
           <div class="delete-box">
             <span
               data-fn="do_cart_remove_select"
               @click="do_cart_remove_select_tip()"
-              >Delete selected</span
-            >
+            >Delete selected</span>
           </div>
           <div class="clear-box">
-            <span data-fn="do_cart_clear" @click="do_cart_clear_tip()"
-              >Clear cart</span
-            >
+            <span data-fn="do_cart_clear" @click="do_cart_clear_tip()">Clear Cart</span>
           </div>
-
-          <div class="total-number">
-            Selected
-            <b>{{ count_shopcart_checked }}</b>
-            Item
+          <div class="total-box">
+            <div class="total-number">
+              Selected
+              <b>{{ count_shopcart_checked }}</b>
+              Item
+            </div>
+            <div class="total-price">
+              Total Amount
+              <b>{{ vuex_huobi }} {{ shopcart_money }}</b>
+            </div>
+            <button
+              :disabled="jiesuanDisabled"
+              class="btn-ripple btn-order"
+              @click="to_pay()"
+            >CHECK OUT</button>
           </div>
-          <div class="total-price">
-            Total Amount
-            <b>{{ vuex_huobi }} {{ shopcart_money }}</b>
-          </div>
-          <button
-            :disabled="jiesuanDisabled"
-            class="btn-ripple btn-order"
-            @click="to_pay()"
-          >
-            Check out
-          </button>
         </div>
       </div>
     </div>
 
-    <cart_action_modal
-      data-title="删除提示"
-      ref="cart_action_modal"
-      @confirm="do_confirm_delete"
-    />
+    <cart_action_modal data-title="删除提示" ref="cart_action_modal" @confirm="do_confirm_delete" />
   </div>
 </template>
 
@@ -177,7 +143,7 @@ import { mapState } from "vuex";
 export default {
   name: "cart",
   components: {
-    cart_action_modal,
+    cart_action_modal
   },
   data() {
     return {
@@ -185,7 +151,7 @@ export default {
       checked_all: false, //是否全选
       list_shopcart: [], //购物车商品列表
       list_address: [], //地址列表
-      keyword: "",
+      keyword: ""
     };
   },
   computed: {
@@ -199,8 +165,8 @@ export default {
     shopcart_money() {
       let money = 0;
       this.list_shopcart
-        .filter((v) => v.checked)
-        .forEach((v) => {
+        .filter(v => v.checked)
+        .forEach(v => {
           money += v.num * v.priceSale;
         });
       return money.toFixed(2);
@@ -208,13 +174,13 @@ export default {
 
     //购物车被选择的商品
     list_shopcart_checked() {
-      return this.list_shopcart.filter((v) => v.checked);
+      return this.list_shopcart.filter(v => v.checked);
     },
     //购物车被选择的商品
     count_shopcart_checked() {
       let count = 0;
       if (this.list_shopcart_checked.length) {
-        this.list_shopcart_checked.forEach((v) => {
+        this.list_shopcart_checked.forEach(v => {
           count += +v.num;
         });
       }
@@ -223,12 +189,12 @@ export default {
 
     jiesuanDisabled() {
       return !this.list_shopcart_checked.length;
-    },
+    }
   },
   watch: {
     address(val) {
       //console.log("当前地址", val);
-    },
+    }
   },
   created() {
     this.setView();
@@ -236,11 +202,22 @@ export default {
   methods: {
     do_update_vuex_cart_number() {
       let count = 0;
-      this.list_shopcart.forEach((v) => {
-        count += v.num * 1;
+      let total = 0;
+      this.list_shopcart.forEach(v => {
+        const n = Number(v.num) || 0;
+        count += n;
+        const price =
+          parseFloat(
+            v.priceSale != null && v.priceSale !== ""
+              ? v.priceSale
+              : v.price != null && v.price !== ""
+              ? v.price
+              : v.yPrice
+          ) || 0;
+        total += n * price;
       });
-
       this.$store.commit("set_vuex_cart_number", count);
+      this.$store.commit("set_vuex_cart_total", total.toFixed(2));
     },
 
     setView() {
@@ -248,12 +225,12 @@ export default {
         url: "/service.php",
         method: "get",
         data: {
-          action: "gouwuche_lists",
-        },
-      }).then((res) => {
+          action: "gouwuche_lists"
+        }
+      }).then(res => {
         let { code, data } = res;
         if (code == 200) {
-          data.forEach((v) => {
+          data.forEach(v => {
             v.checked = true;
           });
           this.list_shopcart = data;
@@ -269,8 +246,8 @@ export default {
     favouriteDelete(item) {
       this.$api("product_collect", {
         inventoryId: item.inventoryId,
-        collect_type: 1,
-      }).then((res) => {
+        collect_type: 1
+      }).then(res => {
         let { code, message } = res;
 
         if (code == 200) {
@@ -281,8 +258,8 @@ export default {
     favouriteAdd(item) {
       this.$api("product_collect", {
         inventoryId: item.inventoryId,
-        collect_type: 0,
-      }).then((res) => {
+        collect_type: 0
+      }).then(res => {
         let { code, message } = res;
 
         if (code == 200) {
@@ -300,7 +277,7 @@ export default {
       this.$refs.cart_action_modal.init({
         type: "批量",
         inventoryId: "",
-        tip: "Are you sure to delete the selected products?",
+        tip: "Are you sure to delete the selected products?"
       });
     },
 
@@ -310,7 +287,7 @@ export default {
         alertErr("Please select the products to delete");
         return;
       }
-      let ids = this.list_shopcart_checked.map((v) => v.inventoryId);
+      let ids = this.list_shopcart_checked.map(v => v.inventoryId);
       //console.log("要删除的商品id", ids);
       let id = ids.join();
       this.do_cart_delete_row(id);
@@ -320,7 +297,7 @@ export default {
       this.$refs.cart_action_modal.init({
         type: "单个",
         inventoryId: inventoryId,
-        tip: "Are you sure to delete this product?",
+        tip: "Are you sure to delete this product?"
       });
     },
 
@@ -341,15 +318,15 @@ export default {
         method: "get",
         data: {
           action: "gouwuche_del",
-          inventoryId: inventoryId,
-        },
-      }).then((res) => {
+          inventoryId: inventoryId
+        }
+      }).then(res => {
         if (res.code == 200) {
           let list = this.list_shopcart;
           let ids = (inventoryId + "").split(",");
           //可能删除多项商品
-          ids.forEach((inventoryId) => {
-            let index = list.findIndex((v) => v.inventoryId == inventoryId);
+          ids.forEach(inventoryId => {
+            let index = list.findIndex(v => v.inventoryId == inventoryId);
             list.splice(index, 1);
           });
 
@@ -382,12 +359,12 @@ export default {
         data: {
           action: "gouwuche_updateNum",
           inventoryId: inventoryId,
-          num: num,
-        },
-      }).then((res) => {
+          num: num
+        }
+      }).then(res => {
         if (res.code == 200) {
           let index = this.list_shopcart.findIndex(
-            (v) => v.inventoryId == inventoryId
+            v => v.inventoryId == inventoryId
           );
           this.list_shopcart.splice(index, 1, item);
           this.setView();
@@ -408,7 +385,7 @@ export default {
       this.$refs.cart_action_modal.init({
         type: "全部",
         inventoryId: "",
-        tip: "Are you sure to clear the shopping cart?",
+        tip: "Are you sure to clear the shopping cart?"
       });
     },
 
@@ -423,9 +400,9 @@ export default {
         url: "/service.php",
         method: "get",
         data: {
-          action: "gouwuche_delAll",
-        },
-      }).then((res) => {
+          action: "gouwuche_delAll"
+        }
+      }).then(res => {
         if (res.code == 200) {
           this.list_shopcart = [];
           this.do_update_vuex_cart_number();
@@ -436,7 +413,7 @@ export default {
     //商品勾选 全选与取消
     on_change_checked_all(val) {
       //console.log("更新后的值", val);
-      this.list_shopcart.forEach((v) => {
+      this.list_shopcart.forEach(v => {
         v.checked = val;
       });
     },
@@ -464,7 +441,7 @@ export default {
         return;
       }
 
-      let data_format = this.list_shopcart_checked.map((v) => ({
+      let data_format = this.list_shopcart_checked.map(v => ({
         title: v.title,
         image: v.image,
         inventoryId: v.inventoryId,
@@ -472,7 +449,7 @@ export default {
         keyVals: v.keyVals,
         num: v.num,
         priceSale: v.priceSale,
-        priceMarket: v.priceMarket,
+        priceMarket: v.priceMarket
       }));
 
       this.$store.commit(
@@ -483,8 +460,8 @@ export default {
       this.$router.push({
         path: "/order-submit",
         query: {
-          from: "cart",
-        },
+          from: "cart"
+        }
       });
     },
 
@@ -493,8 +470,8 @@ export default {
         item.num = 1;
       }
       this.shopcart_updateNum(item);
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -563,6 +540,8 @@ page {
 
         display: flex;
         align-items: center;
+        color: #1e262e;
+        font-weight: 600;
         font-size: 20px;
 
         .title-1 {
@@ -571,7 +550,6 @@ page {
         }
 
         .title-2 {
-          // width: 150px;
           flex: 2;
         }
 
@@ -650,7 +628,7 @@ page {
 
             div {
               &:hover {
-                color: #00306B;
+                color: #00306b;
               }
             }
 
@@ -735,7 +713,7 @@ page {
                 cursor: pointer;
 
                 &:hover {
-                  color: #00306B;
+                  color: #00306b;
                 }
               }
             }
@@ -791,6 +769,11 @@ page {
       color: #1e262e !important;
       font-size: 22px !important;
     }
+    /deep/ .el-checkbox__label {
+      color: #1e262e !important;
+      font-size: 22px !important;
+      font-weight: 400 !important;
+    }
   }
 
   .delete-box {
@@ -802,10 +785,6 @@ page {
       font-weight: 400;
       font-size: 22px;
       color: #ec6a2b;
-
-      &:hover {
-        color: #00306B;
-      }
     }
   }
 
@@ -820,60 +799,53 @@ page {
       font-weight: 400;
       font-size: 22px;
       color: #1e262e;
-
-      &:hover {
-        color: #00306B;
-      }
     }
+  }
+  .total-box {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    gap: 24px;
   }
 
   .total-number {
-    width: fit-content;
     font-family: Poppins, Poppins;
     font-weight: 400;
-    font-size: 16px;
-    color: #1f1f1f;
+    font-size: 20px;
+    color: #1e262e;
 
     b {
-      font-size: 24px;
-      font-family: Poppins, Poppins;
-      font-weight: bold;
-      line-height: 20px;
-      color: #EC6A2B;
+      font-weight: 600;
+      color: #ec6a2b;
     }
   }
 
   .total-price {
-    margin-left: 60px;
-    margin-right: 60px;
-    width: fit-content;
-
     font-family: Poppins, Poppins;
     font-weight: 400;
-    font-size: 16px;
-    color: #1f1f1f;
+    font-size: 20px;
+    color: #242424;
+    line-height: 28px;
 
     b {
-      font-size: 24px;
-      font-family: Poppins, Poppins;
-      font-weight: bold;
-      line-height: 20px;
-      color: #EC6A2B;
+      margin-left: 10px;
+      font-weight: 600;
+      font-size: 30px;
+      color: #ec6a2b;
     }
   }
 
   .btn-order {
     cursor: pointer;
     width: 191px;
-    height: 46px;
-    background: #00306B;
-
-    font-size: 16px;
+    height: 52px;
+    background: #ec6a2b;
+    border-radius: 6px 6px 6px 6px;
     font-family: Poppins, Poppins;
-    font-weight: bold;
+    font-weight: 600;
+    font-size: 20px;
     color: #ffffff;
-    transition: 0.3s;
-    user-select: none;
+    line-height: 22px;
 
     &:disabled {
       opacity: 0.3;
@@ -901,21 +873,23 @@ page {
     }
   }
   .empty-text {
-    margin: 39px 0 33px 0;
+    margin: 5px 0 53px 0;
     font-family: Poppins, Poppins;
-    font-weight: 400;
-    font-size: 16px;
-    color: #1f1f1f;
+    font-weight: 600;
+    font-size: 24px;
+    color: #1e262e;
+    line-height: 33px;
   }
   .empty-btn {
     .btn {
-      width: 224px;
-      height: 56px;
-      border-radius: 8px 8px 8px 8px;
-      background: #EC6A2B;
+      width: 300px;
+      height: 80px;
+      background: #ec6a2b;
+      border-radius: 10px 10px 10px 10px;
+      background: #ec6a2b;
       font-family: Poppins, Poppins;
-      font-weight: 400;
-      font-size: 18px;
+      font-weight: 600;
+      font-size: 24px;
       color: #ffffff;
     }
   }

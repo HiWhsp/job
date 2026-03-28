@@ -1,7 +1,7 @@
 <template>
   <div class="modal-container">
     <el-dialog
-      title="Large Order Inquiry"
+      title="LARGE ORDER INQUIRY"
       width="920px"
       custom-class="inquiry-modal-wrap"
       :close-on-click-modal="false"
@@ -12,14 +12,14 @@
         <!-- 产品信息 -->
         <div class="form-section">
           <div class="form-item">
-            <label class="form-label">Product Name</label>
+            <label class="form-label" style="margin-top:10px;">Product Name</label>
             <div class="form-input">
               <el-input v-model="form.productName" readonly placeholder="Product Name" />
             </div>
           </div>
 
           <div class="form-item">
-            <label class="form-label">serial number</label>
+            <label class="form-label" style="margin-top:10px;">Serial Number</label>
             <div class="form-input">
               <el-input v-model="form.productCode" readonly placeholder="serial number" />
             </div>
@@ -40,9 +40,10 @@
                 v-for="(skuGroup, groupIndex) in skuLists"
                 :key="groupIndex"
               >
-                <div
-                  class="spec-selector-label"
-                >{{ skuGroup.key }}: {{ getSelectedOptionTitle(skuGroup) }}</div>
+                <div class="spec-selector-label">
+                  <span class="spec-selector-label-text">{{ skuGroup.key }}:</span>
+                  {{ getSelectedOptionTitle(skuGroup) }}
+                </div>
                 <div class="spec-selector-options">
                   <!-- 有 thumb 显示图片，无 thumb 显示文字 -->
                   <div
@@ -105,8 +106,8 @@
         <div class="form-section">
           <div class="form-item">
             <label class="form-label">
-              Describe the
-              <br />requirements
+              Describe The
+              <br />Requirements
             </label>
             <div class="form-input">
               <el-input
@@ -124,38 +125,39 @@
         <!-- 联系信息 -->
         <div class="form-section">
           <div class="form-item">
-            <label class="form-label">
+            <label class="form-label" style="margin-top:10px;">
               <i style="color: red">*</i>Company Name
             </label>
             <div class="form-input">
-              <el-input v-model="form.companyName" placeholder="Enter your company name" clearable />
+              <el-input v-model="form.companyName" clearable />
             </div>
           </div>
 
           <div class="form-item">
             <label class="form-label">
-              <i style="color: red">*</i>Contact Person Name
+              <i style="color: red">*</i>Contact
+              <br />Person Name
             </label>
             <div class="form-input">
-              <el-input v-model="form.contact" placeholder="Enter your name" clearable />
+              <el-input v-model="form.contact" clearable />
             </div>
           </div>
 
           <div class="form-item">
-            <label class="form-label">
+            <label class="form-label" style="margin-top:10px;">
               <i style="color: red">*</i> Telephone
             </label>
             <div class="form-input">
-              <el-input v-model="form.mobile" placeholder="Enter your phone number" clearable />
+              <el-input v-model="form.mobile" clearable />
             </div>
           </div>
 
           <div class="form-item">
-            <label class="form-label">
+            <label class="form-label" style="margin-top:10px;">
               <i style="color: red">*</i> Email
             </label>
             <div class="form-input">
-              <el-input v-model="form.email" placeholder="Enter your email" clearable />
+              <el-input v-model="form.email" clearable />
             </div>
           </div>
 
@@ -169,11 +171,11 @@
           </div>
 
           <div class="form-item">
-            <label class="form-label">
+            <label class="form-label" style="margin-top:10px;">
               <i style="color: red">*</i>Mail Address
             </label>
             <div class="form-input">
-              <el-input v-model="form.mail" placeholder="Enter your mail address" clearable />
+              <el-input v-model="form.mail" clearable />
             </div>
           </div>
         </div>
@@ -191,7 +193,7 @@
           </div>
           <div class="contact-service">
             <div class="flex-center">
-              <span>Contact Us</span>
+              <span>CONTACT US</span>
               <span class="phone-number">400-888-888</span>
             </div>
             <img src="@img/product/detail-service.png" alt />
@@ -249,7 +251,13 @@ export default {
         //     trigger: "blur",
         //   },
         // ],
-        note: [{ required: true, message: "please enter the requirements description", trigger: "blur" }]
+        note: [
+          {
+            required: true,
+            message: "please enter the requirements description",
+            trigger: "blur"
+          }
+        ]
       }
     };
   },
@@ -510,7 +518,9 @@ export default {
       if (this.skuLists && this.skuLists.length > 0) {
         // 使用skuLists方式
         if (!this.currentSelectedInventory || this.form.quantity <= 0) {
-          this.$message.warning("please select the specification and fill in the quantity");
+          this.$message.warning(
+            "please select the specification and fill in the quantity"
+          );
           return;
         }
         selectedSpecs = [
@@ -526,7 +536,9 @@ export default {
           spec => spec.selected && spec.num > 0
         );
         if (selectedSpecs.length === 0) {
-          this.$message.warning("please select at least one specification and fill in the quantity");
+          this.$message.warning(
+            "please select at least one specification and fill in the quantity"
+          );
           return;
         }
       }
@@ -561,7 +573,9 @@ export default {
             // 显示成功提示弹窗
             this.$refs.product_saveInquiry_success_modal.init();
           } else {
-            this.$message.error(res.message || "submission failed, please try again");
+            this.$message.error(
+              res.message || "submission failed, please try again"
+            );
           }
         })
         .catch(error => {
@@ -613,11 +627,12 @@ export default {
 
         .form-label {
           font-family: Poppins, Poppins;
-          width: 155px;
+          width: 170px;
           font-size: 18px;
           color: #1e262e;
           margin-right: 12px;
           text-align: right;
+          font-weight: 400;
 
           i {
             margin-right: 5px;
@@ -642,12 +657,15 @@ export default {
             resize: vertical;
           }
 
-          /deep/ .el-checkbox__inner {
-            background-color: #ec6a2b !important;
-            border-color: #ec6a2b !important;
+          .is-checked {
+            /deep/ .el-checkbox__inner {
+              background-color: #ec6a2b !important;
+              border-color: #ec6a2b !important;
+            }
           }
+
           /deep/ .el-checkbox__label {
-            color: #1E262E !important;
+            color: #1e262e !important;
           }
         }
 
@@ -715,6 +733,13 @@ export default {
               font-weight: 600;
               font-size: 18px;
               color: #242424;
+              .spec-selector-label-text {
+                font-family: Poppins, Poppins;
+                font-weight: 400;
+                font-size: 20px;
+                color: #242424;
+                margin-right: 10px;
+              }
             }
 
             .spec-selector-options {

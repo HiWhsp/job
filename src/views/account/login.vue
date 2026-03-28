@@ -162,13 +162,13 @@ export default {
           password: this.form.password
         };
       } else {
-      params = {
-        action: "login_emailLogin",
-        email: this.form.phone,
-        loginType: 0,
-        // code: this.form.password,
-        password: this.form.password
-      };
+        params = {
+          action: "login_emailLogin",
+          email: this.form.phone,
+          loginType: 0,
+          // code: this.form.password,
+          password: this.form.password
+        };
       }
       this.$api({
         url: "/service.php",
@@ -338,8 +338,11 @@ export default {
 // 新用户提示
 .new-user-text {
   text-align: center;
-  color: #1f1f1f;
+  font-family: Poppins, Poppins;
+  font-weight: 600;
   font-size: 24px;
+  color: #1e262e;
+  line-height: 33px;
   margin: 20px 0 40px 0;
 }
 

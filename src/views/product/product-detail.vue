@@ -48,11 +48,8 @@
                     <div class="vals vals-price">
                       <div class="val">{{ vuex_huobi }}{{ view_info.priceSale }}</div>
                     </div>
-                    <span style="color: #ec6a2b; line-height: 30px; margin: 0 10px">/pack</span>
-                    <div
-                      class="val"
-                      style="color: #5e5e5e; line-height: 30px"
-                    >{{ vuex_huobi }}{{ view_info.priceMarket }}</div>
+                    <span>/pack</span>
+                    <div class="del">{{ vuex_huobi }}{{ view_info.priceMarket }}</div>
                   </div>
                   <div class="item">
                     <span class="date">5-7 days delivery!</span>
@@ -83,7 +80,8 @@
                         :key="groupIndex"
                       >
                         <div class="sku-selector-label">
-                          {{ skuGroup.key }}: {{ getSelectedOptionTitle(skuGroup) }}
+                          <span class="sku-selector-label-text">{{ skuGroup.key }}:</span>
+                          {{ getSelectedOptionTitle(skuGroup) }}
                         </div>
                         <div class="sku-selector-options">
                           <!-- 有 thumb 显示图片，无 thumb 显示文字 -->
@@ -99,11 +97,7 @@
                             }"
                             @click="selectSkuOption(skuGroup.id, child.id)"
                           >
-                            <el-image
-                              v-if="child.thumb"
-                              :src="child.thumb"
-                              class="color-image"
-                            ></el-image>
+                            <el-image v-if="child.thumb" :src="child.thumb" class="color-image"></el-image>
                             <span v-else>{{ child.title }}</span>
                           </div>
                         </div>
@@ -144,14 +138,15 @@
                         <div class="operation-item">
                           <div class="price-info" v-if="!info.seckillInfo">
                             <div class="price-info-text">Quantity:</div>
-                            <div class="price-tiers" v-if="currentSelectedInventory.priceConfig && currentSelectedInventory.priceConfig.length > 0">
+                            <div
+                              class="price-tiers"
+                              v-if="currentSelectedInventory.priceConfig && currentSelectedInventory.priceConfig.length > 0"
+                            >
                               <span
                                 v-for="(tier, index) in formatPriceConfig(currentSelectedInventory.priceConfig)"
                                 :key="index"
                                 class="price-tier-item"
-                              >
-                                {{ tier }}
-                              </span>
+                              >{{ tier }}</span>
                             </div>
                             <div class="current-price" v-else>
                               {{ vuex_huobi }}{{ getCurrentPrice(currentSelectedInventory) }}/{{
@@ -261,10 +256,10 @@
                     <img :src="item.thumb" alt class="poster scale-img" />
                   </div>
                   <div class="info-box">
-                    <div class="title ellipsis-2">{{ item.title }}</div>
+                    <div class="title ellipsis-3">{{ item.title }}</div>
                     <div class="price-box">
                       <div class="pirce-item-value">{{ vuex_huobi + "" + item.priceSale }}</div>
-                      <div class="market-price">{{ item.priceMarket }}</div>
+                      <div class="market-price">{{ vuex_huobi + "" + item.priceMarket }}</div>
                     </div>
                     <div class="description-box">
                       <div class="description-item">FDA</div>
@@ -289,7 +284,11 @@
                       @click="togglePanel('资质证书')"
                       :class="active_panel == '资质证书' ? 'active' : ''"
                     >Qualification & Certificates</div>
-
+                    <div
+                      class="nav-item"
+                      @click="togglePanel('Technical File')"
+                      :class="active_panel == 'Technical File' ? 'active' : ''"
+                    >Technical File</div>
                     <div
                       class="nav-item"
                       @click="togglePanel('评价')"
@@ -334,11 +333,13 @@
                       </div>
                     </div>
                     <div class="rich-html" v-html="info.content"></div>
-                    <div class="rich-html" v-html="info.cont2"></div>
-                    <div class="rich-html" v-html="info.cont3"></div>
+                    <!-- <div class="rich-html" v-html="info.cont3"></div> -->
                   </div>
                   <div class="detail-content-box" v-if="active_panel == '资质证书'">
                     <div class="rich-html" v-html="info.cont4"></div>
+                  </div>
+                  <div class="detail-content-box" v-if="active_panel == 'Technical File'">
+                    <div class="rich-html" v-html="info.cont2"></div>
                   </div>
                   <!-- v-if="active_panel == '评价'" -->
                   <div class="comment-box" v-if="active_panel == '评价'">
@@ -592,7 +593,10 @@ export default {
     currentSelectedInventory() {
       if (!this.skuLists || this.skuLists.length === 0) {
         // 如果没有skuLists，返回当前选中的SKU
-        return this.sku_list.find(item => item.inventoryId === this.selectedSkuId) || null;
+        return (
+          this.sku_list.find(item => item.inventoryId === this.selectedSkuId) ||
+          null
+        );
       }
 
       // 根据选择的选项组合匹配对应的库存
@@ -603,11 +607,15 @@ export default {
 
       // 将选中的ID排序后拼接，匹配keyIds
       const keyIdsStr = selectedIds.sort((a, b) => a - b).join("-");
-      
+
       // 查找匹配的库存项
       const matchedInventory = this.sku_list.find(item => {
         if (!item.keyIds) return false;
-        const itemKeyIds = item.keyIds.split("-").map(id => parseInt(id)).sort((a, b) => a - b).join("-");
+        const itemKeyIds = item.keyIds
+          .split("-")
+          .map(id => parseInt(id))
+          .sort((a, b) => a - b)
+          .join("-");
         return itemKeyIds === keyIdsStr;
       });
 
@@ -960,13 +968,14 @@ export default {
         this.selectedSkuOptions = {};
         this.skuLists.forEach(skuGroup => {
           // 优先选择is_selected为1的选项，否则选择第一个
-          const selectedOption = skuGroup.child.find(child => child.is_selected === 1) || 
-                                (skuGroup.child.length > 0 ? skuGroup.child[0] : null);
+          const selectedOption =
+            skuGroup.child.find(child => child.is_selected === 1) ||
+            (skuGroup.child.length > 0 ? skuGroup.child[0] : null);
           if (selectedOption) {
             this.$set(this.selectedSkuOptions, skuGroup.id, selectedOption.id);
           }
         });
-        
+
         // 等待Vue更新后，尝试匹配对应的库存
         this.$nextTick(() => {
           const matchedInventory = this.currentSelectedInventory;
@@ -1098,7 +1107,7 @@ export default {
         if (matchedInventory) {
           this.selectedSkuId = matchedInventory.inventoryId;
           this.sku_select = matchedInventory;
-          
+
           // 如果该库存项还没有初始化数量，初始化为0
           if (this.sku_quantities[matchedInventory.inventoryId] === undefined) {
             this.$set(this.sku_quantities, matchedInventory.inventoryId, 0);
@@ -1123,8 +1132,10 @@ export default {
       tempSelected[groupId] = optionId;
 
       // 获取所有已选择的组ID
-      const selectedGroupIds = Object.keys(tempSelected).filter(key => tempSelected[key] !== undefined && tempSelected[key] !== null);
-      
+      const selectedGroupIds = Object.keys(tempSelected).filter(
+        key => tempSelected[key] !== undefined && tempSelected[key] !== null
+      );
+
       // 如果还没有选择所有必需的选项，检查是否有任何库存项包含这个选项
       if (selectedGroupIds.length < this.skuLists.length) {
         // 检查是否有任何库存项的keyIds包含这个选项ID
@@ -1136,16 +1147,25 @@ export default {
       }
 
       // 如果所有选项都已选择，检查完整组合是否有库存
-      const selectedIds = Object.values(tempSelected).filter(id => id !== undefined && id !== null);
+      const selectedIds = Object.values(tempSelected).filter(
+        id => id !== undefined && id !== null
+      );
       if (selectedIds.length === 0) {
         return true;
       }
 
       // 检查是否有匹配的库存
-      const keyIdsStr = selectedIds.map(id => parseInt(id)).sort((a, b) => a - b).join("-");
+      const keyIdsStr = selectedIds
+        .map(id => parseInt(id))
+        .sort((a, b) => a - b)
+        .join("-");
       const hasMatch = this.sku_list.some(item => {
         if (!item.keyIds) return false;
-        const itemKeyIds = item.keyIds.split("-").map(id => parseInt(id)).sort((a, b) => a - b).join("-");
+        const itemKeyIds = item.keyIds
+          .split("-")
+          .map(id => parseInt(id))
+          .sort((a, b) => a - b)
+          .join("-");
         return itemKeyIds === keyIdsStr && item.kucun > 0;
       });
 
@@ -1154,7 +1174,9 @@ export default {
 
     // 获取已选择的选项ID列表
     getSelectedOptionIds() {
-      return Object.values(this.selectedSkuOptions).filter(id => id !== undefined && id !== null);
+      return Object.values(this.selectedSkuOptions).filter(
+        id => id !== undefined && id !== null
+      );
     },
 
     // 获取选中选项的标题
@@ -1163,7 +1185,9 @@ export default {
       if (!selectedId) {
         return "";
       }
-      const selectedOption = skuGroup.child.find(child => child.id === selectedId);
+      const selectedOption = skuGroup.child.find(
+        child => child.id === selectedId
+      );
       return selectedOption ? selectedOption.title : "";
     },
 
@@ -1174,13 +1198,18 @@ export default {
       }
 
       const unit = this.info.unit || "pack";
-      const sorted = [...priceConfig].sort((a, b) => (a.min || 0) - (b.min || 0));
-      
+      const sorted = [...priceConfig].sort(
+        (a, b) => (a.min || 0) - (b.min || 0)
+      );
+
       return sorted.map(config => {
         const min = Number(config.min || 0);
-        const max = config.max === "" || config.max === null || config.max === undefined ? null : Number(config.max);
+        const max =
+          config.max === "" || config.max === null || config.max === undefined
+            ? null
+            : Number(config.max);
         const price = Number(config.price || 0);
-        
+
         if (max === null) {
           // 无上限，显示 >minpack $price
           return `>${min}${unit} ${this.vuex_huobi}${price}`;
@@ -1564,7 +1593,9 @@ export default {
           this.sku_list.forEach(e => {
             this.sku_quantities[e.inventoryId] = 0;
           });
-          this.$store.commit("set_vuex_cart_number", totalCount);
+          if (this.$store && this.$store.dispatch) {
+            this.$store.dispatch("query_cart");
+          }
         }
       });
     },
@@ -1739,9 +1770,9 @@ export default {
         display: inline-flex;
         align-items: center;
 
-        font-family: Poppins, Poppins;
-        font-size: 18px;
-        color: #5e5e5e;
+        font-family: Poppins, Poppins !important;
+        font-size: 18px !important;
+        color: #5e5e5e !important;
 
         img {
           margin-right: 10px;
@@ -1885,7 +1916,7 @@ export default {
 
             &:hover {
               span {
-                color: #00306B;
+                color: #00306b;
               }
             }
 
@@ -1944,9 +1975,9 @@ export default {
               font-size: 16px;
 
               &.active {
-                background: #00306B;
+                background: #00306b;
                 color: #fff;
-                border-color: #00306B;
+                border-color: #00306b;
               }
             }
           }
@@ -2064,7 +2095,23 @@ export default {
                   font-size: 18px;
                   color: #6a6a6a;
                 }
-
+                span {
+                  font-family: Poppins, Poppins;
+                  font-weight: 600;
+                  font-size: 18px;
+                  color: #ec6a2b;
+                  line-height: 40px;
+                  margin-left: 10px;
+                }
+                .del {
+                  font-family: Poppins, Poppins;
+                  font-weight: 400;
+                  font-size: 22px;
+                  color: #5e5e5e;
+                  line-height: 40px;
+                  margin-left: 10px;
+                  text-decoration: line-through;
+                }
                 .vals {
                   display: flex;
                   align-items: center;
@@ -2142,7 +2189,7 @@ export default {
             .sku-tip {
               margin-left: 20px;
               font-size: 18px;
-              color: #00306B;
+              color: #00306b;
               font-weight: bold;
               font-family: Poppins, Poppins;
             }
@@ -2164,6 +2211,15 @@ export default {
                   font-weight: 600;
                   font-size: 20px;
                   color: #242424;
+                  line-height: 28px;
+                  .sku-selector-label-text {
+                    font-family: Poppins, Poppins;
+                    font-weight: 400;
+                    font-size: 20px;
+                    color: #242424;
+                    line-height: 28px;
+                    margin-right: 10px;
+                  }
                 }
 
                 .sku-selector-options {
@@ -2365,7 +2421,7 @@ export default {
 
                 .price-info-text {
                   font-size: 20px;
-                  color: #505050;
+                  color: #5e5e5e;
                   margin-right: 5px;
                 }
 
@@ -2382,10 +2438,6 @@ export default {
                   font-size: 20px;
                   color: #242424;
                   font-family: Poppins, Poppins;
-
-                  .price-tier-item {
-                    white-space: nowrap;
-                  }
                 }
               }
 
@@ -2635,11 +2687,11 @@ export default {
                 height: 48px;
                 background: #ffffff;
                 border-radius: 0px 0px 0px 0px;
-                border: 1px solid #00306B;
+                border: 1px solid #00306b;
                 font-family: Poppins, Poppins;
                 // font-weight: bold;
                 font-size: 18px;
-                color: #00306B;
+                color: #00306b;
               }
             }
 
@@ -2706,14 +2758,14 @@ export default {
           font-family: Poppins, Poppins;
           font-weight: bold;
           font-size: 25px;
-          color: #00306B;
+          color: #00306b;
         }
 
         .panel-title-line {
           margin-bottom: 64px;
           width: 100%;
           height: 7px;
-          background: #00306B;
+          background: #00306b;
           border-radius: 0px 0px 0px 0px;
         }
       }
@@ -2728,18 +2780,17 @@ export default {
   line-height: 70px;
   border-bottom: 1px solid #dedede;
   .count-num {
-    color: #00306B;
+    color: #00306b;
   }
 
   .nav-item {
-    text-align: center;
     cursor: pointer;
-    text-align: center;
-    padding: 0 30px;
-    font-size: 24px;
     font-family: Poppins, Poppins;
-    font-weight: 400;
-    color: #000000;
+    font-weight: 600;
+    font-size: 24px;
+    color: #1e262e;
+    line-height: 70px;
+    padding: 0 27px;
 
     &.active {
       background: #ec6a2b;
@@ -2764,7 +2815,7 @@ export default {
     /*no */
 
     &.contact {
-      background: #00306B;
+      background: #00306b;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -2946,7 +2997,7 @@ export default {
     .comment-title-text {
       padding: 5px 30px;
       margin-right: 20px;
-      background-color: #00306B;
+      background-color: #00306b;
       color: #fff;
     }
   }
@@ -3021,6 +3072,9 @@ export default {
 
 .product-list {
   padding: 34px 26px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
   .product-item {
     width: 100%;
     // height: 349px;
@@ -3029,7 +3083,7 @@ export default {
 
     &:hover {
       .title {
-        color: #00306B !important;
+        color: #00306b !important;
       }
     }
 
@@ -3046,12 +3100,12 @@ export default {
     .info-box {
       margin-top: 20px;
       .title {
-        // white-space: nowrap;
-        // text-overflow: ellipsis;
-        overflow: hidden;
-        font-weight: 400;
+        height: 86px;
+        font-family: Poppins, Poppins;
+        font-weight: 600;
         font-size: 20px;
-        color: #1f1f1f;
+        color: #000000;
+        line-height: 20px;
       }
 
       .price-box {
@@ -3089,6 +3143,12 @@ export default {
           display: flex;
           align-items: center;
           justify-content: center;
+          &:first-child {
+            font-weight: bold;
+          }
+          &:last-child {
+            font-weight: 600;
+          }
         }
       }
     }

@@ -100,7 +100,7 @@ export default {
     .text-box-1 {
       margin-top: 18px;
       font-family: Poppins, Poppins;
-      font-weight: bold;
+      font-weight: 600;
       font-size: 24px;
       color: #1E262E;
       padding: 0 55px;

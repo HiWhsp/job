@@ -72,6 +72,8 @@ export default new Vuex.Store({
     vuex_is_login: false, //是否登录
     //
     vuex_cart_number: 0,
+    /** 购物车全部商品行金额合计 Σ(num×单价)，与 cart 列表每行 TOTAL 累加一致 */
+    vuex_cart_total: "0.00",
     vuex_huobi: "US$",
     //
     vuex_category_tree: [],
@@ -128,6 +130,11 @@ export default new Vuex.Store({
       state.vuex_cart_number = value;
     },
 
+    set_vuex_cart_total(state, value) {
+      state.vuex_cart_total =
+        value != null && value !== "" ? String(value) : "0.00";
+    },
+
     set_cache_payment_products(state, str_products) {
       console.log('vuex 缓存商品信息', str_products)
       sessionStorage.setItem("cache_payment_products", str_products);
@@ -164,6 +171,7 @@ export default new Vuex.Store({
     //清空登录信息
     remove_vuex_user(state) {
       state.vuex_cart_number = "0";
+      state.vuex_cart_total = "0.00";
       state.token = "";
       state.userId = "";
       state.vuex_user = {};
@@ -236,13 +244,30 @@ export default new Vuex.Store({
       })
         .then((res) => {
           let { code, data } = res;
-          if (code == 200) {
-            let count = 0;
-            data.forEach((v) => {
-              count += v.num * 1;
-            });
-            commit("set_vuex_cart_number", count);
+          if (code != 200) return;
+          const list = Array.isArray(data) ? data : [];
+          if (!list.length) {
+            commit("set_vuex_cart_number", 0);
+            commit("set_vuex_cart_total", "0.00");
+            return;
           }
+          let count = 0;
+          let total = 0;
+          list.forEach((v) => {
+            const n = Number(v.num) || 0;
+            count += n;
+            const price =
+              parseFloat(
+                v.priceSale != null && v.priceSale !== ""
+                  ? v.priceSale
+                  : v.price != null && v.price !== ""
+                    ? v.price
+                    : v.yPrice
+              ) || 0;
+            total += n * price;
+          });
+          commit("set_vuex_cart_number", count);
+          commit("set_vuex_cart_total", total.toFixed(2));
         });
     },
 

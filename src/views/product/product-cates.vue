@@ -3,73 +3,52 @@
     <div class="inner">
       <div class="bread-box">
         <div class="bread-inner flex w-1400">
-          <router-link to="/"> Home </router-link>
+          <router-link to="/">Home</router-link>
 
-          <div
-            class="bread-item"
-            v-for="(item, index) in bread_list"
-            :key="index"
-          >
+          <div class="bread-item" v-for="(item, index) in bread_list" :key="index">
             <span class="arrow">/</span>
             <template v-if="item">
-              <a
-                v-if="item && !item.route"
-                class="link"
-                href="javascript: void(0)"
-                >{{ item.title }}</a
-              >
+              <a v-if="item && !item.route" class="link" href="javascript: void(0)">{{ item.title }}</a>
               <router-link
                 v-else-if="item && item.route"
                 :to="item.route"
                 class="route-link"
-                >{{ item.title }}</router-link
-              >
+              >{{ item.title }}</router-link>
             </template>
           </div>
 
           <div class="bread-item search-item" v-if="keyword">
             <span class="arrow">></span>
-            <span class="search"
-              >搜索：<span class="search-keyword">“{{ keyword }}”</span></span
-            >
+            <span class="search">
+              搜索：
+              <span class="search-keyword">“{{ keyword }}”</span>
+            </span>
           </div>
         </div>
       </div>
 
       <div class="category-box filter-box w-1400">
-        <div
-          class="filter-item"
-          v-for="(group_cates, gindex) in group_options"
-          :key="gindex"
-        >
+        <div class="filter-item" v-for="(group_cates, gindex) in group_options" :key="gindex">
           <div class="label">{{ gindex == 0 ? "Classification" : "" }}</div>
           <div class="val">
-            <div
-              class="cate-box"
-              :class="{ 'hidden-expand': !cate_is_expand_list[gindex] }"
-            >
+            <div class="cate-box" :class="{ 'hidden-expand': !cate_is_expand_list[gindex] }">
               <div
                 class="cate-item"
                 v-for="(item, index) in group_cates"
                 :key="index"
                 :class="{ active: query_id_list.includes(item.id) }"
                 @click="toCate(item)"
-              >
-                {{ item.title }}
-              </div>
+              >{{ item.title }}</div>
             </div>
           </div>
 
           <div class="cate-acts flex">
-            <div
-              class="all-box flex hover-color"
-              @click="do_toggle_all(gindex)"
-            >
-            fold up
+            <div class="all-box flex hover-color" @click="do_toggle_all(gindex)">
+              fold up
               <img
                 :class="{ rotate: cate_is_expand_list[gindex] }"
                 src="@img/product/filter-arrow.png"
-                alt=""
+                alt
               />
             </div>
           </div>
@@ -85,9 +64,7 @@
                 :key="index"
                 :class="{ active: item.id == brand_select.id }"
                 @click="do_brand_toggle(item)"
-              >
-                {{ item.title }}
-              </div>
+              >{{ item.title }}</div>
             </div>
           </div>
         </div>
@@ -96,24 +73,16 @@
           <div class="label">Current Selection</div>
           <div class="val">
             <div class="check-box">
-              <div
-                class="check-item"
-                v-for="(item, index) in cate_select_list"
-                :key="index"
-              >
-                <div class="check-title">
-                  {{ item.title }}
-                </div>
+              <div class="check-item" v-for="(item, index) in cate_select_list" :key="index">
+                <div class="check-title">{{ item.title }}</div>
                 <div class="remove-box" @click="do_remove_cate(item, index)">
-                  <img src="@img/product/remove.png" alt="" />
+                  <img src="@img/product/remove.png" alt />
                 </div>
               </div>
               <div class="check-item" v-if="brand_select.title">
-                <div class="check-title">
-                  {{ brand_select.title }}
-                </div>
+                <div class="check-title">{{ brand_select.title }}</div>
                 <div class="remove-box" @click="do_remove_brand()">
-                  <img src="@img/product/remove.png" alt="" />
+                  <img src="@img/product/remove.png" alt />
                 </div>
               </div>
             </div>
@@ -121,7 +90,7 @@
 
           <div class="check-acts flex">
             <div class="clear-box flex hover-color" @click="do_clear()">
-              <img src="@img/product/clear.png" alt="" />
+              <img src="@img/product/clear.png" alt />
               Clear
             </div>
           </div>
@@ -191,8 +160,7 @@
             :current-page="pagination.page"
             :page-size="pagination.pageNum"
             @current-change="mix_current_change"
-          >
-          </el-pagination>
+          ></el-pagination>
         </div>
       </div>
     </div>
@@ -206,7 +174,7 @@ import { mapState } from "vuex";
 export default {
   name: "category",
   components: {
-    productList,
+    productList
   },
   data() {
     return {
@@ -218,7 +186,7 @@ export default {
         false,
         false,
         false,
-        false,
+        false
       ],
       keyword: this.$route.query.keyword || "",
       tags: this.$route.query.tags || "",
@@ -226,7 +194,7 @@ export default {
       product_list: [],
       pagination: {
         page: 1,
-        pageNum: 16,
+        pageNum: 16
       },
       count: 0,
 
@@ -246,7 +214,7 @@ export default {
         { type: "Popularity ranking", ziduan: "orders", is_arrow: false },
         { type: "Sales", ziduan: "orders", is_arrow: false },
         { type: "Price", ziduan: "priceSale", is_arrow: true },
-        { type: "New product", ziduan: "xinpin", is_arrow: true },
+        { type: "New product", ziduan: "xinpin", is_arrow: true }
       ],
       sort_type: "Comprehensive Ranking",
 
@@ -254,7 +222,7 @@ export default {
       brand_select: {},
 
       searchMin: "",
-      searchMax: "",
+      searchMax: ""
     };
   },
   computed: {
@@ -262,17 +230,17 @@ export default {
 
     query_id_list() {
       let ids = this.$route.query.ids || "";
-      let id_arr = ids.split("-").filter((v) => !!v);
-      let list = id_arr.map((v) => +v);
+      let id_arr = ids.split("-").filter(v => !!v);
+      let list = id_arr.map(v => +v);
       return list;
     },
 
     cate_select_list() {
       let option = [];
       let ids = this.$route.query.ids || "";
-      let id_arr = ids.split("-").filter((v) => !!v);
-      id_arr.forEach((id) => {
-        let cate = this.vuex_category_flat.find((v) => v.id == id) || {};
+      let id_arr = ids.split("-").filter(v => !!v);
+      id_arr.forEach(id => {
+        let cate = this.vuex_category_flat.find(v => v.id == id) || {};
         option.push(cate);
       });
 
@@ -293,15 +261,15 @@ export default {
         });
       }
       return list;
-    },
+    }
   },
 
   watch: {
     $route(newVal) {
       this.pagination.page = 1;
-      this.tags= newVal.query.tags ;
+      this.tags = newVal.query.tags;
       this.setView();
-    },
+    }
   },
 
   created() {
@@ -320,21 +288,21 @@ export default {
       let sort_params = {};
       if (this.sort_type == "综合排序") {
         sort_params = {
-          orderType: 0,
+          orderType: 0
         };
       } else if (this.sort_type == "销量排序") {
         sort_params = {
-          orderType: 1,
+          orderType: 1
         };
       } else if (this.sort_type == "价格排序") {
         if (this.isAsc == "asc") {
           //价格升序
           sort_params = {
-            orderType: 2,
+            orderType: 2
           };
         } else {
           sort_params = {
-            orderType: 3,
+            orderType: 3
           };
         }
       }
@@ -342,7 +310,7 @@ export default {
       if (this.searchMin && this.searchMax && this.searchMax > this.searchMin) {
         price_params = {
           searchMin: this.searchMin,
-          searchMax: this.searchMax,
+          searchMax: this.searchMax
         };
       }
 
@@ -352,15 +320,15 @@ export default {
         data: {
           action: "product_plist",
           channelId: channelId,
-          brandId: this.brand_select.id || '',
+          brandId: this.brand_select.id || "",
           keyword: this.keyword || "",
           ...this.pagination,
           orderType: "", //排序：0-默认排序 1-销量排序 2-价格升序 3-价格降序
           ...sort_params,
           ...price_params,
-          tags:this.tags||''
-        },
-      }).then((res) => {
+          tags: this.tags || ""
+        }
+      }).then(res => {
         let { code, data, count } = res;
         if (code == 200) {
           let { list, count, pages } = data;
@@ -375,9 +343,9 @@ export default {
         url: "/service.php",
         method: "get",
         data: {
-          action: "product_brandList",
-        },
-      }).then((res) => {
+          action: "product_brandList"
+        }
+      }).then(res => {
         if (res.code == 200) {
           this.brand_list = res.data;
         }
@@ -429,8 +397,12 @@ export default {
 
     toDetail(item) {
       // this.$router.push(`/product-detail?id=${item.inventoryId}`);
-      window.open('/product-detail?id='+item.inventoryId,'__blank','',false)
-
+      window.open(
+        "/product-detail?id=" + item.inventoryId,
+        "__blank",
+        "",
+        false
+      );
     },
 
     //排序方式
@@ -448,16 +420,16 @@ export default {
       if (this.searchMin && this.searchMax && this.searchMax > this.searchMin) {
         this.setView();
       }
-    },
-  },
+    }
+  }
 };
 </script>
 
 <style scoped lang="less">
-page{
+page {
   background: #ffffff;
 }
-.page {  
+.page {
   background: #fff;
   text-align: left;
 
@@ -473,7 +445,7 @@ page{
 
 .bread-box {
   padding: 16px 0;
-  background: #FBFBFB;
+  background: #fbfbfb;
   margin-bottom: 24px;
   .bread-inner {
     margin: 0 auto;
@@ -517,7 +489,7 @@ page{
       color: #aeaeae;
     }
     .search-keyword {
-      color: #EC6A2B;
+      color: #ec6a2b;
     }
   }
 }
@@ -536,7 +508,7 @@ page{
     }
 
     .label {
-      background: #fafafa;
+      background: #fbfbfb;
       align-self: stretch;
       // background: #f8f8f8;
       width: 200px;
@@ -545,10 +517,11 @@ page{
       justify-content: flex-end;
       padding-right: 25px;
 
-      font-family: Poppins, Poppins;
-      font-weight: 400;
+      font-family: Arial, Arial;
+      font-weight: bold;
       font-size: 20px;
-      color: #1E262E;
+      color: #1e262e;
+      line-height: 28px;
     }
 
     .val {
@@ -572,15 +545,16 @@ page{
     }
 
     .cate-item {
-      margin: 4px 10px;
+      font-family: Arial, Arial;
+      margin: 4px 10px 10px;
+      font-family: Arial, Arial;
       font-weight: 400;
-      padding: 2px 12px;
       font-size: 20px;
-      color: #1E262E;
-      cursor: pointer;
+      color: #1e262e;
+      line-height: 28px;
 
       &.active {
-        color: #EC6A2B;
+        color: #ec6a2b;
       }
     }
   }
@@ -594,26 +568,24 @@ page{
       justify-content: center;
       align-items: center;
       min-width: 30px;
+      height: 40px;
       margin-right: 20px;
-      border-radius: 15px 15px 15px 15px;
-      background: #FEEEDD;
-      border: 1px solid #EC6A2B;
-      font-family: Poppins, Poppins;
-      font-weight: 400;
-      font-size: 14px;
-      color: #EC6A2B;
-      padding: 0 14px;
+      border-radius: 20px;
+      background: #feeedd;
+      border: 1px solid #ec6a2b;
+      padding: 0 20px;
       padding-right: 0;
 
       &.active {
-        color: #EC6A2B;
+        color: #ec6a2b;
       }
 
       .check-title {
-        font-family: Poppins, Poppins;
+        font-family: Arial, Arial;
         font-weight: 400;
-        font-size: 13px;
-        color: #EC6A2B;
+        font-size: 20px;
+        color: #ec6a2b;
+        line-height: 28px;
       }
       .remove-box {
         cursor: pointer;
@@ -655,7 +627,7 @@ page{
       font-family: Poppins, Poppins;
       font-weight: 400;
       font-size: 14px;
-      color: #EC6A2B;
+      color: #ec6a2b;
 
       img {
         margin-left: 6px;
@@ -674,7 +646,7 @@ page{
     height: auto;
     display: flex;
     font-size: 14px;
-    font-family: Poppins, Poppins;
+    font-family: Arial, Arial;
     font-size: 14px;
     color: #545454;
 
@@ -697,15 +669,15 @@ page{
 
       &.active {
         .text {
-          color: #EC6A2B;
+          color: #ec6a2b;
         }
       }
-
       .text {
-        font-family: Poppins, Poppins;
+        font-family: Arial, Arial;
         font-weight: 400;
-        font-size: 14px;
-        color: #333333;
+        font-size: 20px;
+        color: #1e262e;
+        line-height: 28px;
       }
 
       .sanjiao-box {
@@ -717,7 +689,7 @@ page{
           border-bottom-color: #aaa;
 
           &.active {
-            border-bottom-color: #EC6A2B;
+            border-bottom-color: #ec6a2b;
           }
         }
 
@@ -728,7 +700,7 @@ page{
           border-top-color: #aaa;
 
           &.active {
-            border-top-color: #EC6A2B;
+            border-top-color: #ec6a2b;
           }
         }
       }
@@ -741,15 +713,15 @@ page{
         text-align: center;
         padding: 0 10px;
         display: inline-block;
-        width: 130px;
-        height: 35px;
+        width: 160px;
+        height: 43px;
         background: #ffffff;
         border-radius: 0px 0px 0px 0px;
         border: 1px solid #cccccc;
         font-family: Poppins, Poppins;
         font-weight: 400;
-        font-size: 14px;
-        color: #333;
+        font-size: 20px;
+        color: #b9b9b9;
       }
 
       input[type="number"]::-webkit-inner-spin-button,
@@ -765,7 +737,7 @@ page{
         margin-left: 20px;
         min-width: 70px;
         height: 32px;
-        background: #EC6A2B;
+        background: #ec6a2b;
         font-family: Poppins, Poppins;
         font-weight: 400;
         font-size: 16px;
@@ -849,7 +821,7 @@ page{
 
     &:hover {
       .title {
-        color: #EC6A2B !important;
+        color: #ec6a2b !important;
       }
     }
 

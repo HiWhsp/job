@@ -116,9 +116,9 @@
                   v-if="item.ifCancel == 1&&tabSelect.value!='refund'"
                   class="btn-ripple fit-text btn-bg"
                   @click="doCancel(item)"
-                >Cancel</button>
+                >CANCEL</button>
 
-                <button class="btn-ripple fit-text btn-bg" @click="toDetail(item)">Order Details</button>
+                <button class="btn-ripple fit-text btn-bg" @click="toDetail(item)">ORDER DETAILS</button>
 
                 <!-- <button
                   v-if="item.orderFahuoId&&item.orderStatus==3"
@@ -130,17 +130,17 @@
                   v-if="item.ifPay == 1"
                   class="btn-ripple fit-text btn-bg-orange"
                   @click="doPay(item)"
-                >Payment</button>
+                >PAYMENT</button>
                 <button
                   v-if="item.ifDel == 1"
                   class="btn-ripple fit-text btn-bg-orange"
                   @click="doDelete(item)"
-                >Delete Order</button>
+                >DELETE ORDER</button>
                 <button
                   v-if="item.ifReceive == 1"
                   class="btn-ripple fit-text btn-bg-orange"
                   @click="doReceive(item)"
-                >Confirm Receipt</button>
+                >CONFIRM RECEIPT</button>
 
                 <!-- <button
                   v-if="item.orderStatus >= 5"
@@ -620,22 +620,19 @@ export default {
     color: #333333;
     .tab-item {
       position: relative;
-      // min-width: 96px;
       height: 48px;
       line-height: 48px;
       cursor: pointer;
       margin-right: 40px;
+      font-size: 20px;
+      color: #333;
 
       .number {
-        color: #00306B;
+        color: #ec6a2b;
       }
 
       &.active {
-        // background: #00306B;
-        // color: #fff;
-        // font-weight: bold;
-        // color: #009f39;
-
+        color: #ec6a2b;
         &::after {
           content: "";
           position: absolute;
@@ -722,8 +719,8 @@ export default {
     .date {
       font-size: 20px;
       font-family: Poppins, Poppins;
-      font-weight: bold;
-      color: #1f1f1f;
+      font-weight: 600;
+      color: #333;
     }
 
     .order-code {
@@ -733,7 +730,7 @@ export default {
 
       font-size: 20px;
       font-family: Poppins, Poppins;
-      font-weight: bold;
+      font-weight: 600;
       color: #1f1f1f;
 
       span {
@@ -810,11 +807,11 @@ export default {
             cursor: pointer;
             font-size: 20px;
             font-family: Poppins, Poppins;
-            font-weight: bold;
-            color: #1e262e;
+            font-weight: 400;
+            color: #1E262E;
 
             &:hover {
-              color: #00306B;
+              color: #ec6a2b;
             }
           }
 
@@ -835,7 +832,7 @@ export default {
           text-align: center;
           min-width: 150px;
           font-size: 20px;
-          color: #5e5e5e;
+          color: #1E262E;
         }
 
         .box-price {
@@ -854,7 +851,7 @@ export default {
           font-family: Poppins, Poppins;
           font-weight: 400;
           font-size: 20px;
-          color: #5e5e5e;
+          color: #1E262E;
         }
         .box-refund {
           .refund-act {

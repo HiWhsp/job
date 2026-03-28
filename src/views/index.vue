@@ -976,9 +976,8 @@ export default {
         }
       }).then(res => {
         if (res.code == 200) {
-          const totalCount = (res.data && res.data.count) || 0;
-          if (this.$store && this.$store.commit) {
-            this.$store.commit("set_vuex_cart_number", totalCount);
+          if (this.$store && this.$store.dispatch) {
+            this.$store.dispatch("query_cart");
           }
           alertSucc("Added to cart");
         }
@@ -1342,6 +1341,7 @@ export default {
     width: fit-content;
     height: 312px;
     animation: scroll-left 30s linear infinite;
+    gap: 143px;
 
     .brand-list {
       height: 312px;
@@ -1944,6 +1944,7 @@ export default {
               color: #5e5e5e;
               font-size: 20px;
               text-decoration: line-through;
+              line-height: 40px;
             }
           }
 
@@ -1959,7 +1960,7 @@ export default {
               text-overflow: ellipsis;
               font-family: Poppins, Poppins;
               font-size: 20px;
-              font-weight: bold;
+              font-weight: 600;
               color: #1e262e;
               line-height: 26px;
             }
@@ -1975,10 +1976,15 @@ export default {
               border: 1px solid #00306b;
               padding: 0 10px;
               font-family: Poppins, Poppins;
-              font-weight: 600;
               font-size: 22px;
               color: #00306b;
               line-height: 31px;
+              &:last-child {
+                font-weight: 600;
+              }
+              &:first-child {
+                font-weight: bold;
+              }
             }
           }
         }
@@ -2247,8 +2253,8 @@ export default {
             background: #1a237e;
             color: #ffffff;
             border-radius: 10px;
-            font-family: Arial, sans-serif;
-            font-weight: bold;
+            font-family: Arial, Arial;
+            font-weight: 400;
             font-size: 40px;
             padding: 0 8px;
           }
