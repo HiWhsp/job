@@ -43,7 +43,7 @@
       <div class="table-util-bar">
         <div class="table-title">产品指导价格</div>
         <div class="table-acts">
-          <el-button type="primary" size="small" @click="handleImport">导出产品模板</el-button>
+          <el-button type="primary" size="small" @click="handleImport">导出价格模板</el-button>
           <el-button type="primary" size="small" @click="handleExport">导入价格</el-button>
         </div>
       </div>
@@ -108,6 +108,9 @@
       :current-spec-only="editPriceCurrentSpecOnly"
       @submit="handleEditPriceSubmit"
     />
+
+    <!-- 导入价格（与客户列表 import_file_modal 用法一致） -->
+    <import-modal ref="importModal" @confirm="handleImportConfirm" />
   </div>
 </template>
   
@@ -115,13 +118,18 @@
 import { mapState } from "vuex";
 import ProductDetailDrawer from "./components/product-detail-drawer.vue";
 import EditPriceDialog from "../components/edit-price-dialog.vue";
+import ImportModal from "@/components/upload/import_file_modal.vue";
+
+/** 导入指导价格 Excel（与客户导入同属 multipart 上传接口，若后端路径不同请改此处） */
+const IMPORT_PRODUCT_INVENTORY_PRICE_API = "/importProductInventoryPrice";
 
 export default {
   name: "ProductPrice",
 
   components: {
     ProductDetailDrawer,
-    EditPriceDialog
+    EditPriceDialog,
+    ImportModal
   },
 
   computed: {
@@ -267,13 +275,70 @@ export default {
       // TODO: 调用接口保存 specList 中的价格
       this.loadList();
     },
+    /** 导出价格导入模板：daochuProductInventoryPrice（须 blob 下载，用 $apiDownload） */
     handleImport() {
-      // TODO: 导出产品模板
-      this.$message.info("导出产品模板");
+      const loading = this.$loading({
+        lock: true,
+        text: "正在导出模板...",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.35)"
+      });
+      const formData = new URLSearchParams();
+      const token = localStorage.getItem("token") || "";
+      if (token) formData.append("token", token);
+      const ids = this.queryParams.categoryIds || [];
+      const cateId = ids.length ? String(ids[ids.length - 1]) : "";
+      const kw = (this.queryParams.keyword || "").trim();
+      if (kw) formData.append("keyword", kw);
+      if (cateId) formData.append("cateId", cateId);
+
+      this.$apiDownload({
+        url: "/daochuProductInventoryPrice",
+        method: "post",
+        data: formData
+      })
+        .then(res => {
+          const blob = res && res.data;
+          if (!blob || !(blob instanceof Blob)) {
+            this.$message.error("导出失败");
+            return;
+          }
+          if (blob.type && blob.type.indexOf("application/json") !== -1) {
+            const reader = new FileReader();
+            reader.onload = () => {
+              try {
+                const j = JSON.parse(reader.result);
+                this.$message.error(j.msg || "导出失败");
+              } catch (e) {
+                this.$message.error("导出失败");
+              }
+            };
+            reader.readAsText(blob);
+            return;
+          }
+          const url = window.URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.setAttribute("download", "产品指导价格导入模板.xlsx");
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(url);
+          this.$message.success("模板已下载");
+        })
+        .catch(() => {
+          this.$message.error("导出失败");
+        })
+        .finally(() => {
+          loading.close();
+        });
     },
+    /** 导入价格：与客户列表 handleImport 相同，使用 import_file_modal + $apiUploadFile */
     handleExport() {
-      // TODO: 导入价格
-      this.$message.info("导入价格");
+      this.$refs.importModal.init("导入价格", IMPORT_PRODUCT_INVENTORY_PRICE_API);
+    },
+    handleImportConfirm() {
+      this.loadList();
     },
     handleSizeChange(val) {
       this.queryParams.pageSize = val;
