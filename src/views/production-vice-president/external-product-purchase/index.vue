@@ -72,6 +72,7 @@
             <template slot-scope="{ row }">
               <el-tag v-if="row.status === '待审核'" type="info" size="small" effect="plain">待审核</el-tag>
               <el-tag v-else-if="row.status === '审核未通过'" type="danger" size="small" effect="plain">审核未通过</el-tag>
+              <el-tag v-else-if="row.status === '待财务付款'" type="success" size="small" effect="plain">待财务付款</el-tag>
               <el-tag v-else-if="row.status === '待采购'" type="success" size="small" effect="plain">待采购</el-tag>
               <el-tag v-else-if="row.status === '采购完成'" type="success" size="small" effect="plain">采购完成</el-tag>
               <el-tag v-else-if="row.status === '质检入库中'" type="success" size="small" effect="plain">质检入库中</el-tag>

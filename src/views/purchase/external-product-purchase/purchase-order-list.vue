@@ -65,7 +65,7 @@
               slot-scope="scope"
             >{{ String((queryParams.pageNum - 1) * queryParams.pageSize + scope.$index + 1).padStart(3, '0') }}</template>
           </el-table-column>
-          <el-table-column label="外购请购单单号" min-width="140" show-overflow-tooltip>
+          <el-table-column label="外购产品采购单单号" min-width="140" show-overflow-tooltip>
             <template slot-scope="{ row }">{{ rowDisplay(row, 'purchaseNo') }}</template>
           </el-table-column>
           <el-table-column label="采购单名称" width="160" show-overflow-tooltip>
@@ -100,7 +100,7 @@
               <span class="row-acts">
                 <span class="row-act" @click="handleView(row)">查看详情</span>
                 <span
-                  v-if="isStatusPendingPurchase(row.status)"
+                  v-if="isStatusPendingPurchase(row.orderStatus)"
                   class="row-act"
                   @click="handleComplete(row)"
                 >采购完成</span>

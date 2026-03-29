@@ -506,7 +506,7 @@ export default {
                 quantity: it.num || '',
                 totalPrice: it.totalPrice || '',
                 stockQty: inventory.kucun || '',
-                stockStatus: orderStatusTitle || ''
+                stockStatus: inventory.kucun && inventory.kucun == 0 ? '缺货' : '有货' || ''
               };
             }),
             externalProductList: foreignList.map((it) => {

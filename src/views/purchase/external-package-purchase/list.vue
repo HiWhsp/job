@@ -101,6 +101,24 @@
       @close="closeGenerateOrderDialog"
     >
       <el-form ref="generateOrderForm" :model="generateOrderForm" :rules="generateOrderRules" label-width="100px" class="generate-order-form">
+        <!-- 原料选择 -->
+        <el-form-item label="选择原料:" prop="materialId">
+          <el-select
+            v-model="generateOrderForm.materialId"
+            placeholder="请选择原料"
+            clearable
+            filterable
+            style="width: 100%"
+            :loading="materialOptionsLoading"
+          >
+            <el-option
+              v-for="opt in materialOptions"
+              :key="opt.value"
+              :label="opt.label"
+              :value="opt.value"
+            />
+          </el-select>
+        </el-form-item>
         <el-form-item label="采购数量:" prop="quantity">
           <el-input v-model="generateOrderForm.quantity" placeholder="请输入" clearable />
         </el-form-item>
@@ -132,6 +150,8 @@
 <script>
 const LIST_API = "/getStaffOrderList";
 const ADD_API = "/addPurchaseMaterialPackOrder";
+/** 原料下拉：与原料管理列表同源 POST /getMaterialList */
+const MATERIAL_LIST_API = "/getMaterialList";
 
 export default {
   name: "ExternalPackageRequisitionList",
@@ -149,12 +169,16 @@ export default {
       tableData: [],
       generateOrderDialogVisible: false,
       generateOrderRow: null,
+      materialOptions: [],
+      materialOptionsLoading: false,
       generateOrderForm: {
+        materialId: "",
         quantity: "",
         unitPrice: "",
         arrivalDate: ""
       },
       generateOrderRules: {
+        materialId: [{ required: true, message: "请选择原料", trigger: "change" }],
         quantity: [{ required: true, message: "请输入采购数量", trigger: "blur" }],
         unitPrice: [{ required: true, message: "请输入采购单价", trigger: "blur" }],
         arrivalDate: [{ required: true, message: "请选择预计到货期", trigger: "change" }]
@@ -250,13 +274,51 @@ export default {
     },
     handleGenerate(row) {
       this.generateOrderRow = row;
+      this.generateOrderForm.materialId = "";
       this.generateOrderForm.quantity = "";
       this.generateOrderForm.unitPrice = "";
       this.generateOrderForm.arrivalDate = "";
       this.generateOrderDialogVisible = true;
+      this.loadMaterialOptions();
+    },
+    /** 生成采购单弹框内「选择原料」下拉，来自 getMaterialList */
+    loadMaterialOptions() {
+      this.materialOptionsLoading = true;
+      this.$api({
+        url: MATERIAL_LIST_API,
+        method: "post",
+        data: {
+          page: "1",
+          limit: "500",
+          keyword: "",
+          cateld: ""
+        }
+      })
+        .then(res => {
+          const list =
+            res && res.data && Array.isArray(res.data.list) ? res.data.list : [];
+          this.materialOptions = list
+            .map(it => {
+              const id = it.id != null ? String(it.id) : "";
+              const no = it.materialNo != null ? String(it.materialNo).trim() : "";
+              const title = it.title != null ? String(it.title).trim() : "";
+              const label =
+                no && title ? `${no} / ${title}` : title || no || id || "—";
+              return { value: id, label };
+            })
+            .filter(o => o.value !== "");
+        })
+        .catch(() => {
+          this.materialOptions = [];
+          this.$message.error("获取原料列表失败");
+        })
+        .finally(() => {
+          this.materialOptionsLoading = false;
+        });
     },
     closeGenerateOrderDialog() {
       this.generateOrderRow = null;
+      this.generateOrderForm.materialId = "";
       this.generateOrderForm.quantity = "";
       this.generateOrderForm.unitPrice = "";
       this.generateOrderForm.arrivalDate = "";
@@ -268,7 +330,7 @@ export default {
         if (!this.generateOrderRow) return;
         const row = this.generateOrderRow;
         const id = row && row.id != null ? String(row.id) : "";
-        const staffOrderId = row && row.staffOrderId != null ? String(row.staffOrderId) : "";
+        const staffOrderId = row && row.orderNo != null ? String(row.orderNo) : "";
         if (!staffOrderId) {
           this.$message.warning("缺少业务订单id");
           return;
@@ -282,14 +344,13 @@ export default {
 
         const data = {
           staffOrderId,
+          materialId: String(this.generateOrderForm.materialId || ""),
           num,
           expectedTime,
-          price: String(price.toFixed(2)),
-          // title,
-          // productJson
+          price: String(price.toFixed(2))
         };
         // 文档标注 id 为编辑时传，这里兼容传入
-        if (id) data.id = id;
+        // if (id) data.id = id;
 
         this.$api({ url: ADD_API, method: "post", data })
           .then(res => {

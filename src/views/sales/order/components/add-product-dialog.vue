@@ -209,7 +209,7 @@ export default {
     },
     getGuideTotalDisplay(row) {
       const q = Number(row.quantity);
-      const p = parseFloat(row.actualPrice) || 0;
+      const p = parseFloat(row.guidePrice) || 0;
       if (q > 0) return (q * p).toFixed(2);
       return '—';
     },

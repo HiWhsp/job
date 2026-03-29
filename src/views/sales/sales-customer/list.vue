@@ -159,7 +159,7 @@
             <template slot-scope="{ row }">
               <span class="row-acts">
                 <span class="row-act" @click="handleView(row)">查看详情</span>
-                <span class="row-act" v-if="row.status == '1'" @click="handleAudit(row)">审核</span>
+                <!-- <span class="row-act" v-if="row.status == '1'" @click="handleAudit(row)">审核</span> -->
                 <span class="row-act" @click="handleEdit(row)">编辑</span>
                 <span class="row-act" @click="handleDelete(row)">删除</span>
               </span>
@@ -232,9 +232,9 @@ export default {
       },
       total: 0,
       tableHeight: 0,
-      auditTab: "audited",
+      auditTab: "pending",
       auditTabs: [
-        // { label: "待审核", value: "pending" },
+        { label: "待审核", value: "pending" },
         { label: "已审核", value: "audited" },
         { label: "审核未通过", value: "rejected" }
       ],

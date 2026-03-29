@@ -179,8 +179,7 @@ export default {
         { label: '订单列表', value: '1' },
       ],
       orderStatusOptions: [
-        { label: '待营销总监审核', value: '1' },
-        { label: '待总经理审核', value: '2' },
+        { label: '待审核', value: '1' },
         { label: '缺货审核', value: '3' },
         { label: '待发货', value: '4' },
         { label: '缺货', value: '5' },
