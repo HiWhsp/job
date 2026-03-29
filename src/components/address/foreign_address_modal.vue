@@ -33,20 +33,25 @@
           <el-input clearable v-model="form.address" placeholder="Please enter"></el-input>
         </div>
         <div class="item">
-          <span class="text required">Country</span>
-          <el-select
-            filterable
-            v-model="form.countryId"
-            placeholder="Please select"
-            @change="changeCountry"
-          >
-            <el-option
-              v-for="item in countryList"
-              :key="item.id"
-              :label="item.title"
-              :value="item.id"
-            ></el-option>
-          </el-select>
+          <span class="text required">City</span>
+          <template v-if="!cityList.length">
+            <el-input clearable v-model="form.city" placeholder="Please enter"></el-input>
+          </template>
+          <template v-else>
+            <el-select
+              filterable
+              v-model="form.cityId"
+              placeholder="Please select"
+              @change="changeCity"
+            >
+              <el-option
+                v-for="item in cityList"
+                :key="item.id"
+                :label="item.title"
+                :value="item.id"
+              ></el-option>
+            </el-select>
+          </template>
         </div>
         <div class="item">
           <span class="text required">State</span>
@@ -70,25 +75,20 @@
           </template>
         </div>
         <div class="item">
-          <span class="text required">City</span>
-          <template v-if="!cityList.length">
-            <el-input clearable v-model="form.city" placeholder="Please enter"></el-input>
-          </template>
-          <template v-else>
-            <el-select
-              filterable
-              v-model="form.cityId"
-              placeholder="Please select"
-              @change="changeCity"
-            >
-              <el-option
-                v-for="item in cityList"
-                :key="item.id"
-                :label="item.title"
-                :value="item.id"
-              ></el-option>
-            </el-select>
-          </template>
+          <span class="text required">Country</span>
+          <el-select
+            filterable
+            v-model="form.countryId"
+            placeholder="Please select"
+            @change="changeCountry"
+          >
+            <el-option
+              v-for="item in countryList"
+              :key="item.id"
+              :label="item.title"
+              :value="item.id"
+            ></el-option>
+          </el-select>
         </div>
         <div class="item">
           <span class="text required">Zip Code</span>
@@ -110,7 +110,7 @@
         </div>
       </div>
       <span slot="footer" class="dialog-footer">
-        <el-button class="btn-2" @click="throttle_do_submit()" :loading="loading">Submit</el-button>
+        <el-button class="btn-2" @click="throttle_do_submit()" :loading="loading">SUBMIT</el-button>
         <!-- <button class="btn-ripple fit-text btn-2" @click="show_modal = false">取 消</button> -->
       </span>
     </el-dialog>
@@ -278,7 +278,9 @@ export default {
       const stateTitle = data.province || data.area;
       const cityTitle = data.city;
       if (!countryTitle) return;
-      const countryInfo = this.countryList.find(c => c.title === countryTitle || c.title == countryTitle);
+      const countryInfo = this.countryList.find(
+        c => c.title === countryTitle || c.title == countryTitle
+      );
       if (!countryInfo) return;
       this.form.countryId = countryInfo.id;
       const resState = await this.$api({
@@ -289,7 +291,9 @@ export default {
       if (resState.code == 200) {
         this.stateList = resState.data || [];
         if (stateTitle) {
-          const stateInfo = this.stateList.find(s => s.title === stateTitle || s.title == stateTitle);
+          const stateInfo = this.stateList.find(
+            s => s.title === stateTitle || s.title == stateTitle
+          );
           if (stateInfo) {
             this.form.stateId = stateInfo.id;
             const resCity = await this.$api({
@@ -300,7 +304,9 @@ export default {
             if (resCity.code == 200) {
               this.cityList = resCity.data || [];
               if (cityTitle) {
-                const cityInfo = this.cityList.find(c => c.title === cityTitle || c.title == cityTitle);
+                const cityInfo = this.cityList.find(
+                  c => c.title === cityTitle || c.title == cityTitle
+                );
                 if (cityInfo) this.form.cityId = cityInfo.id;
               }
             }
@@ -378,7 +384,9 @@ export default {
         return;
       }
 
-      const countryTitle = this.countryList.find(c => c.id == this.form.countryId)?.title;
+      const countryTitle = this.countryList.find(
+        c => c.id == this.form.countryId
+      )?.title;
       if (!this.form.countryId || !countryTitle) {
         alertErr("Please select country");
         return;
@@ -387,14 +395,18 @@ export default {
         ? this.stateList.find(s => s.id == this.form.stateId)?.title
         : this.form.province;
       if (!provinceTitle) {
-        alertErr(this.stateList.length ? "Please select state" : "Please enter state");
+        alertErr(
+          this.stateList.length ? "Please select state" : "Please enter state"
+        );
         return;
       }
       const cityTitle = this.cityList.length
         ? this.cityList.find(c => c.id == this.form.cityId)?.title
         : this.form.city;
       if (!cityTitle) {
-        alertErr(this.cityList.length ? "Please select city" : "Please enter city");
+        alertErr(
+          this.cityList.length ? "Please select city" : "Please enter city"
+        );
         return;
       }
       if (!this.form.address) {
@@ -457,11 +469,12 @@ export default {
       align-items: center;
 
       .text {
-        min-width: 200px;
+        min-width: 220px;
         text-align: right;
         padding-right: 10px;
         color: #1e262e;
         font-size: 20px;
+        font-weight: 600;
 
         &.required {
           &::before {
@@ -508,16 +521,24 @@ export default {
 }
 
 /deep/ .el-dialog__header {
-  padding: 16px 24px;
+  padding: 24px;
   background: #fff;
 
   font-family: Poppins, Poppins;
   font-weight: 600;
   font-size: 24px;
-  color: #1E262E;
+  color: #1e262e;
+
+  .el-dialog__title {
+    font-family: Poppins, Poppins;
+    font-weight: 600;
+    font-size: 32px;
+    color: #1e262e;
+    line-height: 34px;
+  }
 
   .el-dialog__close {
-    font-size: 20px;
+    font-size: 32px;
   }
 }
 
@@ -558,11 +579,11 @@ export default {
     height: 32px;
     background: #ffffff;
     border-radius: 50px 50px 50px 50px;
-    border: 1px solid #00306B;
+    border: 1px solid #00306b;
     font-family: Poppins, Poppins;
     font-weight: 400;
     font-size: 14px;
-    color: #00306B;
+    color: #00306b;
   }
 
   .btn-2 {

@@ -314,7 +314,7 @@ export default {
       margin-left: 40px;
       font-size: 20px;
       cursor: pointer;
-
+      text-decoration: underline;
       font-family: Poppins, Poppins;
       font-weight: 400;
       color: #1f1f1f;

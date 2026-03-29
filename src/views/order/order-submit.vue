@@ -3023,7 +3023,7 @@ export default {
     background-color: #00306b;
     color: #ffffff;
     font-size: 20px;
-    font-weight: bold;
+    font-weight: 600;
     border-radius: 8px;
   }
 
@@ -3032,7 +3032,7 @@ export default {
     background: #ec6a2b;
     color: #ffffff;
     font-size: 20px;
-    font-weight: bold;
+    font-weight: 600;
     border-radius: 8px;
     margin-left: 10px;
     padding: 0 20px;

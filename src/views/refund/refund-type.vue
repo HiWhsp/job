@@ -42,7 +42,7 @@
 
         <!-- 服务类型 -->
         <div class="service-box">
-          <div class="service-title">SELECT SERVICE TYPE</div>
+          <div class="service-title">Select Service Type</div>
           <div class="service-list">
             <!-- 退换货类型(1-退款 2-退货退款) -->
             <div class="service-item" @click="to_refund_submit('1')" :class="{ 'active': type == '1' }">
@@ -50,9 +50,9 @@
                 <img src="@img/refund/refund-tuikuan.png" alt />
               </div>
               <div class="text-box">
-                <div class="type">I want a refund (no return required)</div>
-                <div class="desc">Not receiving the goods, or negotiating with the seller to agree not to return the
-                  goods but only to refund them</div>
+                <div class="type">I Want A Refund (No Return Required)</div>
+                <div class="desc">Not Receiving The Goods, Or Negotiating With The Seller To Agree Not To Return The
+                  Goods But Only To Refund Them</div>
               </div>
             </div>
             <div class="service-item" @click="to_refund_submit('2')" :class="{ 'active': type == '2' }">
@@ -60,8 +60,8 @@
                 <img src="@img/refund/refund-tuihuo.png" alt />
               </div>
               <div class="text-box">
-                <div class="type">I want a return and refund</div>
-                <div class="desc">Received goods, need to return received goods</div>
+                <div class="type">I Want A Return And Refund</div>
+                <div class="desc">Received Goods, Need To Return Received Goods</div>
               </div>
             </div>
           </div>

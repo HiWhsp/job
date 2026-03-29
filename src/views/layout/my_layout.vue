@@ -74,7 +74,7 @@ export default {
           icon: require("@img/my/nav-1.png")
         },
         {
-          title: "My coupons",
+          title: "My Coupons",
           route: "coupon-list",
           icon: require("@img/my/nav-2.png")
         },

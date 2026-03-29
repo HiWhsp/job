@@ -7,10 +7,8 @@
     <div class="page-ctx">
       <div class="fav-box">
         <div class="fav-titles flex">
-          <div class="fav-check flex" @click="do_toggle_all()" :class="{ checked: checkedAll }">
-            <img src="@img/common/check0.png" alt class="img-check check-0" />
-            <img src="@img/common/check1.png" alt class="img-check check-1" />
-            <span>All</span>
+          <div class="fav-check flex">
+            <el-checkbox v-model="checkedAll" @change="do_toggle_all()">All</el-checkbox>
           </div>
           <div class="fav-delete" @click="do_delete_checked()">Delete Selected</div>
         </div>
@@ -18,14 +16,7 @@
         <div class="fav-data-box" v-if="count">
           <div class="fav-list">
             <div class="fav-item" v-for="(item, index) in product_list" :key="index">
-              <div
-                class="fav-check"
-                @click.stop="do_toggle_item(item)"
-                :class="{ checked: item.checked }"
-              >
-                <img src="@img/common/check0.png" alt class="img-check check-0" />
-                <img src="@img/common/check1.png" alt class="img-check check-1" />
-              </div>
+              <el-checkbox v-model="item.checked" @change="sync_checked_all()"></el-checkbox>
 
               <div class="goods-img scale-box" @click="to_product(item)">
                 <img class="scale-img" :src="item.thumb" alt />
@@ -147,19 +138,12 @@ export default {
     },
 
     do_toggle_all() {
-      this.checkedAll = !this.checkedAll;
       this.product_list.forEach(v => (v.checked = this.checkedAll));
     },
 
-    do_toggle_item(item) {
-      //console.log("切换勾选", { ...item });
-      item.checked = !item.checked;
-      let hasNotChecked = this.product_list.some(v => !v.checked);
-      if (hasNotChecked) {
-        this.checkedAll = false;
-      } else {
-        this.checkedAll = true;
-      }
+    sync_checked_all() {
+      const hasNotChecked = this.product_list.some(v => !v.checked);
+      this.checkedAll = !hasNotChecked;
     },
 
     do_delete_checked() {
@@ -200,7 +184,9 @@ export default {
       }
       const inventoryId = item.inventoryId || item.id;
       if (!inventoryId) {
-        alertErr("The product information is incomplete, cannot be added to the cart.");
+        alertErr(
+          "The product information is incomplete, cannot be added to the cart."
+        );
         return;
       }
       this.$api({
@@ -225,30 +211,6 @@ export default {
 </script>
 
 <style scoped lang="less">
-.img-check {
-  cursor: pointer;
-
-  &.check-0 {
-    display: block;
-  }
-
-  &.check-1 {
-    display: none;
-  }
-}
-
-.checked {
-  cursor: pointer;
-
-  .check-0 {
-    display: none !important;
-  }
-
-  .check-1 {
-    display: block !important;
-  }
-}
-
 .page {
   padding-bottom: 80px;
 
@@ -305,19 +267,39 @@ export default {
       font-size: 20px;
       color: #1e262e;
 
-      &.checked {
-        color: #1e262e;
-      }
+      .el-checkbox {
+        margin-right: 32px;
+        width: 28px;
+        height: 28px;
+        background: #ffffff;
+        border-radius: 6px 6px 6px 6px;
+        /deep/ .el-checkbox__inner {
+          width: 28px;
+          height: 28px;
+          background: #ffffff;
+          border-radius: 6px 6px 6px 6px;
+          border: 1px solid #707070;
+          &:after {
+            width: 7px;
+            left: 10px;
+            height: 17px;
+          }
+        }
 
-      img {
-        width: 20px;
-        margin-right: 8px;
+        /deep/ .el-checkbox__label {
+          font-family: Poppins, Poppins;
+          font-weight: 600;
+          font-size: 20px;
+          color: #1e262e;
+          line-height: 28px;
+        }
       }
     }
 
     .fav-delete {
       cursor: pointer;
-
+      // 下划线
+      text-decoration: underline;
       font-family: Poppins, Poppins;
       font-weight: 400;
       font-size: 20px;
@@ -340,12 +322,23 @@ export default {
       border-bottom: none;
     }
 
-    .fav-check {
-      width: 52px;
-      text-align: left;
-
-      img {
-        width: 13px;
+    .el-checkbox {
+      margin-right: 32px;
+      width: 28px;
+      height: 28px;
+      background: #ffffff;
+      border-radius: 6px 6px 6px 6px;
+      /deep/ .el-checkbox__inner {
+        width: 28px;
+        height: 28px;
+        background: #ffffff;
+        border-radius: 6px 6px 6px 6px;
+        border: 1px solid #707070;
+        &:after {
+          width: 7px;
+          left: 10px;
+          height: 17px;
+        }
       }
     }
 

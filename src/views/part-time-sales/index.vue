@@ -76,11 +76,11 @@
         </div>
 
         <!-- 收款方式 -->
-        <!-- <div class="form-section">
+        <div class="form-section">
           <div class="section-title">
             <span class="title-text">Payment Method</span>
           </div>
-          <el-form-item prop="receiveType">
+          <!-- <el-form-item prop="receiveType">
             <img
               src="@/assets/img/order/paypal.png"
               class="paypal-img"
@@ -95,8 +95,8 @@
               @click="handle_paypal_click(2)"
               alt
             />
-          </el-form-item>
-        </div>-->
+          </el-form-item> -->
+        </div>
 
         <!-- 银行卡信息 -->
         <div class="form-section">

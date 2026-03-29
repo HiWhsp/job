@@ -121,6 +121,7 @@
               Total Amount
               <b>{{ vuex_huobi }} {{ shopcart_money }}</b>
             </div>
+            <div class="tip-text">Shipping cost calculated at checkout</div>
             <button
               :disabled="jiesuanDisabled"
               class="btn-ripple btn-order"
@@ -604,6 +605,34 @@ page {
           .box-select {
             width: 58px;
             width: 100px;
+
+            .el-checkbox {
+              margin-right: 32px;
+              width: 28px;
+              height: 28px;
+              background: #ffffff;
+              border-radius: 6px 6px 6px 6px;
+              /deep/ .el-checkbox__inner {
+                width: 28px;
+                height: 28px;
+                background: #ffffff;
+                border-radius: 6px 6px 6px 6px;
+                border: 1px solid #707070;
+                &:after {
+                  width: 7px;
+                  left: 10px;
+                  height: 17px;
+                }
+              }
+
+              /deep/ .el-checkbox__label {
+                font-family: Poppins, Poppins;
+                font-weight: 400;
+                font-size: 22px;
+                color: #1e262e;
+                line-height: 28px;
+              }
+            }
           }
 
           .box-image {
@@ -747,10 +776,8 @@ page {
 
 .bottom-action-box {
   display: flex;
-  align-items: center;
+  align-items: start;
   padding-right: 40px;
-  height: 86px;
-  background: #fafbfc;
   // border: 1px solid #eeeeee;
   // box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.08);
   opacity: 1;
@@ -758,21 +785,39 @@ page {
 
   .all-select {
     cursor: pointer;
-    min-width: 120px;
-    width: fit-content;
+    width: 160px;
     font-family: Poppins, Poppins;
     font-weight: 400;
     font-size: 22px;
     color: #1e262e;
     margin-right: 20px;
-    /deep/ .el-checkbox__input + .el-checkbox__label {
-      color: #1e262e !important;
-      font-size: 22px !important;
-    }
-    /deep/ .el-checkbox__label {
-      color: #1e262e !important;
-      font-size: 22px !important;
-      font-weight: 400 !important;
+    text-align: left;
+    .el-checkbox {
+      margin-right: 32px;
+      width: 28px;
+      height: 28px;
+      background: #ffffff;
+      border-radius: 6px 6px 6px 6px;
+      /deep/ .el-checkbox__inner {
+        width: 28px;
+        height: 28px;
+        background: #ffffff;
+        border-radius: 6px 6px 6px 6px;
+        border: 1px solid #707070;
+        &:after {
+          width: 7px;
+          left: 10px;
+          height: 17px;
+        }
+      }
+
+      /deep/ .el-checkbox__label {
+        font-family: Poppins, Poppins;
+        font-weight: 400;
+        font-size: 22px;
+        color: #1e262e;
+        line-height: 28px;
+      }
     }
   }
 
@@ -833,6 +878,13 @@ page {
       font-size: 30px;
       color: #ec6a2b;
     }
+  }
+  .tip-text {
+    font-family: Poppins, Poppins;
+    font-weight: 400;
+    font-size: 20px;
+    color: #5e5e5e;
+    line-height: 28px;
   }
 
   .btn-order {

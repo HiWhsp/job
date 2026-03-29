@@ -177,17 +177,17 @@ body {
 }
 
 .el-checkbox__input.is-focus .el-checkbox__inner {
-  border-color: #00306b !important;
+  border-color: #ec6a2b !important;
 }
 
 .el-checkbox__input.is-checked + .el-checkbox__label {
-  color: #00306b !important;
+  color: #ec6a2b !important;
 }
 
 .el-checkbox__input.is-checked .el-checkbox__inner,
 .el-checkbox__input.is-indeterminate .el-checkbox__inner {
-  background: #00306b !important;
-  border-color: #00306b !important;
+  background: #ec6a2b !important;
+  border-color: #ec6a2b !important;
 }
 
 .pagination-box {
