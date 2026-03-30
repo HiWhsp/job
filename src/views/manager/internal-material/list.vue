@@ -51,7 +51,13 @@
           <el-table-column prop="cateTitle" label="所属管理类别" min-width="120" show-overflow-tooltip
             align="center" />
           <el-table-column prop="productCateTitle" label="用于产品分类" min-width="160" show-overflow-tooltip
-            align="center" />
+            align="center">
+            <template slot-scope="{ row }">
+              <span class="link-name" @click.stop="handleProductCategory(row)">
+                {{ row.productCateTitle || "--" }}
+              </span>
+            </template>
+          </el-table-column>
           <el-table-column prop="updated_at" label="更新时间" min-width="110" show-overflow-tooltip align="center" />
           <el-table-column label="操作" width="160" align="center" fixed="right">
             <template slot-scope="{ row }">
@@ -77,6 +83,12 @@
       :row-summary="detailRowSummary"
     />
 
+    <material-product-category-drawer
+      :visible.sync="productCategoryDrawerVisible"
+      :material-id="productCategoryMaterialId"
+      :row-summary="productCategoryRowSummary"
+    />
+
     <!-- 删除确认弹框 -->
     <delete-dialog
       :visible.sync="deleteDialogVisible"
@@ -92,14 +104,17 @@
 <script>
 import { mapState } from "vuex";
 import MaterialDetailDrawer from "./components/material-detail-drawer.vue";
+import MaterialProductCategoryDrawer from "./components/material-product-category-drawer.vue";
 import DeleteDialog from "../components/delete-dialog.vue";
 import ImportModal from "@/components/upload/import_file_modal.vue";
+import { adminPath } from "@/utils/adminRoutePrefix.js";
 
 export default {
   name: "InternalMaterialList",
 
   components: {
     MaterialDetailDrawer,
+    MaterialProductCategoryDrawer,
     DeleteDialog,
     ImportModal
   },
@@ -117,6 +132,9 @@ export default {
       detailDrawerVisible: false,
       detailMaterialId: null,
       detailRowSummary: null,
+      productCategoryDrawerVisible: false,
+      productCategoryMaterialId: null,
+      productCategoryRowSummary: null,
       deleteDialogVisible: false,
       rowToDelete: null
     };
@@ -229,9 +247,18 @@ export default {
       this.detailRowSummary = row || null;
       this.detailDrawerVisible = true;
     },
+    /** 用于产品分类：右侧抽屉展示原料信息与关联产品大类列表 */
+    handleProductCategory(row) {
+      this.productCategoryMaterialId = row && row.id != null ? row.id : null;
+      this.productCategoryRowSummary = row || null;
+      this.productCategoryDrawerVisible = true;
+    },
     handleEdit(row) {
       // TODO: 跳转或打开编辑页
-      this.$router.push(`/manager/internal-material/add?id=${row.id}`);
+      this.$router.push({
+        path: adminPath(this, "/internal-material/add"),
+        query: { id: row.id }
+      });
     },
     handleDelete(row) {
       this.rowToDelete = row;
@@ -253,7 +280,7 @@ export default {
     },
     handleAdd() {
       // TODO: 新增原料
-      this.$router.push('/manager/internal-material/add');
+      this.$router.push(adminPath(this, "/internal-material/add"));
     },
     handleImport() {
       this.$refs.importModal.init("原料导入", "/importMaterial");

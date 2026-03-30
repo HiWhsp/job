@@ -152,33 +152,59 @@ export default {
       }
     },
 
-    // 判断路由是否激活（父路由）
-    isRouteActive(route) {
-      if (!route.children || route.children.length === 0) {
-        return this.$route.name === route.name;
+    /** 当前路由匹配链中是否包含该 name（含父级、隐藏的子级等） */
+    isNameInMatched(name) {
+      if (!name || !this.$route.matched || !this.$route.matched.length) {
+        return false;
       }
-      // 如果有子路由，检查是否有子路由激活
-      return route.children.some(child => this.$route.name === child.name);
+      return this.$route.matched.some(record => record.name === name);
     },
 
-    // 判断子路由是否激活
+    // 判断路由是否激活（父路由）
+    isRouteActive(route) {
+      if (!route.name) {
+        return false;
+      }
+      // 当前页在该菜单项对应的路由树下（含仅能通过 redirect/跳转进入的隐藏子路由）
+      if (this.isNameInMatched(route.name)) {
+        return true;
+      }
+      if (route.children && route.children.length > 0) {
+        return route.children.some(
+          child =>
+            child.name === this.$route.name || this.isNameInMatched(child.name)
+        );
+      }
+      return this.$route.name === route.name;
+    },
+
+    // 判断子路由是否激活（含该菜单项下更深层的子页面）
     isChildRouteActive(child) {
-      return this.$route.name === child.name;
+      if (!child.name) {
+        return false;
+      }
+      return (
+        this.$route.name === child.name || this.isNameInMatched(child.name)
+      );
     },
 
     // 自动展开包含当前路由的菜单
     autoExpandMenu(route) {
       this.menuRoutes.forEach(parentRoute => {
-        if (parentRoute.children && parentRoute.children.length > 0) {
-          const hasActiveChild = parentRoute.children.some(
-            child => child.name === route.name
+        if (!(parentRoute.children && parentRoute.children.length > 0)) {
+          return;
+        }
+        const activeUnderParent =
+          this.isNameInMatched(parentRoute.name) ||
+          parentRoute.children.some(
+            child =>
+              child.name === route.name || this.isNameInMatched(child.name)
           );
-          if (
-            hasActiveChild &&
-            !this.expandedMenus.includes(parentRoute.name)
-          ) {
-            this.expandedMenus.push(parentRoute.name);
-          }
+        if (
+          activeUnderParent &&
+          !this.expandedMenus.includes(parentRoute.name)
+        ) {
+          this.expandedMenus.push(parentRoute.name);
         }
       });
     },

@@ -256,7 +256,7 @@ export default {
     },
     handleViewDetail(row) {
       this.$router.push({
-        path: '/warehouse/material-warehouse-management/detail',
+        path: '/warehouse-manager/material-warehouse-management/detail',
         query: { id: row.id != null ? String(row.id) : '' }
       });
     },

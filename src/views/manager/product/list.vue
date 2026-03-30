@@ -98,6 +98,7 @@
 import { mapState } from 'vuex';
 import ProductDetailDrawer from './components/product-detail-drawer.vue';
 import ImportModal from '@/components/upload/import_file_modal.vue';
+import { adminPath } from '@/utils/adminRoutePrefix.js';
 
 export default {
   name: 'ProductList',
@@ -249,7 +250,10 @@ export default {
     },
     handleEdit(row) {
       // TODO: 编辑产品，如 this.$router.push('/manager/product-edit?id=' + row.id)
-      this.$router.push('/manager/product/add?id=' + row.id);
+      this.$router.push({
+        path: adminPath(this, '/product/add'),
+        query: { id: row.id }
+      });
     },
     handleDelete(row) {
       this.$confirm('确定要删除该产品吗？', '提示', {
@@ -280,7 +284,7 @@ export default {
         .catch(() => {});
     },
     handleAdd() {
-      this.$router.push('/manager/product/add');
+      this.$router.push(adminPath(this, '/product/add'));
     },
     handleImport() {
       this.$refs.importModal.init('产品导入', '/importProduct');

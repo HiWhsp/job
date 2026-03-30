@@ -201,6 +201,7 @@
 
 <script>
 import { mapState } from "vuex";
+import { adminPath } from "@/utils/adminRoutePrefix.js";
 
 /** 富文本是否视为空（去标签与空白后无有效字符） */
 function isQuillEmpty(html) {
@@ -823,7 +824,7 @@ export default {
         })
           .then(() => {
             this.$message.success("提交成功");
-            this.$router.push("/manager/internal-material/list");
+            this.$router.push(adminPath(this, "/internal-material/list"));
           })
           .catch(err => {
             this.$message.error((err && err.msg) ? err.msg : "提交失败");
@@ -831,7 +832,7 @@ export default {
       });
     },
     handleCancel() {
-      this.$router.push("/manager/internal-material/list");
+      this.$router.push(adminPath(this, "/internal-material/list"));
     }
   }
 };

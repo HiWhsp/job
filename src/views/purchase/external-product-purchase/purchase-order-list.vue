@@ -77,7 +77,7 @@
           <el-table-column label="客户名称" width="120" show-overflow-tooltip>
             <template slot-scope="{ row }">{{ rowDisplay(row, 'customerTitle') }}</template>
           </el-table-column>
-          <el-table-column label="订单时间" width="120" align="center">
+          <el-table-column label="订单时间" width="160" align="center">
             <template slot-scope="{ row }">{{ rowDisplay(row, 'staffOrderTime') }}</template>
           </el-table-column>
           <el-table-column label="采购金额" min-width="110" align="right">

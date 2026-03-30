@@ -40,6 +40,8 @@
 </template>
 
 <script>
+import { adminPath } from "@/utils/adminRoutePrefix.js";
+
 export default {
   name: "ExternalPackageAdd",
 
@@ -164,7 +166,7 @@ export default {
         })
           .then(() => {
             this.$message.success(this.editId ? "修改成功" : "新增成功");
-            this.$router.push("/manager/external-package/list");
+            this.$router.push(adminPath(this, "/external-package/list"));
           })
           .catch((err) => {
             this.$message.error(err && err.msg ? err.msg : "提交失败");
@@ -172,7 +174,7 @@ export default {
       });
     },
     handleCancel() {
-      this.$router.push("/manager/external-package/list");
+      this.$router.push(adminPath(this, "/external-package/list"));
     }
   }
 };

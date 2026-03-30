@@ -167,6 +167,7 @@
 import { mapState } from 'vuex';
 import axios from 'axios';
 import { UPLOAD_ROOT } from '@/config/env.js';
+import { adminPath } from '@/utils/adminRoutePrefix.js';
 
 export default {
   name: "ProductAdd",
@@ -700,13 +701,13 @@ export default {
         this.$api({ url: '/addProduct', method: 'post', data: params })
           .then(() => {
             this.$message.success(this.isEdit ? '保存成功' : '新增成功');
-            this.$router.push('/manager/product/list');
+            this.$router.push(adminPath(this, '/product/list'));
           })
           .catch(err => this.$message.error((err && err.msg) ? err.msg : '提交失败'));
       });
     },
     handleCancel() {
-      this.$router.push("/manager/product/list");
+      this.$router.push(adminPath(this, '/product/list'));
     },
     /** 级联收起时把焦点移出下拉层，避免 aria-hidden 与焦点冲突的控制台警告 */
     onCascaderVisibleChange(visible) {

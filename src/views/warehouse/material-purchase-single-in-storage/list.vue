@@ -213,13 +213,13 @@ export default {
     },
     handleViewDetail(row) {
       this.$router.push({
-        path: '/warehouse/material-purchase-single-in-storage/detail',
+        path: '/warehouse-manager/material-purchase-single-in-storage/detail',
         query: { id: row.id != null ? String(row.id) : '' }
       });
     },
     handleQcIn(row) {
       this.$router.push({
-        path: '/warehouse/material-purchase-single-in-storage/detail',
+        path: '/warehouse-manager/material-purchase-single-in-storage/detail',
         query: { id: row.id != null ? String(row.id) : '', focusQc: '1' }
       });
     }

@@ -283,6 +283,35 @@ export default {
                 return {};
             }
         },
+        /**
+         * 将 getCustomer / 详情里的 customerInfo 结构映射到页面 customer（解析 paymentJson、addressJson）
+         */
+        applyCustomerFromDetailPayload(data) {
+            if (!data || typeof data !== "object") return;
+            const payment = this._parseCustomerJson(data.paymentJson);
+            const address = this._parseCustomerJson(data.addressJson);
+            const t = data.territory;
+            const regionText =
+                t === 1 ? "国内" : t === 2 ? "国外" : t != null && t !== "" ? String(t) : "";
+            this.customer = {
+                ...this.customer,
+                customerNo: data.customerNo ?? "",
+                customerName: data.title ?? "",
+                region: regionText,
+                area: data.region ?? "",
+                attrA: data.attributeA ?? "",
+                attrB: data.attributeB ?? "",
+                contact: data.contact ?? "",
+                contactPhone: data.phone ?? "",
+                companyPhone: data.companyPhone ?? "",
+                accountName: payment.account ?? "",
+                accountNo: payment.code ?? "",
+                bank: payment.bank ?? "",
+                shippingAddress: address.address ?? "",
+                consignee: address.name ?? "",
+                consigneePhone: address.phone ?? ""
+            };
+        },
         loadCustomerDetail(userId) {
             if (!userId) return;
             this.$api({
@@ -292,27 +321,7 @@ export default {
             })
                 .then(res => {
                     if (!res || !res.data) return;
-                    const data = res.data;
-                    const payment = this._parseCustomerJson(data.paymentJson);
-                    const address = this._parseCustomerJson(data.addressJson);
-                    this.customer = {
-                        ...this.customer,
-                        customerNo: data.customerNo ?? "",
-                        customerName: data.title ?? "",
-                        region: data.territory === 1 ? "国内" : data.territory === 2 ? "国外" : (data.territory ?? ""),
-                        area: data.region ?? "",
-                        attrA: data.attributeA ?? "",
-                        attrB: data.attributeB ?? "",
-                        contact: data.contact ?? "",
-                        contactPhone: data.phone ?? "",
-                        companyPhone: data.companyPhone ?? "",
-                        accountName: payment.account ?? "",
-                        accountNo: payment.code ?? "",
-                        bank: payment.bank ?? "",
-                        shippingAddress: address.address ?? "",
-                        consignee: address.name ?? "",
-                        consigneePhone: address.phone ?? ""
-                    };
+                    this.applyCustomerFromDetailPayload(res.data);
                 })
                 .catch(() => { });
         },
@@ -338,10 +347,18 @@ export default {
                         pdfUrl: d.pdfUrl ?? ""
                     };
 
-                    // 客户信息：优先用客户详情接口（按 userId），同时保留 customerTitle 兜底
-                    this.customer.customerName = d.customerTitle || "";
-                    if (d.customerId != null && d.customerId !== "") {
-                        this.loadCustomerDetail(String(d.customerId));
+                    // 客户信息：优先用详情接口返回的 customerInfo（与 getCustomer 字段一致）
+                    let ci = d.customerInfo;
+                    if (typeof ci === "string" && ci.trim()) {
+                        ci = this._parseJson(ci);
+                    }
+                    if (ci != null && typeof ci === "object" && !Array.isArray(ci)) {
+                        this.applyCustomerFromDetailPayload(ci);
+                    } else {
+                        this.customer.customerName = d.customerTitle || "";
+                        if (d.customerId != null && d.customerId !== "") {
+                            this.loadCustomerDetail(String(d.customerId));
+                        }
                     }
 
                     // 产品列表

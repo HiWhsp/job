@@ -188,6 +188,7 @@
 
 <script>
 import AuditDialog from '../components/audit-dialog.vue';
+import { adminPath } from '@/utils/adminRoutePrefix.js';
 
 export default {
   name: 'OrderDeliveryApprovalList',
@@ -340,7 +341,7 @@ export default {
         return;
       }
       this.$router.push({
-        path: '/manager/order-delivery-approval/detail',
+        path: adminPath(this, '/order-delivery-approval/detail'),
         query: { id }
       });
     },
@@ -529,7 +530,7 @@ export default {
       this.$message.info('编辑：' + row.name);
     },
     handleAdd() {
-      this.$router.push('/manager/customer-add');
+      this.$router.push(adminPath(this, '/customer/add'));
     },
     handleImport() {
       // TODO: 客户导入

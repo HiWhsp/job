@@ -161,6 +161,7 @@
 </template>
 
 <script>
+import { adminPath } from "@/utils/adminRoutePrefix.js";
 
 export default {
     name: 'InquiryDataList',
@@ -335,7 +336,7 @@ export default {
             this.$message.info('编辑：' + row.name);
         },
         handleAdd() {
-            this.$router.push('/manager/customer-add');
+            this.$router.push(adminPath(this, '/customer/add'));
         },
         handleImport() {
             // TODO: 客户导入

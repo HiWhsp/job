@@ -130,6 +130,7 @@
 import ExternalPackageDetailDrawer from "./components/external-package-detail-drawer.vue";
 import DeleteDialog from "../components/delete-dialog.vue";
 import ImportModal from "@/components/upload/import_file_modal.vue";
+import { adminPath } from "@/utils/adminRoutePrefix.js";
 
 export default {
   name: "ExternalPackageList",
@@ -227,7 +228,10 @@ export default {
     handleEdit(row) {
       const id = row && row.id != null ? String(row.id) : "";
       if (!id) return;
-      this.$router.push(`/manager/external-package/add?id=${id}`);
+      this.$router.push({
+        path: adminPath(this, "/external-package/add"),
+        query: { id }
+      });
     },
     handleDelete(row) {
       this.rowToDelete = row;
@@ -253,7 +257,7 @@ export default {
     },
     handleAdd() {
       // TODO: 新增原料
-      this.$router.push('/manager/external-package/add');
+      this.$router.push(adminPath(this, "/external-package/add"));
     },
     handleImport() {
       this.$refs.importModal.init("客户外来包装导入", "/importForeignPack");

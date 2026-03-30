@@ -122,6 +122,7 @@
 import ExternalProductDetailDrawer from "./components/external-product-detail-drawer.vue";
 import DeleteDialog from "../components/delete-dialog.vue";
 import ImportModal from "@/components/upload/import_file_modal.vue";
+import { adminPath } from "@/utils/adminRoutePrefix.js";
 
 export default {
   name: "ExternalProductList",
@@ -219,7 +220,10 @@ export default {
     handleEdit(row) {
       const id = row && row.id != null ? String(row.id) : "";
       if (!id) return;
-      this.$router.push(`/manager/external-product/add?id=${id}`);
+      this.$router.push({
+        path: adminPath(this, "/external-product/add"),
+        query: { id }
+      });
     },
     handleDelete(row) {
       this.rowToDelete = row;
@@ -244,7 +248,7 @@ export default {
         });
     },
     handleAdd() {
-      this.$router.push("/manager/external-product/add");
+      this.$router.push(adminPath(this, "/external-product/add"));
     },
     handleImport() {
       this.$refs.importModal.init("外购产品导入", "/importForeignProduct");

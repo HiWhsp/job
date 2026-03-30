@@ -166,4 +166,29 @@ a {
 .el-table th:last-child {
 	text-align: center;
 }
+
+// 原生滚动条
+::-webkit-scrollbar {
+	width: 4px;
+	height: 4px;
+}
+::-webkit-scrollbar-thumb {
+	background: #ccc;
+	border-radius: 4px;
+}
+::-webkit-scrollbar-track {
+	background: #f1f1f1;
+}
+::-webkit-scrollbar-corner {
+	background: #f1f1f1;
+}
+::-webkit-scrollbar-track-piece {
+	background: #f1f1f1;
+}
+::-webkit-scrollbar-track-piece {
+	background: #f1f1f1;
+}
+::-webkit-scrollbar-track-piece {
+	background: #f1f1f1;
+}
 </style>

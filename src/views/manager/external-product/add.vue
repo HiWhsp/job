@@ -22,6 +22,8 @@
 </template>
 
 <script>
+import { adminPath } from "@/utils/adminRoutePrefix.js";
+
 export default {
   name: "ExternalProductAdd",
 
@@ -86,7 +88,7 @@ export default {
         })
           .then(() => {
             this.$message.success(this.editId ? "修改成功" : "新增成功");
-            this.$router.push("/manager/external-product/list");
+            this.$router.push(adminPath(this, "/external-product/list"));
           })
           .catch((err) => {
             this.$message.error(err && err.msg ? err.msg : "提交失败");
@@ -94,7 +96,7 @@ export default {
       });
     },
     handleCancel() {
-      this.$router.push("/manager/external-product/list");
+      this.$router.push(adminPath(this, "/external-product/list"));
     }
   }
 };

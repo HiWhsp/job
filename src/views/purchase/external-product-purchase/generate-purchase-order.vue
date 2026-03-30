@@ -265,6 +265,7 @@ export default {
             const unitPrice = it && it.price != null ? Number(it.price) : 0;
             const quantity = it && it.num != null ? Number(it.num) : 0;
             return {
+              id: it && it.id != null ? String(it.id) : "",
               foreignProductId: it && it.foreignProductId != null ? String(it.foreignProductId) : (info.id != null ? String(info.id) : ""),
               productName: info.title || "",
               spec: info.keyVals || "",

@@ -63,8 +63,8 @@
           <el-table-column prop="orderTime" label="订单时间" align="center" />
           <el-table-column prop="status" label="状态" align="center">
             <template slot-scope="{ row }">
-              <el-tag v-if="String(row.orderStatus) === '4'" type="info" size="small" effect="plain">待生成采购单</el-tag>
-              <el-tag v-else-if="String(row.orderStatus) === '7'" type="success" size="small" effect="plain">已生成采购单</el-tag>
+              <el-tag v-if="String(row.isPurchaseMaterialPack) === '0'" type="info" size="small" effect="plain">待生成采购单</el-tag>
+              <el-tag v-else-if="String(row.isPurchaseMaterialPack) === '1'" type="success" size="small" effect="plain">已生成采购单</el-tag>
               <span v-else>—</span>
             </template>
           </el-table-column>
@@ -73,7 +73,7 @@
             <template slot-scope="{ row }">
               <span class="row-acts">
                 <span class="row-act" @click="handleView(row)">查看详情</span>
-                <span v-if="String(row.orderStatus) === '4'" class="row-act" @click="handleGenerate(row)">生成采购单</span>
+                <span v-if="String(row.isPurchaseMaterialPack) === '0'" class="row-act" @click="handleGenerate(row)">生成采购单</span>
               </span>
             </template>
           </el-table-column>
@@ -151,7 +151,7 @@
 const LIST_API = "/getStaffOrderList";
 const ADD_API = "/addPurchaseMaterialPackOrder";
 /** 原料下拉：与原料管理列表同源 POST /getMaterialList */
-const MATERIAL_LIST_API = "/getMaterialList";
+const MATERIAL_LIST_API = "/getMaterialInventoryList";
 
 export default {
   name: "ExternalPackageRequisitionList",
@@ -291,7 +291,8 @@ export default {
           page: "1",
           limit: "500",
           keyword: "",
-          cateld: ""
+          cateld: "",
+          materialType: 2
         }
       })
         .then(res => {
@@ -330,7 +331,7 @@ export default {
         if (!this.generateOrderRow) return;
         const row = this.generateOrderRow;
         const id = row && row.id != null ? String(row.id) : "";
-        const staffOrderId = row && row.orderNo != null ? String(row.orderNo) : "";
+        const staffOrderId = row && row.id != null ? String(row.id) : "";
         if (!staffOrderId) {
           this.$message.warning("缺少业务订单id");
           return;
@@ -344,7 +345,7 @@ export default {
 
         const data = {
           staffOrderId,
-          materialId: String(this.generateOrderForm.materialId || ""),
+          inventoryId: String(this.generateOrderForm.materialId || ""),
           num,
           expectedTime,
           price: String(price.toFixed(2))

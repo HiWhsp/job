@@ -238,7 +238,7 @@ export default {
       this.$message.info('导出');
     },
     handleAdd() {
-      this.$router.push('/warehouse/material-out-management/add');
+      this.$router.push('/warehouse-manager/material-out-management/add');
     },
     handleViewDetail(row) {
       const id = row.id != null ? String(row.id) : '';

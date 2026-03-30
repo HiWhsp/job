@@ -41,8 +41,8 @@
           <el-table-column prop="orderAmount" label="订单金额" align="center" />
           <el-table-column prop="status" label="状态" align="center">
             <template slot-scope="{ row }">
-              <el-tag v-if="String(row.orderStatus) === '4'" type="info" size="small" effect="plain">待生成采购单</el-tag>
-              <el-tag v-else-if="String(row.orderStatus) === '7'" type="success" size="small"
+              <el-tag v-if="String(row.isPurchaseForeignProduct) === '0'" type="info" size="small" effect="plain">待生成采购单</el-tag>
+              <el-tag v-else-if="String(row.isPurchaseForeignProduct) === '1'" type="success" size="small"
                 effect="plain">已生成采购单</el-tag>
               <span v-else>—</span>
             </template>
@@ -52,7 +52,7 @@
             <template slot-scope="{ row }">
               <span class="row-acts">
                 <span class="row-act" @click="handleView(row)">查看详情</span>
-                <span v-if="String(row.orderStatus) === '4'" class="row-act" @click="handleGenerate(row)">生成采购单</span>
+                <span v-if="String(row.isPurchaseForeignProduct) === '0'" class="row-act" @click="handleGenerate(row)">生成采购单</span>
               </span>
             </template>
           </el-table-column>

@@ -158,6 +158,7 @@
 import { mapState } from "vuex";
 import axios from "axios";
 import { UPLOAD_ROOT } from "@/config/env.js";
+import { adminPath } from "@/utils/adminRoutePrefix.js";
 
 export default {
   name: "CustomerAdd",
@@ -425,7 +426,7 @@ export default {
         })
           .then(() => {
             this.$message.success(this.editId ? "保存成功" : "新增成功");
-            this.$router.push("/manager/customer");
+            this.$router.push(adminPath(this, "/customer"));
           })
           .catch(err => {
             this.$message.error(err && err.msg ? err.msg : "提交失败");
@@ -433,7 +434,7 @@ export default {
       });
     },
     handleCancel() {
-      this.$router.push("/manager/customer");
+      this.$router.push(adminPath(this, "/customer"));
     }
   }
 };

@@ -176,6 +176,7 @@ import { mapState } from "vuex";
 import DeleteDialog from "../components/delete-dialog.vue";
 import DetailDrawer from "../components/detail-drawer.vue";
 import ImportModal from "@/components/upload/import_file_modal.vue";
+import { adminPath } from "@/utils/adminRoutePrefix.js";
 export default {
   name: "Customer",
 
@@ -376,7 +377,10 @@ export default {
       };
     },
     handleEdit(row) {
-      this.$router.push({ path: "/manager/customer/add", query: { id: row.id } });
+      this.$router.push({
+        path: adminPath(this, "/customer/add"),
+        query: { id: row.id }
+      });
     },
     handleDelete(row) {
       this.rowToDelete = row;
@@ -401,7 +405,7 @@ export default {
         });
     },
     handleAdd() {
-      this.$router.push("/manager/customer/add");
+      this.$router.push(adminPath(this, "/customer/add"));
     },
     handleImport() {
       this.$refs.importModal.init("客户导入", "/importCustomer");
