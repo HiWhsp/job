@@ -956,32 +956,38 @@ export default {
       });
     },
 
-    // 加入购物车
+    // 加入购物车：打开与详情页 ctx-top 同风格的规格弹窗
     addToCart(item) {
-      if (typeof this.mix_get_login_status === "function") {
-        if (!this.mix_get_login_status()) return;
-      }
+      // if (typeof this.mix_get_login_status === "function") {
+      //   if (!this.mix_get_login_status()) return;
+      // }
       const inventoryId = item.inventoryId || item.id;
       if (!inventoryId) {
         alertErr("商品信息不完整，无法加入购物车");
         return;
       }
-      this.$api({
-        url: "/service.php",
-        method: "get",
-        data: {
-          action: "gouwuche_add",
-          inventoryId,
-          num: 1
-        }
-      }).then(res => {
-        if (res.code == 200) {
-          if (this.$store && this.$store.dispatch) {
-            this.$store.dispatch("query_cart");
-          }
-          alertSucc("Added to cart");
-        }
-      });
+      // if (item.isThird == 1) {
+      //   if (this.vuex_user.userType != 1) {
+      //     this.$refs.product_renzheng_tip.init();
+      //     return;
+      //   }
+      //   if (this.vuex_user.userType == 1) {
+      //     if (
+      //       !(
+      //         this.vuex_user.license2 ||
+      //         this.vuex_user.license3 ||
+      //         this.vuex_user.license4 ||
+      //         this.vuex_user.license6
+      //       )
+      //     ) {
+      //       this.$refs.product_renzheng_tip.init();
+      //       return;
+      //     }
+      //   }
+      // }
+      if (this.$refs.product_quick_buy_modal) {
+        this.$refs.product_quick_buy_modal.init(inventoryId);
+      }
     }
   }
 };

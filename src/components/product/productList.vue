@@ -163,31 +163,35 @@ export default {
       this.$emit("toggle_check", item);
     },
 
-    openQuickBuy(item) {
-      console.log('this.vuex_user.userType',this.vuex_user.userType)
-      if (item.isThird == 1) {
-        if (this.vuex_user.userType != 1) {
-          this.$refs.product_renzheng_tip.init();
-          return
-        } else if (this.vuex_user.userType == 1) {
-          if (this.vuex_user.license2 || this.vuex_user.license3 || this.vuex_user.license4 | this.vuex_user.license6) {
-            console.log('可以购买三类')
-          } else {
-            this.$refs.product_renzheng_tip.init();
-            return
-          }
-        }
-      }
-
-
-
-
-
-
+    /** 三类器械等校验通过后打开与详情 ctx-top 一致的加购弹窗 */
+    tryOpenQuickBuyModal(item) {
+      // if (item.isThird == 1) {
+      //   if (this.vuex_user.userType != 1) {
+      //     this.$refs.product_renzheng_tip.init();
+      //     return;
+      //   }
+      //   if (this.vuex_user.userType == 1) {
+      //     if (
+      //       !(
+      //         this.vuex_user.license2 ||
+      //         this.vuex_user.license3 ||
+      //         this.vuex_user.license4 ||
+      //         this.vuex_user.license6
+      //       )
+      //     ) {
+      //       this.$refs.product_renzheng_tip.init();
+      //       return;
+      //     }
+      //   }
+      // }
       const inventoryId = item.inventoryId || item.id;
       if (inventoryId && this.$refs.product_quick_buy_modal) {
         this.$refs.product_quick_buy_modal.init(inventoryId);
       }
+    },
+
+    openQuickBuy(item) {
+      this.tryOpenQuickBuyModal(item);
     },
 
     // 关闭企业用户认证弹窗
@@ -230,7 +234,7 @@ export default {
       });
     },
 
-    // 加入购物车
+    // 加入购物车：打开与详情页 ctx-top 同风格的规格弹窗
     addToCart(item) {
       if (typeof this.mix_get_login_status === "function") {
         if (!this.mix_get_login_status()) return;
@@ -240,22 +244,7 @@ export default {
         alertErr("商品信息不完整，无法加入购物车");
         return;
       }
-      this.$api({
-        url: "/service.php",
-        method: "get",
-        data: {
-          action: "gouwuche_add",
-          inventoryId,
-          num: 1
-        }
-      }).then(res => {
-        if (res.code == 200) {
-          if (this.$store && this.$store.dispatch) {
-            this.$store.dispatch("query_cart");
-          }
-          alertSucc("Added to cart");
-        }
-      });
+      this.tryOpenQuickBuyModal(item);
     },
   },
 };

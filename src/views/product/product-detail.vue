@@ -522,7 +522,23 @@ export default {
         }
       }
 
-      return option;
+      const channelIdArr = this.info.channelIdArr;
+      let prefix = [];
+      if (Array.isArray(channelIdArr) && channelIdArr.length) {
+        prefix = channelIdArr.map(row => {
+          const flat =
+            this.vuex_category_flat.find(v => v.id == row.id) || null;
+          if (flat) {
+            return flat;
+          }
+          return {
+            id: row.id,
+            title: row.title || ""
+          };
+        });
+      }
+
+      return [...prefix, ...option];
     },
 
     //预览信息

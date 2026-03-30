@@ -555,7 +555,7 @@
               </div>
               <div class="price-item total">
                 <span class="price-label">Total Amount</span>
-                <span class="price-value">{{ vuex_huobi }}{{ pay_info.orderPrice || 0 }}</span>
+                <span class="price-value">{{ vuex_huobi }}{{ Coupon_checked ? Number(pay_info.orderPrice * 0.8).toFixed(2) : (pay_info.orderPrice) || 0 }}</span>
               </div>
 
               <div class="checkbox-group">
@@ -604,7 +604,7 @@
       <span>Confirm payment for the current order?</span>
       <span slot="footer" class="dialog-footer">
         <button class="btn-ripple btn-cancel" @click="confirm_tip = false">Cancel</button>
-        <button class="btn-ripple btn-confirm" @click="do_confirm_submit()">Confirm payment</button>
+        <button class="btn-ripple btn-confirm" @click="do_confirm_submit()">CONFIRM PAYMENT</button>
       </span>
     </el-dialog>
 
@@ -1309,6 +1309,7 @@ export default {
         remark: "", //备注
         payType: this.paymentType == "online" ? 1 : 2,
         receiveType: this.paymentType == "online" ? 1 : 2,
+        deliveryDiscount: this.Coupon_checked ? 1 : 0,
         ...this.fapiao_info
       };
       return params;

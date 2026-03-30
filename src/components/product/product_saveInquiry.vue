@@ -193,6 +193,7 @@
           </div>
           <div class="contact-service">
             <div class="flex-center">
+              <img class="save-phone-icon" src="@img/product/save-phone.png" alt="">
               <span>CONTACT US</span>
               <span class="phone-number">400-888-888</span>
             </div>
@@ -849,6 +850,11 @@ export default {
 
   .footer-content {
     .contact-service {
+      .save-phone-icon {
+        width: 26px;
+        height: 26px;
+        margin-right: 5px;
+      }
       width: 100%;
       margin-top: 40px;
       display: flex;

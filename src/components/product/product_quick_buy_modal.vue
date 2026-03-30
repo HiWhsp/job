@@ -1,143 +1,195 @@
 <template>
   <div class="modal-container">
-    <el-dialog :visible.sync="show_modal" width="1400px" custom-class="quick-buy-modal" :close-on-click-modal="false"
-      :before-close="onBeforeClose" v-loading="loading" :title="info.title">
-      <div class="modal-inner">
-        <div class="left-pic">
-          <!-- <div class="pic-box">
-            <img :src="(info.images && info.images[0]) || info.thumb" alt="" />
-          </div>
-          <div class="thumb-list" v-if="info.images && info.images.length">
-            <div
-              class="thumb-item"
-              v-for="(img, idx) in info.images"
-              :key="idx"
-              @click="thumbIndex = idx"
-            >
-              <img :src="img" />
-            </div>
-          </div> -->
-
-          <detailLunbo :imageList="detailImages" />
-        </div>
-        <div class="right-info">
-          <div class="detail-title flex">
-            <div class="title-text flex">
-              {{ info.title }}
-              <img v-if="info.isThird == 1" src="@img/product/sanlei.png" alt="" />
+    <el-dialog
+      :visible.sync="show_modal"
+      width="1695px"
+      custom-class="quick-buy-modal"
+      :close-on-click-modal="false"
+      :before-close="onBeforeClose"
+      v-loading="loading"
+      append-to-body
+      :show-close="true"
+    >
+      <span slot="title" class="qb-dialog-title-placeholder"></span>
+      <div class="main-content qb-main-content">
+        <div class="ctx-top">
+          <div class="ctx-left">
+            <div class="preview-wrap">
+              <detailLunbo :imageList="detailImages" />
             </div>
           </div>
-          <div class="detail-desc">商品编号：{{ info.productNo || "--" }}</div>
-
-          <div class="sale-info">
-            <div class="list">
-              <div class="item price-item">
-                <div class="label">价格</div>
-                <div class="vals vals-price">
-                  <div class="val">￥{{ price_range }}</div>
+          <div class="ctx-right">
+            <div class="detail-title flex">
+              <div class="title-text flex">
+                {{ info.title }}
+              </div>
+            </div>
+            <div class="detail-desc">
+              <div class="btn">FDA</div>
+              <div class="btn">CE</div>
+            </div>
+            <div class="sale-info">
+              <div class="list">
+                <div class="item price-item">
+                  <div class="vals vals-price">
+                    <div class="val">{{ vuex_huobi }}{{ headerPriceSale }}</div>
+                  </div>
+                  <span>/{{ info.unit || "pack" }}</span>
+                  <div class="del" v-if="headerPriceMarket">{{ vuex_huobi }}{{ headerPriceMarket }}</div>
+                </div>
+                <div class="item">
+                  <span class="date">5-7 days delivery!</span>
                 </div>
               </div>
             </div>
-          </div>
 
-          <div class="info-texts">
-            <div class="text-item">
-              <div class="label">总销量</div>
-              <div class="text">{{ info.orders }}</div>
-            </div>
-          </div>
-
-          <div class="other-box">
-            <div class="sku-box column-flex-center">
-              <div class="flex-between" style="width: 100%">
-                <div class="sku-label">选择规格</div>
-                <!-- <div class="sku-tip">量大优惠，请关注以下单价变化</div> -->
-              </div>
-              <div class="sku-list">
-                <div class="sku-item flex-between" :class="{ active: getSkuQuantity(item) > 0 }"
-                  v-for="(item, index) in sku_list" :key="index" @click="clickSkuItem(item)">
-                  <div class="sku-item-text">
-                    <div class="text">
-                       <el-image style="width: 40px; height: 40px":src="item.image" :preview-src-list="[item.image]"></el-image>
-                      <span>
-                        {{ item.keyVals }}
-                      </span>
-                    </div>
-                    <div class="tier-pricing">
-                  
-                      <span v-for="(cit, cidx) in item.priceConfig" :key="cidx" style="margin-right: 8px">
-                        
-                        <template v-if="cit.min && cit.max">
-                          {{ cit.min }}-{{ cit.max + info.unit }}¥{{
-                            cit.price
-                          }}
-                          </template>
-                        <template v-else-if="cit.price">
-                          ≥{{ cit.min + info.unit }}¥{{ cit.price }}
-                        </template>
-                      </span>
-                    </div>
-                  </div>
-
-                  <div class="sku-details flex-center">
-                    <div class="price-info">
-                      <div class="current-price">
-                        ¥{{ getCurrentPrice(item) }}/{{ info.unit }}
+            <div class="other-box">
+              <div class="sku-box column-flex-center">
+                <template v-if="skuLists && skuLists.length > 0">
+                  <div class="sku-selectors">
+                    <div
+                      class="sku-selector-group"
+                      v-for="(skuGroup, groupIndex) in skuLists"
+                      :key="groupIndex"
+                    >
+                      <div class="sku-selector-label">
+                        <span class="sku-selector-label-text">{{ skuGroup.key }}:</span>
+                        {{ getSelectedOptionTitle(skuGroup) }}
                       </div>
-                    </div>
-                    <div class="stock-info">库存{{ item.kucun }}</div>
-                    <div class="quantity-control">
-                      <div class="quantity-input">
-                        <div class="btn minus" :disabled="getSkuQuantity(item) <= 0"
-                          @click.stop="decreaseSkuQuantity(item)">
-                          <img src="@img/product/num-minus.png" alt="" />
-                        </div>
-                        <input type="number" v-model="sku_quantities[item.inventoryId]" @click.stop min="0"
-                          :max="item.kucun" @blur="onBlurSkuQuantity(item)"
-                          @input="updateSkuQuantity(item, $event.target.value)" />
-                        <div class="btn plus" :disabled="getSkuQuantity(item) >= item.kucun"
-                          @click.stop="increaseSkuQuantity(item)">
-                          <img src="@img/product/num-plus.png" alt="" />
+                      <div class="sku-selector-options">
+                        <div
+                          v-for="child in skuGroup.child"
+                          :key="child.id"
+                          class="sku-option-item"
+                          :class="{
+                            'sku-option-color': child.thumb,
+                            'sku-option-button': !child.thumb,
+                            active: isOptionSelected(skuGroup.id, child.id),
+                            disabled: !isOptionAvailable(skuGroup.id, child.id)
+                          }"
+                          @click="selectSkuOption(skuGroup.id, child.id)"
+                        >
+                          <el-image v-if="child.thumb" :src="child.thumb" class="color-image"></el-image>
+                          <span v-else>{{ child.title }}</span>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </div>
-            </div>
-            <div class="order-summary">
-              <div class="flex-center box">
-                <div class="summary-item">
-                  已选 <span>{{ orderSummary.selectedItems }}</span>款<span>{{ orderSummary.totalQuantity }}</span>件
-                </div>
-                <div class="summary-item">
-                  实付金额<span>¥{{ orderSummary.finalAmount }}</span>
-                </div>
-                <div class="summary-item" v-if="orderSummary.discount > 0">
-                  <div style="font-weight: 400">
-                    优惠¥{{ orderSummary.discount }}
+                </template>
+                <template v-else>
+                  <div class="sku-list">
+                    <div
+                      class="sku-item"
+                      v-for="(item, index) in sku_list"
+                      :key="index"
+                      @click="selectSku(item)"
+                    >
+                      <div class="sku-item-text">
+                        <div class="text">
+                          <div
+                            class="sku-item-image"
+                            :class="{ active: selectedSkuId === item.inventoryId }"
+                          >
+                            <el-image :src="item.image"></el-image>
+                          </div>
+                          <span></span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </template>
+                <div class="sku-details-box">
+                  <div v-if="currentSelectedInventory" class="sku-details">
+                    <div class="operation-box">
+                      <div class="operation-item">
+                        <div class="price-info" v-if="!info.seckillInfo">
+                          <div class="price-info-text">Quantity:</div>
+                          <div
+                            class="price-tiers"
+                            v-if="
+                              currentSelectedInventory.priceConfig &&
+                              currentSelectedInventory.priceConfig.length > 0
+                            "
+                          >
+                            <span
+                              v-for="(tier, tidx) in formatPriceConfig(currentSelectedInventory.priceConfig)"
+                              :key="tidx"
+                              class="price-tier-item"
+                            >{{ tier }}</span>
+                          </div>
+                          <div class="current-price" v-else>
+                            {{ vuex_huobi }}{{ getCurrentPrice(currentSelectedInventory) }}/{{
+                              info.unit || "pack"
+                            }}
+                          </div>
+                        </div>
+                        <div class="quantity-control">
+                          <div class="quantity-input">
+                            <div
+                              class="btn minus"
+                              :disabled="getSkuQuantity(currentSelectedInventory) <= 0"
+                              @click.stop="decreaseSkuQuantity(currentSelectedInventory)"
+                            >
+                              <img src="@img/product/num-minus.png" alt="" />
+                            </div>
+                            <input
+                              type="number"
+                              v-model="sku_quantities[currentSelectedInventory.inventoryId]"
+                              @click.stop
+                              min="0"
+                              :max="currentSelectedInventory.kucun"
+                              @blur="onBlurSkuQuantity(currentSelectedInventory)"
+                              @input="updateSkuQuantity(currentSelectedInventory, $event.target.value)"
+                            />
+                            <div
+                              class="btn plus"
+                              :disabled="getSkuQuantity(currentSelectedInventory) >= currentSelectedInventory.kucun"
+                              @click.stop="increaseSkuQuantity(currentSelectedInventory)"
+                            >
+                              <img src="@img/product/num-plus.png" alt="" />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="operation-item">
+                        <div class="operation-item-tip">
+                          Increased quantity with lower unit price, pay attention on the price change.
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              <!-- <button class="contact-service" @click="openInquiryModal">
-                  <img src="@img/product/chat.png" alt="" />
-                  量大可联系客服
-                </button> -->
-            </div>
-            <div class="btn-box">
-              <div class="left-buttons">
-                <button class="btn-ripple flex-center btn-buy" @click="do_pay_now()">
-                  <img src="@img/product/detail-buy.png" alt="" class="cart" />
-                  立即购买
-                </button>
-                <button
-                  class="btn-ripple flex-center btn-add-cart"
-                  @click="do_add_cart()"
-                >
-                  <img src="@img/product/detail-cart.png" alt="" class="cart" />
-                  加入购物车
-                </button>
+              <div class="btn-box flex">
+                <div class="order-summary">
+                  <div class="flex-center box">
+                    <div class="summary-item">
+                      Selected
+                      <span>{{ orderSummary.selectedItems }}</span> items
+                      <span>{{ orderSummary.totalQuantity }}</span>
+                      {{ info.unit || "pack" }}
+                    </div>
+                    <div class="summary-item">
+                      Actual amount
+                      <span>{{ vuex_huobi }}{{ orderSummary.finalAmount }}</span>
+                    </div>
+                    <div class="summary-item" v-if="orderSummary.discount > 0">
+                      Discount:
+                      <span>{{ vuex_huobi }}{{ orderSummary.discount }}</span>
+                    </div>
+                  </div>
+                  <div class="left-buttons2">
+                    <!-- <button class="btn-ripple flex-center btn-buy" @click="do_pay_now()">
+                      <img src="@img/product/detail-buy.png" alt="" class="cart" />
+                      SHOP NOW
+                    </button> -->
+                    <button class="btn-ripple flex-center btn-buy" @click="do_add_cart()">
+                      <img src="@img/product/detail-cart.png" alt="" class="cart" />
+                      ADD TO CART
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -145,13 +197,13 @@
       </div>
     </el-dialog>
     <product_add_cart_success_modal ref="product_add_cart_success_modal" />
-
   </div>
 </template>
 
 <script>
 import detailLunbo from "@/components/detail/detailLunbo.vue";
 import product_add_cart_success_modal from "@/components/product/product_add_cart_success_modal.vue";
+import { mapState } from "vuex";
 
 export default {
   name: "product-quick-buy-modal",
@@ -166,6 +218,10 @@ export default {
       selected_num: 0,
       thumbIndex: 0,
       detailImages: [],
+      skuLists: [],
+      selectedSkuOptions: {},
+      selectedSkuId: null,
+      sku_select: {},
     };
   },
   components: {
@@ -174,26 +230,53 @@ export default {
 
   },
   computed: {
-    price_range() {
-      if (
-        !this.info.priceSale &&
-        !this.info.priceSale2 &&
-        !this.info.priceSale3
-      ) {
-        return this.info.priceSale || this.info.priceMarket || 0;
+    ...mapState(["vuex_huobi"]),
+    currentSelectedInventory() {
+      if (!this.skuLists || this.skuLists.length === 0) {
+        return (
+          this.sku_list.find((item) => item.inventoryId === this.selectedSkuId) ||
+          null
+        );
       }
-      const prices = [
-        this.info.priceSale,
-        this.info.priceSale2,
-        this.info.priceSale3,
-      ]
-        .filter((v) => v)
-        .map((v) => Number(v));
-      if (!prices.length) return 0;
-      return `${Math.min.apply(null, prices)}.00 ~ ${Math.max.apply(
-        null,
-        prices
-      )}.00`;
+      const selectedIds = this.getSelectedOptionIds()
+        .map((id) => parseInt(id, 10))
+        .filter((id) => !Number.isNaN(id));
+      if (selectedIds.length === 0) {
+        return null;
+      }
+      const keyIdsStr = selectedIds.sort((a, b) => a - b).join("-");
+      const matchedInventory = this.sku_list.find((item) => {
+        if (!item.keyIds) return false;
+        const itemKeyIds = item.keyIds
+          .split("-")
+          .map((id) => parseInt(id, 10))
+          .sort((a, b) => a - b)
+          .join("-");
+        return itemKeyIds === keyIdsStr;
+      });
+      return matchedInventory || null;
+    },
+    headerPriceSale() {
+      const inv = this.currentSelectedInventory;
+      if (inv) {
+        return this.getCurrentPrice(inv);
+      }
+      const picked = this.sku_list.find((row) => this.getSkuQuantity(row) > 0);
+      if (picked) {
+        return this.getCurrentPrice(picked);
+      }
+      return this.info.priceSale || 0;
+    },
+    headerPriceMarket() {
+      const inv = this.currentSelectedInventory;
+      if (inv) {
+        return inv.priceMarket || this.info.priceMarket || "";
+      }
+      const picked = this.sku_list.find((row) => this.getSkuQuantity(row) > 0);
+      if (picked) {
+        return picked.priceMarket || this.info.priceMarket || "";
+      }
+      return this.info.priceMarket || "";
     },
     orderSummary() {
       let selectedItems = 0;
@@ -209,11 +292,11 @@ export default {
 
           const price = this.getCurrentPrice(item);
           finalAmount += qty * price;
-          if (item.priceConfig.length > 0) {
-            const idx = item.priceConfig.findIndex((it) => it.price == price);
-            console.log(idx, "idx");
+          const pcfg = item.priceConfig || [];
+          if (pcfg.length > 0) {
+            const idx = pcfg.findIndex((it) => it.price == price);
             if (idx > 0) {
-              discount += (item.priceConfig[0].price - price) * qty;
+              discount += (pcfg[0].price - price) * qty;
             }
           }
         }
@@ -235,13 +318,17 @@ export default {
     },
     onBeforeClose() {
       this.show_modal = false;
-      this.id= ""
-      this.info={}
-      this.sku_list= []
-      this.sku_quantities= {}
-      this.selected_num=0
-      this.thumbIndex= 0
-      this.detailImages=[]
+      this.id = "";
+      this.info = {};
+      this.sku_list = [];
+      this.sku_quantities = {};
+      this.selected_num = 0;
+      this.thumbIndex = 0;
+      this.detailImages = [];
+      this.skuLists = [];
+      this.selectedSkuOptions = {};
+      this.selectedSkuId = null;
+      this.sku_select = {};
     },
     openInquiryModal() {
       // 弹窗内占位：与详情页行为一致可后续接入咨询组件
@@ -257,7 +344,7 @@ export default {
         if (res.code == 200) {
           const data = res.data || {};
           this.info = data || {};
-          this.detailImages = data.images.map((v, i) => ({
+          this.detailImages = (data.images || []).map((v, i) => ({
             index: i,
             image: v,
           }));
@@ -266,27 +353,216 @@ export default {
       });
     },
     set_sku(data) {
+      if (data.skuLists && Array.isArray(data.skuLists)) {
+        this.skuLists = data.skuLists;
+        this.selectedSkuOptions = {};
+        this.skuLists.forEach((skuGroup) => {
+          const selectedOption =
+            skuGroup.child.find((child) => child.is_selected === 1) ||
+            (skuGroup.child.length > 0 ? skuGroup.child[0] : null);
+          if (selectedOption) {
+            this.$set(this.selectedSkuOptions, skuGroup.id, selectedOption.id);
+          }
+        });
+      } else {
+        this.skuLists = [];
+      }
+
       let sku_list = [];
       if (data.inventorys && data.inventorys.length) {
-        sku_list = data.inventorys.map((v) => ({
-          ...v,
-          priceConfig: data.seckillInfo ? [] : v.priceConfig,
-          keyVals: v.keyVals,
-          kucun: v.kucun,
-        }));
+        data.inventorys.forEach((v) => {
+          sku_list.push({
+            ...v,
+            priceConfig:
+              data.seckillInfo || (v.priceConfig[0] || {}).price == ""
+                ? []
+                : v.priceConfig,
+            kucun: +v.kucun,
+            key_vals: v.key_vals,
+            keyVals: v.keyVals || v.key_vals,
+          });
+        });
+      } else {
+        sku_list = [
+          {
+            status: this.info.product_status,
+            image: (this.info.images && this.info.images[0]) || "",
+            inventoryId: this.info.inventoryId,
+            key_vals: this.info.key_vals == "无" ? "默认" : this.info.key_vals,
+            keyVals: this.info.key_vals == "无" ? "默认" : this.info.key_vals,
+            kucun: +this.info.kucun,
+            priceMarket: this.info.priceMarket,
+            priceSale: this.info.priceSale,
+            priceSale2: this.info.priceSale2,
+            priceSale3: this.info.priceSale3,
+            nums1: this.info.nums1,
+            nums2: this.info.nums2,
+            keyIds: this.info.keyIds,
+          },
+        ];
       }
+
+      if (sku_list.length == 1) {
+        this.sku_select = sku_list[0];
+        this.selectedSkuId = sku_list[0].inventoryId;
+      } else {
+        this.sku_select =
+          sku_list.find((v) => v.inventoryId == this.id) || {};
+        if (this.sku_select.inventoryId) {
+          this.selectedSkuId = this.sku_select.inventoryId;
+        } else {
+          const firstAvailable = sku_list.find((v) => v.kucun > 0);
+          if (firstAvailable) {
+            this.selectedSkuId = firstAvailable.inventoryId;
+          } else if (sku_list.length > 0) {
+            this.selectedSkuId = sku_list[0].inventoryId;
+          }
+        }
+      }
+
       this.sku_list = sku_list;
       this.sku_quantities = {};
       sku_list.forEach((item) => {
         this.$set(this.sku_quantities, item.inventoryId, 0);
       });
-      this.updateTotalQuantity();
+
+      if (this.skuLists.length) {
+        this.$nextTick(() => {
+          const openInv = sku_list.find(
+            (v) => String(v.inventoryId) === String(this.id)
+          );
+          if (openInv && openInv.keyIds) {
+            const parts = openInv.keyIds
+              .split("-")
+              .filter(Boolean)
+              .map((x) => parseInt(x, 10));
+            this.skuLists.forEach((g) => {
+              const child = g.child.find((c) => parts.includes(c.id));
+              if (child) {
+                this.$set(this.selectedSkuOptions, g.id, child.id);
+              }
+            });
+          }
+          const matched = this.currentSelectedInventory;
+          if (matched) {
+            this.selectedSkuId = matched.inventoryId;
+            this.sku_select = matched;
+            if (this.sku_quantities[matched.inventoryId] === undefined) {
+              this.$set(this.sku_quantities, matched.inventoryId, 0);
+            }
+          }
+          this.updateTotalQuantity();
+        });
+      } else {
+        this.updateTotalQuantity();
+      }
     },
     getSkuQuantity(item) {
+      if (!item || item.inventoryId == null) {
+        return 0;
+      }
       if (!this.sku_quantities[item.inventoryId]) {
         return 0;
       }
-      return parseInt(this.sku_quantities[item.inventoryId]) || 0;
+      return parseInt(this.sku_quantities[item.inventoryId], 10) || 0;
+    },
+    selectSku(item) {
+      if (this.selectedSkuId === item.inventoryId) {
+        this.selectedSkuId = null;
+      } else {
+        this.selectedSkuId = item.inventoryId;
+      }
+    },
+    selectSkuOption(groupId, optionId) {
+      if (!this.isOptionAvailable(groupId, optionId)) {
+        return;
+      }
+      this.$set(this.selectedSkuOptions, groupId, optionId);
+      this.$nextTick(() => {
+        const matchedInventory = this.currentSelectedInventory;
+        if (matchedInventory) {
+          this.selectedSkuId = matchedInventory.inventoryId;
+          this.sku_select = matchedInventory;
+          if (this.sku_quantities[matchedInventory.inventoryId] === undefined) {
+            this.$set(this.sku_quantities, matchedInventory.inventoryId, 0);
+          }
+        } else {
+          this.selectedSkuId = null;
+          this.sku_select = {};
+        }
+      });
+    },
+    isOptionSelected(groupId, optionId) {
+      return this.selectedSkuOptions[groupId] === optionId;
+    },
+    isOptionAvailable(groupId, optionId) {
+      const tempSelected = { ...this.selectedSkuOptions };
+      tempSelected[groupId] = optionId;
+      const selectedGroupIds = Object.keys(tempSelected).filter(
+        (key) => tempSelected[key] !== undefined && tempSelected[key] !== null
+      );
+      if (selectedGroupIds.length < this.skuLists.length) {
+        return this.sku_list.some((item) => {
+          if (!item.keyIds) return false;
+          const itemKeyIds = item.keyIds.split("-").map((id) => parseInt(id, 10));
+          return itemKeyIds.includes(parseInt(optionId, 10)) && item.kucun > 0;
+        });
+      }
+      const selectedIds = Object.values(tempSelected).filter(
+        (id) => id !== undefined && id !== null
+      );
+      if (selectedIds.length === 0) {
+        return true;
+      }
+      const keyIdsStr = selectedIds
+        .map((id) => parseInt(id, 10))
+        .sort((a, b) => a - b)
+        .join("-");
+      return this.sku_list.some((item) => {
+        if (!item.keyIds) return false;
+        const itemKeyIds = item.keyIds
+          .split("-")
+          .map((id) => parseInt(id, 10))
+          .sort((a, b) => a - b)
+          .join("-");
+        return itemKeyIds === keyIdsStr && item.kucun > 0;
+      });
+    },
+    getSelectedOptionIds() {
+      return Object.values(this.selectedSkuOptions).filter(
+        (id) => id !== undefined && id !== null
+      );
+    },
+    getSelectedOptionTitle(skuGroup) {
+      const selectedId = this.selectedSkuOptions[skuGroup.id];
+      if (!selectedId) {
+        return "";
+      }
+      const selectedOption = skuGroup.child.find(
+        (child) => child.id === selectedId
+      );
+      return selectedOption ? selectedOption.title : "";
+    },
+    formatPriceConfig(priceConfig) {
+      if (!Array.isArray(priceConfig) || priceConfig.length === 0) {
+        return [];
+      }
+      const unit = this.info.unit || "pack";
+      const sorted = [...priceConfig].sort(
+        (a, b) => (a.min || 0) - (b.min || 0)
+      );
+      return sorted.map((config) => {
+        const min = Number(config.min || 0);
+        const max =
+          config.max === "" || config.max === null || config.max === undefined
+            ? null
+            : Number(config.max);
+        const price = Number(config.price || 0);
+        if (max === null) {
+          return `>${min}${unit} ${this.vuex_huobi}${price}`;
+        }
+        return `${min}-${max}${unit} ${this.vuex_huobi}${price}`;
+      });
     },
     getCurrentPrice(item) {
       // 数量为0按1处理
@@ -355,17 +631,6 @@ export default {
       if (quantity < 0) quantity = 0;
       this.$set(this.sku_quantities, item.inventoryId, quantity);
       this.updateTotalQuantity();
-    },
-    clickSkuItem(item) {
-      if(item.kucun){
-
-        if (this.getSkuQuantity(item) === 0) {
-          this.$set(this.sku_quantities, item.inventoryId, 1);
-        } else {
-          this.$set(this.sku_quantities, item.inventoryId, 0);
-        }
-        this.updateTotalQuantity();
-      }
     },
     updateTotalQuantity() {
       this.selected_num = Object.values(this.sku_quantities).reduce(
@@ -448,584 +713,5 @@ export default {
 };
 </script>
 
-<style scoped lang="less">
-/deep/ .el-dialog__header {
-  padding: 16px 24px;
-  border-bottom: 1px solid #eee;
-  background: #f7f7f7;
-}
+<style lang="less" src="./product_quick_buy_modal_ctx.less"></style>
 
-/deep/ .el-dialog__body {
-  padding: 24px 24px 30px;
-}
-
-.modal-inner {
-  display: flex;
-}
-
-.left-pic {
-  width: 443px;
-
-  /deep/.lunbo-box,
-  /deep/.zhutu-wrap,
-  /deep/.zhutu-inner {
-    width: 443px;
-
-    .el-carousel {
-      width: 443px;
-    }
-  }
-
-  /deep/.zhutu-wrap,
-  /deep/.zhutu-inner {
-    height: 443px;
-
-    .el-carousel {
-      height: 443px;
-      width: 443px;
-    }
-  }
-}
-
-.right-info {
-  flex: 1;
-  min-height: 364px;
-  margin-left: 36px;
-  text-align: left;
-
-  .detail-title {
-    .title-text {
-      flex: 1;
-      font-family: Poppins, Poppins;
-      font-weight: bold;
-      font-size: 26px;
-      color: #000000;
-
-      img {
-        width: 94px;
-        margin-left: 7px;
-      }
-    }
-
-    .price-box {
-      margin-left: 100px;
-      font-family: Poppins, Poppins;
-      font-weight: bold;
-      font-size: 30px;
-      color: #ff0000;
-    }
-  }
-
-  .detail-desc {
-    margin-top: 17px;
-    margin-bottom: 20px;
-    font-family: Poppins, Poppins;
-    // font-weight: bold;
-    font-size: 16px;
-    color: #747474;
-    line-height: 30px;
-  }
-
-  .sale-info {
-    padding: 0px;
-    background: #f7f7f7;
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
-
-    .list {
-      .item {
-        display: flex;
-        align-items: center;
-        padding: 12px 20px;
-
-        &.price-item {
-          background: url("~@img/product/sale-bg.png");
-          // padding-top: 20px;
-          // padding-bottom: 35px;
-          padding: 20px 40px 35px;
-        }
-
-        .label {
-          font-family: Poppins, Poppins;
-          font-weight: 400;
-          font-size: 18px;
-          color: #6a6a6a;
-        }
-
-        .vals {
-          display: flex;
-          align-items: center;
-          //flex: 1;
-          margin-left: 28px;
-
-          font-size: 16px;
-          font-family: Poppins, Poppins;
-          font-weight: 500;
-          color: #353535;
-
-          &.vals-price {
-            font-size: 32px;
-            font-family: Poppins, Poppins;
-            font-weight: bold;
-            color: #6941aa;
-          }
-
-          .val {
-            flex: 1;
-            font-family: Poppins, Poppins;
-            font-weight: bold;
-            font-size: 32px;
-            color: #6941aa;
-          }
-        }
-      }
-    }
-
-    .price {
-      display: flex;
-      align-items: center;
-
-      .number {
-        font-size: 28px;
-        font-family: Poppins, Poppins;
-        font-weight: bold;
-        color: #ea3200;
-      }
-    }
-  }
-
-  .other-box {
-    padding-left: 20px;
-  }
-
-  .info-texts {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 40px;
-    height: 45px;
-    background: #f8f8f8;
-
-    .text-item {
-      display: flex;
-      align-items: center;
-
-      .label {
-        font-family: Poppins, Poppins;
-        font-weight: 400;
-        font-size: 18px;
-        color: #6a6a6a;
-      }
-
-      .text {
-        margin-left: 16px;
-        font-size: 18px;
-        color: #6941aa;
-        font-weight: bold;
-      }
-    }
-  }
-
-  .sku-box {
-    margin-top: 33px;
-    display: flex;
-    align-items: flex-start;
-    width: 100%;
-
-    .sku-label {
-      margin-top: 8px;
-      min-width: 90px;
-
-      font-family: Poppins, Poppins;
-      font-weight: 400;
-      font-size: 18px;
-      color: #505050;
-    }
-
-    .sku-tip {
-      margin-left: 20px;
-      font-size: 18px;
-      color: #00306B;
-      font-family: Poppins, Poppins;
-    }
-  }
-
-  .sku-list {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    width: 100%;
-    margin-top: 20px;
-    border-bottom: 1px solid #d6d6d6;
-    padding-bottom: 10px;
-
-    .sku-item {
-      // padding: 10px;
-      // border: 1px solid #ddd;
-      // border-radius: 8px;
-      background: #fff;
-      transition: all 0.3s;
-      cursor: pointer;
-      .sku-item-text{
-        width: 600px;
-        text-wrap: nowrap;
-        .text{
-           display: -webkit-box;
-            -webkit-box-orient: vertical;
-            -webkit-line-clamp: 1;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            display: flex;
-            align-items: center;
-            span{
-              margin-left: 20px;
-            }
-        }
-      }
-
-      &:hover {
-        // border-color: #00306B;
-        // box-shadow: 0 2px 8px rgba(120, 83, 178, 0.1);
-      }
-
-      &:disabled {
-        cursor: not-allowed;
-        opacity: 0.6;
-        color: #ccc;
-      }
-
-      &.active {
-        // border: 1px solid #00306B;
-        // box-shadow: 0 0 10px rgba(120, 83, 178, 0.2);
-        // background: #f8f5ff;
-
-        .text {
-          // color: #00306B;
-        }
-
-        .price {
-          // color: #00306B;
-        }
-      }
-
-      .text {
-        font-size: 16px;
-        // font-weight: 500;
-        color: #1F1F1F;
-        // margin-bottom: 10px;
-      }
-
-      .tier-pricing {
-        font-size: 12px;
-        color: #9b9b9b;
-        // margin-bottom: 15px;
-        // line-height: 1.5;
-      }
-
-      .sku-details {
-        // display: flex;
-        // justify-content: space-between;
-        // align-items: center;
-
-        .price-info {
-          display: flex;
-          flex-direction: column;
-          gap: 5px;
-
-          .current-price {
-            font-size: 16px;
-            color: #00306B;
-            text-wrap: nowrap;
-          }
-        }
-
-        .stock-info {
-          padding: 0 13px 0 25px;
-          font-size: 16px;
-          color: #505050;
-            text-wrap: nowrap;
-
-        }
-
-        .quantity-control {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-
-          .quantity-input {
-            display: flex;
-            align-items: center;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            overflow: hidden;
-
-            .btn {
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              width: 32px;
-              height: 32px;
-              background: #f5f5f5;
-              border: none;
-              cursor: pointer;
-              transition: background 0.3s;
-
-              &:hover {
-                background: #e0e0e0;
-              }
-
-              &:disabled {
-                cursor: not-allowed;
-                opacity: 0.5;
-              }
-
-              img {
-                width: 12px;
-                height: 12px;
-              }
-            }
-
-            input {
-              width: 60px;
-              height: 32px;
-              border: none;
-              text-align: center;
-              font-size: 14px;
-              outline: none;
-              background: #fff;
-
-              &::-webkit-outer-spin-button,
-              &::-webkit-inner-spin-button {
-                -webkit-appearance: none;
-              }
-
-              &[type="number"] {
-                -moz-appearance: textfield;
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-
-  .shuliang-box {
-    margin-top: 20px;
-    display: flex;
-    align-items: center;
-
-    .sel-num-title {
-      min-width: 90px;
-      font-family: Poppins, Poppins;
-      font-family: Poppins, Poppins;
-      font-weight: 400;
-      font-size: 14px;
-      color: #505050;
-    }
-
-    .kucun {
-      margin-left: 16px;
-      font-family: Poppins, Poppins;
-      font-weight: 400;
-      font-size: 14px;
-      color: #505050;
-    }
-
-    .shuliang {
-      min-width: 105px;
-      display: flex;
-      align-items: center;
-
-      .btn {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        border: 1px solid #d5d8de;
-        width: 24px;
-        height: 24px;
-        cursor: pointer;
-        user-select: none;
-
-        &:hover {
-          opacity: 0.8;
-        }
-
-        img {
-          width: 10px;
-          height: 10px;
-          vertical-align: bottom;
-        }
-      }
-
-      .minus {}
-
-      input {
-        outline: none;
-        margin: 0 0;
-        display: inline-block;
-        border: 1px solid #ccc;
-        border-left: none;
-        border-right: none;
-
-        width: 40px;
-        height: 30px;
-        height: 24px;
-        line-height: 30px;
-        text-align: center;
-
-        font-size: 16px;
-        font-family: Poppins, Poppins;
-        font-weight: 400;
-        color: #4a4a4a;
-      }
-
-      input::-webkit-outer-spin-button,
-      input::-webkit-inner-spin-button {
-        -webkit-appearance: none !important;
-      }
-
-      /* chrome */
-      input[type="number"] {
-        -moz-appearance: textfield;
-        /* firefox */
-      }
-
-      .plus {}
-    }
-  }
-
-  .yunfei-box,
-  .dinghuo-box {
-    margin-top: 30px;
-
-    .label {
-      min-width: 90px;
-      font-family: Poppins, Poppins;
-      font-weight: 400;
-      font-size: 14px;
-      color: #505050;
-    }
-
-    .value {
-      font-family: Poppins, Poppins;
-      font-weight: 400;
-      font-size: 14px;
-      color: #505050;
-    }
-  }
-
-  .order-summary {
-    display: flex;
-    flex-direction: column;
-    min-width: 200px;
-    align-items: flex-end;
-    margin: 12px 0;
-
-    .box {
-      align-items: flex-end;
-      font-family: Poppins, Poppins;
-    }
-
-    .summary-item {
-      font-size: 16px;
-      color: #1F1F1F;
-      text-align: right;
-      margin-left: 20px;
-      font-weight: bold;
-
-      span {
-        font-size: 24px;
-        color: #00306B;
-        padding: 0 1px;
-      }
-    }
-
-    .contact-service {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 224px;
-      height: 56px;
-      border-radius: 8px 8px 8px 8px;
-      border: 1px solid #00306B;
-      font-size: 20px;
-      font-weight: bold;
-      color: #00306B;
-      cursor: pointer;
-      transition: all 0.3s;
-
-      &:hover {
-        background: #e0e0ff;
-      }
-
-      img {
-        width: 24px;
-        height: 24px;
-        margin-right: 2px;
-      }
-    }
-  }
-
-  .btn-box {
-    margin-top: 10px;
-    display: flex;
-    justify-content: end;
-    align-items: flex-start;
-
-    .left-buttons {
-      display: flex;
-      gap: 20px;
-
-      button {
-        font-size: 16px;
-        transition: 0.3s;
-        border-radius: 8px;
-        // font-weight: bold;
-        font-size: 18px;
-        font-size: 20px;
-        font-weight: bold;
-        color: #ffffff;
-        width: 224px;
-        height: 56px;
-
-        .cart {
-          width: 24px;
-          margin-right: 2px;
-        }
-
-        &:hover {
-          opacity: 0.8;
-        }
-      }
-
-      .btn-buy {
-        background: #00306B;
-
-        font-family: Poppins, Poppins;
-      }
-
-      .btn-add-cart {
-        background: #FCB000;
-
-        img {
-          margin-right: 2px;
-        }
-      }
-
-      .btn-add-fav {
-        width: 164px;
-        height: 48px;
-        background: #ffffff;
-        border-radius: 0px 0px 0px 0px;
-        border: 1px solid #00306B;
-        font-family: Poppins, Poppins;
-        // font-weight: bold;
-        font-size: 18px;
-        color: #00306B;
-      }
-    }
-  }
-}
-</style>
