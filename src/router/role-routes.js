@@ -288,6 +288,42 @@ const managerRoutes = [
           },
         ],
       },
+
+      // // 订单回款记录
+      // {
+      //   path: "payment-record",
+      //   name: "order-payment-record",
+      //   component: () => import("@/views/manager/other/payment-record/index.vue"),
+      //   meta: {
+      //     title: "订单回款记录",
+      //     requireAuth: true,
+      //     hidden: true,
+      //   },
+      // },
+      // // 订单审核列表
+      // {
+      //   path: "order-audit-list",
+      //   name: "order-audit-list",
+      //   component: () => import("@/views/manager/other/order-audit-list/index.vue"),
+      //   meta: {
+      //     title: "订单审核",
+      //     requireAuth: true,
+      //     hidden: true,
+      //   },
+      // },
+      // // 订单审核详情
+      // {
+      //   path: "order-audit-detail",
+      //   name: "order-audit-detail",
+      //   component: () =>
+      //     import("@/views/manager/other/order-audit-list/detail.vue"),
+      //   meta: {
+      //     title: "订单审核详情",
+      //     requireAuth: true,
+      //     hidden: false,
+      //   },
+      // },
+
       // 询盘数据
       {
         path: "inquiry-data",
@@ -326,7 +362,7 @@ const managerRoutes = [
             },
           },
         ],
-      }
+      },
     ],
   },
 ];
@@ -1072,7 +1108,9 @@ const purchaseRoutes = [
             path: "purchase-order-detail",
             name: "external-package-purchase-purchase-order-detail",
             component: () =>
-              import("@/views/purchase/external-package-purchase/purchase-order-detail.vue"),
+              import(
+                "@/views/purchase/external-package-purchase/purchase-order-detail.vue"
+              ),
             meta: {
               title: "采购单详情",
               requireAuth: true,
