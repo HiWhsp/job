@@ -1465,9 +1465,9 @@ export default {
         if (!this.fapiao_info.title) {
           return alertErr("Please enter invoice title");
         }
-        if (!this.fapiao_info.email) {
-          return alertErr("Please enter email address");
-        }
+        // if (!this.fapiao_info.email) {
+        //   return alertErr("Please enter email address");
+        // }
         if (this.fapiao_info.titleType == 2) {
           if (!this.fapiao_info.shibiema) {
             return alertErr("Please enter tax identification number");
@@ -1487,12 +1487,12 @@ export default {
         if (!this.fapiao_info.companyPhone) {
           return alertErr("Please enter company registration phone");
         }
-        if (!this.fapiao_info.bankName) {
-          return alertErr("Please enter bank name");
-        }
-        if (!this.fapiao_info.bankNo) {
-          return alertErr("Please enter bank account");
-        }
+        // if (!this.fapiao_info.bankName) {
+        //   return alertErr("Please enter bank name");
+        // }
+        // if (!this.fapiao_info.bankNo) {
+        //   return alertErr("Please enter bank account");
+        // }
       }
 
       this.confirm_tip = true;
@@ -4272,7 +4272,7 @@ export default {
 
 .invoice-form {
   .form-label {
-    width: 300px !important;
+    width: 310px !important;
     font-family: Poppins, Poppins;
     font-weight: 400;
     font-size: 20px;

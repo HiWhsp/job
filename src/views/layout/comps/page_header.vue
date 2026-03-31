@@ -27,9 +27,8 @@
               <span class="u-line"></span>
               <div class="u-act">
                 <img src="@/assets/img/head/LoginOrRegister.png" alt />
-                <router-link
-                  to="/my-info"
-                >{{ vuex_user.phone ? vuex_user.phone : 'Login or Register' }}</router-link>
+                <router-link v-if="vuex_user.phone" to="/my-info">{{ vuex_user.phone }}</router-link>
+                <router-link v-else to="/login">Login or Register</router-link>
               </div>
             </div>
           </div>
@@ -44,13 +43,8 @@
 
             <div class="center-search">
               <div class="input-box">
-                <input
-                  type="text"
-                  v-model="keyword"
-                  @keyup.enter="do_search"
-                  @focus="focusHandler"
-                  placeholder="Input Keyword or Item"
-                />
+                <input type="text" v-model="keyword" @keyup.enter="do_search" @focus="focusHandler"
+                  placeholder="Input Keyword or Item" />
                 <button class="btn btn-ripple" @click="do_search()">
                   <i class="el-icon-search"></i>
                 </button>
@@ -70,19 +64,10 @@
                   <span class="text">Become Supplier</span>
                 </div>
               </router-link>
-              <div
-                class="header-cart-wrap"
-                @mouseenter="cartHover = true"
-                @mouseleave="cartHover = false"
-              >
+              <div class="header-cart-wrap" @mouseenter="cartHover = true" @mouseleave="cartHover = false">
                 <router-link to="/cart" class="link">
                   <div class="btn-box">
-                    <el-badge
-                      :value="vuex_cart_number"
-                      :hidden="!Number(vuex_cart_number)"
-                      class="item"
-                      type="warning"
-                    >
+                    <el-badge :value="vuex_cart_number" :hidden="!Number(vuex_cart_number)" class="item" type="warning">
                       <img src="@img/head/cart.png" alt />
                     </el-badge>
                     <span class="text cart-text">Cart</span>
@@ -167,7 +152,7 @@ export default {
       if (this.vuex_config.hotSearch) {
         try {
           arr = JSON.parse(this.vuex_config.hotSearch);
-        } catch (error) {}
+        } catch (error) { }
       }
       return arr;
     },
@@ -357,8 +342,8 @@ export default {
     },
     ///
 
-    setView() {},
-    mouseoutSearch() {},
+    setView() { },
+    mouseoutSearch() { },
 
     toHome() {
       if (this.$route.name != "index") {
@@ -445,10 +430,12 @@ export default {
 .head-sec {
   background: #fff;
 }
+
 .head-base {
   .base-inner {
     background: #fff;
     border-bottom: 1px solid #eeeeee;
+
     .base-box {
       height: 54px;
       font-family: Poppins, Poppins;
@@ -460,13 +447,16 @@ export default {
         float: left;
         display: flex;
         align-items: center;
+
         .web-title {
           display: flex;
           align-items: center;
+
           img {
             width: 28px;
             height: 28px;
           }
+
           .phone-number {
             font-family: Poppins, Poppins;
             font-weight: 600;
@@ -476,6 +466,7 @@ export default {
             margin-left: 8px;
             line-height: 25px;
           }
+
           .welcome-text {
             font-family: Poppins, Poppins;
             font-weight: 400;
@@ -483,6 +474,7 @@ export default {
             color: #5e5e5e;
             line-height: 25px;
           }
+
           .login-out {
             cursor: pointer;
             color: #5e5e5e;
@@ -498,6 +490,7 @@ export default {
       .base-right {
         display: flex;
         align-items: center;
+
         a {
           color: #5e5e5e;
         }
@@ -505,11 +498,13 @@ export default {
         .u-act {
           display: flex;
           align-items: center;
+
           img {
             width: 28px;
             height: 28px;
             margin-right: 8px;
           }
+
           font-size: 18px;
         }
 
@@ -520,6 +515,7 @@ export default {
           background: #5e5e5e;
         }
       }
+
       .audit-count {
         display: flex;
         align-items: center;
@@ -535,6 +531,7 @@ export default {
 }
 
 .head-search {
+
   // background: #0c0a0a;
   .search-inner {
     height: 128px;
@@ -595,6 +592,7 @@ export default {
           font-family: Poppins, Poppins;
           color: #5e5e5e;
           border-radius: 40px 0 0 40px;
+
           &::placeholder {
             color: #999;
           }
@@ -605,6 +603,7 @@ export default {
           height: 56px;
           background: #00306b;
           border-radius: 0 40px 40px 0;
+
           i {
             color: #fff;
             font-size: 24px;
@@ -617,7 +616,7 @@ export default {
       margin-left: 40px;
       gap: 20px;
 
-      .link + .header-cart-wrap {
+      .link+.header-cart-wrap {
         margin-left: 10px;
       }
 
@@ -651,6 +650,7 @@ export default {
         background: #ffffff;
         transition: 0.3s;
         border-radius: 4px;
+
         .btn-box {
           position: relative;
           display: flex;
@@ -658,7 +658,7 @@ export default {
           align-items: center;
         }
 
-        & + .link {
+        &+.link {
           margin-left: 10px;
         }
 
@@ -685,8 +685,7 @@ export default {
   }
 }
 
-.head-nav {
-}
+.head-nav {}
 
 .page-head {
   // position: sticky;
@@ -1028,9 +1027,11 @@ export default {
     }
   }
 }
+
 .child-item {
   cursor: pointer;
 }
+
 @media screen and (max-width: 1600px) {
   .header-inner .nav-list .nav-item {
     margin-left: 10px;
