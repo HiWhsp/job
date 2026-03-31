@@ -38,7 +38,7 @@
         <div class="search-inner">
           <div class="search-box w-1400">
             <div class="left-logo">
-              <img src="@img/common/logo.png" @click="$router.push('/')" />
+              <img :src="vuex_config.comLogo" @click="$router.push('/')" />
             </div>
 
             <div class="center-search">
