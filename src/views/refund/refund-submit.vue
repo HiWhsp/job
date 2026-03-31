@@ -10,34 +10,29 @@
             <div class="action">
               <el-radio-group v-model="product_status">
                 <el-radio :label="1">Received</el-radio>
-                <el-radio :label="2" v-if="type == 1">Not reveived</el-radio>
+                <el-radio :label="2" v-if="type == 1">Not Reveived</el-radio>
               </el-radio-group>
             </div>
           </div>
 
           <div class="input-box">
             <div class="label">
-              <span>*</span>Reason for refund :
+              <span>*</span>Reason For Refund :
             </div>
             <div class="action">
               <el-select v-model="refund_reason" placeholder="please select">
-                <el-option
-                  v-for="item in refund_reasons"
-                  :key="item.tilte"
-                  :label="item.tilte"
-                  :value="item.title"
-                ></el-option>
+                <el-option v-for="item in refund_reasons" :key="item.tilte" :label="item.tilte"
+                  :value="item.title"></el-option>
               </el-select>
             </div>
           </div>
 
           <div class="input-box" v-if="type == 1 || type == 2" style="align-items: flex-start;">
-            <div class="label">Refund amount :</div>
+            <div class="label">Refund Amount :</div>
             <div class="action">
               <el-input placeholder="Please enter the refund amount" v-model="refund_money" />
-              <span
-                class="desc"
-              >Up to US${{ actualRefundAmount }}, including shipping fee of US${{ order.payInfo.yunfei || 0 }}</span>
+              <span class="desc">Up to US${{ actualRefundAmount }}, including shipping fee of US${{ order.payInfo.yunfei
+                || 0 }}</span>
             </div>
           </div>
 
@@ -46,28 +41,16 @@
               <span>*</span>Refund Details :
             </div>
             <div class="action">
-              <el-input
-                type="textarea"
-                placeholder="Please describe the problem…"
-                v-model="refund_remark"
-                :autosize="{ minRows: 6 }"
-              />
+              <el-input type="textarea" placeholder="Please describe the problem…" v-model="refund_remark"
+                :autosize="{ minRows: 6 }" />
             </div>
           </div>
           <div class="input-box upload-box">
-            <div class="label">Upload image :</div>
+            <div class="label">Upload Image :</div>
             <div class="action">
-              <el-upload
-                class="upload-demo"
-                list-type="picture-card"
-                multiple
-                accept="image/*"
-                :name="UPLOAD_NAME"
-                :action="UPLOAD_ACTION"
-                :on-success="on_success_upload"
-                :before-upload="on_before_upload"
-                :data="mix_upload_data"
-              >
+              <el-upload class="upload-demo" list-type="picture-card" multiple accept="image/*" :name="UPLOAD_NAME"
+                :action="UPLOAD_ACTION" :on-success="on_success_upload" :before-upload="on_before_upload"
+                :data="mix_upload_data">
                 <img src="@img/refund/upload.png" alt />
               </el-upload>
               <div class="upload-tip">Upload up to 6 photos</div>
@@ -78,29 +61,19 @@
           <div class="return-address-box" v-if="type == 2">
             <div class="input-box return-address-item">
               <div class="label">Return Method :</div>
-              <div class="action">{{ returnAddress.method || 'Return by Express' }}</div>
+              <div class="action">Return by Express</div>
             </div>
             <div class="input-box return-address-item">
               <div class="label">Return Address :</div>
               <div class="action">
-                <div
-                  class="return-address-text"
-                  v-if="returnAddress.address"
-                >{{ returnAddress.address }}</div>
-                <div class="return-address-empty" v-else>-</div>
-                <div
-                  class="return-address-extra"
-                  v-if="returnAddress.consignee || returnAddress.phone"
-                >
-                  <div class="extra-row" v-if="returnAddress.consignee">
-                    <span class="extra-label">Consignee:</span>
-                    <span class="extra-val">{{ returnAddress.consignee }}</span>
-                  </div>
-                  <div class="extra-row" v-if="returnAddress.phone">
-                    <span class="extra-label">Contact Information:</span>
-                    <span class="extra-val">{{ returnAddress.phone }}</span>
-                  </div>
+                <div class="return-address-text" v-if="returnAddress.comAddress">
+                  <span>{{ returnAddress.comAddress }}</span>
+                  <br>
+                  <span>Consignee：{{ returnAddress.comTitle }}</span>
+                  <br>
+                  <span>Contact Information：{{ returnAddress.comPhone }}</span>
                 </div>
+                <div class="return-address-empty" v-else>-</div>
               </div>
             </div>
           </div>
@@ -148,10 +121,9 @@ export default {
       product_select: {},
       // 退货地址（type=2 退货退款时展示，可从订单详情或配置获取）
       returnAddress: {
-        method: "Return by Express",
-        address: "",
-        consignee: "",
-        phone: ""
+        comTitle: '',
+        comAddress: '',
+        comPhone: '',
       },
       //
       refund_reason: "",
@@ -249,20 +221,10 @@ export default {
     },
 
     query_address() {
-      this.$api({
-        url: "/service.php",
-        method: "get",
-        data: {
-          action: "userAddress_lists",
-          page: 1,
-          pageNum: 100
-        }
-      }).then(res => {
-        if (res.code == 200) {
-          let list = res.data;
-          this.returnAddress = list[0];
-        }
-      });
+      console.log("this.vuex_config", this.vuex_config);
+      this.returnAddress.comTitle = this.vuex_config.comTitle;
+      this.returnAddress.comAddress = this.vuex_config.comAddress;
+      this.returnAddress.comPhone = this.vuex_config.comPhone;
     },
 
     //提交
@@ -606,8 +568,7 @@ export default {
             min-width: 75px;
           }
 
-          .val {
-          }
+          .val {}
         }
       }
 

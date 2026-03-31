@@ -107,8 +107,7 @@ export default {
 
     do_submit() {
       if (!this.vuex_is_login) {
-        alertErr("Please log in first");
-        this.$router.push("/login");
+        this.$LoginRequiredModal();
         return;
       }
       if (!this.form.code) {

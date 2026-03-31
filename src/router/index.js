@@ -725,8 +725,8 @@ router.beforeEach((to, from, next) => {
   // debugger
   if (!user_is_login && to.meta.requireAuth) {
     // debugger
-    alertErr("Please log in first");
-    next("/login");
+    Vue.prototype.$LoginRequiredModal();
+    next();
   } else {
     next();
   }

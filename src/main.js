@@ -22,6 +22,9 @@ import '@/lib/lib-flexible.js';
 import Directives from "./directives"; //全局指令
 Vue.use(Directives);
 
+import LoginRequiredModalPlugin from "@/plugin/loginRequiredModal.js";
+Vue.use(LoginRequiredModalPlugin);
+
 import * as filters from "@/filters/index"; //全局过滤器
 Object.keys(filters).forEach((key) => {
   Vue.filter(key, filters[key]);

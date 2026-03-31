@@ -255,6 +255,7 @@ export default {
         this.show_modal = true;
       } else {
         // 编辑地址
+        this.form.id = row.id;
         this.show_modal = true;
         this.query_address_detail();
       }
