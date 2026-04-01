@@ -191,8 +191,23 @@
         <span class="section-title">产品信息</span>
       </div>
       <div class="section-body">
-        <el-table :data="detail.productList" class="product-table">
-          <!-- <el-table-column type="selection" width="48" align="center" /> -->
+        <!-- <p v-if="Number(detail.orderStatus) === 4" class="ship-select-tip">
+          请勾选本次需要发货的产品；未勾选的行不会进入本次出库。
+        </p> -->
+        <el-table
+          ref="productShipTable"
+          :data="detail.productList"
+          row-key="_rowKey"
+          class="product-table"
+          @selection-change="onProductShipSelectionChange"
+        >
+          <el-table-column
+            v-if="Number(detail.orderStatus) === 4"
+            type="selection"
+            width="48"
+            align="center"
+            :selectable="productRowSelectable"
+          />
           <el-table-column prop="code" label="产品编码" min-width="140" />
           <el-table-column prop="name" label="产品名称" min-width="160" />
           <el-table-column prop="spec" label="规格" min-width="140" />
@@ -222,7 +237,23 @@
         <span class="section-title">外购产品信息</span>
       </div>
       <div class="section-body">
-        <el-table :data="detail.externalProductList" class="product-table">
+        <!-- <p v-if="Number(detail.orderStatus) === 4" class="ship-select-tip">
+          请勾选本次需要发货的外购产品；未勾选的行不会进入本次出库。
+        </p> -->
+        <el-table
+          ref="externalShipTable"
+          :data="detail.externalProductList"
+          row-key="_rowKey"
+          class="product-table"
+          @selection-change="onExternalShipSelectionChange"
+        >
+          <el-table-column
+            v-if="Number(detail.orderStatus) === 4"
+            type="selection"
+            width="48"
+            align="center"
+            :selectable="externalRowSelectable"
+          />
           <el-table-column type="index" label="序号" width="70" align="center" />
           <el-table-column prop="name" label="产品名称" min-width="160" />
           <el-table-column prop="spec" label="规格" min-width="140" />
@@ -310,7 +341,10 @@ export default {
       },
       /** 订单原始 productJson / foreignProductJson，用于申请出库 id 列表 */
       _productJsonRaw: [],
-      _foreignProductJsonRaw: []
+      _foreignProductJsonRaw: [],
+      /** 待发货状态下，用户勾选的要出库的产品 / 外购行 */
+      selectedProductShipRows: [],
+      selectedExternalShipRows: []
     };
   },
 
@@ -493,10 +527,13 @@ export default {
             reviewJson: data.reviewJson || '',
             reviewJson2: data.reviewJson2 || '',
             customerId: data.customerId != null ? data.customerId : null,
-            productList: productList.map((it) => {
+            productList: productList.map((it, idx) => {
               const product = it.product || {};
               const inventory = it.inventory || {};
+              const outboundId = this.outboundLineId(it);
               return {
+                _rowKey: `p-${idx}-${outboundId || 'x'}`,
+                _outboundId: outboundId,
                 code: product.productNo || '',
                 name: product.title || '',
                 spec: inventory.keyVals || '',
@@ -509,10 +546,13 @@ export default {
                 stockStatus: inventory.kucun && inventory.kucun == 0 ? '缺货' : '有货' || ''
               };
             }),
-            externalProductList: foreignList.map((it) => {
+            externalProductList: foreignList.map((it, idx) => {
               const fp = it.foreign_product || {};
               const isShortage = orderStatusTitle.includes('缺货');
+              const outboundId = this.outboundLineId(it);
               return {
+                _rowKey: `f-${idx}-${outboundId || 'x'}`,
+                _outboundId: outboundId,
                 name: fp.title || '',
                 spec: fp.keyVals || '',
                 unitPrice: it.price || '',
@@ -524,6 +564,16 @@ export default {
               };
             })
           };
+          this.selectedProductShipRows = [];
+          this.selectedExternalShipRows = [];
+          this.$nextTick(() => {
+            this.$refs.productShipTable &&
+              this.$refs.productShipTable.clearSelection &&
+              this.$refs.productShipTable.clearSelection();
+            this.$refs.externalShipTable &&
+              this.$refs.externalShipTable.clearSelection &&
+              this.$refs.externalShipTable.clearSelection();
+          });
           if (data.customerId != null && data.customerId !== '') {
             this.loadCustomerDetail(String(data.customerId));
           }
@@ -604,8 +654,22 @@ export default {
           ? it.id
           : it.inventoryId != null && String(it.inventoryId).trim() !== ''
             ? it.inventoryId
-            : '';
+            : it.productId != null && String(it.productId).trim() !== ''
+              ? it.productId
+              : '';
       return raw != null ? String(raw).trim() : '';
+    },
+    productRowSelectable(row) {
+      return !!(row && row._outboundId);
+    },
+    externalRowSelectable(row) {
+      return !!(row && row._outboundId);
+    },
+    onProductShipSelectionChange(rows) {
+      this.selectedProductShipRows = rows || [];
+    },
+    onExternalShipSelectionChange(rows) {
+      this.selectedExternalShipRows = rows || [];
     },
     buildOutboundIdsPayload(arr) {
       return this.normalizeOrderLineArray(arr)
@@ -615,7 +679,7 @@ export default {
         })
         .filter(Boolean);
     },
-    /** 待发货：直接申请出库 POST addStaffOutboundOrder（不走弹框） */
+    /** 待发货：直接申请出库 POST addStaffOutboundOrder（仅提交表格中勾选的产品 / 外购行） */
     submitOutboundShip() {
       if (Number(this.detail.orderStatus) !== 4) return;
       const staffOrderId = String(this.orderId || '').trim();
@@ -623,12 +687,27 @@ export default {
         this.$message.warning('缺少订单 id');
         return;
       }
-      const productPayload = this.buildOutboundIdsPayload(this._productJsonRaw);
-      if (!productPayload.length && (this.detail.productList || []).length > 0) {
-        this.$message.warning('订单产品明细缺少可出库行 id，无法申请出库');
+      const prodSel = this.selectedProductShipRows || [];
+      const extSel = this.selectedExternalShipRows || [];
+      const productPayload = prodSel
+        .filter((row) => row && row._outboundId)
+        .map((row) => ({ id: String(row._outboundId) }));
+      const foreignPayload = extSel
+        .filter((row) => row && row._outboundId)
+        .map((row) => ({ id: String(row._outboundId) }));
+
+      const hasProductLines = (this.detail.productList || []).length > 0;
+      const hasForeignLines = (this.detail.externalProductList || []).length > 0;
+      const canShipProduct = (this.detail.productList || []).some((r) => r._outboundId);
+      const canShipForeign = (this.detail.externalProductList || []).some((r) => r._outboundId);
+      if ((hasProductLines || hasForeignLines) && !canShipProduct && !canShipForeign) {
+        this.$message.warning('订单明细缺少可出库行 id，无法申请出库');
         return;
       }
-      const foreignPayload = this.buildOutboundIdsPayload(this._foreignProductJsonRaw);
+      if (!productPayload.length && !foreignPayload.length) {
+        this.$message.warning('请勾选要发货的产品或外购产品');
+        return;
+      }
       const loading = this.$loading({
         lock: true,
         fullscreen: true,
@@ -763,6 +842,13 @@ export default {
 .review-json {
   word-break: break-all;
   white-space: pre-wrap;
+}
+
+.ship-select-tip {
+  margin: 0 0 12px;
+  font-size: 13px;
+  color: #909399;
+  line-height: 1.5;
 }
 
 .form-footer {

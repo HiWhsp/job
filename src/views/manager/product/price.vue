@@ -55,26 +55,62 @@
           header-cell-class-name="table-header-cell"
           :row-class-name="tableRowClassName"
         >
-          <el-table-column prop="sn" label="规格编码" min-width="120" show-overflow-tooltip align="center" />
-          <el-table-column prop="title" label="产品名称" min-width="140" show-overflow-tooltip align="center">
+          <el-table-column
+            prop="sn"
+            label="规格编码"
+            min-width="120"
+            show-overflow-tooltip
+            align="center"
+          />
+          <el-table-column
+            prop="title"
+            label="产品名称"
+            min-width="140"
+            show-overflow-tooltip
+            align="center"
+          >
             <template slot-scope="{ row }">
               <span class="link-name" @click="handleView(row)">{{ row.title }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="keyVals" label="规格" min-width="120" show-overflow-tooltip align="center" />
-          <el-table-column prop="cateTitle" label="所属分类" min-width="100" show-overflow-tooltip align="center" />
-          <el-table-column prop="unit" label="单位" min-width="70" show-overflow-tooltip align="center" />
+          <el-table-column
+            prop="keyVals"
+            label="规格"
+            min-width="120"
+            show-overflow-tooltip
+            align="center"
+          />
+          <el-table-column
+            prop="cateTitle"
+            label="所属分类"
+            min-width="100"
+            show-overflow-tooltip
+            align="center"
+          />
+          <el-table-column
+            prop="unit"
+            label="单位"
+            min-width="70"
+            show-overflow-tooltip
+            align="center"
+          />
           <el-table-column prop="price1" label="经销商指导价格" min-width="130" align="center">
-            <template slot-scope="{ row }">
-              {{ row.price1 != null && row.price1 !== '' ? row.price1 : '—' }}
-            </template>
+            <template
+              slot-scope="{ row }"
+            >{{ row.price1 != null && row.price1 !== '' ? row.price1 : '—' }}</template>
           </el-table-column>
           <el-table-column prop="price2" label="终端指导价格" min-width="130" align="center">
-            <template slot-scope="{ row }">
-              {{ row.price2 != null && row.price2 !== '' ? row.price2 : '—' }}
-            </template>
+            <template
+              slot-scope="{ row }"
+            >{{ row.price2 != null && row.price2 !== '' ? row.price2 : '—' }}</template>
           </el-table-column>
-          <el-table-column prop="updated_at" label="更新时间" min-width="110" show-overflow-tooltip align="center" />
+          <el-table-column
+            prop="updated_at"
+            label="更新时间"
+            min-width="110"
+            show-overflow-tooltip
+            align="center"
+          />
           <el-table-column label="操作" width="420" align="center" fixed="right">
             <template slot-scope="{ row }">
               <span class="row-acts">
@@ -137,9 +173,9 @@ export default {
     /** 将 Vuex 树形分类转为 Cascader 所需格式 { value, label, children } */
     productCategoryCascaderOptions() {
       const list = this.vuex_product_cate_list || [];
-      const mapTree = (nodes) => {
+      const mapTree = nodes => {
         if (!Array.isArray(nodes)) return [];
-        return nodes.map((node) => {
+        return nodes.map(node => {
           const item = { value: node.id, label: node.title || "" };
           if (Array.isArray(node.child) && node.child.length) {
             item.children = mapTree(node.child);
@@ -210,7 +246,7 @@ export default {
         method: "post",
         data: params
       })
-        .then((res) => {
+        .then(res => {
           if (res && res.code === 200 && res.data) {
             const list = res.data.list || [];
             this.tableData = Array.isArray(list) ? list : [];
@@ -251,7 +287,8 @@ export default {
     /** 与产品管理列表一致：右侧抽屉 + getProductInfo(productId) */
     handleView(row) {
       const id =
-        row && (row.productId != null && row.productId !== ""
+        row &&
+        (row.productId != null && row.productId !== ""
           ? row.productId
           : row.id);
       if (id == null || id === "") {
@@ -283,19 +320,17 @@ export default {
         spinner: "el-icon-loading",
         background: "rgba(0, 0, 0, 0.35)"
       });
-      const formData = new URLSearchParams();
-      const token = localStorage.getItem("token") || "";
-      if (token) formData.append("token", token);
       const ids = this.queryParams.categoryIds || [];
       const cateId = ids.length ? String(ids[ids.length - 1]) : "";
       const kw = (this.queryParams.keyword || "").trim();
-      if (kw) formData.append("keyword", kw);
-      if (cateId) formData.append("cateId", cateId);
 
-      this.$apiDownload({
+      this.$api({
         url: "/daochuProductInventoryPrice",
         method: "post",
-        data: formData
+        data: {
+          keyword: kw,
+          cateId: cateId
+        }
       })
         .then(res => {
           const blob = res && res.data;
@@ -335,7 +370,10 @@ export default {
     },
     /** 导入价格：与客户列表 handleImport 相同，使用 import_file_modal + $apiUploadFile */
     handleExport() {
-      this.$refs.importModal.init("导入价格", IMPORT_PRODUCT_INVENTORY_PRICE_API);
+      this.$refs.importModal.init(
+        "导入价格",
+        IMPORT_PRODUCT_INVENTORY_PRICE_API
+      );
     },
     handleImportConfirm() {
       this.loadList();

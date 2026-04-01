@@ -72,7 +72,11 @@
             <template slot-scope="{ row }">
               <span class="row-acts">
                 <span class="row-act" @click="handleViewDetail(row)">查看详情</span>
-                <span class="row-act" @click="handleSetWarn(row)">设置库存预警</span>
+                <span
+                  v-if="!administratorReadOnly"
+                  class="row-act"
+                  @click="handleSetWarn(row)"
+                >设置库存预警</span>
               </span>
             </template>
           </el-table-column>
@@ -144,6 +148,13 @@ export default {
       warnSubmitLoading: false,
       tableData: []
     };
+  },
+
+  computed: {
+    /** 管理员合并路由：原料库列表仅可查看 */
+    administratorReadOnly() {
+      return !!(this.$route.meta && this.$route.meta.administratorReadOnly);
+    }
   },
 
   mounted() {

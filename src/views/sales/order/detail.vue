@@ -525,7 +525,7 @@ export default {
             ? d.foreignProductJson.map(item => {
                 const fp = item.foreign_product || {};
                 return {
-                  name: fp.keyVals || "",
+                  name: fp.title || "",
                   spec: fp.keyVals || "",
                   unitPrice: item.price,
                   quantity: item.num,

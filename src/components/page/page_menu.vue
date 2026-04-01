@@ -78,6 +78,59 @@
 import { mapState } from "vuex";
 import { getRoutesByRole } from "@/router/role-routes.js";
 
+/** 浅拷贝单条菜单路由（含 meta、children 树），避免改写到 role-routes 源数据 */
+function cloneMenuRouteNode(route) {
+  if (!route) return route;
+  const r = { ...route };
+  if (r.meta) r.meta = { ...r.meta };
+  if (r.children && r.children.length) {
+    r.children = r.children.map(cloneMenuRouteNode);
+  }
+  return r;
+}
+
+function menuTitleKey(route) {
+  const t = route.meta && route.meta.title;
+  if (t != null && String(t).trim() !== "") {
+    return String(t).trim();
+  }
+  return `__unnamed__${route.name || route.path || "_"}`;
+}
+
+/**
+ * 管理员合并多端路由后，侧边栏按菜单名去重：同名只保留一项；
+ * 若多项均有 children，则合并子菜单并递归按子项 title 去重。
+ */
+function mergeAdminMenuRoutesByTitle(routes) {
+  if (!routes || !routes.length) return [];
+  const map = new Map();
+  for (const route of routes) {
+    const key = menuTitleKey(route);
+    const inc = cloneMenuRouteNode(route);
+    if (!map.has(key)) {
+      map.set(key, inc);
+      continue;
+    }
+    const existing = map.get(key);
+    const incKids = inc.children && inc.children.length ? inc.children : null;
+    const exKids =
+      existing.children && existing.children.length ? existing.children : null;
+    if (incKids && exKids) {
+      existing.children = mergeAdminMenuRoutesByTitle([...exKids, ...incKids]);
+    } else if (incKids && !exKids) {
+      existing.children = mergeAdminMenuRoutesByTitle([...incKids]);
+      if (inc.redirect && !existing.redirect) {
+        existing.redirect = inc.redirect;
+      }
+    }
+  }
+  return Array.from(map.values());
+}
+
+function isAdministratorRole(role) {
+  return Number(role) === 9;
+}
+
 export default {
   name: "page-menu",
   components: {},
@@ -119,6 +172,9 @@ export default {
           childrenRoutes.push(route);
         }
       });
+      if (isAdministratorRole(this.vuex_role)) {
+        return mergeAdminMenuRoutesByTitle(childrenRoutes);
+      }
       return childrenRoutes;
     }
   },

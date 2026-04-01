@@ -283,7 +283,7 @@ export default {
       this.$router.push(adminPath(this, "/internal-material/add"));
     },
     handleImport() {
-      this.$refs.importModal.init("原料导入", "/importMaterial");
+      this.$refs.importModal.init("原料导入", "/importMaterial", "raw_material");
     },
     handleImportConfirm() {
       this.loadList();

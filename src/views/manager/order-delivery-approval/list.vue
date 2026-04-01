@@ -132,7 +132,7 @@
               <span class="row-acts">
                 <span class="row-act" @click="handleView(row)">查看详情</span>
                 <span class="row-act" v-if="row.orderStatus == 3" @click="handleDelivery(row)">审批</span>
-                <span class="row-act" v-if="row.orderStatus == 4" @click="handleOutboundShip(row)">发货</span>
+                <span class="row-act" v-if="row.orderStatus == 4" @click="handleView(row)">发货</span>
                 <!-- <span class="row-act" v-if="row.orderStatus == 4 || row.orderStatus == 7" @click="handleAudit(row)">打印电子订单</span> -->
               </span>
             </template>
@@ -167,7 +167,7 @@
             <el-radio label="lack">库存不足</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="预计发货时间：">
+        <el-form-item label="预计发货时间：" v-if="deliveryForm.approveType === 'batch'">
           <el-date-picker
             v-model="deliveryForm.estimateTime"
             type="date"

@@ -3,12 +3,12 @@
     <!-- 搜索/筛选区域 -->
     <div class="search-section">
       <el-form :model="queryParams" ref="queryForm" inline class="search-form" label-width="80px">
-        <el-form-item label="状态" prop="status">
+        <!-- <el-form-item label="状态" prop="status">
           <el-select v-model="queryParams.status" placeholder="请选择" style="width: 140px">
             <el-option label="申请单" value="1" />
             <el-option label="已完成" value="2" />
           </el-select>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="关键词" prop="keyword">
           <el-input v-model="queryParams.keyword" placeholder="出库单号/订单编号/客户名称" clearable style="width: 260px" />
         </el-form-item>
@@ -45,11 +45,11 @@
           <el-table-column prop="receiveAddress" label="收货地址" min-width="220" show-overflow-tooltip />
           <el-table-column prop="orderNo" label="所属订单号" min-width="120" show-overflow-tooltip />
           <el-table-column prop="applyTime" label="申请时间" width="120" align="center" />
-          <el-table-column label="状态" width="100" align="center">
+          <!-- <el-table-column label="状态" width="100" align="center">
             <template slot-scope="{ row }">
               {{ row.orderStatus === 2 ? '已完成' : '申请单' }}
             </template>
-          </el-table-column>
+          </el-table-column> -->
           <el-table-column label="操作" width="280" align="left">
             <template slot-scope="{ row }">
               <span class="row-acts">

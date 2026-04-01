@@ -38,7 +38,12 @@
       <div class="table-util-bar">
         <div class="table-title">产品管理</div>
         <div class="table-acts">
-          <el-button type="primary" size="small" @click="handleAddIn">新增入库</el-button>
+          <el-button
+            v-if="!administratorReadOnly"
+            type="primary"
+            size="small"
+            @click="handleAddIn"
+          >新增入库</el-button>
           <el-button size="small" @click="handleExport">导出</el-button>
         </div>
       </div>
@@ -72,7 +77,11 @@
             <template slot-scope="{ row }">
               <span class="row-acts">
                 <span class="row-act" @click="handleViewDetail(row)">查看详情</span>
-                <span class="row-act" @click="handleSetWarn(row)">设置库存预警</span>
+                <span
+                  v-if="!administratorReadOnly"
+                  class="row-act"
+                  @click="handleSetWarn(row)"
+                >设置库存预警</span>
               </span>
             </template>
           </el-table-column>
@@ -314,6 +323,13 @@ export default {
       addProductList: [],
       addProductSelected: []
     };
+  },
+
+  computed: {
+    /** 管理员合并路由：产品库存列表仅可查看 */
+    administratorReadOnly() {
+      return !!(this.$route.meta && this.$route.meta.administratorReadOnly);
+    }
   },
 
   mounted() {

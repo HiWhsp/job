@@ -1,14 +1,14 @@
 <template>
-  <div class="view-wrap product-out-record-page">
+  <div class="view-wrap product-out-apply-page">
     <!-- 搜索/筛选区域 -->
     <div class="search-section">
       <el-form :model="queryParams" ref="queryForm" inline class="search-form" label-width="80px">
-        <el-form-item label="状态" prop="status">
+        <!-- <el-form-item label="状态" prop="status">
           <el-select v-model="queryParams.status" placeholder="请选择" style="width: 140px">
             <el-option label="申请单" value="1" />
             <el-option label="已完成" value="2" />
           </el-select>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="关键词" prop="keyword">
           <el-input v-model="queryParams.keyword" placeholder="出库单号/订单编号/客户名称" clearable style="width: 260px" />
         </el-form-item>
@@ -26,7 +26,7 @@
     <!-- 表格区域 -->
     <div class="table-view">
       <div class="table-util-bar">
-        <div class="table-title">产品出库记录</div>
+        <div class="table-title">产品出库申请</div>
         <div class="table-acts">
           <el-button size="small" @click="handleExport">导出</el-button>
         </div>
@@ -44,10 +44,21 @@
           <el-table-column prop="region" label="属地" width="90" align="center" />
           <el-table-column prop="receiveAddress" label="收货地址" min-width="220" show-overflow-tooltip />
           <el-table-column prop="orderNo" label="所属订单号" min-width="120" show-overflow-tooltip />
-          <el-table-column prop="outTime" label="出库时间" width="120" align="center" />
-          <el-table-column label="操作" width="120" align="center" fixed="right">
+          <el-table-column prop="applyTime" label="申请时间" width="120" align="center" />
+          <!-- <el-table-column label="状态" width="100" align="center">
             <template slot-scope="{ row }">
-              <span class="row-act" @click="handleViewDetail(row)">查看详情</span>
+              {{ row.orderStatus === 2 ? '已完成' : '申请单' }}
+            </template>
+          </el-table-column> -->
+          <el-table-column label="操作" width="280" align="left">
+            <template slot-scope="{ row }">
+              <span class="row-acts">
+                <span class="row-act" @click="handleViewDetail(row)">查看详情</span>
+                <template v-if="row.orderStatus !== 2">
+                  <span class="row-act" @click="handleShip(row)">立即发货</span>
+                  <span class="row-act" @click="handleUploadQc(row)">上传出库质检单</span>
+                </template>
+              </span>
             </template>
           </el-table-column>
         </el-table>
@@ -59,57 +70,105 @@
       </div>
     </div>
 
+    <!-- 发货弹框：sendNo + sendImages（多图英文逗号拼接） -->
+    <el-dialog title="发货" :visible.sync="shipDialogVisible" width="600px" :close-on-click-modal="false" append-to-body
+      @close="handleShipDialogClose">
+      <el-form ref="shipFormRef" :model="shipForm" label-width="100px">
+        <el-form-item label="物流单号：" prop="logisticsNo">
+          <el-input v-model="shipForm.logisticsNo" placeholder="请输入" clearable />
+        </el-form-item>
+        <el-form-item label="发货照片：">
+          <el-upload
+            class="ship-photo-uploader"
+            list-type="picture-card"
+            :action="uploadAction"
+            name="file"
+            :file-list="shipForm.photoList"
+            accept="image/*"
+            :limit="9"
+            :on-success="handleShipUploadSuccess"
+            :on-remove="handleShipUploadRemove"
+            :http-request="handleShipUploadRequest"
+          >
+            <div class="upload-inner">
+              <i class="el-icon-plus" />
+              <span class="upload-plus-text">添加照片</span>
+            </div>
+          </el-upload>
+          <div class="upload-hint">可多张，提交时多个地址英文逗号拼接</div>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" :loading="shipSubmitLoading" @click="submitShip">提交</el-button>
+        <el-button @click="shipDialogVisible = false">取消</el-button>
+      </span>
+    </el-dialog>
+
+    <!-- 上传出库质检单：qualityImages 多图英文逗号拼接 -->
+    <el-dialog title="上传出库质检单" :visible.sync="qcDialogVisible" width="600px" :close-on-click-modal="false" append-to-body
+      @close="handleQcDialogClose">
+      <el-form label-width="120px">
+        <el-form-item label="质检单图片：">
+          <el-upload
+            class="ship-photo-uploader"
+            list-type="picture-card"
+            :action="uploadAction"
+            name="file"
+            :file-list="qcForm.photoList"
+            accept="image/*"
+            :limit="9"
+            :on-success="handleQcUploadSuccess"
+            :on-remove="handleQcUploadRemove"
+            :http-request="handleQcUploadRequest"
+          >
+            <div class="upload-inner">
+              <i class="el-icon-plus" />
+              <span class="upload-plus-text">添加图片</span>
+            </div>
+          </el-upload>
+          <div class="upload-hint">可多张，多个地址英文逗号拼接提交</div>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" :loading="qcSubmitLoading" @click="submitQc">提交</el-button>
+        <el-button @click="qcDialogVisible = false">取消</el-button>
+      </span>
+    </el-dialog>
+
     <!-- 出库详情抽屉：从右到左打开，800px -->
     <el-drawer title="出库详情" :visible.sync="detailDrawerVisible" direction="rtl" size="800px" append-to-body
       :close-on-click-modal="false" @closed="onDetailDrawerClosed">
       <div class="detail-drawer">
         <div class="detail-base-info">
           <div class="info-line">
-            <div class="info-item">
-              <span class="label">出库单号：</span>
-              <span class="value">{{ detailInfo.outNo }}</span>
+            <div class="info-item"><span class="label">出库单号：</span><span class="value">{{ detailInfo.outNo }}</span>
             </div>
-            <div class="info-item">
-              <span class="label">出库时间：</span>
-              <span class="value">{{ detailInfo.outTime || '—' }}</span>
+            <div class="info-item"><span class="label">申请时间：</span><span class="value">{{ detailInfo.outTime }}</span>
             </div>
           </div>
-          <div v-if="detailInfo.applyTime" class="info-line">
-            <div class="info-item">
-              <span class="label">申请时间：</span>
-              <span class="value">{{ detailInfo.applyTime }}</span>
-            </div>
+          <div v-if="detailInfo.sendTime" class="info-line">
+            <div class="info-item"><span class="label">发货时间：</span><span class="value">{{ detailInfo.sendTime }}</span></div>
           </div>
-          <div class="info-line">
-            <div class="info-item">
-              <span class="label">所属订单号：</span>
-              <span class="value">{{ detailInfo.orderNo }}</span>
-            </div>
-            <div class="info-item">
-              <span class="label">客户名称：</span>
-              <span class="value">{{ detailInfo.customerName }}</span>
-            </div>
-          </div>
-          <div class="info-line">
-            <div class="info-item">
-              <span class="label">属地：</span>
-              <span class="value">{{ detailInfo.region }}</span>
-            </div>
 
-            <div class="info-item">
-              <span class="label">收货地址：</span>
-              <span class="value">{{ detailInfo.receiveAddress }}</span>
+          <div class="info-line">
+            <div class="info-item"><span class="label">所属订单号：</span><span class="value">{{ detailInfo.orderNo }}</span>
+            </div>
+            <div class="info-item"><span class="label">客户名称：</span><span class="value">{{ detailInfo.customerName
+                }}</span>
             </div>
           </div>
+
           <div class="info-line">
-            <div class="info-item">
-              <span class="label">收货人：</span>
-              <span class="value">{{ detailInfo.receiver }}</span>
+            <div class="info-item"><span class="label">属地：</span><span class="value">{{ detailInfo.region }}</span>
             </div>
-            <div class="info-item">
-              <span class="label">收货人联系方式方式：</span>
-              <span class="value">{{ detailInfo.receiverPhone }}</span>
+            <div class="info-item"><span class="label">收货地址：</span><span class="value">{{ detailInfo.receiveAddress
+                }}</span></div>
+          </div>
+          <div class="info-line">
+            <div class="info-item"><span class="label">收货人：</span><span class="value">{{ detailInfo.receiver }}</span>
             </div>
+            <div class="info-item"><span class="label">收货人联系方式方式：</span><span class="value">{{ detailInfo.receiverPhone
+                }}</span></div>
           </div>
         </div>
 
@@ -139,48 +198,6 @@
           </el-table>
         </div>
 
-        <div class="detail-section ship-section">
-          <div class="section-title"><span class="section-bar"></span><span>发货信息</span></div>
-          <div class="ship-info">
-            <div class="ship-item">
-              <span class="label">物流单号：</span>
-              <span class="value">{{ detailInfo.logisticsNo }}</span>
-            </div>
-            <div class="ship-item">
-              <span class="label">发货照片：</span>
-              <div class="ship-photos">
-                <template v-if="detailInfo.shipPhotoUrls && detailInfo.shipPhotoUrls.length">
-                  <div v-for="(url, idx) in detailInfo.shipPhotoUrls" :key="idx" class="ship-photo-box">
-                    <img :src="url" alt="" />
-                  </div>
-                </template>
-                <template v-else>
-                  <div class="ship-photo-box placeholder"></div>
-                </template>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="detail-section ship-section">
-          <div class="section-title"><span class="section-bar"></span><span>出库质检单</span></div>
-          <div class="ship-info">
-            <div class="ship-item">
-              <span class="label">质检图片：</span>
-              <div class="ship-photos">
-                <template v-if="detailInfo.qualityImageUrls && detailInfo.qualityImageUrls.length">
-                  <div v-for="(url, idx) in detailInfo.qualityImageUrls" :key="'qc-' + idx" class="ship-photo-box">
-                    <img :src="url" alt="" />
-                  </div>
-                </template>
-                <template v-else>
-                  <div class="ship-photo-box placeholder"></div>
-                </template>
-              </div>
-            </div>
-          </div>
-        </div>
-
         <div class="detail-footer">
           <el-button type="primary" @click="detailDrawerVisible = false">确定</el-button>
           <el-button @click="detailDrawerVisible = false">取消</el-button>
@@ -191,18 +208,22 @@
 </template>
 
 <script>
-/** 与产品出库申请页一致：列表、详情接口相同 */
-const LIST_API = '/getStaffOutboundOrderList';
-const DETAIL_API = '/getStaffOutboundOrder';
+import axios from "axios";
+import { UPLOAD_ROOT } from "@/config/env.js";
+
+const LIST_API = "/getStaffOutboundOrderList";
+const DETAIL_API = "/getStaffOutboundOrder";
+const SHIP_API = "/sendStaffOutboundOrder";
+const QC_API = "/setStaffOutboundOrderQuality";
 
 export default {
-  name: 'WarehouseProductOutRecord',
+  name: "WarehouseProductOutApply",
   data() {
     return {
+      uploadAction: UPLOAD_ROOT,
       queryParams: {
-        /** 出库记录默认查已完成 */
-        status: '2',
-        keyword: '',
+        status: "2",
+        keyword: "",
         dateRange: null,
         pageNum: 1,
         pageSize: 20
@@ -210,20 +231,30 @@ export default {
       total: 0,
       tableHeight: 0,
       tableData: [],
+      shipDialogVisible: false,
+      shipSubmitLoading: false,
+      currentShipRow: null,
+      shipForm: {
+        logisticsNo: "",
+        photoList: []
+      },
+      qcDialogVisible: false,
+      qcSubmitLoading: false,
+      currentQcRow: null,
+      qcForm: {
+        photoList: []
+      },
       detailDrawerVisible: false,
       detailInfo: {
-        outNo: '',
-        outTime: '',
-        applyTime: '',
-        orderNo: '',
-        region: '',
-        customerName: '',
-        receiveAddress: '',
-        receiver: '',
-        receiverPhone: '',
-        logisticsNo: '',
-        shipPhotoUrls: [],
-        qualityImageUrls: []
+        outNo: "",
+        outTime: "",
+        sendTime: "",
+        orderNo: "",
+        region: "",
+        customerName: "",
+        receiveAddress: "",
+        receiver: "",
+        receiverPhone: ""
       },
       detailProducts: [],
       detailOutsourcedProducts: []
@@ -249,18 +280,58 @@ export default {
       });
     },
     tableRowClassName({ rowIndex }) {
-      return rowIndex % 2 === 1 ? 'row-even' : '';
+      return rowIndex % 2 === 1 ? "row-even" : "";
     },
     loadList() {
-      // TODO: 调用产品出库记录列表接口
+      const dr = this.queryParams.dateRange;
+      const start_time = Array.isArray(dr) && dr[0] ? dr[0] : "";
+      const end_time = Array.isArray(dr) && dr[1] ? dr[1] : "";
+      this.$api({
+        url: LIST_API,
+        method: "post",
+        data: {
+          page: String(this.queryParams.pageNum),
+          limit: String(this.queryParams.pageSize),
+          status: this.queryParams.status != null && this.queryParams.status !== "" ? String(this.queryParams.status) : "",
+          start_time,
+          end_time,
+          keyword: this.queryParams.keyword || ""
+        }
+      })
+        .then(res => {
+          if (res && res.code === 200 && res.data) {
+            const list = Array.isArray(res.data.list) ? res.data.list : [];
+            this.tableData = list.map(it => {
+              const addr = it.customerAddress || {};
+              return {
+                id: it.id,
+                orderStatus: Number(it.orderStatus) || 0,
+                outNo: it.orderNo || "",
+                customerName: it.customerTitle || "",
+                region: it.customerTerritory || "",
+                receiveAddress: addr.address || "",
+                orderNo: it.staffOrderNo || "",
+                applyTime: (it.created_at || "").slice(0, 10)
+              };
+            });
+            this.total = res.data.count != null ? res.data.count : list.length;
+          } else {
+            this.tableData = [];
+            this.total = 0;
+          }
+        })
+        .catch(() => {
+          this.tableData = [];
+          this.total = 0;
+        });
     },
     handleQuery() {
       this.queryParams.pageNum = 1;
       this.loadList();
     },
     resetQuery() {
-      this.queryParams.status = '2';
-      this.queryParams.keyword = '';
+      this.queryParams.status = "1";
+      this.queryParams.keyword = "";
       this.queryParams.dateRange = null;
       this.queryParams.pageNum = 1;
       this.$refs.queryForm && this.$refs.queryForm.resetFields();
@@ -276,19 +347,161 @@ export default {
     },
     handleExport() {
       // TODO: 导出
-      this.$message.info('导出');
+      this.$message.info("导出");
     },
-    /** 详情里图片：数组或英文逗号分隔字符串 */
-    normalizeMediaList(val) {
-      if (val == null || val === '') return [];
-      if (Array.isArray(val)) return val.filter(Boolean);
-      if (typeof val === 'string') {
-        return val
-          .split(',')
-          .map(s => s.trim())
-          .filter(Boolean);
+    handleShip(row) {
+      this.currentShipRow = row;
+      this.shipForm.logisticsNo = "";
+      this.shipForm.photoList = [];
+      this.shipDialogVisible = true;
+    },
+    handleShipDialogClose() {
+      this.currentShipRow = null;
+      this.shipForm.logisticsNo = "";
+      this.shipForm.photoList = [];
+      this.shipSubmitLoading = false;
+    },
+    handleShipUploadRequest(option) {
+      const formData = new FormData();
+      formData.append("file", option.file);
+      const token = localStorage.getItem("token");
+      axios
+        .post(UPLOAD_ROOT, formData, {
+          headers: { Authorization: "Bearer " + token },
+          timeout: 60000
+        })
+        .then(res => {
+          const data = res.data || res;
+          const payload = data && data.data ? data.data : data;
+          const url = (payload && (payload.path || payload.url)) || (data && data.path) || "";
+          option.onSuccess({ url });
+        })
+        .catch(err => {
+          this.$message.error(
+            (err.response && err.response.data && err.response.data.msg) || "上传失败"
+          );
+          option.onError(err);
+        });
+    },
+    handleShipUploadSuccess(res, file, fileList) {
+      this.shipForm.photoList = fileList || [];
+      const r = res || (file && file.response);
+      const payload = r && r.data ? r.data : r;
+      const url =
+        (payload && (payload.path || payload.url)) || (r && r.path) || (file && file.url) || "";
+      if (url && file) file.url = url;
+    },
+    handleShipUploadRemove(file, fileList) {
+      this.shipForm.photoList = fileList || [];
+    },
+    collectImageUrls(fileList) {
+      const list = fileList || [];
+      return list
+        .map(f => f.url || (f.response && (f.response.url || f.response.path)) || "")
+        .map(s => (typeof s === "string" ? s.trim() : ""))
+        .filter(Boolean);
+    },
+    submitShip() {
+      const id = this.currentShipRow && this.currentShipRow.id != null ? String(this.currentShipRow.id) : "";
+      if (!id) {
+        this.$message.warning("缺少出库单id");
+        return;
       }
-      return [];
+      const sendNo = (this.shipForm.logisticsNo || "").trim();
+      if (!sendNo) {
+        this.$message.warning("请输入物流单号");
+        return;
+      }
+      const urls = this.collectImageUrls(this.shipForm.photoList);
+      if (!urls.length) {
+        this.$message.warning("请上传至少一张发货照片");
+        return;
+      }
+      this.shipSubmitLoading = true;
+      this.$api({
+        url: SHIP_API,
+        method: "post",
+        data: {
+          id,
+          sendNo,
+          sendImages: urls.join(",")
+        }
+      })
+        .then(res => {
+          this.shipSubmitLoading = false;
+          if (res && res.code === 200) {
+            this.$message.success("提交成功");
+            this.shipDialogVisible = false;
+            this.handleShipDialogClose();
+            this.loadList();
+          } else {
+            this.$message.error((res && res.msg) || "提交失败");
+          }
+        })
+        .catch(() => {
+          this.shipSubmitLoading = false;
+          this.$message.error("提交失败");
+        });
+    },
+    handleUploadQc(row) {
+      this.currentQcRow = row;
+      this.qcForm.photoList = [];
+      this.qcDialogVisible = true;
+    },
+    handleQcDialogClose() {
+      this.currentQcRow = null;
+      this.qcForm.photoList = [];
+      this.qcSubmitLoading = false;
+    },
+    handleQcUploadRequest(option) {
+      this.handleShipUploadRequest(option);
+    },
+    handleQcUploadSuccess(res, file, fileList) {
+      this.qcForm.photoList = fileList || [];
+      const r = res || (file && file.response);
+      const payload = r && r.data ? r.data : r;
+      const url =
+        (payload && (payload.path || payload.url)) || (r && r.path) || (file && file.url) || "";
+      if (url && file) file.url = url;
+    },
+    handleQcUploadRemove(file, fileList) {
+      this.qcForm.photoList = fileList || [];
+    },
+    submitQc() {
+      const id = this.currentQcRow && this.currentQcRow.id != null ? String(this.currentQcRow.id) : "";
+      if (!id) {
+        this.$message.warning("缺少出库单id");
+        return;
+      }
+      const urls = this.collectImageUrls(this.qcForm.photoList);
+      if (!urls.length) {
+        this.$message.warning("请上传至少一张质检单图片");
+        return;
+      }
+      this.qcSubmitLoading = true;
+      this.$api({
+        url: QC_API,
+        method: "post",
+        data: {
+          id,
+          qualityImages: urls.join(",")
+        }
+      })
+        .then(res => {
+          this.qcSubmitLoading = false;
+          if (res && res.code === 200) {
+            this.$message.success("提交成功");
+            this.qcDialogVisible = false;
+            this.handleQcDialogClose();
+            this.loadList();
+          } else {
+            this.$message.error((res && res.msg) || "提交失败");
+          }
+        })
+        .catch(() => {
+          this.qcSubmitLoading = false;
+          this.$message.error("提交失败");
+        });
     },
     mapProductRows(list) {
       if (!Array.isArray(list)) return [];
@@ -296,10 +509,10 @@ export default {
         const p = it.product || {};
         const inv = it.inventory || {};
         return {
-          productName: p.title || '',
-          spec: inv.keyVals || inv.sn || '',
-          unit: p.unit || '',
-          quantity: it.num != null ? String(it.num) : ''
+          productName: p.title || "",
+          spec: inv.keyVals || inv.sn || "",
+          unit: p.unit || "",
+          quantity: it.num != null ? String(it.num) : ""
         };
       });
     },
@@ -308,23 +521,23 @@ export default {
       return list.map(it => {
         const fp = it.foreign_product || {};
         return {
-          productName: fp.title || '外购产品',
-          spec: fp.keyVals || '',
-          unit: fp.unit || '',
-          quantity: it.num != null ? String(it.num) : ''
+          productName: fp.title || "外购产品",
+          spec: fp.keyVals || "",
+          unit: fp.unit || "",
+          quantity: it.num != null ? String(it.num) : ""
         };
       });
     },
     handleViewDetail(row) {
-      const id = row.id != null ? String(row.id) : '';
+      const id = row.id != null ? String(row.id) : "";
       if (!id) {
-        this.$message.warning('缺少出库单id');
+        this.$message.warning("缺少出库单id");
         return;
       }
-      const loading = this.$loading({ lock: true, text: '加载中...', spinner: 'el-icon-loading' });
+      const loading = this.$loading({ lock: true, text: "加载中...", spinner: "el-icon-loading" });
       this.$api({
         url: DETAIL_API,
-        method: 'post',
+        method: "post",
         data: { id }
       })
         .then(res => {
@@ -332,49 +545,42 @@ export default {
           if (res && res.code === 200 && res.data) {
             const d = res.data;
             const addr = d.customerAddress || {};
-            const outTimeRaw = d.sendTime || d.updated_at || d.created_at || '';
             this.detailInfo = {
-              outNo: d.orderNo || '',
-              outTime: outTimeRaw ? String(outTimeRaw).slice(0, 19) : '',
-              applyTime: d.created_at ? String(d.created_at).slice(0, 19) : '',
-              orderNo: d.staffOrderNo || '',
-              region: d.customerTerritory || '',
-              customerName: d.customerTitle || '',
-              receiveAddress: addr.address || '',
-              receiver: addr.name || '',
-              receiverPhone: addr.phone || '',
-              logisticsNo: d.sendNo != null && d.sendNo !== '' ? String(d.sendNo) : '',
-              shipPhotoUrls: this.normalizeMediaList(d.sendImages),
-              qualityImageUrls: this.normalizeMediaList(d.qualityImages)
+              outNo: d.orderNo || "",
+              outTime: d.created_at || "",
+              sendTime: d.sendTime || "",
+              orderNo: d.staffOrderNo || "",
+              region: d.customerTerritory || "",
+              customerName: d.customerTitle || "",
+              receiveAddress: addr.address || "",
+              receiver: addr.name || "",
+              receiverPhone: addr.phone || ""
             };
             this.detailProducts = this.mapProductRows(d.productJson);
             this.detailOutsourcedProducts = this.mapForeignProductRows(d.foreignProductJson);
             this.detailDrawerVisible = true;
           } else {
-            this.$message.error((res && res.msg) || '获取详情失败');
+            this.$message.error((res && res.msg) || "获取详情失败");
           }
         })
         .catch(() => {
           loading.close();
-          this.$message.error('获取详情失败');
+          this.$message.error("获取详情失败");
         });
     },
     onDetailDrawerClosed() {
       this.detailProducts = [];
       this.detailOutsourcedProducts = [];
       this.detailInfo = {
-        outNo: '',
-        outTime: '',
-        applyTime: '',
-        orderNo: '',
-        region: '',
-        customerName: '',
-        receiveAddress: '',
-        receiver: '',
-        receiverPhone: '',
-        logisticsNo: '',
-        shipPhotoUrls: [],
-        qualityImageUrls: []
+        outNo: "",
+        outTime: "",
+        sendTime: "",
+        orderNo: "",
+        region: "",
+        customerName: "",
+        receiveAddress: "",
+        receiver: "",
+        receiverPhone: ""
       };
     }
   }
@@ -382,7 +588,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.product-out-record-page {
+.product-out-apply-page {
   background: #fff;
   border-radius: 8px;
 }
@@ -482,13 +688,24 @@ export default {
   }
 }
 
-.row-act {
-  color: #3377fe;
-  cursor: pointer;
-  font-size: 14px;
+.row-acts {
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  flex-wrap: wrap;
 
-  &:hover {
-    text-decoration: underline;
+  .row-act {
+    color: #3377fe;
+    cursor: pointer;
+    font-size: 14px;
+
+    &:hover {
+      text-decoration: underline;
+    }
+
+    &+.row-act {
+      margin-left: 8px;
+    }
   }
 }
 
@@ -497,6 +714,55 @@ export default {
   background: #fff;
   display: flex;
   justify-content: flex-end;
+}
+
+::v-deep .el-dialog__footer {
+  text-align: center;
+}
+
+.ship-photo-uploader {
+  display: flex;
+  flex-wrap: wrap;
+
+  ::v-deep .el-upload--picture-card {
+    width: 120px;
+    height: 120px;
+    line-height: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  ::v-deep .el-upload-list__item {
+    width: 120px;
+    height: 120px;
+  }
+
+  .upload-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  ::v-deep .el-icon-plus {
+    font-size: 26px;
+    color: #909399;
+  }
+
+  .upload-plus-text {
+    margin-top: 8px;
+    color: #909399;
+    font-size: 12px;
+  }
+}
+
+.upload-hint {
+  margin-top: 8px;
+  font-size: 12px;
+  color: #909399;
+  line-height: 1.4;
 }
 
 /* 详情抽屉 */
@@ -527,8 +793,7 @@ export default {
   }
 
   .info-item {
-    flex: 1;
-    min-width: 0;
+    min-width: 300px;
     text-align: left;
     font-size: 14px;
     color: #333;
@@ -568,49 +833,6 @@ export default {
     background: #2373c8;
     border-radius: 2px;
     margin-right: 8px;
-  }
-}
-
-.ship-info {
-  padding: 12px 0 0;
-  font-size: 14px;
-  color: #333;
-
-  .ship-item {
-    display: flex;
-    align-items: flex-start;
-    margin-bottom: 12px;
-    text-align: left;
-  }
-
-  .label {
-    width: 90px;
-    flex-shrink: 0;
-  }
-
-  .ship-photos {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-
-  .ship-photo-box {
-    width: 120px;
-    height: 80px;
-    background: #f5f7fa;
-    border: 1px solid #ebeef5;
-    border-radius: 4px;
-    overflow: hidden;
-
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    &.placeholder {
-      background: #e5e5e5;
-    }
   }
 }
 

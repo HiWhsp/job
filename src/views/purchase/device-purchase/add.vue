@@ -76,6 +76,7 @@
             <template slot-scope="{ row, $index }">
               <template v-if="row.isEditing">
                 <span class="row-act" @click="handleSaveRow($index)">保存</span>
+                <span class="row-act" @click="handleDeleteRow($index)">删除</span>
               </template>
               <template v-else>
                 <span class="row-act" @click="handleEditRow($index)">编辑</span>
@@ -96,49 +97,6 @@
       <el-button type="primary" @click="handleSubmit">提交</el-button>
       <el-button @click="handleCancel">取消</el-button>
     </div>
-
-    <!-- 添加采购产品弹框 -->
-    <el-dialog title="添加采购产品" :visible.sync="addProductDialogVisible" width="820px" custom-class="add-product-dialog"
-      :close-on-click-modal="false" @close="closeAddProductDialog">
-      <div class="dialog-search">
-        <el-form :model="addProductQuery" ref="addProductQueryForm" inline label-width="80px">
-          <el-form-item label="关键词" prop="keyword">
-            <el-input v-model="addProductQuery.keyword" placeholder="产品名称/产品编码" clearable style="width: 220px" />
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="searchAddProduct">搜索</el-button>
-            <el-button @click="resetAddProductQuery">重置</el-button>
-          </el-form-item>
-        </el-form>
-      </div>
-
-      <div class="dialog-table-wrap">
-        <el-table ref="addProductTable" :data="addProductList" max-height="380"
-          header-cell-class-name="table-header-cell" @selection-change="handleAddProductSelectionChange">
-          <el-table-column type="selection" width="50" align="center" />
-          <el-table-column prop="productNo" label="产品编码" min-width="120" show-overflow-tooltip />
-          <el-table-column prop="title" label="产品名称" min-width="140" show-overflow-tooltip />
-          <el-table-column prop="spec" label="规格" min-width="140" show-overflow-tooltip />
-          <el-table-column prop="cateTitle" label="所属分类" min-width="120" show-overflow-tooltip />
-          <el-table-column label="单价" width="110" align="center">
-            <template slot-scope="{ row }">
-              <el-input v-model="row.unitPrice" placeholder="请填写" size="small" style="width: 90px" />
-            </template>
-          </el-table-column>
-          <el-table-column label="数量" width="110" align="center">
-            <template slot-scope="{ row }">
-              <el-input v-model="row.quantity" placeholder="请填写" size="small" style="width: 90px" />
-            </template>
-          </el-table-column>
-          <el-table-column prop="unit" label="单位" width="80" align="center" />
-        </el-table>
-      </div>
-
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="addProductDialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="confirmAddProduct">确定</el-button>
-      </span>
-    </el-dialog>
   </div>
 </template>
 
@@ -149,7 +107,6 @@ import { UPLOAD_ROOT } from "@/config/env.js";
 
 const ADD_API = "/addPurchaseEquipmentOrder";
 const DETAIL_API = "/getPurchaseEquipmentOrder";
-const PRODUCT_LIST_API = "/getForeignProductList";
 
 export default {
   name: "DevicePurchaseAdd",
@@ -166,16 +123,7 @@ export default {
       uploadAction: UPLOAD_ROOT,
       contractFileList: [],
       deviceList: [],
-      selectedRows: [],
-      // 添加采购产品弹框
-      addProductDialogVisible: false,
-      addProductQuery: {
-        keyword: "",
-        pageNum: 1,
-        pageSize: 10
-      },
-      addProductList: [],
-      addProductSelected: []
+      selectedRows: []
     };
   },
   computed: {
@@ -249,9 +197,19 @@ export default {
       return isNaN(n) ? "0.00" : n.toFixed(2);
     },
     handleAddDevice() {
-      this.addProductDialogVisible = true;
-      this.$nextTick(() => {
-        this.searchAddProduct();
+      const hasEditing = this.deviceList.some(r => r.isEditing);
+      if (hasEditing) {
+        this.$message.warning("请先保存当前编辑行");
+        return;
+      }
+      this.deviceList.push({
+        id: rowId++,
+        deviceName: "",
+        unitPrice: "",
+        quantity: "",
+        totalPrice: "0.00",
+        unit: "台",
+        isEditing: true
       });
     },
     _parseJson(val) {
@@ -320,78 +278,6 @@ export default {
       const ids = this.selectedRows.map(r => r.id);
       this.deviceList = this.deviceList.filter(item => !ids.includes(item.id));
       this.$message.success("删除成功");
-    },
-    closeAddProductDialog() {
-      this.addProductQuery.keyword = "";
-      this.addProductQuery.pageNum = 1;
-      this.addProductSelected = [];
-    },
-    searchAddProduct() {
-      const params = {
-        limit: String(this.addProductQuery.pageSize),
-        page: String(this.addProductQuery.pageNum),
-        keyword: this.addProductQuery.keyword || "",
-        cateId: ""
-      };
-      this.$api({ url: PRODUCT_LIST_API, method: "post", data: params })
-        .then(res => {
-          if (res && res.code === 200 && res.data) {
-            const list = Array.isArray(res.data.list) ? res.data.list : [];
-            this.addProductList = list.map(it => ({
-              id: it.id != null ? String(it.id) : "",
-              title: it.title || "",
-              productNo: it.productNo || "",
-              spec: it.keyVals || "",
-              unit: it.unit || "",
-              cateTitle: it.cateTitle || "",
-              inventoryId: it.id != null ? String(it.id) : "",
-              unitPrice: "",
-              quantity: ""
-            }));
-          } else {
-            this.addProductList = [];
-          }
-        })
-        .catch(() => {
-          this.addProductList = [];
-        });
-    },
-    resetAddProductQuery() {
-      this.$refs.addProductQueryForm && this.$refs.addProductQueryForm.resetFields();
-      this.addProductQuery.pageNum = 1;
-      this.searchAddProduct();
-    },
-    handleAddProductSelectionChange(selection) {
-      this.addProductSelected = selection || [];
-    },
-    confirmAddProduct() {
-      if (!this.addProductSelected.length) {
-        this.$message.warning("请先勾选要添加的产品");
-        return;
-      }
-      const toAdd = this.addProductSelected.filter(r => r.unitPrice !== "" && r.quantity !== "");
-      if (!toAdd.length) {
-        this.$message.warning("请为勾选的产品填写单价和数量");
-        return;
-      }
-      toAdd.forEach(p => {
-        const unitPrice = String(p.unitPrice || "");
-        const quantity = String(p.quantity || "");
-        const totalPrice = this.formatMoney((Number(unitPrice) || 0) * (Number(quantity) || 0));
-        this.deviceList.push({
-          id: rowId++,
-          deviceName: p.title,
-          unitPrice,
-          quantity,
-          totalPrice,
-          unit: p.unit || "台",
-          isEditing: false,
-          productId: p.id,
-          inventoryId: p.inventoryId
-        });
-      });
-      this.addProductDialogVisible = false;
-      this.$message.success("添加成功");
     },
     handleSubmit() {
       this.$refs.baseForm.validate(valid => {

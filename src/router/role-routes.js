@@ -753,282 +753,270 @@ const generalManagerRoutes = [
         ],
       },
       // 管理员（与后台管理员同源菜单，路径在 /general-manager/admin 下）
+
       {
-        path: "admin",
-        name: "gm-admin",
-        component: () => import("@/views/general-manager/admin/index.vue"),
-        redirect: "/general-manager/admin/data-statistics",
+        path: "data-statistics",
+        name: "gm-data-statistics",
+        component: () =>
+          import("@/views/general-manager/admin/data-statistics/index.vue"),
         meta: {
-          title: "管理路由",
+          title: "数据统计",
+          requireAuth: true,
+          hidden: true,
+        },
+      },
+      {
+        path: "customer",
+        name: "gm-customer",
+        component: () =>
+          import("@/views/general-manager/admin/customer/index.vue"),
+        redirect: "/general-manager/admin/customer/list",
+        meta: {
+          title: "客户管理",
+          requireAuth: true,
+        },
+        children: [
+          {
+            path: "list",
+            name: "gm-customer-list",
+            component: () => import("@/views/manager/customer/list.vue"),
+            meta: {
+              title: "客户列表",
+              requireAuth: true,
+              hidden: false,
+            },
+          },
+          {
+            path: "add",
+            name: "gm-customer-add",
+            component: () => import("@/views/manager/customer/add.vue"),
+            meta: {
+              title: "新增客户",
+              requireAuth: true,
+              hidden: false,
+            },
+          },
+        ],
+      },
+      {
+        path: "product",
+        name: "gm-product",
+        component: () =>
+          import("@/views/general-manager/admin/product/index.vue"),
+        redirect: "/general-manager/admin/product/list",
+        meta: {
+          title: "产品管理",
           requireAuth: true,
           hidden: true,
         },
         children: [
           {
-            path: "data-statistics",
-            name: "gm-data-statistics",
-            component: () =>
-              import("@/views/general-manager/admin/data-statistics/index.vue"),
+            path: "category",
+            name: "gm-product-category",
+            component: () => import("@/views/manager/product/category.vue"),
             meta: {
-              title: "数据统计",
+              title: "产品分类管理",
               requireAuth: true,
               hidden: true,
             },
           },
           {
-            path: "customer",
-            name: "gm-customer",
-            component: () =>
-              import("@/views/general-manager/admin/customer/index.vue"),
-            redirect: "/general-manager/admin/customer/list",
-            meta: {
-              title: "客户管理",
-              requireAuth: true,
-            },
-            children: [
-              {
-                path: "list",
-                name: "gm-customer-list",
-                component: () => import("@/views/manager/customer/list.vue"),
-                meta: {
-                  title: "客户列表",
-                  requireAuth: true,
-                  hidden: false,
-                },
-              },
-              {
-                path: "add",
-                name: "gm-customer-add",
-                component: () => import("@/views/manager/customer/add.vue"),
-                meta: {
-                  title: "新增客户",
-                  requireAuth: true,
-                  hidden: false,
-                },
-              },
-            ],
-          },
-          {
-            path: "product",
-            name: "gm-product",
-            component: () =>
-              import("@/views/general-manager/admin/product/index.vue"),
-            redirect: "/general-manager/admin/product/list",
+            path: "list",
+            name: "gm-product-list",
+            component: () => import("@/views/manager/product/list.vue"),
             meta: {
               title: "产品管理",
               requireAuth: true,
               hidden: true,
             },
-            children: [
-              {
-                path: "category",
-                name: "gm-product-category",
-                component: () => import("@/views/manager/product/category.vue"),
-                meta: {
-                  title: "产品分类管理",
-                  requireAuth: true,
-                  hidden: true,
-                },
-              },
-              {
-                path: "list",
-                name: "gm-product-list",
-                component: () => import("@/views/manager/product/list.vue"),
-                meta: {
-                  title: "产品管理",
-                  requireAuth: true,
-                  hidden: true,
-                },
-              },
-              {
-                path: "add",
-                name: "gm-product-add",
-                component: () => import("@/views/manager/product/add.vue"),
-                meta: {
-                  title: "产品新增",
-                  requireAuth: true,
-                  hidden: false,
-                },
-              },
-            ],
           },
           {
-            path: "price",
-            name: "gm-product-price",
-            component: () =>
-              import("@/views/general-manager/admin/price/index.vue"),
+            path: "add",
+            name: "gm-product-add",
+            component: () => import("@/views/manager/product/add.vue"),
             meta: {
-              title: "产品指导价格",
+              title: "产品新增",
+              requireAuth: true,
+              hidden: false,
+            },
+          },
+        ],
+      },
+      {
+        path: "price",
+        name: "gm-product-price",
+        component: () =>
+          import("@/views/general-manager/admin/price/index.vue"),
+        meta: {
+          title: "产品指导价格",
+          requireAuth: true,
+          hidden: true,
+        },
+      },
+      {
+        path: "internal-material",
+        name: "gm-internal-material",
+        component: () =>
+          import("@/views/general-manager/admin/internal-material/index.vue"),
+        redirect: "/general-manager/admin/internal-material/list",
+        meta: {
+          title: "内部原料管理",
+          requireAuth: true,
+          hidden: true,
+        },
+        children: [
+          {
+            path: "category",
+            name: "gm-internal-material-category",
+            component: () =>
+              import("@/views/manager/internal-material/category.vue"),
+            meta: {
+              title: "原料分类管理",
               requireAuth: true,
               hidden: true,
             },
           },
           {
-            path: "internal-material",
-            name: "gm-internal-material",
+            path: "list",
+            name: "gm-internal-material-list",
             component: () =>
-              import("@/views/general-manager/admin/internal-material/index.vue"),
-            redirect: "/general-manager/admin/internal-material/list",
+              import("@/views/manager/internal-material/list.vue"),
             meta: {
-              title: "内部原料管理",
+              title: "原料管理",
               requireAuth: true,
               hidden: true,
             },
-            children: [
-              {
-                path: "category",
-                name: "gm-internal-material-category",
-                component: () =>
-                  import("@/views/manager/internal-material/category.vue"),
-                meta: {
-                  title: "原料分类管理",
-                  requireAuth: true,
-                  hidden: true,
-                },
-              },
-              {
-                path: "list",
-                name: "gm-internal-material-list",
-                component: () =>
-                  import("@/views/manager/internal-material/list.vue"),
-                meta: {
-                  title: "原料管理",
-                  requireAuth: true,
-                  hidden: true,
-                },
-              },
-              {
-                path: "add",
-                name: "gm-internal-material-add",
-                component: () =>
-                  import("@/views/manager/internal-material/add.vue"),
-                meta: {
-                  title: "新增原料",
-                  requireAuth: true,
-                  hidden: false,
-                },
-              },
-            ],
           },
           {
-            path: "external-package",
-            name: "gm-external-package",
+            path: "add",
+            name: "gm-internal-material-add",
             component: () =>
-              import("@/views/general-manager/admin/external-package/index.vue"),
-            redirect: "/general-manager/admin/external-package/list",
+              import("@/views/manager/internal-material/add.vue"),
             meta: {
-              title: "客户外来包装",
+              title: "新增原料",
               requireAuth: true,
-              hidden: true,
+              hidden: false,
             },
-            children: [
-              {
-                path: "list",
-                name: "gm-external-package-list",
-                component: () =>
-                  import("@/views/manager/external-package/list.vue"),
-                meta: {
-                  title: "客户外来包装管理",
-                  requireAuth: true,
-                  hidden: false,
-                },
-              },
-              {
-                path: "add",
-                name: "gm-external-package-add",
-                component: () =>
-                  import("@/views/manager/external-package/add.vue"),
-                meta: {
-                  title: "新增客户外来包装",
-                  requireAuth: true,
-                  hidden: false,
-                },
-              },
-            ],
+          },
+        ],
+      },
+      {
+        path: "external-package",
+        name: "gm-external-package",
+        component: () =>
+          import("@/views/general-manager/admin/external-package/index.vue"),
+        redirect: "/general-manager/admin/external-package/list",
+        meta: {
+          title: "客户外来包装",
+          requireAuth: true,
+          hidden: true,
+        },
+        children: [
+          {
+            path: "list",
+            name: "gm-external-package-list",
+            component: () =>
+              import("@/views/manager/external-package/list.vue"),
+            meta: {
+              title: "客户外来包装管理",
+              requireAuth: true,
+              hidden: false,
+            },
           },
           {
-            path: "external-product",
-            name: "gm-external-product",
+            path: "add",
+            name: "gm-external-package-add",
             component: () =>
-              import("@/views/general-manager/admin/external-product/index.vue"),
-            redirect: "/general-manager/admin/external-product/list",
+              import("@/views/manager/external-package/add.vue"),
+            meta: {
+              title: "新增客户外来包装",
+              requireAuth: true,
+              hidden: false,
+            },
+          },
+        ],
+      },
+      {
+        path: "external-product",
+        name: "gm-external-product",
+        component: () =>
+          import("@/views/general-manager/admin/external-product/index.vue"),
+        redirect: "/general-manager/admin/external-product/list",
+        meta: {
+          title: "外购产品管理",
+          requireAuth: true,
+          hidden: true,
+        },
+        children: [
+          {
+            path: "list",
+            name: "gm-external-product-list",
+            component: () =>
+              import("@/views/manager/external-product/list.vue"),
             meta: {
               title: "外购产品管理",
               requireAuth: true,
-              hidden: true,
+              hidden: false,
             },
-            children: [
-              {
-                path: "list",
-                name: "gm-external-product-list",
-                component: () =>
-                  import("@/views/manager/external-product/list.vue"),
-                meta: {
-                  title: "外购产品管理",
-                  requireAuth: true,
-                  hidden: false,
-                },
-              },
-              {
-                path: "add",
-                name: "gm-external-product-add",
-                component: () =>
-                  import("@/views/manager/external-product/add.vue"),
-                meta: {
-                  title: "新增外购产品",
-                  requireAuth: true,
-                  hidden: false,
-                },
-              },
-            ],
           },
           {
-            path: "inquiry-data",
-            name: "gm-inquiry-data",
+            path: "add",
+            name: "gm-external-product-add",
             component: () =>
-              import("@/views/general-manager/admin/inquiry-data/index.vue"),
+              import("@/views/manager/external-product/add.vue"),
             meta: {
-              title: "询盘数据",
+              title: "新增外购产品",
+              requireAuth: true,
+              hidden: false,
+            },
+          },
+        ],
+      },
+      {
+        path: "inquiry-data",
+        name: "gm-inquiry-data",
+        component: () =>
+          import("@/views/general-manager/admin/inquiry-data/index.vue"),
+        meta: {
+          title: "询盘数据",
+          requireAuth: true,
+          hidden: true,
+        },
+      },
+      {
+        path: "account-management",
+        name: "gm-account-management",
+        component: () =>
+          import(
+            "@/views/general-manager/admin/account-management/index.vue"
+          ),
+        redirect: "/general-manager/admin/account-management/list",
+        meta: {
+          title: "账号管理",
+          requireAuth: true,
+          hidden: true,
+        },
+        children: [
+          {
+            path: "list",
+            name: "gm-account-management-list",
+            component: () => import("@/views/account-management/list.vue"),
+            meta: {
+              title: "账号列表",
               requireAuth: true,
               hidden: true,
             },
           },
           {
-            path: "account-management",
-            name: "gm-account-management",
+            path: "role-management",
+            name: "gm-account-management-role",
             component: () =>
-              import(
-                "@/views/general-manager/admin/account-management/index.vue"
-              ),
-            redirect: "/general-manager/admin/account-management/list",
+              import("@/views/account-management/role-management.vue"),
             meta: {
-              title: "账号管理",
+              title: "角色管理",
               requireAuth: true,
               hidden: true,
             },
-            children: [
-              {
-                path: "list",
-                name: "gm-account-management-list",
-                component: () => import("@/views/account-management/list.vue"),
-                meta: {
-                  title: "账号列表",
-                  requireAuth: true,
-                  hidden: true,
-                },
-              },
-              {
-                path: "role-management",
-                name: "gm-account-management-role",
-                component: () =>
-                  import("@/views/account-management/role-management.vue"),
-                meta: {
-                  title: "角色管理",
-                  requireAuth: true,
-                  hidden: true,
-                },
-              },
-            ],
           },
         ],
       },
@@ -2000,24 +1988,66 @@ function prefixRouteTreeNames(routes, prefix) {
   return (routes || []).map(walk);
 }
 
+/** 管理员端：不注册业务员「新增订单」路由，菜单与直链均不可进 */
+function stripAdministratorSalesOrderAddRoute(routes) {
+  const walk = (nodes) => {
+    if (!nodes || !nodes.length) return;
+    for (const node of nodes) {
+      if (node.children && node.children.length) {
+        if (node.name === "r9s-order") {
+          node.children = node.children.filter(c => c.name !== "r9s-order-add");
+        }
+        walk(node.children);
+      }
+    }
+  };
+  walk(routes);
+}
+
+/** 管理员合并路由下，指定页面仅展示数据（列表/详情只读，由页面读 meta） */
+const ADMINISTRATOR_READ_ONLY_ROUTE_NAMES = new Set([
+  "r9s-order-list",
+  "r9s-order-detail",
+  "r9wh-product-inventory-management-list",
+  "r9whm-material-warehouse-management-list"
+]);
+
+function markAdministratorReadOnlyRouteMeta(routes) {
+  const walk = (nodes) => {
+    if (!nodes || !nodes.length) return;
+    for (const node of nodes) {
+      if (node.name && ADMINISTRATOR_READ_ONLY_ROUTE_NAMES.has(node.name)) {
+        node.meta = { ...(node.meta || {}), administratorReadOnly: true };
+      }
+      if (node.children && node.children.length) walk(node.children);
+    }
+  };
+  walk(routes);
+}
+
 /**
  * 管理员：合并各端路由。采购端 name 保持原样（页面内多用 name 跳转）；
  * 其余端加前缀，避免与采购、管理端等重名。
  */
-const administratorRoutes = [
-  ...cloneRouteTree(managerRoutes),
-  ...prefixRouteTreeNames(cloneRouteTree(salesRoutes), "r9s"),
-  ...prefixRouteTreeNames(cloneRouteTree(marketingRoutes), "r9mkt"),
-  ...prefixRouteTreeNames(cloneRouteTree(generalManagerRoutes), "r9gm"),
-  ...prefixRouteTreeNames(cloneRouteTree(financeRoutes), "r9fin"),
-  ...cloneRouteTree(purchaseRoutes),
-  ...prefixRouteTreeNames(
-    cloneRouteTree(productionVicePresidentRoutes),
-    "r9pvp"
-  ),
-  ...prefixRouteTreeNames(cloneRouteTree(warehouseRoutes), "r9wh"),
-  ...prefixRouteTreeNames(cloneRouteTree(warehouseManagerRoutes), "r9whm"),
-];
+const administratorRoutes = (() => {
+  const routes = [
+    ...cloneRouteTree(managerRoutes),
+    ...prefixRouteTreeNames(cloneRouteTree(salesRoutes), "r9s"),
+    ...prefixRouteTreeNames(cloneRouteTree(marketingRoutes), "r9mkt"),
+    ...prefixRouteTreeNames(cloneRouteTree(generalManagerRoutes), "r9gm"),
+    ...prefixRouteTreeNames(cloneRouteTree(financeRoutes), "r9fin"),
+    ...cloneRouteTree(purchaseRoutes),
+    ...prefixRouteTreeNames(
+      cloneRouteTree(productionVicePresidentRoutes),
+      "r9pvp"
+    ),
+    ...prefixRouteTreeNames(cloneRouteTree(warehouseRoutes), "r9wh"),
+    ...prefixRouteTreeNames(cloneRouteTree(warehouseManagerRoutes), "r9whm")
+  ];
+  stripAdministratorSalesOrderAddRoute(routes);
+  markAdministratorReadOnlyRouteMeta(routes);
+  return routes;
+})();
 
 // 角色路由映射表
 // key: 角色标识（从后端返回的 opRole）

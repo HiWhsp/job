@@ -287,7 +287,7 @@ export default {
       this.$router.push(adminPath(this, '/product/add'));
     },
     handleImport() {
-      this.$refs.importModal.init('产品导入', '/importProduct');
+      this.$refs.importModal.init('产品导入', '/importProduct', 'product');
     },
     handleImportConfirm() {
       this.loadList();

@@ -408,7 +408,7 @@ export default {
       this.$router.push(adminPath(this, "/customer/add"));
     },
     handleImport() {
-      this.$refs.importModal.init("客户导入", "/importCustomer");
+      this.$refs.importModal.init("客户导入", "/importCustomer", "customer");
     },
     handleImportConfirm() {
       this.loadList();

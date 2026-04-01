@@ -72,7 +72,12 @@
         </div>
         <div class="table-acts">
           <el-button type="primary" size="small" @click="handleExport">导出</el-button>
-          <el-button type="primary" size="small" @click="handleAdd">新增订单</el-button>
+          <el-button
+            v-if="!administratorReadOnly"
+            type="primary"
+            size="small"
+            @click="handleAdd"
+          >新增订单</el-button>
         </div>
       </div>
       <div class="table-box">
@@ -130,12 +135,13 @@
             <template slot-scope="{ row }">
               <span class="row-acts">
                 <span class="row-act" @click="handleView(row)">查看详情</span>
-                <span class="row-act" @click="handleSubmitPayment(row)" v-if="[1, 2, -1, 4].includes(row.orderStatus)">提交回款</span>
-                <span class="row-act" v-if="[1, 2, -1, 6].includes(row.orderStatus)" @click="handleEdit(row)">编辑</span>
-                <span class="row-act" v-if="[1, 2, -1, -2].includes(row.orderStatus)" @click="handleDelete(row)">删除</span>
-                <span class="row-act" v-if="[3].includes(row.orderStatus)" @click="handleContinue(row, 'continue')">是否继续</span>
-                <span class="row-act" v-if="[6].includes(row.orderStatus)" @click="handleAudit(row)">继续</span>
-                
+                <template v-if="!administratorReadOnly">
+                  <span class="row-act" @click="handleSubmitPayment(row)" v-if="[1, 2, -1, 4, 7].includes(row.orderStatus)">提交回款</span>
+                  <span class="row-act" v-if="[1, 2, -1, 6].includes(row.orderStatus)" @click="handleEdit(row)">编辑</span>
+                  <span class="row-act" v-if="[1, 2, -1, -2].includes(row.orderStatus)" @click="handleDelete(row)">删除</span>
+                  <span class="row-act" v-if="[3].includes(row.orderStatus)" @click="handleContinue(row, 'continue')">是否继续</span>
+                  <span class="row-act" v-if="[6].includes(row.orderStatus)" @click="handleAudit(row)">继续</span>
+                </template>
               </span>
             </template>
           </el-table-column>
@@ -311,6 +317,10 @@ export default {
   },
 
   computed: {
+    /** 管理员合并路由：业务员订单列表/详情仅可查看 */
+    administratorReadOnly() {
+      return !!(this.$route.meta && this.$route.meta.administratorReadOnly);
+    },
     paymentOrderAmount() {
       if (!this.rowToPayment) return '0.00';
       return this.rowToPayment.orderPrice != null ? String(this.rowToPayment.orderPrice) : (this.rowToPayment.orderAmount || '0.00');

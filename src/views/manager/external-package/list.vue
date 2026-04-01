@@ -260,7 +260,7 @@ export default {
       this.$router.push(adminPath(this, "/external-package/add"));
     },
     handleImport() {
-      this.$refs.importModal.init("客户外来包装导入", "/importForeignPack");
+      this.$refs.importModal.init("客户外来包装导入", "/importForeignPack", "foreign_package");
     },
     handleImportConfirm() {
       this.loadList();

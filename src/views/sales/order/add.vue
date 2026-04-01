@@ -182,28 +182,48 @@
               <template slot-scope="{ $index }">{{ formatSeq($index) }}</template>
             </el-table-column>
             <el-table-column label="产品名称" width="220">
-              <template slot-scope="{ row }">
-                <el-input v-if="row.isNew" v-model="row.name" placeholder="输入选择" size="small" />
+              <template slot-scope="{ row, $index }">
+                <el-input
+                  v-if="isExternalRowEditing(row, $index)"
+                  v-model="row.name"
+                  placeholder="输入选择"
+                  size="small"
+                />
                 <span v-else>{{ row.name }}</span>
               </template>
             </el-table-column>
             <el-table-column label="规格" align="center">
-              <template slot-scope="{ row }">
-                <el-input v-if="row.isNew" v-model="row.spec" placeholder="输入选择" size="small" />
+              <template slot-scope="{ row, $index }">
+                <el-input
+                  v-if="isExternalRowEditing(row, $index)"
+                  v-model="row.spec"
+                  placeholder="输入选择"
+                  size="small"
+                />
                 <span v-else>{{ row.spec }}</span>
               </template>
             </el-table-column>
             <el-table-column label="单价" align="center">
-              <template slot-scope="{ row }">
-                <el-input v-if="row.isNew" v-model.number="row.price" placeholder="请输入" size="small"
-                  @input="calcExternalRowTotal(row)" />
+              <template slot-scope="{ row, $index }">
+                <el-input
+                  v-if="isExternalRowEditing(row, $index)"
+                  v-model.number="row.price"
+                  placeholder="请输入"
+                  size="small"
+                  @input="calcExternalRowTotal(row)"
+                />
                 <span v-else>{{ row.price }}</span>
               </template>
             </el-table-column>
             <el-table-column label="数量" align="center">
-              <template slot-scope="{ row }">
-                <el-input v-if="row.isNew" v-model.number="row.quantity" placeholder="请输入" size="small"
-                  @input="calcExternalRowTotal(row)" />
+              <template slot-scope="{ row, $index }">
+                <el-input
+                  v-if="isExternalRowEditing(row, $index)"
+                  v-model.number="row.quantity"
+                  placeholder="请输入"
+                  size="small"
+                  @input="calcExternalRowTotal(row)"
+                />
                 <span v-else>{{ row.quantity }}</span>
               </template>
             </el-table-column>
@@ -211,8 +231,13 @@
               <template slot-scope="{ row }">{{ row.total != null ? row.total : '0.00' }}</template>
             </el-table-column>
             <el-table-column label="单位" align="center">
-              <template slot-scope="{ row }">
-                <el-input v-if="row.isNew" v-model="row.unit" placeholder="请输入" size="small" />
+              <template slot-scope="{ row, $index }">
+                <el-input
+                  v-if="isExternalRowEditing(row, $index)"
+                  v-model="row.unit"
+                  placeholder="请输入"
+                  size="small"
+                />
                 <span v-else>{{ row.unit }}</span>
               </template>
             </el-table-column>
@@ -224,10 +249,14 @@
                 >{{ row.stockStatus || '—' }}</span>
               </template>
             </el-table-column> -->
-            <el-table-column label="操作" width="140" align="center" fixed="right">
+            <el-table-column label="操作" width="180" align="center" fixed="right">
               <template slot-scope="{ row, $index }">
                 <template v-if="row.isNew">
                   <el-button type="text" size="small" class="link-btn" @click="handleSaveExternalRow">保存</el-button>
+                </template>
+                <template v-else-if="externalEditingIndex === $index">
+                  <el-button type="text" size="small" class="link-btn" @click="handleSaveExternalEdit">保存</el-button>
+                  <el-button type="text" size="small" class="link-btn" @click="handleCancelExternalEdit">取消</el-button>
                 </template>
                 <template v-else>
                   <el-button type="text" size="small" class="link-btn"
@@ -331,6 +360,10 @@ export default {
       productSelected: [],
       externalProductList: [],
       externalNewRow: null,
+      /** 外购表格：正在行内编辑的 `externalProductList` 下标，null 表示未在编辑已保存行 */
+      externalEditingIndex: null,
+      /** 行内编辑前快照，用于取消还原 */
+      externalEditSnapshot: null,
       addProductVisible: false,
       addExternalProductVisible: false,
       customerSelectVisible: false,
@@ -410,6 +443,8 @@ export default {
       this.productSelected = [];
       this.externalProductList = [];
       this.externalNewRow = null;
+      this.externalEditingIndex = null;
+      this.externalEditSnapshot = null;
       this.$nextTick(() => {
         this.$refs.formRef && this.$refs.formRef.clearValidate();
       });
@@ -571,6 +606,8 @@ export default {
       this.externalProductList = this.parseForeignRowsFromDetail(d);
       this.productSelected = [];
       this.externalNewRow = null;
+      this.externalEditingIndex = null;
+      this.externalEditSnapshot = null;
       this.$nextTick(() => {
         this.$refs.formRef && this.$refs.formRef.clearValidate();
       });
@@ -650,8 +687,15 @@ export default {
       const p = parseFloat(row.guidePrice) || 0;
       row.guideTotal = (q * p).toFixed(2);
     },
-    externalRowClassName({ row }) {
-      return row.isNew ? "row-new" : "";
+    externalRowClassName({ row, rowIndex }) {
+      if (row.isNew) return "row-new";
+      if (
+        this.externalEditingIndex !== null &&
+        this.externalEditingIndex === rowIndex
+      ) {
+        return "row-new";
+      }
+      return "";
     },
     handleDeleteExternalProducts() {
       const ref = this.$refs.externalTable;
@@ -661,14 +705,31 @@ export default {
         this.$message.warning("请先勾选要删除的外购产品");
         return;
       }
+      const editingRow =
+        this.externalEditingIndex !== null
+          ? this.externalProductList[this.externalEditingIndex]
+          : null;
       this.externalProductList = this.externalProductList.filter(
         row => !selection.includes(row)
       );
+      if (editingRow) {
+        const ni = this.externalProductList.indexOf(editingRow);
+        if (ni === -1) {
+          this.externalEditingIndex = null;
+          this.externalEditSnapshot = null;
+        } else {
+          this.externalEditingIndex = ni;
+        }
+      }
     },
     /** 添加外购产品：打开弹窗，由 getForeignProductList 接口获取列表并选择 */
     handleAddExternalProduct() {
       if (this.externalNewRow) {
         this.$message.warning("请先保存当前新增行");
+        return;
+      }
+      if (this.externalEditingIndex !== null) {
+        this.$message.warning("请先保存或取消当前外购行编辑");
         return;
       }
       this.addExternalProductVisible = true;
@@ -690,10 +751,16 @@ export default {
       });
     },
     calcExternalRowTotal(row) {
-      if (!row || !row.isNew) return;
+      if (!row) return;
       const p = parseFloat(row.price) || 0;
       const q = Number(row.quantity) || 0;
       row.total = (p * q).toFixed(2);
+    },
+    /** 外购行：新增行或正在行内编辑的已保存行显示为可编辑 */
+    isExternalRowEditing(row, tableIndex) {
+      if (row.isNew) return true;
+      if (this.externalEditingIndex === null) return false;
+      return this.externalEditingIndex === tableIndex;
     },
     handleSaveExternalRow() {
       const row = this.externalNewRow;
@@ -702,6 +769,7 @@ export default {
         this.$message.warning("请填写产品名称、规格");
         return;
       }
+      this.calcExternalRowTotal(row);
       this.externalProductList.push({
         productId: row.productId || "2",
         name: row.name,
@@ -716,10 +784,68 @@ export default {
       this.externalNewRow = null;
     },
     handleEditExternalRow(index) {
-      // TODO: 可改为行内编辑或弹窗编辑
-      this.$message.info("编辑第" + (index + 1) + "行");
+      if (this.externalNewRow) {
+        this.$message.warning("请先保存当前新增行");
+        return;
+      }
+      if (index < 0 || index >= this.externalProductList.length) {
+        return;
+      }
+      if (this.externalEditingIndex !== null) {
+        if (this.externalEditingIndex === index) {
+          return;
+        }
+        this.$message.warning("请先保存或取消当前外购行编辑");
+        return;
+      }
+      const row = this.externalProductList[index];
+      this.externalEditSnapshot = JSON.parse(JSON.stringify(row));
+      this.externalEditingIndex = index;
+      this.calcExternalRowTotal(row);
+    },
+    handleSaveExternalEdit() {
+      const i = this.externalEditingIndex;
+      if (i == null) return;
+      const row = this.externalProductList[i];
+      if (!row) {
+        this.externalEditingIndex = null;
+        this.externalEditSnapshot = null;
+        return;
+      }
+      if (!row.name || !row.spec) {
+        this.$message.warning("请填写产品名称、规格");
+        return;
+      }
+      this.calcExternalRowTotal(row);
+      if (row.price != null && row.price !== "") {
+        row.price = String(row.price);
+      }
+      this.externalEditingIndex = null;
+      this.externalEditSnapshot = null;
+    },
+    handleCancelExternalEdit() {
+      const i = this.externalEditingIndex;
+      if (i == null) {
+        this.externalEditSnapshot = null;
+        return;
+      }
+      if (this.externalEditSnapshot) {
+        this.$set(this.externalProductList, i, {
+          ...this.externalEditSnapshot
+        });
+      }
+      this.externalEditingIndex = null;
+      this.externalEditSnapshot = null;
     },
     handleRemoveExternalProduct(index) {
+      if (this.externalEditingIndex !== null) {
+        if (this.externalEditingIndex === index) {
+          this.externalEditingIndex = null;
+          this.externalEditSnapshot = null;
+        } else if (this.externalEditingIndex > index) {
+          this.externalEditingIndex -= 1;
+        }
+      }
       this.externalProductList.splice(index, 1);
     },
     onPackageSpecChange() {

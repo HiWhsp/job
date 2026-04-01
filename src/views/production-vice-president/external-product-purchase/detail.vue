@@ -11,7 +11,7 @@
       <div class="info-grid">
         <div class="info-col">
           <div class="info-item">
-            <span class="info-label">外购请购单单号:</span>
+            <span class="info-label">外购产品采购单单号:</span>
             <span class="info-value">{{ detail.requisitionNo }}</span>
           </div>
           <div class="info-item">

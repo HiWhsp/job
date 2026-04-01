@@ -58,7 +58,7 @@
               {{ String((queryParams.pageNum - 1) * queryParams.pageSize + scope.$index + 1).padStart(3, '0') }}
             </template>
           </el-table-column>
-          <el-table-column prop="purchaseNo" label="外购请购单单号" align="center" show-overflow-tooltip />
+          <el-table-column prop="purchaseNo" label="外购产品采购单单号" align="center" show-overflow-tooltip />
           <el-table-column prop="staffOrderNo" label="所属订单号" align="center" show-overflow-tooltip />
           <el-table-column prop="customerTitle" label="客户名称" align="center" show-overflow-tooltip />
           <el-table-column prop="price" label="订单金额" align="center">

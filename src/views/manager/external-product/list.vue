@@ -251,7 +251,7 @@ export default {
       this.$router.push(adminPath(this, "/external-product/add"));
     },
     handleImport() {
-      this.$refs.importModal.init("外购产品导入", "/importForeignProduct");
+      this.$refs.importModal.init("外购产品导入", "/importForeignProduct", "foreign_product");
     },
     handleImportConfirm() {
       this.loadList();
