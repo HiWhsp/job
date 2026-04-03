@@ -1045,15 +1045,15 @@ export default {
 .banner-box .lunbo-box {
   position: relative;
   width: 100%;
-  height: 690;
+  height: 460px;
 
   /deep/ .el-carousel__container {
-    height: 690px;
+    height: 460px;
   }
 
   /deep/ img {
     width: 100%;
-    height: 690px;
+    height: 460px;
     cursor: pointer;
   }
 }
@@ -2065,7 +2065,7 @@ export default {
   }
   .cate-banner-item {
     width: 100vw;
-    height: 663px;
+    height: 442px;
     background-size: 100% 100%;
     background-repeat: no-repeat;
     cursor: pointer;
@@ -2091,7 +2091,7 @@ export default {
       line-height: 71px;
     }
     .cate-banner-item-btn {
-      margin-top: 80px;
+      margin-top: 50px;
       width: 252px;
       height: 72px;
       display: flex;
@@ -2634,28 +2634,28 @@ export default {
 
       &.suggest-item-1 {
         width: 505px;
-        height: 694px;
+        height: 462px;
         background: url("~@/assets/img/index/suggest/1.png") no-repeat center
           center / 100% 100%;
       }
 
       &.suggest-item-2 {
         width: 505px;
-        height: 694px;
+        height: 462px;
         background: url("~@/assets/img/index/suggest/2.png") no-repeat center
           center / 100% 100%;
       }
 
       &.suggest-item-3 {
         width: 524px;
-        height: 328px;
+        height: 209px;
         background: url("~@/assets/img/index/suggest/3.png") no-repeat center
           center / 100% 100%;
       }
 
       &.suggest-item-4 {
         width: 524px;
-        height: 328px;
+        height: 209px;
         // background: url('~@/assets/img/index/suggest/4.png') no-repeat center center / 100% 100%;
       }
 

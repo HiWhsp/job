@@ -2053,7 +2053,7 @@ export default {
             .title-text {
               flex: 1;
               font-family: Poppins, Poppins;
-              font-weight: bold;
+              font-weight: 600;
               font-size: 30px;
               color: #242424;
 
@@ -2724,11 +2724,11 @@ export default {
               }
 
               .summary-item {
-                font-size: 16px;
+                font-size: 20px;
                 color: #1f1f1f;
                 text-align: right;
                 margin-left: 20px;
-                font-weight: bold;
+                font-weight: 600;
 
                 span {
                   font-size: 24px;

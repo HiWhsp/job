@@ -2,9 +2,9 @@
   <transition name="login-required-fade">
     <div v-show="visible" class="login-required-mask" @click.self="close">
       <div class="login-required-dialog" role="dialog" aria-modal="true">
-        <button type="button" class="login-required-close" aria-label="Close" @click="close">
+        <!-- <button type="button" class="login-required-close" aria-label="Close" @click="close">
           ×
-        </button>
+        </button> -->
         <div class="login-required-body">
           <div class="login-required-icon-wrap">
             <img src="@img/common/login-success.png" alt="login-required-icon">
