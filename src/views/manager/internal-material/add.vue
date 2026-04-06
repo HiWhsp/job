@@ -83,26 +83,56 @@
               >
                 <div class="spec-col spec-col-name">
                   <div class="spec-tags-wrap">
+                    <el-input
+                      v-if="specNameEdit.gIndex === gIndex"
+                      ref="specNameInputRef"
+                      v-model="specNameEdit.value"
+                      size="small"
+                      class="spec-input-inline spec-edit-input"
+                      maxlength="20"
+                      @blur="finishEditSpecGroupName(gIndex)"
+                      @keyup.enter.native="finishEditSpecGroupName(gIndex)"
+                      @keydown.native.esc.prevent="cancelSpecNameEdit"
+                    />
                     <el-tag
+                      v-else
                       closable
                       type="primary"
                       size="small"
-                      class="spec-tag"
+                      class="spec-tag spec-tag-editable"
+                      title="双击修改"
                       @close.stop="handleRemoveSpecGroup(gIndex)"
+                      @dblclick.native.stop="startEditSpecGroupName(gIndex)"
                     >{{ group.name }}</el-tag>
                   </div>
                 </div>
                 <div class="spec-col spec-col-values">
                   <div class="spec-tags-wrap">
-                    <el-tag
-                      v-for="(v, vIndex) in group.values"
-                      :key="'g-' + gIndex + '-v-' + vIndex"
-                      closable
-                      type="primary"
-                      size="small"
-                      class="spec-tag"
-                      @close="removeGroupValue(gIndex, vIndex)"
-                    >{{ v }}</el-tag>
+                    <template v-for="(v, vIndex) in group.values">
+                      <el-input
+                        v-if="specValueEdit.gIndex === gIndex && specValueEdit.vIndex === vIndex"
+                        :key="'edit-g-' + gIndex + '-v-' + vIndex"
+                        ref="specValueInputRef"
+                        v-model="specValueEdit.value"
+                        size="small"
+                        class="spec-input-inline spec-edit-input"
+                        maxlength="30"
+                        @blur="finishEditSpecValue(gIndex, vIndex)"
+                        @keyup.enter.native="finishEditSpecValue(gIndex, vIndex)"
+                        @keydown.native.esc.prevent="cancelSpecValueEdit"
+                      />
+                      <el-tag
+                        v-else
+                        :key="'g-' + gIndex + '-v-' + vIndex"
+                        closable
+                        type="primary"
+                        size="small"
+                        class="spec-tag spec-tag-editable"
+                        title="双击修改"
+                        @close="removeGroupValue(gIndex, vIndex)"
+                        @dblclick.native.stop="startEditSpecValue(gIndex, vIndex, v)"
+                      >{{ v }}</el-tag>
+                    </template>
                     <el-input
                       v-model="group.valueInput"
                       placeholder="回车添加"
@@ -139,15 +169,31 @@
                 </div>
                 <div class="spec-col spec-col-values">
                   <div class="spec-tags-wrap">
-                    <el-tag
-                      v-for="(v, idx) in draft.values"
-                      :key="'draft-' + dIndex + '-val-' + idx"
-                      closable
-                      type="primary"
-                      size="small"
-                      class="spec-tag"
-                      @close="removeDraftSpecValue(dIndex, idx)"
-                    >{{ v }}</el-tag>
+                    <template v-for="(v, idx) in draft.values">
+                      <el-input
+                        v-if="draftValueEdit.dIndex === dIndex && draftValueEdit.vIndex === idx"
+                        :key="'draft-edit-' + dIndex + '-' + idx"
+                        ref="draftValueInputRef"
+                        v-model="draftValueEdit.value"
+                        size="small"
+                        class="spec-input-inline spec-edit-input"
+                        maxlength="30"
+                        @blur="finishEditDraftSpecValue(dIndex, idx)"
+                        @keyup.enter.native="finishEditDraftSpecValue(dIndex, idx)"
+                        @keydown.native.esc.prevent="cancelDraftValueEdit"
+                      />
+                      <el-tag
+                        v-else
+                        :key="'draft-' + dIndex + '-val-' + idx"
+                        closable
+                        type="primary"
+                        size="small"
+                        class="spec-tag spec-tag-editable"
+                        title="双击修改"
+                        @close="removeDraftSpecValue(dIndex, idx)"
+                        @dblclick.native.stop="startEditDraftSpecValue(dIndex, idx, v)"
+                      >{{ v }}</el-tag>
+                    </template>
                     <el-input
                       v-model="draft.valueInput"
                       placeholder="回车添加"
@@ -164,8 +210,20 @@
           </div>
 
           <div class="spec-list-block">
-            <div class="spec-setting-title">规格列表</div>
-            <el-table :data="specList" border class="spec-table">
+            <div class="spec-list-toolbar">
+              <div class="spec-setting-title">规格列表</div>
+              <div class="spec-batch-stock">
+                <el-input
+                  v-model="batchSpecStock"
+                  placeholder="统一库存"
+                  size="small"
+                  class="batch-stock-input"
+                  clearable
+                />
+                <el-button type="primary" size="small" @click="applyBatchSpecStock">批量设置库存</el-button>
+              </div>
+            </div>
+            <el-table :data="specList" border class="spec-table" height="300">
               <el-table-column label="规格值" min-width="200">
                 <template slot-scope="{ row }">
                   <el-input v-model="row.specValue" readonly size="small" />
@@ -346,7 +404,12 @@ export default {
       /** 未提交规格草稿，每项 { name, values, valueInput } */
       specDraftRows: [{ name: '', values: [], valueInput: '' }],
       // 规格列表（笛卡尔积生成），每项 { specValue, code, stock, id?, keyIds? }
-      specList: []
+      specList: [],
+      /** 规格列表：批量填入库存的暂存值 */
+      batchSpecStock: '',
+      specNameEdit: { gIndex: null, value: '' },
+      specValueEdit: { gIndex: null, vIndex: null, value: '' },
+      draftValueEdit: { dIndex: null, vIndex: null, value: '' }
     };
   },
 
@@ -454,6 +517,190 @@ export default {
     },
     addSpecDraftRow() {
       this.specDraftRows.push({ name: '', values: [], valueInput: '' });
+    },
+    cancelSpecNameEdit() {
+      this.specNameEdit = { gIndex: null, value: '' };
+    },
+    startEditSpecGroupName(gIndex) {
+      const g = this.specGroups[gIndex];
+      if (!g) return;
+      this.cancelSpecValueEdit();
+      this.cancelDraftValueEdit();
+      this.specNameEdit = { gIndex, value: g.name || '' };
+      this.$nextTick(() => {
+        const ref = this.$refs.specNameInputRef;
+        const comp = Array.isArray(ref) ? ref[0] : ref;
+        if (comp && comp.focus) comp.focus();
+      });
+    },
+    async finishEditSpecGroupName(gIndex) {
+      if (this.specNameEdit.gIndex !== gIndex) return;
+      const raw = (this.specNameEdit.value || '').trim();
+      const group = this.specGroups[gIndex];
+      this.specNameEdit = { gIndex: null, value: '' };
+      if (!group) return;
+      const oldName = group.name || '';
+      if (!raw || raw === oldName) return;
+      if (this.specGroups.some((g, i) => i !== gIndex && (g.name || '') === raw)) {
+        this.$message.warning('已存在同名规格，请更换规格名称');
+        return;
+      }
+      const parent = (this.skus || []).find(s => (s.title || '') === oldName);
+      const groupId =
+        group.id != null && group.id !== ''
+          ? String(group.id)
+          : parent && parent.id != null
+            ? String(parent.id)
+            : '';
+      if (!groupId) {
+        this.$set(this.specGroups, gIndex, { ...group, name: raw });
+        if (parent && parent.id != null) {
+          const pi = (this.skus || []).findIndex(s => String(s.id) === String(parent.id));
+          if (pi >= 0) {
+            this.$set(this.skus, pi, { ...this.skus[pi], title: raw });
+          }
+        }
+        this.buildSpecList();
+        return;
+      }
+      const ok = await this.withFullLoading('正在修改规格名称...', async () => {
+        const r = await this.$api({
+          url: '/editMaterialKey',
+          method: 'post',
+          data: { id: groupId, title: raw }
+        });
+        if (!(r && r.code === 200)) {
+          throw r || new Error('修改失败');
+        }
+      })
+        .then(() => true)
+        .catch(e => {
+          this.$message.error(e && e.msg ? e.msg : '修改规格名称失败');
+          return false;
+        });
+      if (!ok) return;
+      await this.refreshSpecFromDetail();
+    },
+    cancelSpecValueEdit() {
+      this.specValueEdit = { gIndex: null, vIndex: null, value: '' };
+    },
+    startEditSpecValue(gIndex, vIndex, v) {
+      const group = this.specGroups[gIndex];
+      if (!group || !Array.isArray(group.values)) return;
+      this.cancelSpecNameEdit();
+      this.cancelDraftValueEdit();
+      this.specValueEdit = { gIndex, vIndex, value: v != null ? String(v) : '' };
+      this.$nextTick(() => {
+        const ref = this.$refs.specValueInputRef;
+        const comp = Array.isArray(ref) ? ref[0] : ref;
+        if (comp && comp.focus) comp.focus();
+      });
+    },
+    migrateSpecListForValueRename(gIndex, oldVal, newVal) {
+      const activeGroups = this.specGroups.filter(
+        g => Array.isArray(g.values) && g.values.length > 0
+      );
+      const group = this.specGroups[gIndex];
+      const pos = activeGroups.indexOf(group);
+      if (pos < 0) return;
+      const ov = String(oldVal || '').trim();
+      const nv = String(newVal || '').trim();
+      if (!nv || ov === nv) return;
+      (this.specList || []).forEach(row => {
+        const parts = (row.specValue || '').split(',').map(s => s.trim());
+        if (parts.length > pos && parts[pos] === ov) {
+          const next = [...parts];
+          next[pos] = nv;
+          this.$set(row, 'specValue', next.join(','));
+        }
+      });
+    },
+    async finishEditSpecValue(gIndex, vIndex) {
+      if (
+        this.specValueEdit.gIndex !== gIndex ||
+        this.specValueEdit.vIndex !== vIndex
+      ) {
+        return;
+      }
+      const raw = (this.specValueEdit.value || '').trim();
+      const group = this.specGroups[gIndex];
+      this.specValueEdit = { gIndex: null, vIndex: null, value: '' };
+      if (!group || !Array.isArray(group.values)) return;
+      const oldVal = group.values[vIndex];
+      if (oldVal == null) return;
+      const oldStr = String(oldVal).trim();
+      if (!raw || raw === oldStr) return;
+      if (group.values.some((x, i) => i !== vIndex && String(x).trim() === raw)) {
+        this.$message.warning('该规格下已存在同名规格值');
+        return;
+      }
+      const valueIds = group.valueIds || [];
+      const keyId =
+        valueIds[vIndex] != null && valueIds[vIndex] !== ''
+          ? String(valueIds[vIndex])
+          : '';
+      if (keyId) {
+        const ok = await this.withFullLoading('正在修改规格值...', async () => {
+          const r = await this.$api({
+            url: '/editMaterialKey',
+            method: 'post',
+            data: { id: keyId, title: raw }
+          });
+          if (!(r && r.code === 200)) {
+            throw r || new Error('修改失败');
+          }
+        })
+          .then(() => true)
+          .catch(e => {
+            this.$message.error(e && e.msg ? e.msg : '修改规格值失败');
+            return false;
+          });
+        if (!ok) return;
+        await this.refreshSpecFromDetail();
+        return;
+      }
+      this.migrateSpecListForValueRename(gIndex, oldStr, raw);
+      this.$set(group.values, vIndex, raw);
+      this.buildSpecList();
+    },
+    cancelDraftValueEdit() {
+      this.draftValueEdit = { dIndex: null, vIndex: null, value: '' };
+    },
+    startEditDraftSpecValue(dIndex, vIndex, v) {
+      const draft = this.specDraftRows[dIndex];
+      if (!draft || !Array.isArray(draft.values)) return;
+      this.cancelSpecNameEdit();
+      this.cancelSpecValueEdit();
+      this.draftValueEdit = {
+        dIndex,
+        vIndex,
+        value: v != null ? String(v) : ''
+      };
+      this.$nextTick(() => {
+        const ref = this.$refs.draftValueInputRef;
+        const comp = Array.isArray(ref) ? ref[0] : ref;
+        if (comp && comp.focus) comp.focus();
+      });
+    },
+    finishEditDraftSpecValue(dIndex, vIndex) {
+      if (
+        this.draftValueEdit.dIndex !== dIndex ||
+        this.draftValueEdit.vIndex !== vIndex
+      ) {
+        return;
+      }
+      const raw = (this.draftValueEdit.value || '').trim();
+      const draft = this.specDraftRows[dIndex];
+      this.draftValueEdit = { dIndex: null, vIndex: null, value: '' };
+      if (!draft || !Array.isArray(draft.values)) return;
+      const oldStr =
+        draft.values[vIndex] != null ? String(draft.values[vIndex]).trim() : '';
+      if (!raw || raw === oldStr) return;
+      if (draft.values.some((x, i) => i !== vIndex && String(x).trim() === raw)) {
+        this.$message.warning('该规格下已存在同名规格值');
+        return;
+      }
+      this.$set(draft.values, vIndex, raw);
     },
     addDraftSpecValue(dIndex) {
       const draft = this.specDraftRows[dIndex];
@@ -728,6 +975,23 @@ export default {
         };
       });
       this.specList = newList;
+    },
+    applyBatchSpecStock() {
+      const v =
+        this.batchSpecStock != null ? String(this.batchSpecStock).trim() : '';
+      const list = this.specList || [];
+      if (!list.length) {
+        this.$message.warning('暂无规格列表，请先配置规格');
+        return;
+      }
+      if (v === '') {
+        this.$message.warning('请输入要批量设置的库存');
+        return;
+      }
+      list.forEach(row => {
+        this.$set(row, 'stock', v);
+      });
+      this.$message.success('已批量设置库存');
     },
     cartesian(arrays) {
       if (arrays.length === 0) return [[]];
@@ -1029,6 +1293,22 @@ export default {
   margin-right: 0;
 }
 
+.spec-tag-editable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.spec-edit-input {
+  min-width: 120px;
+  width: auto !important;
+  max-width: 280px;
+
+  :deep(.el-input__inner) {
+    width: 100%;
+    min-width: 120px;
+  }
+}
+
 .spec-input-inline {
   width: 220px;
 
@@ -1054,8 +1334,30 @@ export default {
 }
 
 .spec-list-block {
-  .spec-setting-title {
+  .spec-list-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
     margin-bottom: 12px;
+  }
+
+  .spec-setting-title {
+    margin-bottom: 0;
+  }
+
+  .spec-batch-stock {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .batch-stock-input {
+    width: 120px;
+    :deep(.el-input__inner) {
+      width: 120px;
+    }
   }
 }
 

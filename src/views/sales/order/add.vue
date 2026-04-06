@@ -6,11 +6,28 @@
         <div class="form-section">
           <div class="section-content">
             <!-- 客户名称 -->
-            <el-form-item label="客户名称:" prop="customerName" required>
-              <div class="customer-name-row">
-                <el-input v-model="form.customerName" placeholder="请输入查询" clearable class="input-with-btn" />
-                <el-button type="primary" @click="handleAddCustomer">新增客户</el-button>
-              </div>
+            <el-form-item label="客户名称:" prop="customerId" required>
+              <el-select
+                v-model="form.customerId"
+                class="customer-select"
+                filterable
+                remote
+                reserve-keyword
+                clearable
+                placeholder="请选择或输入关键字搜索客户"
+                :remote-method="remoteSearchCustomer"
+                :loading="customerListLoading"
+                @visible-change="onCustomerDropdownVisible"
+                @change="onCustomerIdChange"
+                @clear="onCustomerClear"
+              >
+                <el-option
+                  v-for="item in customerList"
+                  :key="String(item.id)"
+                  :label="formatCustomerOptionLabel(item)"
+                  :value="String(item.id)"
+                />
+              </el-select>
             </el-form-item>
 
             <!-- 订单类型 -->
@@ -289,25 +306,6 @@
       <!-- 添加外购产品弹窗：getForeignProductList -->
       <add-external-product-dialog :visible.sync="addExternalProductVisible" @confirm="onAddExternalProductConfirm" />
 
-      <!-- 选择客户弹窗：getCustomerList 按 form.customerName 查询 -->
-      <el-dialog title="选择客户" :visible.sync="customerSelectVisible" width="700px" :close-on-click-modal="false"
-        @open="loadCustomerList">
-        <el-table ref="customerTable" :data="customerList" highlight-current-row max-height="360"
-          @current-change="onCustomerRowSelect">
-          <el-table-column type="index" label="序号" width="60" align="center" />
-          <el-table-column prop="title" label="客户名称" show-overflow-tooltip />
-          <el-table-column prop="customerNo" label="客户编码" show-overflow-tooltip />
-          <el-table-column prop="territory" label="属地" />
-          <el-table-column label="操作" width="80" align="center" fixed="right">
-            <template slot-scope="{ row }">
-              <el-button type="text" size="small" @click="selectCustomer(row)">选择</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="customerSelectVisible = false">取消</el-button>
-        </div>
-      </el-dialog>
     </div>
   </div>
 </template>
@@ -346,8 +344,8 @@ export default {
         payVoucherImageList: []
       },
       rules: {
-        customerName: [
-          { required: true, message: "请输入客户名称", trigger: "blur" }
+        customerId: [
+          { required: true, message: "请选择客户", trigger: "change" }
         ],
         orderType: [
           { required: true, message: "请选择订单类型", trigger: "change" }
@@ -366,8 +364,8 @@ export default {
       externalEditSnapshot: null,
       addProductVisible: false,
       addExternalProductVisible: false,
-      customerSelectVisible: false,
       customerList: [],
+      customerListLoading: false,
       /** 路由带 id 时为编辑模式，提交时传给接口 */
       editOrderId: ""
     };
@@ -445,6 +443,7 @@ export default {
       this.externalNewRow = null;
       this.externalEditingIndex = null;
       this.externalEditSnapshot = null;
+      this.customerList = [];
       this.$nextTick(() => {
         this.$refs.formRef && this.$refs.formRef.clearValidate();
       });
@@ -609,6 +608,7 @@ export default {
       this.externalEditingIndex = null;
       this.externalEditSnapshot = null;
       this.$nextTick(() => {
+        this.ensureCustomerInSelectOptions();
         this.$refs.formRef && this.$refs.formRef.clearValidate();
       });
     },
@@ -853,18 +853,43 @@ export default {
         this.form.packageSpecOther = "";
       }
     },
-    /** 点击新增客户：打开选择客户弹窗，调用 getCustomerList，keyword 使用 form.customerName */
-    handleAddCustomer() {
-      this.customerSelectVisible = true;
+    formatCustomerOptionLabel(item) {
+      const title = item.title != null ? String(item.title) : "";
+      const no =
+        item.customerNo != null && String(item.customerNo).trim()
+          ? String(item.customerNo).trim()
+          : "";
+      return no ? `${title}（${no}）` : title;
     },
-    loadCustomerList() {
-      this.$api({
+    /** 编辑回显：当前客户可能不在本次分页结果中，补一条选项避免下拉空白 */
+    ensureCustomerInSelectOptions() {
+      const id = String(this.form.customerId || "").trim();
+      if (!id) return;
+      const hit = this.customerList.some(c => String(c.id) === id);
+      if (hit) return;
+      const title =
+        this.form.customerName != null ? String(this.form.customerName) : "";
+      this.customerList = [
+        {
+          id,
+          title: title || id,
+          customerNo: "",
+          territory: ""
+        },
+        ...this.customerList
+      ];
+    },
+    /** keyword 为空时拉首页客户；有值时按关键字搜索（与 getCustomerList 一致） */
+    loadCustomerList(keyword) {
+      const kw = keyword != null ? String(keyword).trim() : "";
+      this.customerListLoading = true;
+      return this.$api({
         url: "/getCustomerList",
         method: "post",
         data: {
           page: "1",
-          limit: "20",
-          keyword: (this.form.customerName || "").trim()
+          limit: "100",
+          keyword: kw
         }
       })
         .then(res => {
@@ -872,24 +897,47 @@ export default {
             const list = res.data.list || res.data.rows || [];
             this.customerList = list.map(row => ({
               ...row,
-              territory: row.territory === 1 ? "国内" : row.territory === 2 ? "国外" : (row.territory ?? "")
+              territory:
+                row.territory === 1
+                  ? "国内"
+                  : row.territory === 2
+                    ? "国外"
+                    : row.territory ?? ""
             }));
           } else {
             this.customerList = [];
           }
+          this.ensureCustomerInSelectOptions();
         })
         .catch(() => {
           this.customerList = [];
+          this.ensureCustomerInSelectOptions();
+        })
+        .finally(() => {
+          this.customerListLoading = false;
         });
     },
-    onCustomerRowSelect(row) {
-      this._selectedCustomerRow = row;
+    remoteSearchCustomer(query) {
+      this.loadCustomerList(query);
     },
-    selectCustomer(row) {
-      if (!row) return;
-      this.form.customerId = row.id != null ? String(row.id) : "";
-      this.form.customerName = row.title != null ? String(row.title) : "";
-      this.customerSelectVisible = false;
+    onCustomerDropdownVisible(visible) {
+      if (visible) {
+        this.loadCustomerList("");
+      }
+    },
+    onCustomerIdChange(val) {
+      if (!val) {
+        this.form.customerName = "";
+        return;
+      }
+      const row = this.customerList.find(c => String(c.id) === String(val));
+      if (row) {
+        this.form.customerName =
+          row.title != null ? String(row.title) : "";
+      }
+    },
+    onCustomerClear() {
+      this.form.customerName = "";
     },
     /** 自定义上传：使用 UPLOAD_ROOT，参数名 file（与 customer add 一致） */
     handleUploadRequest(option, field) {
@@ -1023,7 +1071,7 @@ export default {
         if (!valid) return;
         const customerId = String(this.form.customerId || "").trim();
         if (!customerId) {
-          this.$message.warning("请选择客户（点击「新增客户」在列表中选择）");
+          this.$message.warning("请选择客户");
           return;
         }
         if (!(this.productList && this.productList.length)) {
@@ -1168,13 +1216,9 @@ export default {
   }
 }
 
-.customer-name-row {
-  display: flex;
-  align-items: center;
-
-  .input-with-btn {
-    margin-right: 12px;
-  }
+.customer-select {
+  width: 100%;
+  max-width: 420px;
 }
 
 .package-other-input {
