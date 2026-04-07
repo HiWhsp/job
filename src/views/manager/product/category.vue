@@ -27,7 +27,6 @@
           :data="tableData"
           row-key="id"
           :tree-props="{ children: 'child', hasChildren: 'hasChildren' }"
-          default-expand-all
           header-cell-class-name="table-header-cell"
           :height="tableHeight"
         >

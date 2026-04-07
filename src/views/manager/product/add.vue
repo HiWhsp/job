@@ -1266,6 +1266,7 @@ export default {
     flex-wrap: wrap;
     gap: 12px;
     margin-bottom: 12px;
+    background: #eee;
   }
 
   .spec-setting-title {
@@ -1276,6 +1277,7 @@ export default {
     display: flex;
     align-items: center;
     gap: 8px;
+    padding-right: 20px;
   }
 
   .batch-stock-input {

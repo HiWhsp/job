@@ -86,6 +86,7 @@
 <script>
 const LIST_API = "/getPurchaseOtherOrderList";
 const FINISH_API = "/finishPurchaseOtherOrder";
+const DELETE_API = "/delPurchaseOtherOrder";
 
 export default {
   name: "OtherPurchaseList",
@@ -220,8 +221,16 @@ export default {
         type: "warning"
       }).then(() => {
         // TODO: 调用删除接口
-        this.$message.success("删除成功");
-        this.loadList();
+        this.$api({
+          url: DELETE_API,
+          method: "post",
+          data: { id: row.id }
+        }).then(res => {
+          if (res && res.code === 200) {
+            this.$message.success("删除成功");
+            this.loadList();
+          }
+        }).catch(() => {});
       }).catch(() => { });
     },
     handleComplete(row) {

@@ -113,6 +113,7 @@
 <script>
 const LIST_API = "/getPurchaseEquipmentOrderList";
 const FINISH_API = "/finishPurchaseEquipmentOrder";
+const DELETE_API = "/delPurchaseEquipmentOrder";
 
 export default {
   name: "DevicePurchaseList",
@@ -248,8 +249,16 @@ export default {
         type: "warning"
       }).then(() => {
         // TODO: 调用删除接口
-        this.$message.success("删除成功");
-        this.loadList();
+        this.$api({
+          url: DELETE_API,
+          method: "post",
+          data: { id: row.id }
+        }).then(res => {
+          if (res && res.code === 200) {
+            this.$message.success("删除成功");
+            this.loadList();
+          }
+        }).catch(() => {});
       }).catch(() => {});
     },
     handleComplete(row) {

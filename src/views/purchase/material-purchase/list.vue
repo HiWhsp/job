@@ -137,6 +137,7 @@ import axios from "axios";
 import { UPLOAD_ROOT } from "@/config/env.js";
 
 const LIST_API = "/getPurchaseMaterialOrderList";
+const DELETE_API = "/delPurchaseMaterialOrder";
 const SET_CONTRACT_API = "/setPurchaseMaterialContract";
 const FINISH_PURCHASE_API = "/finishPurchaseMaterialOrder";
 
@@ -305,8 +306,16 @@ export default {
         type: "warning"
       }).then(() => {
         // TODO: 调用删除接口
-        this.$message.success("删除成功");
-        this.loadList();
+        this.$api({
+          url: DELETE_API,
+          method: "post",
+          data: { id: row.id }
+        }).then(res => {
+          if (res && res.code === 200) {
+            this.$message.success("删除成功");
+            this.loadList();
+          }
+        }).catch(() => {});
       }).catch(() => {});
     },
     handleUploadContract(row) {
