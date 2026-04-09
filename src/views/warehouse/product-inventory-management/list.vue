@@ -221,7 +221,7 @@
             />
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="searchAddProduct">搜索</el-button>
+            <el-button type="primary" @click="handleAddProductSearch">搜索</el-button>
             <el-button @click="resetAddProductQuery">重置</el-button>
           </el-form-item>
         </el-form>
@@ -229,12 +229,13 @@
       <div class="dialog-table-wrap">
         <el-table
           ref="addProductTable"
+          row-key="rowKey"
           :data="addProductList"
           max-height="380"
           header-cell-class-name="table-header-cell"
           @selection-change="handleAddProductSelectionChange"
         >
-          <el-table-column type="selection" width="50" align="center" />
+          <el-table-column type="selection" width="50" align="center" :reserve-selection="true" />
           <el-table-column prop="productNo" label="产品编码" min-width="120" show-overflow-tooltip />
           <el-table-column prop="title" label="产品名称" min-width="140" show-overflow-tooltip />
           <el-table-column prop="spec" label="规格" min-width="140" show-overflow-tooltip />
@@ -246,6 +247,18 @@
           </el-table-column>
           <el-table-column prop="unit" label="单位" width="80" align="center" />
         </el-table>
+        <div class="dialog-pagination-wrap">
+          <el-pagination
+            small
+            @size-change="handleAddProductSizeChange"
+            @current-change="handleAddProductPageChange"
+            :current-page="addProductQuery.pageNum"
+            :page-sizes="[10, 20, 50]"
+            :page-size="addProductQuery.pageSize"
+            layout="total, prev, pager, next, jumper"
+            :total="addProductQuery.total"
+          />
+        </div>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="addProductDialogVisible = false">取消</el-button>
@@ -318,7 +331,8 @@ export default {
       addProductQuery: {
         keyword: '',
         pageNum: 1,
-        pageSize: 50
+        pageSize: 10,
+        total: 0
       },
       addProductList: [],
       addProductSelected: []
@@ -507,6 +521,7 @@ export default {
       this.addInForm.inTime = '';
     },
     openAddProductDialog() {
+      this.addProductQuery.pageNum = 1;
       this.addProductDialogVisible = true;
       this.$nextTick(() => {
         this.searchAddProduct();
@@ -515,10 +530,26 @@ export default {
     closeAddProductDialog() {
       this.addProductQuery.keyword = '';
       this.addProductQuery.pageNum = 1;
+      this.addProductQuery.pageSize = 10;
       this.addProductSelected = [];
+      this.addProductQuery.total = 0;
+      this.addProductList = [];
       this.$nextTick(() => {
         this.$refs.addProductTable && this.$refs.addProductTable.clearSelection();
       });
+    },
+    handleAddProductSearch() {
+      this.addProductQuery.pageNum = 1;
+      this.searchAddProduct();
+    },
+    handleAddProductPageChange(val) {
+      this.addProductQuery.pageNum = val;
+      this.searchAddProduct();
+    },
+    handleAddProductSizeChange(val) {
+      this.addProductQuery.pageSize = val;
+      this.addProductQuery.pageNum = 1;
+      this.searchAddProduct();
     },
     searchAddProduct() {
       const params = {
@@ -534,23 +565,31 @@ export default {
       })
         .then(res => {
           if (res && res.code === 200 && res.data) {
+            this.addProductQuery.total = res.data.count ?? 0;
             const list = Array.isArray(res.data.list) ? res.data.list : [];
-            this.addProductList = list.map(it => ({
-              id: it.productId != null ? String(it.productId) : '',
-              title: it.title || '',
-              productNo: it.productNo || '',
-              spec: it.keyVals || '',
-              unit: it.unit || '',
-              cateTitle: it.cateTitle || '',
-              inventoryId: it.id != null ? String(it.id) : '',
-              quantity: ''
-            }));
+            this.addProductList = list.map(it => {
+              const pid = it.productId != null ? String(it.productId) : '';
+              const invId = it.id != null ? String(it.id) : '';
+              return {
+                rowKey: `${pid}_${invId}`,
+                id: pid,
+                title: it.title || '',
+                productNo: it.productNo || '',
+                spec: it.keyVals || '',
+                unit: it.unit || '',
+                cateTitle: it.cateTitle || '',
+                inventoryId: invId,
+                quantity: ''
+              };
+            });
           } else {
             this.addProductList = [];
+            this.addProductQuery.total = 0;
           }
         })
         .catch(() => {
           this.addProductList = [];
+          this.addProductQuery.total = 0;
         });
     },
     resetAddProductQuery() {
@@ -909,5 +948,11 @@ export default {
 
 .dialog-search {
   margin-bottom: 12px;
+}
+
+.dialog-pagination-wrap {
+  margin-top: 12px;
+  display: flex;
+  justify-content: flex-end;
 }
 </style>

@@ -5,73 +5,32 @@
       <el-form :model="queryParams" ref="queryForm" inline class="search-form" label-width="80px">
         <div class="search-row">
           <el-form-item label="关键词">
-            <el-input
-              v-model="queryParams.keyword"
-              placeholder="客户编码/客户名称/联系人/电话"
-              clearable
-              style="width: 260px"
-            />
+            <el-input v-model="queryParams.keyword" placeholder="客户编码/客户名称/联系人/电话" clearable style="width: 260px" />
           </el-form-item>
           <el-form-item label="客户属地">
-            <el-select
-              v-model="queryParams.territory"
-              placeholder="请选择"
-              clearable
-              style="width: 140px"
-            >
-              <el-option
-                v-for="item in customerBelongOptions"
-                :key="item.value"
-                :label="item.name"
-                :value="item.value"
-              />
+            <el-select v-model="queryParams.territory" placeholder="请选择" clearable style="width: 140px">
+              <el-option v-for="item in customerBelongOptions" :key="item.value" :label="item.name"
+                :value="item.value" />
             </el-select>
           </el-form-item>
           <el-form-item label="客户区域">
-            <el-select
-              v-model="queryParams.region"
-              placeholder="客户区域"
-              clearable
-              style="width: 140px"
-            >
-              <el-option
-                v-for="item in customerRegionOptions"
-                :key="item.value"
-                :label="item.name"
-                :value="item.value"
-              />
+            <el-select v-model="queryParams.region" placeholder="客户区域" clearable style="width: 140px">
+              <el-option v-for="item in customerRegionOptions" :key="item.value" :label="item.name"
+                :value="item.value" />
             </el-select>
           </el-form-item>
           <el-form-item label="客户属性A">
-            <el-select
-              v-model="queryParams.attributeA"
-              placeholder="客户属性A"
-              clearable
-              style="width: 140px"
-            >
-              <el-option
-                v-for="item in customerAttrAOptions"
-                :key="item.value"
-                :label="item.name"
-                :value="item.value"
-              />
+            <el-select v-model="queryParams.attributeA" placeholder="客户属性A" clearable style="width: 140px">
+              <el-option v-for="item in customerAttrAOptions" :key="item.value" :label="item.name"
+                :value="item.value" />
             </el-select>
           </el-form-item>
         </div>
         <div class="search-row">
           <el-form-item label="客户属性B">
-            <el-select
-              v-model="queryParams.attributeB"
-              placeholder="客户属性B"
-              clearable
-              style="width: 140px"
-            >
-              <el-option
-                v-for="item in customerAttrBOptions"
-                :key="item.value"
-                :label="item.name"
-                :value="item.value"
-              />
+            <el-select v-model="queryParams.attributeB" placeholder="客户属性B" clearable style="width: 140px">
+              <el-option v-for="item in customerAttrBOptions" :key="item.value" :label="item.name"
+                :value="item.value" />
             </el-select>
           </el-form-item>
           <el-form-item>
@@ -93,14 +52,8 @@
         </div>
       </div>
       <div class="table-box">
-        <el-table
-          ref="tableH"
-          :height="tableHeight"
-          :data="tableData"
-          header-cell-class-name="table-header-cell"
-          :row-class-name="tableRowClassName"
-          @selection-change="handleSelectionChange"
-        >
+        <el-table ref="tableH" :height="tableHeight" :data="tableData" header-cell-class-name="table-header-cell"
+          :row-class-name="tableRowClassName" @selection-change="handleSelectionChange">
           <el-table-column type="selection" width="55" align="center" />
           <el-table-column prop="customerNo" label="客户编码" min-width="100" show-overflow-tooltip />
           <el-table-column prop="title" label="客户名称" min-width="180" show-overflow-tooltip>
@@ -112,27 +65,12 @@
           <el-table-column prop="region" label="客户区域" min-width="90" show-overflow-tooltip />
           <el-table-column prop="attributeA" label="客户属性A" min-width="100" show-overflow-tooltip />
           <el-table-column prop="attributeB" label="客户属性B" min-width="100" show-overflow-tooltip />
-          <el-table-column
-            prop="contact"
-            label="客户直接联系人"
-            min-width="120"
-            show-overflow-tooltip
-          />
-          <el-table-column
-            prop="phone"
-            label="客户联系电话"
-            min-width="120"
-            show-overflow-tooltip
-          />
+          <el-table-column prop="contact" label="客户直接联系人" min-width="120" show-overflow-tooltip />
+          <el-table-column prop="phone" label="客户联系电话" min-width="120" show-overflow-tooltip />
           <el-table-column prop="companyPhone" label="公司电话" min-width="120" show-overflow-tooltip />
           <el-table-column prop="address" label="收货地址" min-width="200" show-overflow-tooltip />
           <el-table-column prop="receiver" label="收货人" min-width="90" show-overflow-tooltip />
-          <el-table-column
-            prop="receiverPhone"
-            label="收货人联系方式"
-            min-width="120"
-            show-overflow-tooltip
-          />
+          <el-table-column prop="receiverPhone" label="收货人联系方式" min-width="120" show-overflow-tooltip />
           <el-table-column prop="introducer" label="客户引入人" min-width="100" show-overflow-tooltip />
           <el-table-column prop="manager" label="客户负责人" min-width="100" show-overflow-tooltip />
           <el-table-column prop="other" label="其他" min-width="120" show-overflow-tooltip />
@@ -147,15 +85,9 @@
           </el-table-column>
         </el-table>
         <div class="pagination-wrap">
-          <el-pagination
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :current-page="queryParams.pageNum"
-            :page-sizes="[10, 20, 50, 100]"
-            :page-size="queryParams.pageSize"
-            layout="total, prev, pager, next, jumper"
-            :total="total"
-          />
+          <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
+            :current-page="queryParams.pageNum" :page-sizes="[10, 20, 50, 100]" :page-size="queryParams.pageSize"
+            layout="total, prev, pager, next, jumper" :total="total" />
         </div>
       </div>
     </div>
@@ -234,7 +166,7 @@ export default {
         const windowHeight = window.innerHeight;
         this.tableHeight = Math.max(windowHeight - tableOffsetTop, 200);
         const that = this;
-        window.onresize = function() {
+        window.onresize = function () {
           const top = tableEl.offsetTop + 84 + 80;
           that.tableHeight = Math.max(window.innerHeight - top, 200);
         };
@@ -415,7 +347,19 @@ export default {
     },
     handleExport() {
       // TODO: 导出
-      this.$message.info("导出");
+      this.$api({
+        url: "/daochuCustomer",
+        method: "post",
+        data: this.queryParams
+      })
+        .then(res => {
+          if (res && res.data) {
+            window.open(res.data, "_blank");
+          }
+        })
+        .catch(err => {
+          this.$message.error(err && err.msg ? err.msg : "导出失败");
+        });
     },
     handleSizeChange(val) {
       this.queryParams.pageSize = val;
@@ -523,7 +467,7 @@ export default {
       background: #f3f7fa;
     }
 
-    .el-table__body tr:hover > td {
+    .el-table__body tr:hover>td {
       background: #f5f7fa !important;
     }
   }
@@ -561,7 +505,7 @@ export default {
       text-decoration: underline;
     }
 
-    & + .row-act::before {
+    &+.row-act::before {
       content: "";
       display: inline-block;
       width: 1px;

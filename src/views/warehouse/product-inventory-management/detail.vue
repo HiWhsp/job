@@ -985,7 +985,7 @@ export default {
                             outQuantity: it.num != null ? String(it.num) : '',
                             outDate: it.created_at || '',
                             orderNo: it.kuNo || '',
-                            customerName: ''
+                            customerName: it.customerIdTitle || ''
                         }));
                         const kw = (this.outQueryParams.orderNo || '').trim();
                         this.outTableData = kw
