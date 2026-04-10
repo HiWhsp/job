@@ -287,6 +287,7 @@ export default {
 <style scoped lang="less">
 .menu-wrap {
   height: 100vh;
+  padding-right: 10px;
   overflow-y: auto;
 
   .menu-logo {

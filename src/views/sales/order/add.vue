@@ -201,7 +201,7 @@
             <el-table-column label="产品名称" width="220">
               <template slot-scope="{ row, $index }">
                 <el-input
-                  v-if="isExternalRowEditing(row, $index)"
+                  v-if="isExternalRowEditing(row, $index) && !isExternalRowMetaLocked(row)"
                   v-model="row.name"
                   placeholder="输入选择"
                   size="small"
@@ -212,7 +212,7 @@
             <el-table-column label="规格" align="center">
               <template slot-scope="{ row, $index }">
                 <el-input
-                  v-if="isExternalRowEditing(row, $index)"
+                  v-if="isExternalRowEditing(row, $index) && !isExternalRowMetaLocked(row)"
                   v-model="row.spec"
                   placeholder="输入选择"
                   size="small"
@@ -250,7 +250,7 @@
             <el-table-column label="单位" align="center">
               <template slot-scope="{ row, $index }">
                 <el-input
-                  v-if="isExternalRowEditing(row, $index)"
+                  v-if="isExternalRowEditing(row, $index) && !isExternalRowMetaLocked(row)"
                   v-model="row.unit"
                   placeholder="请输入"
                   size="small"
@@ -761,6 +761,13 @@ export default {
       if (row.isNew) return true;
       if (this.externalEditingIndex === null) return false;
       return this.externalEditingIndex === tableIndex;
+    },
+    /**
+     * 已保存的外购行（含弹窗添加、订单回显）：点「编辑」时仅允许改单价、数量；
+     * 底部草稿行 isNew 仍可改名称/规格/单位。
+     */
+    isExternalRowMetaLocked(row) {
+      return !!(row && !row.isNew);
     },
     handleSaveExternalRow() {
       const row = this.externalNewRow;

@@ -176,7 +176,7 @@
           <div class="spec-list-block">
             <div class="spec-list-toolbar">
               <div class="spec-setting-title">规格列表</div>
-              <div class="spec-batch-stock">
+              <div v-if="!isEdit" class="spec-batch-stock">
                 <el-input
                   v-model="batchSpecStock"
                   placeholder="统一库存"
@@ -200,7 +200,13 @@
               </el-table-column>
               <el-table-column label="库存" min-width="160">
                 <template slot-scope="{ row }">
-                  <el-input v-model="row.num" placeholder="库存" size="small" clearable />
+                  <el-input
+                    v-model="row.num"
+                    placeholder="库存"
+                    size="small"
+                    :clearable="!(isEdit && isPersistedSpecInventoryRow(row))"
+                    :disabled="isEdit && isPersistedSpecInventoryRow(row)"
+                  />
                 </template>
               </el-table-column>
             </el-table>
@@ -770,7 +776,13 @@ export default {
       });
       this.specList = newList;
     },
+    /** 编辑模式下：详情接口带回的库存行有 id，视为已有数据不可改库存；新增规格组合产生的新行无 id，仍可填库存 */
+    isPersistedSpecInventoryRow(row) {
+      const id = row && row.id != null ? String(row.id).trim() : '';
+      return !!id;
+    },
     applyBatchSpecStock() {
+      if (this.isEdit) return;
       const v =
         this.batchSpecStock != null ? String(this.batchSpecStock).trim() : '';
       const list = this.specList || [];

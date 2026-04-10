@@ -78,18 +78,9 @@
           <el-input v-model="shipForm.logisticsNo" placeholder="请输入" clearable />
         </el-form-item>
         <el-form-item label="发货照片：">
-          <el-upload
-            class="ship-photo-uploader"
-            list-type="picture-card"
-            :action="uploadAction"
-            name="file"
-            :file-list="shipForm.photoList"
-            accept="image/*"
-            :limit="9"
-            :on-success="handleShipUploadSuccess"
-            :on-remove="handleShipUploadRemove"
-            :http-request="handleShipUploadRequest"
-          >
+          <el-upload class="ship-photo-uploader" list-type="picture-card" :action="uploadAction" name="file"
+            :file-list="shipForm.photoList" accept="image/*" :limit="9" :on-success="handleShipUploadSuccess"
+            :on-remove="handleShipUploadRemove" :http-request="handleShipUploadRequest">
             <div class="upload-inner">
               <i class="el-icon-plus" />
               <span class="upload-plus-text">添加照片</span>
@@ -105,22 +96,13 @@
     </el-dialog>
 
     <!-- 上传出库质检单：qualityImages 多图英文逗号拼接 -->
-    <el-dialog title="上传出库质检单" :visible.sync="qcDialogVisible" width="600px" :close-on-click-modal="false" append-to-body
-      @close="handleQcDialogClose">
+    <el-dialog title="上传出库质检单" :visible.sync="qcDialogVisible" width="600px" :close-on-click-modal="false"
+      append-to-body @close="handleQcDialogClose">
       <el-form label-width="120px">
         <el-form-item label="质检单图片：">
-          <el-upload
-            class="ship-photo-uploader"
-            list-type="picture-card"
-            :action="uploadAction"
-            name="file"
-            :file-list="qcForm.photoList"
-            accept="image/*"
-            :limit="9"
-            :on-success="handleQcUploadSuccess"
-            :on-remove="handleQcUploadRemove"
-            :http-request="handleQcUploadRequest"
-          >
+          <el-upload class="ship-photo-uploader" list-type="picture-card" :action="uploadAction" name="file"
+            :file-list="qcForm.photoList" accept="image/*" :limit="9" :on-success="handleQcUploadSuccess"
+            :on-remove="handleQcUploadRemove" :http-request="handleQcUploadRequest">
             <div class="upload-inner">
               <i class="el-icon-plus" />
               <span class="upload-plus-text">添加图片</span>
@@ -147,7 +129,8 @@
             </div>
           </div>
           <div v-if="detailInfo.sendTime" class="info-line">
-            <div class="info-item"><span class="label">发货时间：</span><span class="value">{{ detailInfo.sendTime }}</span></div>
+            <div class="info-item"><span class="label">发货时间：</span><span class="value">{{ detailInfo.sendTime }}</span>
+            </div>
           </div>
 
           <div class="info-line">
@@ -169,6 +152,12 @@
             </div>
             <div class="info-item"><span class="label">收货人联系方式方式：</span><span class="value">{{ detailInfo.receiverPhone
                 }}</span></div>
+          </div>
+          <div class="info-line" v-if="detailInfo.qualityImages && detailInfo.qualityImages.length > 0">
+            <div class="info-item"><span class="label">出库质检单：</span>
+              <el-image :src="item" style="width: 100px; height: 100px; margin-right: 10px;"
+                v-for="item in detailInfo.qualityImages" :key="item" />
+            </div>
           </div>
         </div>
 
@@ -197,6 +186,8 @@
             <el-table-column prop="quantity" label="出库数量" width="120" align="center" />
           </el-table>
         </div>
+
+
 
         <div class="detail-footer">
           <el-button type="primary" @click="detailDrawerVisible = false">确定</el-button>
@@ -254,7 +245,8 @@ export default {
         customerName: "",
         receiveAddress: "",
         receiver: "",
-        receiverPhone: ""
+        receiverPhone: "",
+        qualityImages: []
       },
       detailProducts: [],
       detailOutsourcedProducts: []
@@ -554,7 +546,8 @@ export default {
               customerName: d.customerTitle || "",
               receiveAddress: addr.address || "",
               receiver: addr.name || "",
-              receiverPhone: addr.phone || ""
+              receiverPhone: addr.phone || "",
+              qualityImages: d.qualityImages || []
             };
             this.detailProducts = this.mapProductRows(d.productJson);
             this.detailOutsourcedProducts = this.mapForeignProductRows(d.foreignProductJson);
@@ -580,7 +573,8 @@ export default {
         customerName: "",
         receiveAddress: "",
         receiver: "",
-        receiverPhone: ""
+        receiverPhone: "",
+        qualityImages: []
       };
     }
   }

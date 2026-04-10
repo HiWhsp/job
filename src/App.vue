@@ -169,8 +169,8 @@ a {
 
 // 原生滚动条
 ::-webkit-scrollbar {
-	width: 4px;
-	height: 4px;
+	width: 8px;
+	height: 8px;
 }
 ::-webkit-scrollbar-thumb {
 	background: #ccc;

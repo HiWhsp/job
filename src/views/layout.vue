@@ -68,7 +68,7 @@ export default {
 }
 
 .root-left {
-  width: 223px;
+  width: 233px;
   height: 100vh;
   background: #304156;
   box-shadow: 0px 3px 6px 1px rgba(0, 0, 0, 0.16);
