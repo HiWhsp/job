@@ -347,18 +347,30 @@ export default {
     },
     handleExport() {
       // TODO: 导出
+      // 导出中
+      const loading = this.$loading({
+        lock: true,
+        text: '导出中...',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
       this.$api({
         url: "/daochuCustomer",
         method: "post",
         data: this.queryParams
       })
         .then(res => {
+          loading.close();
           if (res && res.data) {
-            window.open(res.data, "_blank");
+            window.open(res.data.url, "_blank");
           }
         })
         .catch(err => {
           this.$message.error(err && err.msg ? err.msg : "导出失败");
+          loading.close();
+        })
+        .finally(() => {
+          loading.close();
         });
     },
     handleSizeChange(val) {

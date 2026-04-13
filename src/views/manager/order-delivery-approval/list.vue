@@ -92,7 +92,7 @@
               <span>{{ row.customerAddress && row.customerAddress.address ? row.customerAddress.address : '' }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="orderPrice" label="订单金额" align="center">
+          <el-table-column prop="orderPrice" label="订单金额" align="center" width="120">
             <template slot-scope="{ row }">
               <span>{{ row.orderPrice }}</span>
             </template>
@@ -105,7 +105,7 @@
                 :type="orderStatusTagType(row.orderStatus)"
                 size="small"
               >
-                {{ orderStatusText(row.orderStatus) || '-' }}
+                {{ orderStatusText(row.orderStatus, row.againSend) || '-' }}
               </el-tag>
               <span v-else>—</span>
             </template>
@@ -132,7 +132,7 @@
               <span class="row-acts">
                 <span class="row-act" @click="handleView(row)">查看详情</span>
                 <span class="row-act" v-if="row.orderStatus == 3" @click="handleDelivery(row)">审批</span>
-                <span class="row-act" v-if="row.orderStatus == 4" @click="handleView(row)">发货</span>
+                <span class="row-act" v-if="(row.orderStatus == 4) || (row.orderStatus == 7 && row.againSend == 1)" @click="handleView(row)">发货</span>
                 <!-- <span class="row-act" v-if="row.orderStatus == 4 || row.orderStatus == 7" @click="handleAudit(row)">打印电子订单</span> -->
               </span>
             </template>
@@ -568,11 +568,12 @@ export default {
       if (s === 3) return 'success';
       return 'info';
     },
-    orderStatusText(status) {
+    orderStatusText(status, againSend) {
       const s = Number(status);
       if (s === 3) return '待审批';
       if (s === 4) return '待发货';
-      if (s === 7) return '已发货';
+      if (s === 7 && againSend == 0) return '已发货';
+      if (s === 7 && againSend == 1) return '部分发货';
       return '';
     }
   }

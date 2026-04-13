@@ -37,7 +37,7 @@
               v-for="(child, childIndex) in route.children"
               :key="`child-${childIndex}-${child.name}`"
               class="menu-item-child"
-              :class="{ 'active': isChildRouteActive(child) }"
+              :class="{ 'active': isChildRouteActive(child, route) }"
               @click="navigateToRoute(child)"
             >
               <div class="menu-icon">
@@ -234,14 +234,42 @@ export default {
       return this.$route.name === route.name;
     },
 
-    // 判断子路由是否激活（含该菜单项下更深层的子页面）
-    isChildRouteActive(child) {
+    /**
+     * 判断子路由是否激活。
+     * 详情等页与列表为兄弟路由时，matched 中不含列表 name，需回显高亮列表项；
+     * 也可在路由 meta 中设置 activeMenu 为要高亮的子路由 name。
+     */
+    isChildRouteActive(child, parentRoute) {
       if (!child.name) {
         return false;
       }
-      return (
-        this.$route.name === child.name || this.isNameInMatched(child.name)
+      const route = this.$route;
+      const metaActive = route.meta && route.meta.activeMenu;
+      if (metaActive && child.name === metaActive) {
+        return true;
+      }
+      if (route.name === child.name || this.isNameInMatched(child.name)) {
+        return true;
+      }
+      if (
+        !parentRoute ||
+        !parentRoute.name ||
+        !this.isNameInMatched(parentRoute.name)
+      ) {
+        return false;
+      }
+      const menuNames = new Set(
+        (parentRoute.children || [])
+          .map(c => c.name)
+          .filter(Boolean)
       );
+      if (menuNames.has(route.name)) {
+        return false;
+      }
+      const pathSeg = (child.path || "").replace(/^\/+|\/+$/g, "").split("/").pop();
+      const isListEntry =
+        pathSeg === "list" || (child.name && /-list$/.test(String(child.name)));
+      return isListEntry;
     },
 
     // 自动展开包含当前路由的菜单
